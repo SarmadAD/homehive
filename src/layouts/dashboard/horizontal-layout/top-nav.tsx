@@ -14,6 +14,7 @@ import type { NavColor } from "src/types/settings";
 import { AccountButton } from "../account-button";
 import type { Section } from "../config";
 import { TopNavSection } from "./top-nav-section";
+import { TenantSwitch } from "../tenant-switch";
 
 const useCssVars = (color: NavColor): Record<string, string> => {
   const theme = useTheme();
