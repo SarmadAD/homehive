@@ -1,9 +1,9 @@
-import type { FC } from 'react';
-import numeral from 'numeral';
-import { format, subMinutes, subSeconds } from 'date-fns';
-import ArrowRightIcon from '@untitled-ui/icons-react/build/esm/ArrowRight';
-import DotsHorizontalIcon from '@untitled-ui/icons-react/build/esm/DotsHorizontal';
-import Edit02Icon from '@untitled-ui/icons-react/build/esm/Edit02';
+import type { FC } from "react";
+import numeral from "numeral";
+import { format, subMinutes, subSeconds } from "date-fns";
+import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
+import DotsHorizontalIcon from "@untitled-ui/icons-react/build/esm/DotsHorizontal";
+import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import {
   Box,
   Card,
@@ -18,15 +18,15 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
-} from '@mui/material';
-import { Scrollbar } from 'src/components/scrollbar';
-import type { SeverityPillColor } from 'src/components/severity-pill';
-import { SeverityPill } from 'src/components/severity-pill';
+  Typography,
+} from "@mui/material";
+import { Scrollbar } from "src/components/scrollbar";
+import type { SeverityPillColor } from "src/components/severity-pill";
+import { SeverityPill } from "src/components/severity-pill";
 
 const now = new Date();
 
-type OrderStatus = 'canceled' | 'complete' | 'pending' | 'rejected';
+type OrderStatus = "canceled" | "complete" | "pending" | "rejected";
 
 interface Order {
   id: string;
@@ -44,119 +44,113 @@ interface Order {
 
 const orders: Order[] = [
   {
-    id: '5ecb8a6d9f53bfae09e16115',
+    id: "5ecb8a6d9f53bfae09e16115",
     createdAt: subMinutes(subSeconds(now, 23), 32).getTime(),
-    currency: '$',
+    currency: "$",
     customer: {
-      email: 'carson.darrin@devias.io',
-      name: 'Carson Darrin'
+      email: "carson.darrin@devias.io",
+      name: "Carson Darrin",
     },
-    number: 'DEV-102',
-    paymentMethod: 'CreditCard',
-    status: 'pending',
-    totalAmount: 500.00
+    number: "DEV-102",
+    paymentMethod: "CreditCard",
+    status: "pending",
+    totalAmount: 500.0,
   },
   {
-    id: '5ecb8a738aa6f3e577c2b3ec',
+    id: "5ecb8a738aa6f3e577c2b3ec",
     createdAt: subMinutes(subSeconds(now, 51), 36).getTime(),
-    currency: '$',
+    currency: "$",
     customer: {
-      email: 'fran.perez@devias.io',
-      name: 'Fran Perez'
+      email: "fran.perez@devias.io",
+      name: "Fran Perez",
     },
-    number: 'DEV-101',
-    paymentMethod: 'PayPal',
-    status: 'complete',
-    totalAmount: 500.00
+    number: "DEV-101",
+    paymentMethod: "PayPal",
+    status: "complete",
+    totalAmount: 500.0,
   },
   {
-    id: '5ecb8a795e53f134013eba3b',
+    id: "5ecb8a795e53f134013eba3b",
     createdAt: subMinutes(subSeconds(now, 55), 38).getTime(),
-    currency: '$',
+    currency: "$",
     customer: {
-      email: 'jie.yan.song@devias.io',
-      name: 'Jie Yan Song'
+      email: "jie.yan.song@devias.io",
+      name: "Jie Yan Song",
     },
-    number: 'DEV-100',
-    paymentMethod: 'CreditCard',
-    status: 'pending',
-    totalAmount: 500.00
+    number: "DEV-100",
+    paymentMethod: "CreditCard",
+    status: "pending",
+    totalAmount: 500.0,
   },
   {
-    id: '5ecb8a7f738cc572a9ce0277',
+    id: "5ecb8a7f738cc572a9ce0277",
     createdAt: subMinutes(subSeconds(now, 3), 40).getTime(),
-    currency: '$',
+    currency: "$",
     customer: {
-      email: 'clarke.gillebert@devias.io',
-      name: 'Clarke Gillebert'
+      email: "clarke.gillebert@devias.io",
+      name: "Clarke Gillebert",
     },
-    number: 'DEV-99',
-    paymentMethod: 'PayPal',
-    status: 'complete',
-    totalAmount: 500.00
+    number: "DEV-99",
+    paymentMethod: "PayPal",
+    status: "complete",
+    totalAmount: 500.0,
   },
   {
-    id: '5e86805e2bafd54f66cc95c3',
+    id: "5e86805e2bafd54f66cc95c3",
     createdAt: subMinutes(subSeconds(now, 32), 45).getTime(),
-    currency: '$',
+    currency: "$",
     customer: {
-      email: 'miron.vitold@devias.io',
-      name: 'Miron Vitold'
+      email: "miron.vitold@devias.io",
+      name: "Miron Vitold",
     },
-    number: 'DEV-98',
-    paymentMethod: 'PayPal',
-    status: 'complete',
-    totalAmount: 500.00
-  }
+    number: "DEV-98",
+    paymentMethod: "PayPal",
+    status: "complete",
+    totalAmount: 500.0,
+  },
 ];
 
 const getStatusPill = (orderStatus: OrderStatus): JSX.Element => {
-  const map: Record<OrderStatus, { color: SeverityPillColor; text: string; }> = {
+  const map: Record<OrderStatus, { color: SeverityPillColor; text: string }> = {
     canceled: {
-      color: 'error',
-      text: 'Canceled'
+      color: "error",
+      text: "Canceled",
     },
     complete: {
-      color: 'success',
-      text: 'complete'
+      color: "success",
+      text: "complete",
     },
     pending: {
-      color: 'warning',
-      text: 'Pending'
+      color: "warning",
+      text: "Pending",
     },
     rejected: {
-      color: 'error',
-      text: 'Rejected'
-    }
+      color: "error",
+      text: "Rejected",
+    },
   };
 
   const { text, color } = map[orderStatus];
 
-  return (
-    <SeverityPill color={color}>
-      {text}
-    </SeverityPill>
-  );
+  return <SeverityPill color={color}>{text}</SeverityPill>;
 };
 
 export const Table4: FC = () => (
   <Box
     sx={{
-      backgroundColor: (theme) => theme.palette.mode === 'dark'
-        ? 'neutral.800'
-        : 'neutral.100',
-      p: 3
+      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.800" : "neutral.100"),
+      p: 3,
     }}
   >
     <Card>
       <CardHeader
-        action={(
+        action={
           <IconButton>
             <SvgIcon>
               <DotsHorizontalIcon />
             </SvgIcon>
           </IconButton>
-        )}
+        }
         title="Orders"
       />
       <Divider />
@@ -167,71 +161,40 @@ export const Table4: FC = () => (
               <TableCell padding="checkbox">
                 <Checkbox />
               </TableCell>
-              <TableCell>
-                Number
-              </TableCell>
-              <TableCell>
-                Customer
-              </TableCell>
-              <TableCell>
-                Method
-              </TableCell>
-              <TableCell>
-                Total
-              </TableCell>
-              <TableCell>
-                Status
-              </TableCell>
-              <TableCell align="right">
-                Actions
-              </TableCell>
+              <TableCell>Number</TableCell>
+              <TableCell>Customer</TableCell>
+              <TableCell>Method</TableCell>
+              <TableCell>Total</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {orders.map((order) => {
-              const createdAt = format(order.createdAt, 'dd MMM yyyy | HH:mm');
+              const createdAt = format(order.createdAt, "dd MMM yyyy | HH:mm");
               const totalAmount = numeral(order.totalAmount).format(`${order.currency}0,0.00`);
               const statusPill = getStatusPill(order.status);
 
               return (
-                <TableRow
-                  hover
-                  key={order.id}
-                >
+                <TableRow hover key={order.id}>
                   <TableCell padding="checkbox">
                     <Checkbox />
                   </TableCell>
                   <TableCell>
-                    <Typography variant="subtitle2">
-                      {order.number}
-                    </Typography>
-                    <Typography
-                      color="text.secondary"
-                      variant="body2"
-                    >
+                    <Typography variant="subtitle2">{order.number}</Typography>
+                    <Typography color="text.secondary" variant="body2">
                       {createdAt}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="subtitle2">
-                      {order.customer.name}
-                    </Typography>
-                    <Typography
-                      color="text.secondary"
-                      variant="body2"
-                    >
+                    <Typography variant="subtitle2">{order.customer.name}</Typography>
+                    <Typography color="text.secondary" variant="body2">
                       {order.customer.email}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    {order.paymentMethod}
-                  </TableCell>
-                  <TableCell>
-                    {totalAmount}
-                  </TableCell>
-                  <TableCell>
-                    {statusPill}
-                  </TableCell>
+                  <TableCell>{order.paymentMethod}</TableCell>
+                  <TableCell>{totalAmount}</TableCell>
+                  <TableCell>{statusPill}</TableCell>
                   <TableCell align="right">
                     <IconButton>
                       <SvgIcon>
