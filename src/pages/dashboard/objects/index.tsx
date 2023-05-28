@@ -7,10 +7,131 @@ import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
 import type { Page as PageType } from "src/types/page";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
-import { ObjectsOverview } from "src/sections/dashboard/objects/objects-overview";
+import { ObjectListTable } from "src/sections/dashboard/objects/objects-list-table";
+import { useCallback, useState, ChangeEvent, MouseEvent, useEffect, useMemo } from "react";
+import { useMounted } from "src/hooks/use-mounted";
+import { useSelection } from "src/hooks/use-selection";
+import { RentalObject } from "src/types/object";
+import { objectsApi } from "src/api/objects";
+
+interface Filters {
+  query?: string;
+  hasAcceptedMarketing?: boolean;
+  isProspect?: boolean;
+  isReturning?: boolean;
+}
+
+interface ObjectsSearchState {
+  filters: Filters;
+  page: number;
+  rowsPerPage: number;
+  sortBy: string;
+  sortDir: "asc" | "desc";
+}
+
+const useObjectsSearch = () => {
+  const [state, setState] = useState<ObjectsSearchState>({
+    filters: {
+      query: undefined,
+      hasAcceptedMarketing: undefined,
+      isProspect: undefined,
+      isReturning: undefined,
+    },
+    page: 0,
+    rowsPerPage: 5,
+    sortBy: "updatedAt",
+    sortDir: "desc",
+  });
+
+  const handleFiltersChange = useCallback((filters: Filters): void => {
+    setState((prevState) => ({
+      ...prevState,
+      filters,
+    }));
+  }, []);
+
+  const handleSortChange = useCallback((sort: { sortBy: string; sortDir: "asc" | "desc" }): void => {
+    setState((prevState) => ({
+      ...prevState,
+      sortBy: sort.sortBy,
+      sortDir: sort.sortDir,
+    }));
+  }, []);
+
+  const handlePageChange = useCallback((event: MouseEvent<HTMLButtonElement> | null, page: number): void => {
+    setState((prevState) => ({
+      ...prevState,
+      page,
+    }));
+  }, []);
+
+  const handleRowsPerPageChange = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
+    setState((prevState) => ({
+      ...prevState,
+      rowsPerPage: parseInt(event.target.value, 10),
+    }));
+  }, []);
+
+  return {
+    handleFiltersChange,
+    handleSortChange,
+    handlePageChange,
+    handleRowsPerPageChange,
+    state,
+  };
+};
+interface ObjectsStoreState {
+  objects: RentalObject[];
+  objectsCount: number;
+}
+
+const useObjectsStore = (searchState: ObjectsSearchState) => {
+  const isMounted = useMounted();
+  const [state, setState] = useState<ObjectsStoreState>({
+    objects: [],
+    objectsCount: 0,
+  });
+
+  const handleObjectsGet = useCallback(async () => {
+    try {
+      const response = await objectsApi.getObjects(searchState);
+
+      if (isMounted()) {
+        setState({
+          objects: response.data,
+          objectsCount: response.count,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [searchState, isMounted]);
+
+  useEffect(
+    () => {
+      handleObjectsGet();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [searchState]
+  );
+
+  return {
+    ...state,
+  };
+};
+
+const useObjectsIds = (objects: RentalObject[] = []) => {
+  return useMemo(() => {
+    return objects.map((object) => object.id);
+  }, [objects]);
+};
 
 const Page: PageType = () => {
   const settings = useSettings();
+  const objectsSearch = useObjectsSearch();
+  const objectsStore = useObjectsStore(objectsSearch.state);
+  const objectsIds = useObjectsIds(objectsStore.objects);
+  const objectsSelection = useSelection<string>(objectsIds);
 
   usePageView();
 
@@ -61,7 +182,27 @@ const Page: PageType = () => {
               <OverviewStatusObjects amount={5} />
             </Grid>
             <Grid xs={12} md={12}>
-              <ObjectsOverview />
+              {/* <ObjectsListTable />
+               */}
+              {/* <CustomerListSearch
+                onFiltersChange={customersSearch.handleFiltersChange}
+                onSortChange={customersSearch.handleSortChange}
+                sortBy={customersSearch.state.sortBy}
+                sortDir={customersSearch.state.sortDir}
+              /> */}
+              <ObjectListTable
+                count={objectsStore.objectsCount}
+                items={objectsStore.objects}
+                onDeselectAll={objectsSelection.handleDeselectAll}
+                onDeselectOne={objectsSelection.handleDeselectOne}
+                onPageChange={objectsSearch.handlePageChange}
+                onRowsPerPageChange={objectsSearch.handleRowsPerPageChange}
+                onSelectAll={objectsSelection.handleSelectAll}
+                onSelectOne={objectsSelection.handleSelectOne}
+                page={objectsSearch.state.page}
+                rowsPerPage={objectsSearch.state.rowsPerPage}
+                selected={objectsSelection.selected}
+              />
             </Grid>
           </Grid>
         </Container>

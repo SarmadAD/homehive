@@ -1,8 +1,8 @@
-import type { ChangeEvent, FC, MouseEvent } from 'react';
-import numeral from 'numeral';
-import PropTypes from 'prop-types';
-import ArrowRightIcon from '@untitled-ui/icons-react/build/esm/ArrowRight';
-import Edit02Icon from '@untitled-ui/icons-react/build/esm/Edit02';
+import type { ChangeEvent, FC, MouseEvent } from "react";
+import numeral from "numeral";
+import PropTypes from "prop-types";
+import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
+import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import {
   Avatar,
   Box,
@@ -18,13 +18,13 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
-} from '@mui/material';
-import { RouterLink } from 'src/components/router-link';
-import { Scrollbar } from 'src/components/scrollbar';
-import { paths } from 'src/paths';
-import type { Customer } from 'src/types/customer';
-import { getInitials } from 'src/utils/get-initials';
+  Typography,
+} from "@mui/material";
+import { RouterLink } from "src/components/router-link";
+import { Scrollbar } from "src/components/scrollbar";
+import { paths } from "src/paths";
+import type { Customer } from "src/types/customer";
+import { getInitials } from "src/utils/get-initials";
 
 interface CustomerListTableProps {
   count?: number;
@@ -52,32 +52,30 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
     onSelectOne,
     page = 0,
     rowsPerPage = 0,
-    selected = []
+    selected = [],
   } = props;
 
-  const selectedSome = (selected.length > 0) && (selected.length < items.length);
-  const selectedAll = (items.length > 0) && (selected.length === items.length);
+  const selectedSome = selected.length > 0 && selected.length < items.length;
+  const selectedAll = items.length > 0 && selected.length === items.length;
   const enableBulkActions = selected.length > 0;
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box sx={{ position: "relative" }}>
       {enableBulkActions && (
         <Stack
           direction="row"
           spacing={2}
           sx={{
-            alignItems: 'center',
-            backgroundColor: (theme) => theme.palette.mode === 'dark'
-              ? 'neutral.800'
-              : 'neutral.50',
-            display: enableBulkActions ? 'flex' : 'none',
-            position: 'absolute',
+            alignItems: "center",
+            backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.800" : "neutral.50"),
+            display: enableBulkActions ? "flex" : "none",
+            position: "absolute",
             top: 0,
             left: 0,
-            width: '100%',
+            width: "100%",
             px: 2,
             py: 0.5,
-            zIndex: 10
+            zIndex: 10,
           }}
         >
           <Checkbox
@@ -91,16 +89,10 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
               }
             }}
           />
-          <Button
-            color="inherit"
-            size="small"
-          >
+          <Button color="inherit" size="small">
             Delete
           </Button>
-          <Button
-            color="inherit"
-            size="small"
-          >
+          <Button color="inherit" size="small">
             Edit
           </Button>
         </Stack>
@@ -122,21 +114,11 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
                   }}
                 />
               </TableCell>
-              <TableCell>
-                Name
-              </TableCell>
-              <TableCell>
-                Location
-              </TableCell>
-              <TableCell>
-                Orders
-              </TableCell>
-              <TableCell>
-                Spent
-              </TableCell>
-              <TableCell align="right">
-                Actions
-              </TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Location</TableCell>
+              <TableCell>Orders</TableCell>
+              <TableCell>Spent</TableCell>
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -146,11 +128,7 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
               const totalSpent = numeral(customer.totalSpent).format(`${customer.currency}0,0.00`);
 
               return (
-                <TableRow
-                  hover
-                  key={customer.id}
-                  selected={isSelected}
-                >
+                <TableRow hover key={customer.id} selected={isSelected}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isSelected}
@@ -165,62 +143,38 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Stack
-                      alignItems="center"
-                      direction="row"
-                      spacing={1}
-                    >
+                    <Stack alignItems="center" direction="row" spacing={1}>
                       <Avatar
                         src={customer.avatar}
                         sx={{
                           height: 42,
-                          width: 42
+                          width: 42,
                         }}
                       >
                         {getInitials(customer.name)}
                       </Avatar>
                       <div>
-                        <Link
-                          color="inherit"
-                          component={RouterLink}
-                          href={paths.dashboard.customers.details}
-                          variant="subtitle2"
-                        >
+                        <Link color="inherit" component={RouterLink} href={paths.dashboard.customers.details} variant="subtitle2">
                           {customer.name}
                         </Link>
-                        <Typography
-                          color="text.secondary"
-                          variant="body2"
-                        >
+                        <Typography color="text.secondary" variant="body2">
                           {customer.email}
                         </Typography>
                       </div>
                     </Stack>
                   </TableCell>
+                  <TableCell>{location}</TableCell>
+                  <TableCell>{customer.totalOrders}</TableCell>
                   <TableCell>
-                    {location}
-                  </TableCell>
-                  <TableCell>
-                    {customer.totalOrders}
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2">
-                      {totalSpent}
-                    </Typography>
+                    <Typography variant="subtitle2">{totalSpent}</Typography>
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton
-                      component={RouterLink}
-                      href={paths.dashboard.customers.edit}
-                    >
+                    <IconButton component={RouterLink} href={paths.dashboard.customers.edit}>
                       <SvgIcon>
                         <Edit02Icon />
                       </SvgIcon>
                     </IconButton>
-                    <IconButton
-                      component={RouterLink}
-                      href={paths.dashboard.customers.details}
-                    >
+                    <IconButton component={RouterLink} href={paths.dashboard.customers.details}>
                       <SvgIcon>
                         <ArrowRightIcon />
                       </SvgIcon>
@@ -256,5 +210,5 @@ CustomerListTable.propTypes = {
   onSelectOne: PropTypes.func,
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
+  selected: PropTypes.array,
 };
