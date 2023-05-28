@@ -178,7 +178,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                         {getInitials(object.name)}
                       </Avatar>
                       <div>
-                        <Link color="inherit" component={RouterLink} href={paths.dashboard.objects.details} variant="subtitle2">
+                        <Link color="inherit" component={RouterLink} href={`${paths.dashboard.objects.details}/${object.id}`} variant="subtitle2">
                           {object.name}
                         </Link>
                         <Typography color="text.secondary" variant="body2">

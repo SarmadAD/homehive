@@ -17,27 +17,31 @@ import { CustomerEmailsSummary } from "src/sections/dashboard/customer/customer-
 import { CustomerInvoices } from "src/sections/dashboard/customer/customer-invoices";
 import { CustomerPayment } from "src/sections/dashboard/customer/customer-payment";
 import { CustomerLogs } from "src/sections/dashboard/customer/customer-logs";
-import type { Customer } from "src/types/customer";
 import { CustomerInvoice, CustomerLog } from "src/types/customer";
 import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
+import { RentalObject } from "src/types/object";
+import { objectsApi } from "src/api/objects";
+import { useRouter } from "next/router";
+import { ObjectBasicDetails } from "src/sections/dashboard/objects/object-basic-details";
 
 const tabs = [
   { label: "Details", value: "details" },
-  { label: "Invoices", value: "invoices" },
-  { label: "Logs", value: "logs" },
+  { label: "Mieter", value: "renter" },
+  { label: "Wartung/Reperatur", value: "repair" },
 ];
 
-const useCustomer = (): Customer | null => {
+const useRentalObject = (): RentalObject | null => {
   const isMounted = useMounted();
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const router = useRouter();
+  const [rentalObject, setRentalObject] = useState<RentalObject | null>(null);
 
-  const handleCustomerGet = useCallback(async () => {
+  const handleRentalObjectGet = useCallback(async () => {
     try {
-      const response = await customersApi.getCustomer();
+      const response = await objectsApi.getObject({ objectId: router.query.objectId?.toString() });
 
       if (isMounted()) {
-        setCustomer(response);
+        setRentalObject(response);
       }
     } catch (err) {
       console.error(err);
@@ -46,13 +50,13 @@ const useCustomer = (): Customer | null => {
 
   useEffect(
     () => {
-      handleCustomerGet();
+      handleRentalObjectGet();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  return customer;
+  return rentalObject;
 };
 
 const useInvoices = (): CustomerInvoice[] => {
@@ -111,7 +115,8 @@ const useLogs = (): CustomerLog[] => {
 
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
-  const customer = useCustomer();
+  const rentalObject = useRentalObject();
+
   const invoices = useInvoices();
   const logs = useLogs();
 
@@ -121,13 +126,13 @@ const Page: PageType = () => {
     setCurrentTab(value);
   }, []);
 
-  if (!customer) {
+  if (!rentalObject) {
     return null;
   }
 
   return (
     <>
-      <Seo title="Dashboard: Customer Details" />
+      <Seo title="Objekt Details" />
       <Box
         component="main"
         sx={{
@@ -142,7 +147,7 @@ const Page: PageType = () => {
                 <Link
                   color="text.primary"
                   component={RouterLink}
-                  href={paths.dashboard.customers.index}
+                  href={paths.dashboard.objects.index}
                   sx={{
                     alignItems: "center",
                     display: "inline-flex",
@@ -152,7 +157,7 @@ const Page: PageType = () => {
                   <SvgIcon sx={{ mr: 1 }}>
                     <ArrowLeftIcon />
                   </SvgIcon>
-                  <Typography variant="subtitle2">Customers</Typography>
+                  <Typography variant="subtitle2">Objekte</Typography>
                 </Link>
               </div>
               <Stack
@@ -166,19 +171,19 @@ const Page: PageType = () => {
               >
                 <Stack alignItems="center" direction="row" spacing={2}>
                   <Avatar
-                    src={customer.avatar}
+                    src={rentalObject.image}
                     sx={{
                       height: 64,
                       width: 64,
                     }}
                   >
-                    {getInitials(customer.name)}
+                    {getInitials(rentalObject.name)}
                   </Avatar>
                   <Stack spacing={1}>
-                    <Typography variant="h4">{customer.email}</Typography>
+                    <Typography variant="h4">{rentalObject.name}</Typography>
                     <Stack alignItems="center" direction="row" spacing={1}>
                       <Typography variant="subtitle2">user_id:</Typography>
-                      <Chip label={customer.id} size="small" />
+                      <Chip label={rentalObject.id} size="small" />
                     </Stack>
                   </Stack>
                 </Stack>
@@ -191,7 +196,7 @@ const Page: PageType = () => {
                         <Edit02Icon />
                       </SvgIcon>
                     }
-                    href={paths.dashboard.customers.edit}
+                    href={paths.dashboard.objects.edit}
                   >
                     Edit
                   </Button>
@@ -228,23 +233,22 @@ const Page: PageType = () => {
               <div>
                 <Grid container spacing={4}>
                   <Grid xs={12} lg={4}>
-                    <CustomerBasicDetails
-                      address1={customer.address1}
-                      address2={customer.address2}
-                      country={customer.country}
-                      email={customer.email}
-                      isVerified={!!customer.isVerified}
-                      phone={customer.phone}
-                      state={customer.state}
+                    <ObjectBasicDetails
+                      address={rentalObject.address}
+                      areaSize={rentalObject.areaSize}
+                      city={rentalObject.city}
+                      houseNr={rentalObject.houseNr}
+                      postalCode={rentalObject.postalCode}
+                      additionalHouseDetails={rentalObject.additionalHouseDetails}
                     />
                   </Grid>
-                  <Grid xs={12} lg={8}>
+                  {/* <Grid xs={12} lg={8}>
                     <Stack spacing={4}>
                       <CustomerPayment />
                       <CustomerEmailsSummary />
                       <CustomerDataManagement />
                     </Stack>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </div>
             )}

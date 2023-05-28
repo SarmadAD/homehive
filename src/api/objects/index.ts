@@ -7,9 +7,6 @@ import { RentalObject } from "src/types/object";
 type GetObjectsRequest = {
   filters?: {
     query?: string;
-    hasAcceptedMarketing?: boolean;
-    isProspect?: boolean;
-    isReturning?: boolean;
   };
   page?: number;
   rowsPerPage?: number;
@@ -22,9 +19,11 @@ type GetObjectsResponse = Promise<{
   count: number;
 }>;
 
-// type GetCustomerRequest = {};
+type GetObjectRequest = {
+  objectId?: string;
+};
 
-// type GetCustomerResponse = Promise<Customer>;
+type GetObjectResponse = Promise<RentalObject>;
 
 // type GetCustomerEmailsRequest = {};
 
@@ -99,9 +98,11 @@ class ObjectsApi {
     });
   }
 
-  //   getCustomer(request?: GetCustomerRequest): GetCustomerResponse {
-  //     return Promise.resolve(deepCopy(customer));
-  //   }
+  getObject(request: GetObjectRequest): GetObjectResponse {
+    let data = deepCopy(objects) as RentalObject[];
+    let object = data.find((x) => x.id === request?.objectId);
+    return Promise.resolve(deepCopy(object));
+  }
 
   //   getEmails(request?: GetCustomerEmailsRequest): GetCustomerEmailsResponse {
   //     return Promise.resolve(deepCopy(emails));
