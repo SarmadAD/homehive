@@ -50,7 +50,7 @@ export const useSections = () => {
           },
           {
             title: t(tokens.nav.renter),
-            path: paths.dashboard.renter.index,
+            path: paths.dashboard.renters.index,
             icon: (
               <SvgIcon fontSize="small">
                 <Person />

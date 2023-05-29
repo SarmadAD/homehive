@@ -21,6 +21,11 @@ import { objectsApi } from "src/api/objects";
 import { useRouter } from "next/router";
 import { ObjectBasicDetails } from "src/sections/dashboard/objects/object-basic-details";
 import { ObjectRentInfoChart } from "src/sections/dashboard/objects/object-rentInfo-chart";
+import { RenterListTable } from "src/sections/dashboard/renter/renter-list-table";
+import { useRentersSearch } from "src/hooks/use-renter-search";
+import { useRentersStore } from "src/hooks/use-renter-store";
+import { useRentersIds } from "src/hooks/use-renters-ids";
+import { useSelection } from "src/hooks/use-selection";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -56,66 +61,14 @@ const useRentalObject = (): RentalObject | null => {
   return rentalObject;
 };
 
-const useInvoices = (): CustomerInvoice[] => {
-  const isMounted = useMounted();
-  const [invoices, setInvoices] = useState<CustomerInvoice[]>([]);
-
-  const handleInvoicesGet = useCallback(async () => {
-    try {
-      const response = await customersApi.getInvoices();
-
-      if (isMounted()) {
-        setInvoices(response);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(
-    () => {
-      handleInvoicesGet();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  return invoices;
-};
-
-const useLogs = (): CustomerLog[] => {
-  const isMounted = useMounted();
-  const [logs, setLogs] = useState<CustomerLog[]>([]);
-
-  const handleLogsGet = useCallback(async () => {
-    try {
-      const response = await customersApi.getLogs();
-
-      if (isMounted()) {
-        setLogs(response);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(
-    () => {
-      handleLogsGet();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  return logs;
-};
-
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
   const rentalObject = useRentalObject();
 
-  const invoices = useInvoices();
-  const logs = useLogs();
+  const rentersSearch = useRentersSearch();
+  const rentersStore = useRentersStore(rentersSearch.state);
+  const rentersIds = useRentersIds(rentersStore.renters);
+  const rentersSelection = useSelection<string>(rentersIds);
 
   usePageView();
 
@@ -258,8 +211,21 @@ const Page: PageType = () => {
                 </Grid>
               </div>
             )}
-            {currentTab === "invoices" && <CustomerInvoices invoices={invoices} />}
-            {currentTab === "logs" && <CustomerLogs logs={logs} />}
+            {currentTab === "renter" && (
+              <RenterListTable
+                count={rentersStore.rentersCount}
+                items={rentersStore.renters}
+                onDeselectAll={rentersSelection.handleDeselectAll}
+                onDeselectOne={rentersSelection.handleDeselectOne}
+                onPageChange={rentersSearch.handlePageChange}
+                onRowsPerPageChange={rentersSearch.handleRowsPerPageChange}
+                onSelectAll={rentersSelection.handleSelectAll}
+                onSelectOne={rentersSelection.handleSelectOne}
+                page={rentersSearch.state.page}
+                rowsPerPage={rentersSearch.state.rowsPerPage}
+                selected={rentersSelection.selected}
+              />
+            )}
           </Stack>
         </Container>
       </Box>

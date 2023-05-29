@@ -6,10 +6,11 @@ import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } f
 interface OverviewRentPaidProps {
   numberOfRentsPaid: number;
   rentNumber: number;
+  showActions: boolean;
 }
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
-  const { numberOfRentsPaid, rentNumber } = props;
+  const { numberOfRentsPaid, rentNumber, showActions } = props;
 
   return (
     <Card>
@@ -37,20 +38,27 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
           </Typography>
         </Box>
       </Stack>
-      <Divider />
-      <CardActions>
-        <Button
-          color="inherit"
-          endIcon={
-            <SvgIcon>
-              <ArrowRightIcon />
-            </SvgIcon>
-          }
-          size="small"
-        >
-          Mieter anzeigen
-        </Button>
-      </CardActions>
+
+      {showActions ? (
+        <>
+          <Divider />
+          <CardActions>
+            <Button
+              color="inherit"
+              endIcon={
+                <SvgIcon>
+                  <ArrowRightIcon />
+                </SvgIcon>
+              }
+              size="small"
+            >
+              Mieter anzeigen
+            </Button>
+          </CardActions>
+        </>
+      ) : (
+        ""
+      )}
     </Card>
   );
 };

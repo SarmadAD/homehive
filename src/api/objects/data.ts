@@ -21,6 +21,7 @@ export const objects: RentalObject[] = [
         createdAt: subMinutes(subSeconds(now, 23), 32).getTime(),
         email: "carson.darrin@devias.io",
         name: "Carson Darrin",
+        status: "paid",
       },
     ],
     rentInfo: {
@@ -49,6 +50,7 @@ export const objects: RentalObject[] = [
         createdAt: 1664813832674,
         email: "emma.smith@example.com",
         name: "Emma Smith",
+        status: "paid",
       },
     ],
     rentInfo: {
@@ -77,6 +79,7 @@ export const objects: RentalObject[] = [
         createdAt: 1664813832674,
         email: "john.doe@example.com",
         name: "John Doe",
+        status: "paid",
       },
       {
         id: "5ecb8a6d9f53bfae09e16116",
@@ -84,6 +87,7 @@ export const objects: RentalObject[] = [
         createdAt: 1664813832674,
         email: "jane.smith@example.com",
         name: "Jane Smith",
+        status: "notPaid",
       },
     ],
     rentInfo: {

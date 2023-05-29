@@ -16,9 +16,6 @@ import { objectsApi } from "src/api/objects";
 
 interface Filters {
   query?: string;
-  hasAcceptedMarketing?: boolean;
-  isProspect?: boolean;
-  isReturning?: boolean;
 }
 
 interface ObjectsSearchState {
@@ -33,9 +30,6 @@ const useObjectsSearch = () => {
   const [state, setState] = useState<ObjectsSearchState>({
     filters: {
       query: undefined,
-      hasAcceptedMarketing: undefined,
-      isProspect: undefined,
-      isReturning: undefined,
     },
     page: 0,
     rowsPerPage: 5,
