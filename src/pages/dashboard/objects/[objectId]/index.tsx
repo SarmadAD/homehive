@@ -11,11 +11,7 @@ import { useMounted } from "src/hooks/use-mounted";
 import { usePageView } from "src/hooks/use-page-view";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { paths } from "src/paths";
-import { CustomerBasicDetails } from "src/sections/dashboard/customer/customer-basic-details";
-import { CustomerDataManagement } from "src/sections/dashboard/customer/customer-data-management";
-import { CustomerEmailsSummary } from "src/sections/dashboard/customer/customer-emails-summary";
 import { CustomerInvoices } from "src/sections/dashboard/customer/customer-invoices";
-import { CustomerPayment } from "src/sections/dashboard/customer/customer-payment";
 import { CustomerLogs } from "src/sections/dashboard/customer/customer-logs";
 import { CustomerInvoice, CustomerLog } from "src/types/customer";
 import type { Page as PageType } from "src/types/page";
@@ -24,6 +20,7 @@ import { RentalObject } from "src/types/object";
 import { objectsApi } from "src/api/objects";
 import { useRouter } from "next/router";
 import { ObjectBasicDetails } from "src/sections/dashboard/objects/object-basic-details";
+import { ObjectRentInfoChart } from "src/sections/dashboard/objects/object-rentInfo-chart";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -234,21 +231,30 @@ const Page: PageType = () => {
                 <Grid container spacing={4}>
                   <Grid xs={12} lg={4}>
                     <ObjectBasicDetails
+                      id={rentalObject.id}
+                      createdAt={rentalObject.createdAt}
                       address={rentalObject.address}
                       areaSize={rentalObject.areaSize}
                       city={rentalObject.city}
                       houseNr={rentalObject.houseNr}
                       postalCode={rentalObject.postalCode}
                       additionalHouseDetails={rentalObject.additionalHouseDetails}
+                      image={rentalObject.image}
+                      name={rentalObject.name}
+                      rentInfo={rentalObject.rentInfo}
+                      renter={rentalObject.renter}
+                      status={rentalObject.status}
                     />
                   </Grid>
-                  {/* <Grid xs={12} lg={8}>
-                    <Stack spacing={4}>
-                      <CustomerPayment />
-                      <CustomerEmailsSummary />
-                      <CustomerDataManagement />
-                    </Stack>
-                  </Grid> */}
+                  <Grid xs={12} lg={8}>
+                    <ObjectRentInfoChart
+                      id={rentalObject.rentInfo.id}
+                      baseRent={rentalObject.rentInfo.baseRent}
+                      electricityCosts={rentalObject.rentInfo.electricityCosts}
+                      heatingCosts={rentalObject.rentInfo.heatingCosts}
+                      waterCosts={rentalObject.rentInfo.waterCosts}
+                    />
+                  </Grid>
                 </Grid>
               </div>
             )}

@@ -6,10 +6,10 @@ import { PropertyListItem } from "src/components/property-list-item";
 import { RentalObject } from "src/types/object";
 
 export const ObjectBasicDetails: FC<RentalObject> = (props) => {
-  const { address, areaSize, city, houseNr, postalCode, additionalHouseDetails, ...other } = props;
+  const { address, areaSize, city, houseNr, postalCode, additionalHouseDetails } = props;
 
   return (
-    <Card {...other}>
+    <Card>
       <CardHeader title="Basic Details" />
       <PropertyList>
         <PropertyListItem divider label="Straße" value={`${address} ${houseNr} ${additionalHouseDetails ? additionalHouseDetails : ""}`} />
@@ -27,10 +27,9 @@ export const ObjectBasicDetails: FC<RentalObject> = (props) => {
 
 ObjectBasicDetails.propTypes = {
   address: PropTypes.string,
-  address2: PropTypes.string,
-  country: PropTypes.string,
-  email: PropTypes.string.isRequired,
-  isVerified: PropTypes.bool.isRequired,
-  phone: PropTypes.string,
-  state: PropTypes.string,
+  areaSize: PropTypes.number,
+  city: PropTypes.string,
+  houseNr: PropTypes.number,
+  postalCode: PropTypes.string,
+  additionalHouseDetails: PropTypes.string,
 };
