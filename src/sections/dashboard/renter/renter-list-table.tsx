@@ -47,12 +47,14 @@ interface RenterListTableProps {
   page?: number;
   rowsPerPage?: number;
   selected?: string[];
+  onSelect?: (renterId: string) => void;
 }
 
 export const RenterListTable: FC<RenterListTableProps> = (props) => {
   const {
     count = 0,
     items = [],
+    onSelect,
     onDeselectAll,
     onDeselectOne,
     onPageChange = () => {},
@@ -151,7 +153,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
               const statusPill = getStatusPill(renter.status);
 
               return (
-                <TableRow hover key={renter.id} selected={isSelected}>
+                <TableRow hover key={renter.id} selected={isSelected} onClick={() => onSelect?.(renter.id)}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isSelected}
