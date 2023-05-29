@@ -1,6 +1,6 @@
 import { Renter } from "src/types/renter";
 
-export const renter: Renter[] = [
+export const renters: Renter[] = [
   {
     id: "5ecb8a6d9f53bfae09e16117",
     image: "src",

@@ -215,7 +215,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                         <Edit02Icon />
                       </SvgIcon>
                     </IconButton>
-                    <IconButton component={RouterLink} href={paths.dashboard.objects.details}>
+                    <IconButton component={RouterLink} href={`${paths.dashboard.objects.details}/${object.id}`}>
                       <SvgIcon>
                         <ArrowRightIcon />
                       </SvgIcon>

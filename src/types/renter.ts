@@ -3,8 +3,6 @@ export interface Renter {
   createdAt: number;
   name: string;
   status: RenterPaidStatus;
-  address?: string;
-  city?: string;
   email: string;
   image: string;
 }

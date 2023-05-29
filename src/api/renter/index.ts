@@ -3,7 +3,7 @@ import { applySort } from "src/utils/apply-sort";
 import { deepCopy } from "src/utils/deep-copy";
 import { RentalObject } from "src/types/object";
 import { Renter } from "src/types/renter";
-import { renter } from "./data";
+import { renters } from "./data";
 
 type GetRentersRequest = {
   filters?: {
@@ -24,7 +24,7 @@ type GetRenterRequest = {
   renterId?: string;
 };
 
-type GetRenterResponse = Promise<RentalObject>;
+type GetRenterResponse = Promise<Renter>;
 
 // type GetCustomerEmailsRequest = {};
 
@@ -42,7 +42,7 @@ class RentersApi {
   getRenters(request: GetRentersRequest = {}): GetRentersResponse {
     const { filters, page, rowsPerPage, sortBy, sortDir } = request;
 
-    let data = deepCopy(renter) as Renter[];
+    let data = deepCopy(renters) as Renter[];
     let count = data.length;
 
     if (typeof filters !== "undefined") {
@@ -99,11 +99,11 @@ class RentersApi {
     });
   }
 
-  //   getObject(request: GetObjectRequest): GetObjectResponse {
-  //     let data = deepCopy(objects) as RentalObject[];
-  //     let object = data.find((x) => x.id === request?.objectId);
-  //     return Promise.resolve(deepCopy(object));
-  //   }
+  getRenter(request: GetRenterRequest): GetRenterResponse {
+    let data = deepCopy(renters) as Renter[];
+    let renter = data.find((x) => x.id === request?.renterId);
+    return Promise.resolve(deepCopy(renter));
+  }
 
   //   getEmails(request?: GetCustomerEmailsRequest): GetCustomerEmailsResponse {
   //     return Promise.resolve(deepCopy(emails));

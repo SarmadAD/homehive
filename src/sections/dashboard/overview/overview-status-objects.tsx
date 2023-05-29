@@ -10,7 +10,7 @@ interface OverviewStatusObjects {
 }
 type ChartSeries = number[];
 const chartSeries: ChartSeries = [25, 75];
-const labels: string[] = ["Vermieter", "Nicht vermietet"];
+const labels: string[] = ["Bewohnt", "Unbewohnt"];
 
 const useChartOptions = (): ApexOptions => {
   const theme = useTheme();
