@@ -4,16 +4,12 @@ import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
 import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import { Avatar, Box, Button, Chip, Container, Divider, Link, Stack, SvgIcon, Tab, Tabs, Typography, Unstable_Grid2 as Grid } from "@mui/material";
-import { customersApi } from "src/api/customers";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
 import { useMounted } from "src/hooks/use-mounted";
 import { usePageView } from "src/hooks/use-page-view";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { paths } from "src/paths";
-import { CustomerInvoices } from "src/sections/dashboard/customer/customer-invoices";
-import { CustomerLogs } from "src/sections/dashboard/customer/customer-logs";
-import { CustomerInvoice, CustomerLog } from "src/types/customer";
 import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
 import { RentalObject } from "src/types/object";
@@ -66,8 +62,7 @@ const Page: PageType = () => {
   const rentalObject = useRentalObject();
 
   const rentersSearch = useRentersSearch();
-  const rentersStore = useRentersStore(rentersSearch.state);
-  const rentersIds = useRentersIds(rentersStore.renters);
+  const rentersIds = useRentersIds(rentalObject?.renter);
   const rentersSelection = useSelection<string>(rentersIds);
 
   usePageView();
@@ -213,8 +208,8 @@ const Page: PageType = () => {
             )}
             {currentTab === "renter" && (
               <RenterListTable
-                count={rentersStore.rentersCount}
-                items={rentersStore.renters}
+                count={rentalObject.renter.length}
+                items={rentalObject.renter}
                 onDeselectAll={rentersSelection.handleDeselectAll}
                 onDeselectOne={rentersSelection.handleDeselectOne}
                 onPageChange={rentersSearch.handlePageChange}
