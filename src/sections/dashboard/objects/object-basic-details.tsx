@@ -16,11 +16,6 @@ export const ObjectBasicDetails: FC<RentalObject> = (props) => {
         <PropertyListItem divider label="Ort" value={`${postalCode} ${city}`} />
         <PropertyListItem divider label="Fläche" value={areaSize.toString()} />
       </PropertyList>
-      <CardActions>
-        <Button color="inherit" size="small">
-          Reset Password
-        </Button>
-      </CardActions>
     </Card>
   );
 };

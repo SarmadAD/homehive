@@ -3,7 +3,22 @@ import { useCallback, useEffect, useState } from "react";
 import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
 import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
-import { Avatar, Box, Button, Chip, Container, Divider, Link, Stack, SvgIcon, Tab, Tabs, Typography, Unstable_Grid2 as Grid } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Container,
+  Divider,
+  Link,
+  Stack,
+  SvgIcon,
+  Tab,
+  Tabs,
+  Typography,
+  Unstable_Grid2 as Grid,
+  TextField,
+} from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
 import { useMounted } from "src/hooks/use-mounted";
@@ -186,7 +201,7 @@ const Page: PageType = () => {
                 <div>
                   <Grid container spacing={4}>
                     <Grid xs={12} lg={4}>
-                      <RenterBasicDetails email={renter.email} name={renter.name} />
+                      <RenterBasicDetails email={renter.email} name={renter.name} status={renter.status} />
                     </Grid>
                   </Grid>
                 </div>
