@@ -25,6 +25,7 @@ type GetRenterRequest = {
 };
 
 type GetRenterResponse = Promise<Renter>;
+type GetAllRenterResponse = Promise<Renter[]>;
 
 // type GetCustomerEmailsRequest = {};
 
@@ -105,7 +106,7 @@ class RentersApi {
     return Promise.resolve(deepCopy(renter));
   }
 
-  getAllRenter(): GetRenterResponse {
+  getAllRenter(): GetAllRenterResponse {
     let data = deepCopy(renters) as Renter[];
     return Promise.resolve(deepCopy(data));
   }

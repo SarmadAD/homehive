@@ -47,7 +47,7 @@ const Page: PageType = () => {
               </Stack>
             </Grid>
             <Grid xs={12} md={4}>
-              <OverviewRentPaid numberOfRentsPaid={3} rentNumber={5} showActions={false} />
+              <OverviewRentPaid showActions={false} />
             </Grid>
             <Grid xs={12} md={12}>
               <RenterListTable

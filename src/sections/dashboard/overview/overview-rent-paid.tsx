@@ -1,7 +1,10 @@
-import type { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
+import { renterApi } from "src/api/renter";
+import { Renter } from "src/types/renter";
+import { paths } from "src/paths";
 
 interface OverviewRentPaidProps {
   numberOfRentsPaid: number;
@@ -10,7 +13,18 @@ interface OverviewRentPaidProps {
 }
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
-  const { numberOfRentsPaid, rentNumber, showActions } = props;
+  const { showActions } = props;
+  const [renters, setRenter] = useState<Renter[]>();
+
+  async function getAllRenterWithStatusPaid() {
+    const renters = await renterApi.getAllRenter();
+    if (renters.length > 0) {
+      setRenter(renters);
+    }
+  }
+  useEffect(() => {
+    getAllRenterWithStatusPaid();
+  }, []);
 
   return (
     <Card>
@@ -34,7 +48,7 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
             Mieten bezahlt
           </Typography>
           <Typography color="text.primary" variant="h4">
-            {numberOfRentsPaid} / {rentNumber}
+            {renters?.filter((renter) => renter.status === "paid").length} / {renters?.length}
           </Typography>
         </Box>
       </Stack>
@@ -51,6 +65,7 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
                 </SvgIcon>
               }
               size="small"
+              href={paths.dashboard.renters.index}
             >
               Mieter anzeigen
             </Button>
@@ -64,5 +79,5 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
 };
 
 OverviewRentPaid.propTypes = {
-  numberOfRentsPaid: PropTypes.number.isRequired,
+  showActions: PropTypes.bool,
 };
