@@ -1,8 +1,5 @@
-import { Box, Button, Container, Stack, SvgIcon, Typography, Unstable_Grid2 as Grid } from "@mui/material";
-import { useCallback, useState, ChangeEvent, MouseEvent, useEffect, useMemo } from "react";
-import { renterApi } from "src/api/renter";
+import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Seo } from "src/components/seo";
-import { useMounted } from "src/hooks/use-mounted";
 import { usePageView } from "src/hooks/use-page-view";
 import { useRentersSearch } from "src/hooks/use-renter-search";
 import { useRentersStore } from "src/hooks/use-renter-store";

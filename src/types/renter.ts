@@ -7,4 +7,4 @@ export interface Renter {
   image: string;
 }
 
-export type RenterPaidStatus = "paid" | "notPaid";
+export type RenterPaidStatus = "paid" | "notPaid" | "inArrears";

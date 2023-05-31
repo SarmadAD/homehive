@@ -32,6 +32,7 @@ import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { Renter, RenterPaidStatus } from "src/types/renter";
+import { useStatusPill } from "src/hooks/use-status-pill";
 
 const now = new Date();
 
@@ -69,23 +70,6 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
   const enableBulkActions = selected.length > 0;
-
-  const getStatusPill = (rentPaidStatus: RenterPaidStatus): JSX.Element => {
-    const map: Record<RenterPaidStatus, { color: SeverityPillColor; text: string }> = {
-      paid: {
-        color: "success",
-        text: "Bezahlt",
-      },
-      notPaid: {
-        color: "error",
-        text: "Nicht bezahlt",
-      },
-    };
-
-    const { text, color } = map[rentPaidStatus];
-
-    return <SeverityPill color={color}>{text}</SeverityPill>;
-  };
 
   return (
     <Box sx={{ position: "relative" }}>
@@ -150,7 +134,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
           <TableBody>
             {items.map((renter) => {
               const isSelected = selected.includes(renter.id);
-              const statusPill = getStatusPill(renter.status);
+              const statusPill = useStatusPill(renter.status);
 
               return (
                 <TableRow hover key={renter.id} selected={isSelected} onClick={() => onSelect?.(renter.id)}>

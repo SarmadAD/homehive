@@ -105,6 +105,11 @@ class RentersApi {
     return Promise.resolve(deepCopy(renter));
   }
 
+  getAllRenter(): GetRenterResponse {
+    let data = deepCopy(renters) as Renter[];
+    return Promise.resolve(deepCopy(data));
+  }
+
   //   getEmails(request?: GetCustomerEmailsRequest): GetCustomerEmailsResponse {
   //     return Promise.resolve(deepCopy(emails));
   //   }

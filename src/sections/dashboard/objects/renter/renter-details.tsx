@@ -1,25 +1,35 @@
-import type { FC } from "react";
+import { ChangeEvent, FC, useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
 import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
-import type { Theme } from "@mui/material";
+import { TextField, Theme } from "@mui/material";
 import { Button, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { Renter } from "src/types/renter";
+import { Renter, RenterPaidStatus } from "src/types/renter";
+import { SeverityPill, SeverityPillColor } from "src/components/severity-pill";
+import { useStatusPill } from "src/hooks/use-status-pill";
+
+const statusMap: Record<RenterPaidStatus, string> = {
+  notPaid: "warning",
+  paid: "success",
+  inArrears: "error",
+};
 
 interface RenterDetailsProps {
   onEdit?: () => void;
+  onPaid?: () => void;
   renter: Renter;
 }
 
 export const RenterDetails: FC<RenterDetailsProps> = (props) => {
-  const { onEdit, renter } = props;
+  const { onEdit, renter, onPaid } = props;
+
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
   const align = lgUp ? "horizontal" : "vertical";
-  const createdAt = format(renter.createdAt, "dd/MM/yyyy HH:mm");
 
+  const statusPill = useStatusPill(renter.status);
   return (
     <Stack spacing={6}>
       <Stack spacing={3}>
@@ -46,8 +56,16 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
             <Typography color="text.secondary" variant="body2">
               {renter.email}
             </Typography>
+          </PropertyListItem>{" "}
+          <PropertyListItem align={align} disableGutters divider label="Status">
+            {statusPill}
           </PropertyListItem>
         </PropertyList>
+        <Stack alignItems="center" direction="row" flexWrap="wrap" justifyContent="flex-end" spacing={2}>
+          <Button onClick={onPaid} size="small" variant="contained">
+            Bezahlt
+          </Button>
+        </Stack>
       </Stack>
     </Stack>
   );

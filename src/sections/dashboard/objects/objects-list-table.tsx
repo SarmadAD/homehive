@@ -8,10 +8,7 @@ import {
   AvatarGroup,
   Box,
   Button,
-  Card,
-  CardHeader,
   Checkbox,
-  Divider,
   IconButton,
   Link,
   Stack,
@@ -32,8 +29,6 @@ import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { RentalObject, RentalObjectStatus } from "src/types/object";
-
-const now = new Date();
 
 interface ObjectListTableProps {
   count?: number;
