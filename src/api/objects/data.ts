@@ -44,14 +44,14 @@ export const objects: RentalObject[] = [
     postalCode: "12345",
     city: "London",
     image: "src",
-    repairRequestsIds: ["5ecb8a6d9f53bfae09e16142", "5ecb8a6d9f53bfae09e16143"],
+    repairRequestsIds: ["5ecb8a6d9f53bfae09e16144", "5ecb8a6d9f53bfae09e16145"],
     renter: [
       {
-        id: "5ecb8a6d9f53bfae09e16115",
+        id: "5ecb8a6d9f53bfae09e16118",
         image: "src",
         createdAt: 1664813832674,
-        email: "emma.smith@example.com",
-        name: "Emma Smith",
+        email: "emma.jones@example.com",
+        name: "Emma Jones",
         status: "paid",
       },
     ],
@@ -74,7 +74,7 @@ export const objects: RentalObject[] = [
     postalCode: "98765",
     city: "Beachville",
     image: "src",
-    repairRequestsIds: ["5ecb8a6d9f53bfae09e16142", "5ecb8a6d9f53bfae09e16143"],
+    repairRequestsIds: [""],
     renter: [
       {
         id: "5ecb8a6d9f53bfae09e16115",

@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 
-export const ObjectRenterSingleView = styled("div", { shouldForwardProp: (prop) => prop !== "open" })<{ open?: boolean }>(({ theme, open }) => ({
+export const ObjectSingleView = styled("div", { shouldForwardProp: (prop) => prop !== "open" })<{ open?: boolean }>(({ theme, open }) => ({
   flexGrow: 1,
   overflow: "auto",
   zIndex: 1,

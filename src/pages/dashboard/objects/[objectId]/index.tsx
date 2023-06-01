@@ -22,11 +22,13 @@ import { useRentersSearch } from "src/hooks/use-renter-search";
 import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useDialog } from "src/hooks/use-dialog";
-import { ObjectRenterSingleView } from "src/sections/dashboard/objects/renter/object-renter-single-view";
-import { RenterDrawer } from "src/sections/dashboard/objects/renter/object-renter-drawer";
+import { ObjectSingleView } from "src/sections/dashboard/objects/renter/object-single-view";
 import { Renter } from "src/types/renter";
 import { ObjectRepairRequestList } from "src/sections/dashboard/objects/repairRequests/objects-repairRequests-list";
 import { RepairRequest } from "src/types/repairRequest";
+import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
+import { ObjectRepairRequestDrawer } from "src/sections/dashboard/objects/repairRequests/object-repairRequest-drawer";
+import { RenterDrawer } from "src/sections/dashboard/objects/renter/object-renter-drawer";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -62,10 +64,10 @@ const useRentalObject = (): RentalObject | null => {
   return rentalObject;
 };
 
-const useRepairRequests = (): RepairRequest[] | null => {
+const useRepairRequests = (): RepairRequest[] | undefined => {
   const isMounted = useMounted();
   const router = useRouter();
-  const [repairRequests, setRepairRequests] = useState<RepairRequest[] | null>(null);
+  const [repairRequests, setRepairRequests] = useState<RepairRequest[] | undefined>(undefined);
 
   const handleRepairRequsts = useCallback(async () => {
     try {
@@ -100,6 +102,16 @@ const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undef
   }, [renters, renterId]);
 };
 
+const useCurrentRepairRequest = (repairRequests?: RepairRequest[], repairRequestId?: string): RepairRequest | undefined => {
+  return useMemo((): RepairRequest | undefined => {
+    if (!repairRequestId) {
+      return undefined;
+    }
+
+    return repairRequests?.find((repairRequest) => repairRequest.id === repairRequestId);
+  }, [repairRequests, repairRequestId]);
+};
+
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
   const rentalObject = useRentalObject();
@@ -112,25 +124,32 @@ const Page: PageType = () => {
   const rentersIds = useRentersIds(rentalObject?.renter);
   const rentersSelection = useSelection<string>(rentersIds);
 
+  const repairRequestsSearch = useRepairRequestsSearch();
+  // const repairRequestsIds = useRepairRequestsIds(rentalObject?.repairRequestsIds);
+  const repairRequestsSelection = useSelection<string>(rentalObject?.repairRequestsIds);
+
   const currentRenter = useCurrentRenter(rentalObject?.renter, dialog.data);
+  const currentRepairRequest = useCurrentRepairRequest(repairRequests, dialog.data);
 
   usePageView();
 
-  const handleOrderOpen = useCallback(
-    (orderId: string): void => {
+  const handleDialog = useCallback(
+    (id: string): void => {
       // Close drawer if is the same order
 
-      if (dialog.open && dialog.data === orderId) {
+      if (dialog.open && dialog.data === id) {
         dialog.handleClose();
         return;
       }
 
-      dialog.handleOpen(orderId);
+      dialog.handleOpen(id);
     },
     [dialog]
   );
+
   const handleTabsChange = useCallback((event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
+    dialog.handleClose();
   }, []);
 
   if (!rentalObject) {
@@ -165,7 +184,7 @@ const Page: PageType = () => {
             top: 0,
           }}
         >
-          <ObjectRenterSingleView open={dialog.open}>
+          <ObjectSingleView open={dialog.open}>
             <Container maxWidth="xl">
               <Stack spacing={4}>
                 <Stack spacing={4}>
@@ -300,14 +319,38 @@ const Page: PageType = () => {
                     page={rentersSearch.state.page}
                     rowsPerPage={rentersSearch.state.rowsPerPage}
                     selected={rentersSelection.selected}
-                    onSelect={handleOrderOpen}
+                    onSelect={handleDialog}
                   />
                 )}
-                {currentTab === "repairRequests" && <ObjectRepairRequestList count={repairRequests?.length} items={repairRequests} />}
+                {currentTab === "repairRequests" && (
+                  <ObjectRepairRequestList
+                    count={repairRequests?.length}
+                    items={repairRequests}
+                    onDeselectAll={repairRequestsSelection.handleDeselectAll}
+                    onDeselectOne={repairRequestsSelection.handleDeselectOne}
+                    onPageChange={repairRequestsSearch.handlePageChange}
+                    onRowsPerPageChange={repairRequestsSearch.handleRowsPerPageChange}
+                    onSelectAll={repairRequestsSelection.handleSelectAll}
+                    onSelectOne={repairRequestsSelection.handleSelectOne}
+                    page={repairRequestsSearch.state.page}
+                    rowsPerPage={repairRequestsSearch.state.rowsPerPage}
+                    selected={repairRequestsSelection.selected}
+                    onSelect={handleDialog}
+                  />
+                )}
               </Stack>
             </Container>
-          </ObjectRenterSingleView>
-          <RenterDrawer container={rootRef.current} onClose={dialog.handleClose} open={dialog.open} renter={currentRenter} />
+          </ObjectSingleView>
+          {currentTab === "repairRequests" ? (
+            <ObjectRepairRequestDrawer
+              container={rootRef.current}
+              onClose={dialog.handleClose}
+              open={dialog.open}
+              repairRequest={currentRepairRequest}
+            />
+          ) : (
+            <RenterDrawer container={rootRef.current} onClose={dialog.handleClose} open={dialog.open} renter={currentRenter} />
+          )}
         </Box>
       </Box>
     </>

@@ -1,5 +1,4 @@
 import type { FC, ChangeEvent, MouseEvent } from "react";
-import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import PropTypes from "prop-types";
 
@@ -28,7 +27,6 @@ import { SeverityPill } from "src/components/severity-pill";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
-import { RentalObject, RentalObjectStatus } from "src/types/object";
 import { RepairRequest, RepairRequestStatus } from "src/types/repairRequest";
 import { useRepairRequestStatusPill } from "src/hooks/use-status-pill";
 
@@ -36,12 +34,12 @@ interface ObjectRepairRequestListProps {
   count?: number;
   items?: RepairRequest[];
   onDeselectAll?: () => void;
-  onDeselectOne?: (objectId: string) => void;
+  onDeselectOne?: (repairRequestId: string) => void;
   onPageChange?: (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   onRowsPerPageChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onSelectAll?: () => void;
-  onSelect?: (renterId: string) => void;
-  onSelectOne?: (objectId: string) => void;
+  onSelect?: (repairRequestId: string) => void;
+  onSelectOne?: (repairRequestId: string) => void;
   page?: number;
   rowsPerPage?: number;
   selected?: string[];
@@ -57,6 +55,7 @@ export const ObjectRepairRequestList: FC<ObjectRepairRequestListProps> = (props)
     onRowsPerPageChange,
     onSelectAll,
     onSelectOne,
+    onSelect,
     page = 0,
     rowsPerPage = 0,
     selected = [],
@@ -133,7 +132,7 @@ export const ObjectRepairRequestList: FC<ObjectRepairRequestListProps> = (props)
               const statusPill = useRepairRequestStatusPill(repairRequest.status);
 
               return (
-                <TableRow hover key={repairRequest.id} selected={isSelected}>
+                <TableRow hover key={repairRequest.id} selected={isSelected} onClick={() => onSelect?.(repairRequest.id)}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isSelected}

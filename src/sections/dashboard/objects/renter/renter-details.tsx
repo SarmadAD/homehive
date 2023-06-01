@@ -1,20 +1,12 @@
-import { ChangeEvent, FC, useCallback, useState } from "react";
+import { FC } from "react";
 import PropTypes from "prop-types";
-import { format } from "date-fns";
 import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
-import { TextField, Theme } from "@mui/material";
+import { Theme } from "@mui/material";
 import { Button, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { Renter, RenterPaidStatus } from "src/types/renter";
-import { SeverityPill, SeverityPillColor } from "src/components/severity-pill";
+import { Renter } from "src/types/renter";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
-
-const statusMap: Record<RenterPaidStatus, string> = {
-  notPaid: "warning",
-  paid: "success",
-  inArrears: "error",
-};
 
 interface RenterDetailsProps {
   onEdit?: () => void;
