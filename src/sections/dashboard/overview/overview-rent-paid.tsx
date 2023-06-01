@@ -7,8 +7,6 @@ import { Renter } from "src/types/renter";
 import { paths } from "src/paths";
 
 interface OverviewRentPaidProps {
-  numberOfRentsPaid: number;
-  rentNumber: number;
   showActions: boolean;
 }
 

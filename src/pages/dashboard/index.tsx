@@ -1,4 +1,4 @@
-import { Box, Container, Stack, SvgIcon, Typography, Unstable_Grid2 as Grid } from "@mui/material";
+import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import { useSettings } from "src/hooks/use-settings";

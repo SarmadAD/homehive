@@ -3,6 +3,8 @@ import { applySort } from "src/utils/apply-sort";
 import { deepCopy } from "src/utils/deep-copy";
 import { objects } from "./data";
 import { RentalObject } from "src/types/object";
+import { repairRequests } from "./repairRequests/data";
+import { RepairRequest } from "src/types/repairRequest";
 
 type GetObjectsRequest = {
   filters?: {
@@ -23,7 +25,12 @@ type GetObjectRequest = {
   objectId?: string;
 };
 
+type GetRepairRequests = {
+  objectId?: string;
+};
+
 type GetObjectResponse = Promise<RentalObject>;
+type GetRepairRequestsResponse = Promise<RepairRequest[]>;
 
 // type GetCustomerEmailsRequest = {};
 
@@ -102,6 +109,14 @@ class ObjectsApi {
     let data = deepCopy(objects) as RentalObject[];
     let object = data.find((x) => x.id === request?.objectId);
     return Promise.resolve(deepCopy(object));
+  }
+
+  getRepairRequests(request: GetRepairRequests): GetRepairRequestsResponse {
+    let data = deepCopy(objects) as RentalObject[];
+    let object = data.find((x) => x.id === request?.objectId);
+    const repairRequestsData = deepCopy(repairRequests) as RepairRequest[];
+    const filteredData = repairRequestsData.filter((repairReqest) => object?.repairRequestsIds.includes(repairReqest.id));
+    return Promise.resolve(deepCopy(filteredData));
   }
 
   //   getEmails(request?: GetCustomerEmailsRequest): GetCustomerEmailsResponse {

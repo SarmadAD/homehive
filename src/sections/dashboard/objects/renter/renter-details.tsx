@@ -8,7 +8,7 @@ import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
 import { Renter, RenterPaidStatus } from "src/types/renter";
 import { SeverityPill, SeverityPillColor } from "src/components/severity-pill";
-import { useStatusPill } from "src/hooks/use-status-pill";
+import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 
 const statusMap: Record<RenterPaidStatus, string> = {
   notPaid: "warning",
@@ -29,7 +29,7 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
 
   const align = lgUp ? "horizontal" : "vertical";
 
-  const statusPill = useStatusPill(renter.status);
+  const statusPill = useRentPaidStatusPill(renter.status);
   return (
     <Stack spacing={6}>
       <Stack spacing={3}>

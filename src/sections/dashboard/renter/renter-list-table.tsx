@@ -32,7 +32,7 @@ import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { Renter, RenterPaidStatus } from "src/types/renter";
-import { useStatusPill } from "src/hooks/use-status-pill";
+import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 
 const now = new Date();
 
@@ -134,7 +134,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
           <TableBody>
             {items.map((renter) => {
               const isSelected = selected.includes(renter.id);
-              const statusPill = useStatusPill(renter.status);
+              const statusPill = useRentPaidStatusPill(renter.status);
 
               return (
                 <TableRow hover key={renter.id} selected={isSelected} onClick={() => onSelect?.(renter.id)}>
@@ -174,12 +174,12 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                   </TableCell>
                   <TableCell>{statusPill}</TableCell>
                   <TableCell align="right">
-                    <IconButton component={RouterLink} href={paths.dashboard.objects.edit}>
+                    <IconButton component={RouterLink} href={paths.dashboard.renters.edit}>
                       <SvgIcon>
                         <Edit02Icon />
                       </SvgIcon>
                     </IconButton>
-                    <IconButton component={RouterLink} href={paths.dashboard.objects.details}>
+                    <IconButton component={RouterLink} href={`${paths.dashboard.renters.details}/${renter.id}`}>
                       <SvgIcon>
                         <ArrowRightIcon />
                       </SvgIcon>

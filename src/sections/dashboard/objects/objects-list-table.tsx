@@ -187,19 +187,17 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                     <Stack alignItems="center" direction="row" spacing={1}>
                       <AvatarGroup max={3}>
                         {object.renter.map((renter) => (
-                          <>
-                            <Tooltip key={renter.name} title={renter.name}>
-                              <Avatar
-                                src={object.image}
-                                sx={{
-                                  height: 42,
-                                  width: 42,
-                                }}
-                              >
-                                {getInitials(renter.name)}
-                              </Avatar>
-                            </Tooltip>
-                          </>
+                          <Tooltip key={renter.name} title={renter.name}>
+                            <Avatar
+                              src={object.image}
+                              sx={{
+                                height: 42,
+                                width: 42,
+                              }}
+                            >
+                              {getInitials(renter.name)}
+                            </Avatar>
+                          </Tooltip>
                         ))}
                       </AvatarGroup>
                     </Stack>

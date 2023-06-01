@@ -25,11 +25,13 @@ import { useDialog } from "src/hooks/use-dialog";
 import { ObjectRenterSingleView } from "src/sections/dashboard/objects/renter/object-renter-single-view";
 import { RenterDrawer } from "src/sections/dashboard/objects/renter/object-renter-drawer";
 import { Renter } from "src/types/renter";
+import { ObjectRepairRequestList } from "src/sections/dashboard/objects/repairRequests/objects-repairRequests-list";
+import { RepairRequest } from "src/types/repairRequest";
 
 const tabs = [
   { label: "Details", value: "details" },
   { label: "Mieter", value: "renter" },
-  { label: "Wartung/Reperatur", value: "repair" },
+  { label: "Wartung/Reperatur", value: "repairRequests" },
 ];
 
 const useRentalObject = (): RentalObject | null => {
@@ -60,6 +62,34 @@ const useRentalObject = (): RentalObject | null => {
   return rentalObject;
 };
 
+const useRepairRequests = (): RepairRequest[] | null => {
+  const isMounted = useMounted();
+  const router = useRouter();
+  const [repairRequests, setRepairRequests] = useState<RepairRequest[] | null>(null);
+
+  const handleRepairRequsts = useCallback(async () => {
+    try {
+      const response = await objectsApi.getRepairRequests({ objectId: router.query.objectId?.toString() });
+
+      if (isMounted()) {
+        setRepairRequests(response);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isMounted]);
+
+  useEffect(
+    () => {
+      handleRepairRequsts();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  return repairRequests;
+};
+
 const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undefined => {
   return useMemo((): Renter | undefined => {
     if (!renterId) {
@@ -73,12 +103,15 @@ const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undef
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
   const rentalObject = useRentalObject();
+  const repairRequests = useRepairRequests();
 
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const dialog = useDialog<string>();
+
   const rentersSearch = useRentersSearch();
   const rentersIds = useRentersIds(rentalObject?.renter);
   const rentersSelection = useSelection<string>(rentersIds);
-  const dialog = useDialog<string>();
+
   const currentRenter = useCurrentRenter(rentalObject?.renter, dialog.data);
 
   usePageView();
@@ -101,6 +134,10 @@ const Page: PageType = () => {
   }, []);
 
   if (!rentalObject) {
+    return null;
+  }
+
+  if (!repairRequests) {
     return null;
   }
 
@@ -266,6 +303,7 @@ const Page: PageType = () => {
                     onSelect={handleOrderOpen}
                   />
                 )}
+                {currentTab === "repairRequests" && <ObjectRepairRequestList count={repairRequests?.length} items={repairRequests} />}
               </Stack>
             </Container>
           </ObjectRenterSingleView>

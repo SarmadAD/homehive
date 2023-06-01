@@ -5,12 +5,12 @@ import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
 import { RentalObject } from "src/types/object";
 import { Renter } from "src/types/renter";
-import { useStatusPill } from "src/hooks/use-status-pill";
+import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 
 export const RenterBasicDetails: FC<Renter> = (props) => {
   const { email, name, status } = props;
 
-  const statusPill = useStatusPill(status);
+  const statusPill = useRentPaidStatusPill(status);
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
   const align = lgUp ? "horizontal" : "vertical";
