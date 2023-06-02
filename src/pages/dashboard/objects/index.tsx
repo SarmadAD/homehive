@@ -170,10 +170,10 @@ const Page: PageType = () => {
               </Stack>
             </Grid>
             <Grid xs={12} md={4}>
-              <OverviewRepairRequest amount={12} />
+              <OverviewRepairRequest showActions={false} />
             </Grid>
             <Grid xs={12} md={4}>
-              <OverviewStatusObjects amount={5} />
+              <OverviewStatusObjects showActions={false} />
             </Grid>
             <Grid xs={12} md={12}>
               {/* <ObjectsListTable />

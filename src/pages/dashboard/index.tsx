@@ -44,10 +44,10 @@ const Page: PageType = () => {
               <OverviewRentPaid showActions={true} />
             </Grid>
             <Grid xs={12} md={4}>
-              <OverviewRepairRequest amount={12} />
+              <OverviewRepairRequest showActions={true} />
             </Grid>
             <Grid xs={12} md={4}>
-              <OverviewStatusObjects amount={5} />
+              <OverviewStatusObjects showActions={true} />
             </Grid>
             <Grid xs={12} md={12}>
               <OverviewRentalIncome

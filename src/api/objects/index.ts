@@ -29,7 +29,10 @@ type GetRepairRequests = {
   objectId?: string;
 };
 
+type GetAllRepairRequestResponse = Promise<RepairRequest[]>;
+
 type GetObjectResponse = Promise<RentalObject>;
+type GetAllObjectsResponse = Promise<RentalObject[]>;
 type GetRepairRequestsResponse = Promise<RepairRequest[]>;
 
 // type GetCustomerEmailsRequest = {};
@@ -105,6 +108,11 @@ class ObjectsApi {
     });
   }
 
+  getAllObjects(): GetAllObjectsResponse {
+    let data = deepCopy(objects) as RentalObject[];
+    return Promise.resolve(deepCopy(data));
+  }
+
   getObject(request: GetObjectRequest): GetObjectResponse {
     let data = deepCopy(objects) as RentalObject[];
     let object = data.find((x) => x.id === request?.objectId);
@@ -117,6 +125,11 @@ class ObjectsApi {
     const repairRequestsData = deepCopy(repairRequests) as RepairRequest[];
     const filteredData = repairRequestsData.filter((repairReqest) => object?.repairRequestsIds.includes(repairReqest.id));
     return Promise.resolve(deepCopy(filteredData));
+  }
+
+  getAllRepairRequests(): GetAllRepairRequestResponse {
+    let data = deepCopy(repairRequests) as RepairRequest[];
+    return Promise.resolve(deepCopy(data));
   }
 
   //   getEmails(request?: GetCustomerEmailsRequest): GetCustomerEmailsResponse {

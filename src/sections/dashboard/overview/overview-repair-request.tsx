@@ -1,14 +1,28 @@
-import type { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
+import { objectsApi } from "src/api/objects";
+import { RepairRequest } from "src/types/repairRequest";
+import { paths } from "src/paths";
 
 interface OverviewRepairRequest {
-  amount: number;
+  showActions: boolean;
 }
 
 export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
-  const { amount } = props;
+  const { showActions } = props;
+  const [repairRequests, setRepairRequests] = useState<RepairRequest[]>();
+
+  async function getAllRepairRequests() {
+    const localRepairRequests = await objectsApi.getAllRepairRequests();
+    if (localRepairRequests.length > 0) {
+      setRepairRequests(localRepairRequests);
+    }
+  }
+  useEffect(() => {
+    getAllRepairRequests();
+  }, []);
 
   return (
     <Card>
@@ -32,28 +46,29 @@ export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
             Reperatur Anfragen
           </Typography>
           <Typography color="text.primary" variant="h4">
-            {amount}
+            {repairRequests?.length}
           </Typography>
         </Box>
       </Stack>
       <Divider />
-      <CardActions>
-        <Button
-          color="inherit"
-          endIcon={
-            <SvgIcon>
-              <ArrowRightIcon />
-            </SvgIcon>
-          }
-          size="small"
-        >
-          Objekte anzeigen
-        </Button>
-      </CardActions>
+      {showActions && (
+        <CardActions>
+          <Button
+            color="inherit"
+            href={paths.dashboard.objects.index}
+            endIcon={
+              <SvgIcon>
+                <ArrowRightIcon />
+              </SvgIcon>
+            }
+            size="small"
+          >
+            Objekte anzeigen
+          </Button>
+        </CardActions>
+      )}
     </Card>
   );
 };
 
-OverviewRepairRequest.propTypes = {
-  amount: PropTypes.number.isRequired,
-};
+OverviewRepairRequest.propTypes = {};

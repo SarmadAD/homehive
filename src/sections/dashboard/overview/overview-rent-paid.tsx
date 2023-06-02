@@ -12,12 +12,12 @@ interface OverviewRentPaidProps {
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
-  const [renters, setRenter] = useState<Renter[]>();
+  const [renters, setRenters] = useState<Renter[]>();
 
   async function getAllRenterWithStatusPaid() {
     const renters = await renterApi.getAllRenter();
     if (renters.length > 0) {
-      setRenter(renters);
+      setRenters(renters);
     }
   }
   useEffect(() => {

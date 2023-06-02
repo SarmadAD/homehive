@@ -1,15 +1,17 @@
-import type { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, CardContent, Container, Divider, Stack, SvgIcon, useTheme } from "@mui/material";
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
+import { paths } from "src/paths";
+import { objectsApi } from "src/api/objects";
+import { RentalObject } from "src/types/object";
 
 interface OverviewStatusObjects {
-  amount: number;
+  showActions: boolean;
 }
 type ChartSeries = number[];
-const chartSeries: ChartSeries = [25, 75];
 const labels: string[] = ["Bewohnt", "Unbewohnt"];
 
 const useChartOptions = (): ApexOptions => {
@@ -74,6 +76,22 @@ const useChartOptions = (): ApexOptions => {
 };
 export const OverviewStatusObjects: FC<OverviewStatusObjects> = (props) => {
   const chartOptions = useChartOptions();
+  const { showActions } = props;
+  const [allRentalObjects, setAllRentalObjects] = useState<RentalObject[]>();
+
+  async function getAllObjects() {
+    const localAllObjects = await objectsApi.getAllObjects();
+    if (localAllObjects.length > 0) {
+      setAllRentalObjects(localAllObjects);
+    }
+  }
+  useEffect(() => {
+    getAllObjects();
+  }, []);
+
+  if (allRentalObjects === undefined) {
+    return undefined;
+  }
 
   return (
     <Card>
@@ -87,29 +105,41 @@ export const OverviewStatusObjects: FC<OverviewStatusObjects> = (props) => {
         <Box>
           <Container maxWidth="sm">
             <CardContent>
-              <Chart height={500} width={300} options={chartOptions} series={chartSeries} type="donut" />
+              <Chart
+                height={500}
+                width={300}
+                options={chartOptions}
+                series={[
+                  (allRentalObjects.filter((rentalObject) => rentalObject.status === "inhabited").length / allRentalObjects.length) * 100,
+                  (allRentalObjects.filter((rentalObject) => rentalObject.status === "uninhabited").length / allRentalObjects.length) * 100,
+                ]}
+                type="donut"
+              />
             </CardContent>
           </Container>
         </Box>
       </Stack>
       <Divider />
-      <CardActions>
-        <Button
-          color="inherit"
-          endIcon={
-            <SvgIcon>
-              <ArrowRightIcon />
-            </SvgIcon>
-          }
-          size="small"
-        >
-          Objete ansehen
-        </Button>
-      </CardActions>
+      {showActions && (
+        <CardActions>
+          <Button
+            color="inherit"
+            href={paths.dashboard.objects.index}
+            endIcon={
+              <SvgIcon>
+                <ArrowRightIcon />
+              </SvgIcon>
+            }
+            size="small"
+          >
+            Objete ansehen
+          </Button>
+        </CardActions>
+      )}
     </Card>
   );
 };
 
 OverviewStatusObjects.propTypes = {
-  amount: PropTypes.number.isRequired,
+  showActions: PropTypes.bool.isRequired,
 };
