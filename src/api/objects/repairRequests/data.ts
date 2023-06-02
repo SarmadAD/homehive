@@ -10,7 +10,7 @@ export const repairRequests: RepairRequest[] = [
     createdAt: subMinutes(subSeconds(now, 23), 32).getTime(),
     name: "Fenster kaputt",
     status: "done",
-    comment: "halllooo",
+    comment: "Bitte das Fenter reperierern",
     renter: {
       id: "5ecb8a6d9f53bfae09e16117",
       image: "src",
@@ -25,7 +25,7 @@ export const repairRequests: RepairRequest[] = [
     createdAt: subMinutes(subSeconds(now, 23), 32).getTime(),
     name: "Garage kaputt",
     status: "inProgress",
-    comment: "halllooo",
+    comment: "Man diese Garage, bittteeee",
     renter: {
       id: "5ecb8a6d9f53bfae09e16117",
       image: "src",
@@ -40,7 +40,7 @@ export const repairRequests: RepairRequest[] = [
     createdAt: subMinutes(subSeconds(now, 23), 32).getTime(),
     name: "Dach kaputt",
     status: "inProgress",
-    comment: "halllooo",
+    comment: "Bald fällt mir das Dach auf dem Kopf! Hilfe! ",
     renter: {
       id: "5ecb8a6d9f53bfae09e16118",
       image: "src",
@@ -55,7 +55,7 @@ export const repairRequests: RepairRequest[] = [
     createdAt: subMinutes(subSeconds(now, 23), 32).getTime(),
     name: "Tisch kaputt",
     status: "inProgress",
-    comment: "Jetzt reicht es auch mal",
+    comment: "Der Tisch nervt",
     renter: {
       id: "5ecb8a6d9f53bfae09e16118",
       image: "src",

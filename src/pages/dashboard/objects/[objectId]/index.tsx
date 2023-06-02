@@ -152,6 +152,9 @@ const Page: PageType = () => {
     dialog.handleClose();
   }, []);
 
+  const handleAcceptRepairRequest = () => {};
+  const handleRejectRepairRequest = () => {};
+
   if (!rentalObject) {
     return null;
   }
@@ -347,6 +350,8 @@ const Page: PageType = () => {
               onClose={dialog.handleClose}
               open={dialog.open}
               repairRequest={currentRepairRequest}
+              handleAcceptRepairRequest={handleAcceptRepairRequest}
+              handleRejectRepairRequest={handleRejectRepairRequest}
             />
           ) : (
             <RenterDrawer container={rootRef.current} onClose={dialog.handleClose} open={dialog.open} renter={currentRenter} />

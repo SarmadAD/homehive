@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { ChangeEvent, ChangeEventHandler, FC, useState } from "react";
 import PropTypes from "prop-types";
 import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
-import { Theme } from "@mui/material";
+import { OutlinedInput, Theme } from "@mui/material";
 import { Button, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
@@ -12,14 +12,23 @@ interface RepairRequestDetailsProps {
   onEdit?: () => void;
   onPaid?: () => void;
   repairRequest: RepairRequest;
+  handleAcceptRepairRequest: () => void;
+  handleRejectRepairRequest: () => void;
 }
 
 export const RepairRequestDetails: FC<RepairRequestDetailsProps> = (props) => {
-  const { onEdit, repairRequest, onPaid } = props;
-
+  const { onEdit, repairRequest, handleRejectRepairRequest, handleAcceptRepairRequest } = props;
+  const [localRepairRequest, setRepairRequest] = useState<RepairRequest>(repairRequest);
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
   const align = lgUp ? "horizontal" : "vertical";
+
+  function handleCommentChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    setRepairRequest({
+      ...localRepairRequest, // Copy the old fields
+      comment: e.target.value, // But override this one
+    });
+  }
 
   const statusPill = useRepairRequestStatusPill(repairRequest.status);
   return (
@@ -41,21 +50,26 @@ export const RepairRequestDetails: FC<RepairRequestDetailsProps> = (props) => {
           </Button>
         </Stack>
         <PropertyList>
-          <PropertyListItem align={align} disableGutters divider label="Kontaktdaten">
+          <PropertyListItem align={align} disableGutters divider label="Mieter">
             <Typography color="text.secondary" variant="body2">
-              0123123123
+              {repairRequest.renter.name}
             </Typography>
-            {/* <Typography color="text.secondary" variant="body2">
-              {repairRequest.email}
-            </Typography> */}
-          </PropertyListItem>{" "}
+          </PropertyListItem>
+
+          <PropertyListItem align={"vertical"} divider label="Kommentar">
+            <OutlinedInput fullWidth name="comment" required multiline rows={6} value={localRepairRequest.comment} onChange={handleCommentChange} />
+          </PropertyListItem>
+
           <PropertyListItem align={align} disableGutters divider label="Status">
             {statusPill}
           </PropertyListItem>
         </PropertyList>
         <Stack alignItems="center" direction="row" flexWrap="wrap" justifyContent="flex-end" spacing={2}>
-          <Button onClick={onPaid} size="small" variant="contained">
-            Bezahlt
+          <Button onClick={handleAcceptRepairRequest} size="small" variant="contained" color="success">
+            Annehmen
+          </Button>
+          <Button onClick={handleRejectRepairRequest} size="small" variant="contained" color="warning">
+            Ablehnen
           </Button>
         </Stack>
       </Stack>

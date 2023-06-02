@@ -11,11 +11,13 @@ interface ObjectRepairRequestDrawerProps {
   container?: HTMLDivElement | null;
   open?: boolean;
   onClose?: () => void;
+  handleAcceptRepairRequest: () => void;
+  handleRejectRepairRequest: () => void;
   repairRequest?: RepairRequest;
 }
 
 export const ObjectRepairRequestDrawer: FC<ObjectRepairRequestDrawerProps> = (props) => {
-  const { container, onClose, open, repairRequest } = props;
+  const { container, onClose, open, repairRequest, handleAcceptRepairRequest, handleRejectRepairRequest } = props;
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
@@ -56,7 +58,12 @@ export const ObjectRepairRequestDrawer: FC<ObjectRepairRequestDrawerProps> = (pr
             py: 4,
           }}
         >
-          <RepairRequestDetails onEdit={handleEditOpen} repairRequest={repairRequest} />
+          <RepairRequestDetails
+            onEdit={handleEditOpen}
+            repairRequest={repairRequest}
+            handleAcceptRepairRequest={handleAcceptRepairRequest}
+            handleRejectRepairRequest={handleRejectRepairRequest}
+          />
           {/* {!isEditing ? (
             <OrderDetails onApprove={onClose} onEdit={handleEditOpen} onReject={onClose} order={order} />
           ) : (
