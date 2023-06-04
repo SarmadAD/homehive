@@ -104,6 +104,7 @@ export const paths = {
       index: "/dashboard/objects",
       details: "/dashboard/objects/",
       edit: "/dashboard/objects/:objectId/edit",
+      create: "/dashboard/objects/create",
     },
     renters: {
       index: "/dashboard/renters",

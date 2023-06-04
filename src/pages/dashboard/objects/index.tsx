@@ -13,6 +13,7 @@ import { useMounted } from "src/hooks/use-mounted";
 import { useSelection } from "src/hooks/use-selection";
 import { RentalObject } from "src/types/object";
 import { objectsApi } from "src/api/objects";
+import { paths } from "src/paths";
 
 interface Filters {
   query?: string;
@@ -162,6 +163,7 @@ const Page: PageType = () => {
                         </SvgIcon>
                       }
                       variant="contained"
+                      href={paths.dashboard.objects.create}
                     >
                       Hinzufügen
                     </Button>
