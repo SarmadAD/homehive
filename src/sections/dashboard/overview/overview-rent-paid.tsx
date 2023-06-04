@@ -14,14 +14,14 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
   const [renters, setRenters] = useState<Renter[]>();
 
-  async function getAllRenterWithStatusPaid() {
+  async function getAllRenters() {
     const renters = await renterApi.getAllRenter();
     if (renters.length > 0) {
       setRenters(renters);
     }
   }
   useEffect(() => {
-    getAllRenterWithStatusPaid();
+    getAllRenters();
   }, []);
 
   return (

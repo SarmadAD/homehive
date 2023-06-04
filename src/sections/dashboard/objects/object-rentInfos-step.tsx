@@ -1,10 +1,12 @@
-import type { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, FC, SetStateAction, useEffect } from "react";
 import { useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Button, Chip, InputAdornment, MenuItem, Stack, SvgIcon, TextField, Typography } from "@mui/material";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import { RentalObject } from "src/types/object";
+import { Renter } from "src/types/renter";
+import { renterApi } from "src/api/renter";
 
 interface ObjectRentInfosStep {
   onNext?: () => void;
@@ -17,33 +19,6 @@ interface CategoryOption {
   label: string;
   value: string;
 }
-
-const categoryOptions: CategoryOption[] = [
-  {
-    label: "Healthcare",
-    value: "healthcare",
-  },
-  {
-    label: "Makeup",
-    value: "makeup",
-  },
-  {
-    label: "Dress",
-    value: "dress",
-  },
-  {
-    label: "Skincare",
-    value: "skincare",
-  },
-  {
-    label: "Jewelry",
-    value: "jewelry",
-  },
-  {
-    label: "Blouse",
-    value: "blouse",
-  },
-];
 
 const dueDateOfRent = [
   {
@@ -61,19 +36,43 @@ const dueDateOfRent = [
 ];
 export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
   const { onBack, onNext, newObject, setNewObject, ...other } = props;
+  const [renters, setRenters] = useState<Renter[]>();
+
+  async function getAllRenters() {
+    const renters = await renterApi.getAllRenter();
+    if (renters.length > 0) {
+      setRenters(renters);
+    }
+  }
+  useEffect(() => {
+    getAllRenters();
+  }, []);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    if (newObject === undefined) return;
+
     setNewObject({
-      ...newObject?.rentInfo,
-      [e.target.name]: e.target.value,
+      ...newObject,
+      rentInfo: {
+        ...newObject?.rentInfo,
+        [e.target.name]: e.target.value,
+      },
     });
+    console.log(newObject);
+  }
+
+  function handleRenterChange(e: ChangeEvent<HTMLInputElement>) {
+    if (newObject === undefined) return;
+    const updatedRenter = Array.isArray(newObject.renter) ? [...newObject.renter, { name: e.target.value }] : [{ name: e.target.value }];
+    setNewObject({ ...newObject, renter: updatedRenter });
+
     console.log(newObject);
   }
 
   return (
     <Stack spacing={3} {...other}>
       <Stack spacing={3} direction="row">
-        <TextField fullWidth label="Kaltmiete" name="rentInfo.baseRent" value={newObject?.rentInfo?.baseRent} onChange={handleChange} type="number" />
+        <TextField fullWidth label="Kaltmiete" name="baseRent" value={newObject?.rentInfo?.baseRent} onChange={handleChange} type="number" />
         <TextField fullWidth label="Heizkosten" name="heatingCosts" value={newObject?.rentInfo?.heatingCosts} onChange={handleChange} type="number" />
       </Stack>
 
@@ -92,10 +91,17 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
         <div>
           <Typography variant="h6">Füge ein Mieter zu dem neuen Objekt hinzu</Typography>
         </div>
-        <TextField fullWidth label="Mieter" name="renter" onChange={handleChange} select>
-          {categoryOptions.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
+        <TextField
+          fullWidth
+          label="Mieter"
+          name="renter"
+          onChange={handleRenterChange}
+          select
+          value={newObject?.renter ? newObject.renter[0].name : ""}
+        >
+          {renters?.map((renter) => (
+            <MenuItem key={renter.id} value={renter.name}>
+              {renter.name}
             </MenuItem>
           ))}
         </TextField>
