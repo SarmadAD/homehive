@@ -5,6 +5,8 @@ import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } f
 import { objectsApi } from "src/api/objects";
 import { RepairRequest } from "src/types/repairRequest";
 import { paths } from "src/paths";
+import { useRecoilState } from "recoil";
+import { repairRequestsAtom } from "src/state/atoms/repairRequestsAtom";
 
 interface OverviewRepairRequest {
   showActions: boolean;
@@ -12,7 +14,7 @@ interface OverviewRepairRequest {
 
 export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
   const { showActions } = props;
-  const [repairRequests, setRepairRequests] = useState<RepairRequest[]>();
+  const [repairRequests, setRepairRequests] = useRecoilState(repairRequestsAtom);
 
   async function getAllRepairRequests() {
     const localRepairRequests = await objectsApi.getAllRepairRequests();

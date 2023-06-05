@@ -7,11 +7,13 @@ import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
 import { objectsApi } from "src/api/objects";
 import { RentalObject } from "src/types/object";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
 
 interface OverviewStatusObjects {
   showActions: boolean;
 }
-type ChartSeries = number[];
 const labels: string[] = ["Bewohnt", "Unbewohnt"];
 
 const useChartOptions = (): ApexOptions => {
@@ -77,7 +79,8 @@ const useChartOptions = (): ApexOptions => {
 export const OverviewStatusObjects: FC<OverviewStatusObjects> = (props) => {
   const chartOptions = useChartOptions();
   const { showActions } = props;
-  const [allRentalObjects, setAllRentalObjects] = useState<RentalObject[]>();
+  const [allRentalObjects, setAllRentalObjects] = useRecoilState(rentalObjectsAtom);
+  const objectStatusData = useRecoilValue(objectStatusSeriesData);
 
   async function getAllObjects() {
     const localAllObjects = await objectsApi.getAllObjects();
@@ -105,16 +108,7 @@ export const OverviewStatusObjects: FC<OverviewStatusObjects> = (props) => {
         <Box>
           <Container maxWidth="sm">
             <CardContent>
-              <Chart
-                height={500}
-                width={300}
-                options={chartOptions}
-                series={[
-                  (allRentalObjects.filter((rentalObject) => rentalObject.status === "inhabited").length / allRentalObjects.length) * 100,
-                  (allRentalObjects.filter((rentalObject) => rentalObject.status === "uninhabited").length / allRentalObjects.length) * 100,
-                ]}
-                type="donut"
-              />
+              <Chart height={500} width={300} options={chartOptions} series={objectStatusData} type="donut" />
             </CardContent>
           </Container>
         </Box>

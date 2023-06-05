@@ -1,10 +1,12 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
 import { renterApi } from "src/api/renter";
-import { Renter } from "src/types/renter";
 import { paths } from "src/paths";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { rentersAtom } from "src/state/atoms/rentersAtom";
+import { totalPaidRents } from "src/state/selectors/TotalPaidRents";
 
 interface OverviewRentPaidProps {
   showActions: boolean;
@@ -12,7 +14,8 @@ interface OverviewRentPaidProps {
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
-  const [renters, setRenters] = useState<Renter[]>();
+  const [renters, setRenters] = useRecoilState(rentersAtom);
+  const lengthPaidRents = useRecoilValue(totalPaidRents);
 
   async function getAllRenters() {
     const renters = await renterApi.getAllRenter();
@@ -46,7 +49,7 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
             Mieten bezahlt
           </Typography>
           <Typography color="text.primary" variant="h4">
-            {renters?.filter((renter) => renter.status === "paid").length} / {renters?.length}
+            {lengthPaidRents} / {renters.length}
           </Typography>
         </Box>
       </Stack>
