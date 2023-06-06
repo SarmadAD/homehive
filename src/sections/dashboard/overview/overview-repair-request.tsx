@@ -16,16 +16,6 @@ export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
   const { showActions } = props;
   const [repairRequests, setRepairRequests] = useRecoilState(repairRequestsAtom);
 
-  async function getAllRepairRequests() {
-    const localRepairRequests = await objectsApi.getAllRepairRequests();
-    if (localRepairRequests.length > 0) {
-      setRepairRequests(localRepairRequests);
-    }
-  }
-  useEffect(() => {
-    getAllRepairRequests();
-  }, []);
-
   return (
     <Card>
       <Stack

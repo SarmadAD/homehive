@@ -2,11 +2,10 @@ import { FC, useEffect } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
-import { renterApi } from "src/api/renter";
 import { paths } from "src/paths";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
-import { totalPaidRents } from "src/state/selectors/TotalPaidRents";
+import { totalPaidRents } from "src/state/selectors/totalPaidRents";
 
 interface OverviewRentPaidProps {
   showActions: boolean;
@@ -16,16 +15,6 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
   const [renters, setRenters] = useRecoilState(rentersAtom);
   const lengthPaidRents = useRecoilValue(totalPaidRents);
-
-  async function getAllRenters() {
-    const renters = await renterApi.getAllRenter();
-    if (renters.length > 0) {
-      setRenters(renters);
-    }
-  }
-  useEffect(() => {
-    getAllRenters();
-  }, []);
 
   return (
     <Card>

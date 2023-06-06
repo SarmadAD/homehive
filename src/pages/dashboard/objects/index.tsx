@@ -14,6 +14,8 @@ import { useSelection } from "src/hooks/use-selection";
 import { RentalObject } from "src/types/object";
 import { objectsApi } from "src/api/objects";
 import { paths } from "src/paths";
+import { useRecoilValue } from "recoil";
+import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 
 interface Filters {
   query?: string;
@@ -124,8 +126,10 @@ const useObjectsIds = (objects: RentalObject[] = []) => {
 const Page: PageType = () => {
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
-  const objectsStore = useObjectsStore(objectsSearch.state);
-  const objectsIds = useObjectsIds(objectsStore.objects);
+
+  const rentalObjects = useRecoilValue(rentalObjectsAtom);
+  const objectsIds = useObjectsIds(rentalObjects);
+
   const objectsSelection = useSelection<string>(objectsIds);
 
   usePageView();
@@ -187,8 +191,8 @@ const Page: PageType = () => {
                 sortDir={customersSearch.state.sortDir}
               /> */}
               <ObjectListTable
-                count={objectsStore.objectsCount}
-                items={objectsStore.objects}
+                count={rentalObjects.length}
+                items={rentalObjects}
                 onDeselectAll={objectsSelection.handleDeselectAll}
                 onDeselectOne={objectsSelection.handleDeselectOne}
                 onPageChange={objectsSearch.handlePageChange}

@@ -1,12 +1,10 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, CardContent, Container, Divider, Stack, SvgIcon, useTheme } from "@mui/material";
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
-import { objectsApi } from "src/api/objects";
-import { RentalObject } from "src/types/object";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
@@ -81,16 +79,6 @@ export const OverviewStatusObjects: FC<OverviewStatusObjects> = (props) => {
   const { showActions } = props;
   const [allRentalObjects, setAllRentalObjects] = useRecoilState(rentalObjectsAtom);
   const objectStatusData = useRecoilValue(objectStatusSeriesData);
-
-  async function getAllObjects() {
-    const localAllObjects = await objectsApi.getAllObjects();
-    if (localAllObjects.length > 0) {
-      setAllRentalObjects(localAllObjects);
-    }
-  }
-  useEffect(() => {
-    getAllObjects();
-  }, []);
 
   if (allRentalObjects === undefined) {
     return undefined;
