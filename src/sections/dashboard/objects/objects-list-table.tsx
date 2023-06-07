@@ -63,7 +63,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
   const selectedAll = items.length > 0 && selected.length === items.length;
   const enableBulkActions = selected.length > 0;
 
-  const getStatusPill = (orderStatus: RentalObjectStatus): JSX.Element => {
+  const getStatusPill = (rentalObjectStatus: RentalObjectStatus): JSX.Element => {
     const map: Record<RentalObjectStatus, { color: SeverityPillColor; text: string }> = {
       inhabited: {
         color: "success",
@@ -75,7 +75,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
       },
     };
 
-    const { text, color } = map[orderStatus];
+    const { text, color } = map[rentalObjectStatus];
 
     return <SeverityPill color={color}>{text}</SeverityPill>;
   };

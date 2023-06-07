@@ -8,7 +8,7 @@ interface ObjectInfosStepProps {
   onNext?: () => void;
   onBack?: () => void;
   newObject: RentalObject | undefined;
-  setNewObject: Dispatch<SetStateAction<RentalObject | undefined>>;
+  setNewObject: SetterOrUpdater<RentalObject>;
 }
 
 export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {

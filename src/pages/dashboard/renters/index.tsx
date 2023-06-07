@@ -1,23 +1,25 @@
 import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
+import { useRecoilValue } from "recoil";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import { useRentersSearch } from "src/hooks/use-renter-search";
-import { useRentersStore } from "src/hooks/use-renter-store";
 import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useSettings } from "src/hooks/use-settings";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
 import { RenterListTable } from "src/sections/dashboard/renter/renter-list-table";
+import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
 
 const Page: PageType = () => {
   usePageView();
+
   const settings = useSettings();
 
   const rentersSearch = useRentersSearch();
-  const rentersStore = useRentersStore(rentersSearch.state);
-  const rentersIds = useRentersIds(rentersStore.renters);
+  const renters = useRecoilValue(rentersAtom);
+  const rentersIds = useRentersIds(renters);
   const rentersSelection = useSelection<string>(rentersIds);
 
   return (
@@ -51,8 +53,8 @@ const Page: PageType = () => {
             </Grid>
             <Grid xs={12} md={12}>
               <RenterListTable
-                count={rentersStore.rentersCount}
-                items={rentersStore.renters}
+                count={renters.length}
+                items={renters}
                 onDeselectAll={rentersSelection.handleDeselectAll}
                 onDeselectOne={rentersSelection.handleDeselectOne}
                 onPageChange={rentersSearch.handlePageChange}

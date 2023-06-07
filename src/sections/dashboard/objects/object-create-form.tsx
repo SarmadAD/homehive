@@ -3,12 +3,13 @@ import { useCallback, useMemo, useState } from "react";
 import CheckIcon from "@untitled-ui/icons-react/build/esm/Check";
 import type { StepIconProps } from "@mui/material";
 import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } from "@mui/material";
-import { JobDescriptionStep } from "../jobs/job-description-step";
 import { JobPreview } from "../jobs/job-preview";
 import { ObjectBasicInfosStep } from "./object-basicinfos-step";
-import { RentalObject } from "src/types/object";
 import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
+import { useRecoilState } from "recoil";
+import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
+import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -41,7 +42,8 @@ const StepIcon: FC<StepIconProps> = (props) => {
 export const ObjectCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
-  const [newObject, setNewObject] = useState<RentalObject>();
+  const [newObject, setNewObject] = useRecoilState(rentalObjectAtom);
+  const [rentalObjects, setRentalObjects] = useRecoilState(rentalObjectsAtom);
 
   const handleNext = useCallback(() => {
     setActiveStep((prevState) => prevState + 1);
@@ -74,6 +76,8 @@ export const ObjectCreateForm: FC = () => {
   }, [handleBack, handleNext, handleComplete, newObject]);
 
   if (isComplete) {
+    setRentalObjects([...rentalObjects, newObject]);
+    setIsComplete(false);
     return <JobPreview />;
   }
 

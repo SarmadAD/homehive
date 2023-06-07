@@ -1,12 +1,14 @@
 import type { FC } from "react";
 import PropTypes from "prop-types";
-import { Button, Card, CardActions, CardHeader } from "@mui/material";
+import { Card, CardHeader } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { RentalObject } from "src/types/object";
+import { useRecoilValue } from "recoil";
+import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
-export const ObjectBasicDetails: FC<RentalObject> = (props) => {
-  const { address, areaSize, city, houseNr, postalCode, additionalHouseDetails } = props;
+export const ObjectBasicDetails: FC = () => {
+  const rentalObject = useRecoilValue(rentalObjectAtom);
+  const { address, areaSize, city, houseNr, postalCode, additionalHouseDetails } = rentalObject;
 
   return (
     <Card>

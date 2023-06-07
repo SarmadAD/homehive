@@ -29,6 +29,9 @@ import { RepairRequest } from "src/types/repairRequest";
 import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
 import { ObjectRepairRequestDrawer } from "src/sections/dashboard/objects/repairRequests/object-repairRequest-drawer";
 import { RenterDrawer } from "src/sections/dashboard/objects/renter/object-renter-drawer";
+import { useRecoilState } from "recoil";
+import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
+import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -39,19 +42,21 @@ const tabs = [
 const useRentalObject = (): RentalObject | null => {
   const isMounted = useMounted();
   const router = useRouter();
-  const [rentalObject, setRentalObject] = useState<RentalObject | null>(null);
+  const [rentalObject, setRentalObject] = useRecoilState(rentalObjectAtom);
+  const [selectedRentalObjectId, setSelectedRentalObjectId] = useRecoilState(selectedRentalObjectIdAtom);
 
-  const handleRentalObjectGet = useCallback(async () => {
+  const handleRentalObjectGet = async () => {
     try {
       const response = await objectsApi.getObject({ objectId: router.query.objectId?.toString() });
 
       if (isMounted()) {
         setRentalObject(response);
+        setSelectedRentalObjectId(router.query.objectId?.toString() ?? "");
       }
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted]);
+  };
 
   useEffect(
     () => {
@@ -114,8 +119,8 @@ const useCurrentRepairRequest = (repairRequests?: RepairRequest[], repairRequest
 
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
+
   const rentalObject = useRentalObject();
-  const repairRequests = useRepairRequests();
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
@@ -124,8 +129,8 @@ const Page: PageType = () => {
   const rentersIds = useRentersIds(rentalObject?.renter);
   const rentersSelection = useSelection<string>(rentersIds);
 
+  const repairRequests = useRepairRequests();
   const repairRequestsSearch = useRepairRequestsSearch();
-  // const repairRequestsIds = useRepairRequestsIds(rentalObject?.repairRequestsIds);
   const repairRequestsSelection = useSelection<string>(rentalObject?.repairRequestsIds);
 
   const currentRenter = useCurrentRenter(rentalObject?.renter, dialog.data);
@@ -281,21 +286,7 @@ const Page: PageType = () => {
                   <div>
                     <Grid container spacing={4}>
                       <Grid xs={12} lg={4}>
-                        <ObjectBasicDetails
-                          id={rentalObject.id}
-                          createdAt={rentalObject.createdAt}
-                          address={rentalObject.address}
-                          areaSize={rentalObject.areaSize}
-                          city={rentalObject.city}
-                          houseNr={rentalObject.houseNr}
-                          postalCode={rentalObject.postalCode}
-                          additionalHouseDetails={rentalObject.additionalHouseDetails}
-                          image={rentalObject.image}
-                          name={rentalObject.name}
-                          rentInfo={rentalObject.rentInfo}
-                          renter={rentalObject.renter}
-                          status={rentalObject.status}
-                        />
+                        <ObjectBasicDetails />
                       </Grid>
                       <Grid xs={12} lg={8}>
                         <ObjectRentInfoChart

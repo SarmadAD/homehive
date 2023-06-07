@@ -7,12 +7,13 @@ import { MobileDatePicker } from "@mui/x-date-pickers";
 import { RentalObject } from "src/types/object";
 import { Renter } from "src/types/renter";
 import { renterApi } from "src/api/renter";
+import { SetterOrUpdater } from "recoil";
 
 interface ObjectRentInfosStep {
   onNext?: () => void;
   onBack?: () => void;
   newObject: RentalObject | undefined;
-  setNewObject: Dispatch<SetStateAction<RentalObject | undefined>>;
+  setNewObject: SetterOrUpdater<RentalObject>;
 }
 
 interface CategoryOption {

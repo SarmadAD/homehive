@@ -5,12 +5,13 @@ import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Button, Chip, InputAdornment, Stack, SvgIcon, TextField, Typography } from "@mui/material";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import { RentalObject } from "src/types/object";
+import { SetterOrUpdater } from "recoil";
 
 interface ObjectDetailsStepProps {
   onNext?: () => void;
   onBack?: () => void;
   newObject: RentalObject | undefined;
-  setNewObject: Dispatch<SetStateAction<RentalObject | undefined>>;
+  setNewObject: SetterOrUpdater<RentalObject>;
 }
 
 export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
