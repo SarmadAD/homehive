@@ -1,27 +1,16 @@
-import type { FC } from 'react';
-import { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import toast from 'react-hot-toast';
-import CreditCard01Icon from '@untitled-ui/icons-react/build/esm/CreditCard01';
-import Settings04Icon from '@untitled-ui/icons-react/build/esm/Settings04';
-import User03Icon from '@untitled-ui/icons-react/build/esm/User03';
-import {
-  Box,
-  Button,
-  Divider,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Popover,
-  SvgIcon,
-  Typography
-} from '@mui/material';
-import { RouterLink } from 'src/components/router-link';
-import { useAuth } from 'src/hooks/use-auth';
-import { useMockedUser } from 'src/hooks/use-mocked-user';
-import { useRouter } from 'src/hooks/use-router';
-import { paths } from 'src/paths';
-import { Issuer } from 'src/utils/auth';
+import type { FC } from "react";
+import { useCallback } from "react";
+import PropTypes from "prop-types";
+import toast from "react-hot-toast";
+import CreditCard01Icon from "@untitled-ui/icons-react/build/esm/CreditCard01";
+import Settings04Icon from "@untitled-ui/icons-react/build/esm/Settings04";
+import User03Icon from "@untitled-ui/icons-react/build/esm/User03";
+import { Box, Button, Divider, ListItemButton, ListItemIcon, ListItemText, Popover, SvgIcon, Typography } from "@mui/material";
+import { RouterLink } from "src/components/router-link";
+import { useAuth } from "src/hooks/use-auth";
+import { useRouter } from "src/hooks/use-router";
+import { paths } from "src/paths";
+import { Issuer } from "src/utils/auth";
 
 interface AccountPopoverProps {
   anchorEl: null | Element;
@@ -32,55 +21,51 @@ interface AccountPopoverProps {
 export const AccountPopover: FC<AccountPopoverProps> = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const router = useRouter();
-  const auth = useAuth();
-  const user = useMockedUser();
+  const { user } = useAuth();
 
-  const handleLogout = useCallback(
-    async (): Promise<void> => {
-      try {
-        onClose?.();
+  const handleLogout = useCallback(async (): Promise<void> => {
+    try {
+      onClose?.();
 
-        switch (auth.issuer) {
-          case Issuer.Amplify: {
-            await auth.signOut();
-            break;
-          }
-
-          case Issuer.Auth0: {
-            await auth.logout();
-            break;
-          }
-
-          case Issuer.Firebase: {
-            await auth.signOut();
-            break;
-          }
-
-          case Issuer.JWT: {
-            await auth.signOut();
-            break;
-          }
-
-          default: {
-            console.warn('Using an unknown Auth Issuer, did not log out');
-          }
+      switch (user?.issuer) {
+        case Issuer.Amplify: {
+          await user.signOut();
+          break;
         }
 
-        router.push(paths.index);
-      } catch (err) {
-        console.error(err);
-        toast.error('Something went wrong!');
+        case Issuer.Auth0: {
+          await user.logout();
+          break;
+        }
+
+        case Issuer.Firebase: {
+          await user.signOut();
+          break;
+        }
+
+        case Issuer.JWT: {
+          await user.signOut();
+          break;
+        }
+
+        default: {
+          console.warn("Using an unknown Auth Issuer, did not log out");
+        }
       }
-    },
-    [auth, router, onClose]
-  );
+
+      router.push(paths.index);
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong!");
+    }
+  }, [user, router, onClose]);
 
   return (
     <Popover
       anchorEl={anchorEl}
       anchorOrigin={{
-        horizontal: 'center',
-        vertical: 'bottom'
+        horizontal: "center",
+        vertical: "bottom",
       }}
       disableScrollLock
       onClose={onClose}
@@ -89,14 +74,9 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
       {...other}
     >
       <Box sx={{ p: 2 }}>
-        <Typography variant="body1">
-          {user.name}
-        </Typography>
-        <Typography
-          color="text.secondary"
-          variant="body2"
-        >
-          demo@devias.io
+        <Typography variant="body1">{user?.name}</Typography>
+        <Typography color="text.secondary" variant="body2">
+          {user?.email}
         </Typography>
       </Box>
       <Divider />
@@ -108,7 +88,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
           sx={{
             borderRadius: 1,
             px: 1,
-            py: 0.5
+            py: 0.5,
           }}
         >
           <ListItemIcon>
@@ -116,13 +96,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
               <User03Icon />
             </SvgIcon>
           </ListItemIcon>
-          <ListItemText
-            primary={(
-              <Typography variant="body1">
-                Profile
-              </Typography>
-            )}
-          />
+          <ListItemText primary={<Typography variant="body1">Profile</Typography>} />
         </ListItemButton>
         <ListItemButton
           component={RouterLink}
@@ -131,7 +105,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
           sx={{
             borderRadius: 1,
             px: 1,
-            py: 0.5
+            py: 0.5,
           }}
         >
           <ListItemIcon>
@@ -139,13 +113,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
               <Settings04Icon />
             </SvgIcon>
           </ListItemIcon>
-          <ListItemText
-            primary={(
-              <Typography variant="body1">
-                Settings
-              </Typography>
-            )}
-          />
+          <ListItemText primary={<Typography variant="body1">Settings</Typography>} />
         </ListItemButton>
         <ListItemButton
           component={RouterLink}
@@ -154,7 +122,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
           sx={{
             borderRadius: 1,
             px: 1,
-            py: 0.5
+            py: 0.5,
           }}
         >
           <ListItemIcon>
@@ -162,28 +130,18 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
               <CreditCard01Icon />
             </SvgIcon>
           </ListItemIcon>
-          <ListItemText
-            primary={(
-              <Typography variant="body1">
-                Billing
-              </Typography>
-            )}
-          />
+          <ListItemText primary={<Typography variant="body1">Billing</Typography>} />
         </ListItemButton>
       </Box>
-      <Divider sx={{ my: '0 !important' }} />
+      <Divider sx={{ my: "0 !important" }} />
       <Box
         sx={{
-          display: 'flex',
+          display: "flex",
           p: 1,
-          justifyContent: 'center'
+          justifyContent: "center",
         }}
       >
-        <Button
-          color="inherit"
-          onClick={handleLogout}
-          size="small"
-        >
+        <Button color="inherit" onClick={handleLogout} size="small">
           Logout
         </Button>
       </Box>
@@ -194,5 +152,5 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
 AccountPopover.propTypes = {
   anchorEl: PropTypes.any,
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };
