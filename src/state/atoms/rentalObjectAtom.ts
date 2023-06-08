@@ -3,5 +3,5 @@ import { RentalObject } from "src/types/object";
 
 export const rentalObjectAtom = atom<RentalObject>({
   key: "rentalObject",
-  default: { status: "inhabited" } as RentalObject,
+  default: {} as RentalObject,
 });

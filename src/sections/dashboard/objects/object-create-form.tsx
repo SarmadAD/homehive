@@ -9,7 +9,9 @@ import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
 import { useRecoilState } from "recoil";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
+import { v4 as uuidv4 } from "uuid";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import router from "next/router";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -47,7 +49,6 @@ export const ObjectCreateForm: FC = () => {
 
   const handleNext = useCallback(() => {
     setActiveStep((prevState) => prevState + 1);
-    console.log(newObject);
   }, []);
 
   const handleBack = useCallback(() => {
@@ -76,9 +77,16 @@ export const ObjectCreateForm: FC = () => {
   }, [handleBack, handleNext, handleComplete, newObject]);
 
   if (isComplete) {
-    setRentalObjects([...rentalObjects, newObject]);
+    setRentalObjects((oldRentalObjects) => [
+      ...oldRentalObjects,
+      {
+        ...newObject,
+        id: uuidv4(),
+        status: "uninhabited",
+      },
+    ]);
     setIsComplete(false);
-    return <JobPreview />;
+    router.push("/dashboard/objects");
   }
 
   return (

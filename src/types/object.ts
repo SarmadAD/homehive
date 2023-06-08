@@ -1,6 +1,5 @@
 import { RentalObjectInfo } from "./RentalObjectInfo";
 import { Renter } from "./renter";
-import { RepairRequest } from "./repairRequest";
 
 export interface RentalObject {
   id: string;

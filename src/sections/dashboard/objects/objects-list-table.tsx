@@ -63,7 +63,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
   const selectedAll = items.length > 0 && selected.length === items.length;
   const enableBulkActions = selected.length > 0;
 
-  const getStatusPill = (rentalObjectStatus: RentalObjectStatus): JSX.Element => {
+  const getStatusPill = (rentalObject: RentalObject): JSX.Element => {
     const map: Record<RentalObjectStatus, { color: SeverityPillColor; text: string }> = {
       inhabited: {
         color: "success",
@@ -74,8 +74,11 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
         text: "Unbewohnt",
       },
     };
-
-    const { text, color } = map[rentalObjectStatus];
+    let status: RentalObjectStatus = "uninhabited";
+    if (rentalObject.renter && rentalObject.renter.length > 0) {
+      status = "inhabited";
+    }
+    const { text, color } = map[status];
 
     return <SeverityPill color={color}>{text}</SeverityPill>;
   };
@@ -144,7 +147,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
           <TableBody>
             {items.map((object) => {
               const isSelected = selected.includes(object.id);
-              const statusPill = getStatusPill(object.status);
+              const statusPill = getStatusPill(object);
 
               return (
                 <TableRow hover key={object.id} selected={isSelected}>
@@ -186,7 +189,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                   <TableCell>
                     <Stack alignItems="center" direction="row" spacing={1}>
                       <AvatarGroup max={3}>
-                        {object.renter.map((renter) => (
+                        {object.renter?.map((renter) => (
                           <Tooltip key={renter.name} title={renter.name}>
                             <Avatar
                               src={object.image}

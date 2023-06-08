@@ -149,9 +149,9 @@ export const ObjectRepairRequestList: FC<ObjectRepairRequestListProps> = (props)
                   <TableCell>
                     <Stack alignItems="center" direction="row" spacing={1}>
                       <div>
-                        <Link href="" color="inherit" component={RouterLink} variant="subtitle2">
+                        <Typography color="inherit" variant="subtitle2">
                           {repairRequest.name}
-                        </Link>
+                        </Typography>
                       </div>
                     </Stack>
                   </TableCell>
