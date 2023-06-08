@@ -1,19 +1,19 @@
-import type { ChangeEvent, MouseEvent } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import Download01Icon from '@untitled-ui/icons-react/build/esm/Download01';
-import PlusIcon from '@untitled-ui/icons-react/build/esm/Plus';
-import Upload01Icon from '@untitled-ui/icons-react/build/esm/Upload01';
-import { Box, Button, Card, Container, Stack, SvgIcon, Typography } from '@mui/material';
-import { customersApi } from 'src/api/customers';
-import { Seo } from 'src/components/seo';
-import { useMounted } from 'src/hooks/use-mounted';
-import { usePageView } from 'src/hooks/use-page-view';
-import { useSelection } from 'src/hooks/use-selection';
-import { Layout as DashboardLayout } from 'src/layouts/dashboard';
-import { CustomerListSearch } from 'src/sections/dashboard/customer/customer-list-search';
-import { CustomerListTable } from 'src/sections/dashboard/customer/customer-list-table';
-import type { Customer } from 'src/types/customer';
-import type { Page as PageType } from 'src/types/page';
+import type { ChangeEvent, MouseEvent } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import Download01Icon from "@untitled-ui/icons-react/build/esm/Download01";
+import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
+import Upload01Icon from "@untitled-ui/icons-react/build/esm/Upload01";
+import { Box, Button, Card, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import { customersApi } from "src/api/customers";
+import { Seo } from "src/components/seo";
+import { useMounted } from "src/hooks/use-mounted";
+import { usePageView } from "src/hooks/use-page-view";
+import { useSelection } from "src/hooks/use-selection";
+import { Layout as DashboardLayout } from "src/layouts/dashboard";
+import { CustomerListSearch } from "src/sections/dashboard/customer/customer-list-search";
+import { CustomerListTable } from "src/sections/dashboard/customer/customer-list-table";
+import type { Customer } from "src/types/customer";
+import type { Page as PageType } from "src/types/page";
 
 interface Filters {
   query?: string;
@@ -27,7 +27,7 @@ interface CustomersSearchState {
   page: number;
   rowsPerPage: number;
   sortBy: string;
-  sortDir: 'asc' | 'desc';
+  sortDir: "asc" | "desc";
 }
 
 const useCustomersSearch = () => {
@@ -36,61 +36,49 @@ const useCustomersSearch = () => {
       query: undefined,
       hasAcceptedMarketing: undefined,
       isProspect: undefined,
-      isReturning: undefined
+      isReturning: undefined,
     },
     page: 0,
     rowsPerPage: 5,
-    sortBy: 'updatedAt',
-    sortDir: 'desc'
+    sortBy: "updatedAt",
+    sortDir: "desc",
   });
 
-  const handleFiltersChange = useCallback(
-    (filters: Filters): void => {
-      setState((prevState) => ({
-        ...prevState,
-        filters
-      }));
-    },
-    []
-  );
+  const handleFiltersChange = useCallback((filters: Filters): void => {
+    setState((prevState) => ({
+      ...prevState,
+      filters,
+    }));
+  }, []);
 
-  const handleSortChange = useCallback(
-    (sort: { sortBy: string; sortDir: 'asc' | 'desc'; }): void => {
-      setState((prevState) => ({
-        ...prevState,
-        sortBy: sort.sortBy,
-        sortDir: sort.sortDir
-      }));
-    },
-    []
-  );
+  const handleSortChange = useCallback((sort: { sortBy: string; sortDir: "asc" | "desc" }): void => {
+    setState((prevState) => ({
+      ...prevState,
+      sortBy: sort.sortBy,
+      sortDir: sort.sortDir,
+    }));
+  }, []);
 
-  const handlePageChange = useCallback(
-    (event: MouseEvent<HTMLButtonElement> | null, page: number): void => {
-      setState((prevState) => ({
-        ...prevState,
-        page
-      }));
-    },
-    []
-  );
+  const handlePageChange = useCallback((event: MouseEvent<HTMLButtonElement> | null, page: number): void => {
+    setState((prevState) => ({
+      ...prevState,
+      page,
+    }));
+  }, []);
 
-  const handleRowsPerPageChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>): void => {
-      setState((prevState) => ({
-        ...prevState,
-        rowsPerPage: parseInt(event.target.value, 10)
-      }));
-    },
-    []
-  );
+  const handleRowsPerPageChange = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
+    setState((prevState) => ({
+      ...prevState,
+      rowsPerPage: parseInt(event.target.value, 10),
+    }));
+  }, []);
 
   return {
     handleFiltersChange,
     handleSortChange,
     handlePageChange,
     handleRowsPerPageChange,
-    state
+    state,
   };
 };
 
@@ -103,26 +91,23 @@ const useCustomersStore = (searchState: CustomersSearchState) => {
   const isMounted = useMounted();
   const [state, setState] = useState<CustomersStoreState>({
     customers: [],
-    customersCount: 0
+    customersCount: 0,
   });
 
-  const handleCustomersGet = useCallback(
-    async () => {
-      try {
-        const response = await customersApi.getCustomers(searchState);
+  const handleCustomersGet = useCallback(async () => {
+    try {
+      const response = await customersApi.getCustomers(searchState);
 
-        if (isMounted()) {
-          setState({
-            customers: response.data,
-            customersCount: response.count
-          });
-        }
-      } catch (err) {
-        console.error(err);
+      if (isMounted()) {
+        setState({
+          customers: response.data,
+          customersCount: response.count,
+        });
       }
-    },
-    [searchState, isMounted]
-  );
+    } catch (err) {
+      console.error(err);
+    }
+  }, [searchState, isMounted]);
 
   useEffect(
     () => {
@@ -133,17 +118,14 @@ const useCustomersStore = (searchState: CustomersSearchState) => {
   );
 
   return {
-    ...state
+    ...state,
   };
 };
 
 const useCustomersIds = (customers: Customer[] = []) => {
-  return useMemo(
-    () => {
-      return customers.map((customer) => customer.id);
-    },
-    [customers]
-  );
+  return useMemo(() => {
+    return customers.map((customer) => customer.id);
+  }, [customers]);
 };
 
 const Page: PageType = () => {
@@ -161,60 +143,46 @@ const Page: PageType = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="xl">
           <Stack spacing={4}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              spacing={4}
-            >
+            <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">
-                  Customers
-                </Typography>
-                <Stack
-                  alignItems="center"
-                  direction="row"
-                  spacing={1}
-                >
+                <Typography variant="h4">Customers</Typography>
+                <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
                     size="small"
-                    startIcon={(
+                    startIcon={
                       <SvgIcon>
                         <Upload01Icon />
                       </SvgIcon>
-                    )}
+                    }
                   >
                     Import
                   </Button>
                   <Button
                     color="inherit"
                     size="small"
-                    startIcon={(
+                    startIcon={
                       <SvgIcon>
                         <Download01Icon />
                       </SvgIcon>
-                    )}
+                    }
                   >
                     Export
                   </Button>
                 </Stack>
               </Stack>
-              <Stack
-                alignItems="center"
-                direction="row"
-                spacing={3}
-              >
+              <Stack alignItems="center" direction="row" spacing={3}>
                 <Button
-                  startIcon={(
+                  startIcon={
                     <SvgIcon>
                       <PlusIcon />
                     </SvgIcon>
-                  )}
+                  }
                   variant="contained"
                 >
                   Add
@@ -249,10 +217,6 @@ const Page: PageType = () => {
   );
 };
 
-Page.getLayout = (page) => (
-  <DashboardLayout>
-    {page}
-  </DashboardLayout>
-);
+Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;
