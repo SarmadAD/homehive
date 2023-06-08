@@ -9,7 +9,6 @@ import {
   Button,
   Checkbox,
   IconButton,
-  Link,
   Stack,
   SvgIcon,
   Table,
@@ -22,12 +21,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import type { SeverityPillColor } from "src/components/severity-pill";
-import { SeverityPill } from "src/components/severity-pill";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
-import { RepairRequest, RepairRequestStatus } from "src/types/repairRequest";
+import { RepairRequest } from "src/types/repairRequest";
 import { useRepairRequestStatusPill } from "src/hooks/use-status-pill";
 
 interface ObjectRepairRequestListProps {
