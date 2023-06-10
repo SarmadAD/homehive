@@ -23,12 +23,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import type { SeverityPillColor } from "src/components/severity-pill";
-import { SeverityPill } from "src/components/severity-pill";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
-import { RentalObject, RentalObjectStatus } from "src/types/object";
+import { RentalObject } from "src/types/object";
+import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
+import { collection, getDoc, getDocs } from "firebase/firestore";
+import { Renter } from "src/types/renter";
 
 interface ObjectListTableProps {
   count?: number;
@@ -62,26 +63,6 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
   const enableBulkActions = selected.length > 0;
-
-  const getStatusPill = (rentalObject: RentalObject): JSX.Element => {
-    const map: Record<RentalObjectStatus, { color: SeverityPillColor; text: string }> = {
-      inhabited: {
-        color: "success",
-        text: "Bewohnt",
-      },
-      uninhabited: {
-        color: "info",
-        text: "Unbewohnt",
-      },
-    };
-    let status: RentalObjectStatus = "uninhabited";
-    if (rentalObject.renter && rentalObject.renter.length > 0) {
-      status = "inhabited";
-    }
-    const { text, color } = map[status];
-
-    return <SeverityPill color={color}>{text}</SeverityPill>;
-  };
 
   return (
     <Box sx={{ position: "relative" }}>
@@ -147,7 +128,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
           <TableBody>
             {items.map((object) => {
               const isSelected = selected.includes(object.id);
-              const statusPill = getStatusPill(object);
+              const statusPill = useRentalObjectStatusPill(object);
 
               return (
                 <TableRow hover key={object.id} selected={isSelected}>

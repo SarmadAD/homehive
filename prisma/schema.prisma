@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model RentalObject {
+  id                     Int                @id @default(autoincrement())
+  createdAt              DateTime           @default(now())
+  name                   String
+  image                  String
+  status                 RentalObjectStatus
+  address                String
+  houseNr                Int
+  additionalHouseDetails String?            @default("")
+  city                   String
+  postalCode             String
+  areaSize               Int
+  rentalObjectInfoId     Int
+  renter                 Renter[]
+  RentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
+  repairRequests         RepairRequest[]
+
+  @@index([rentalObjectInfoId])
+}
+
+model Renter {
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now())
+  name           String
+  status         RenterPaidStatus
+  email          String           @unique
+  image          String
+  rentalObjectId Int?
+  RentalObject   RentalObject?    @relation(fields: [rentalObjectId], references: [id])
+  RepairRequest  RepairRequest[]
+
+  @@index([rentalObjectId])
+}
+
+model RentalObjectInfo {
+  id               Int            @id @default(autoincrement())
+  baseRent         Int
+  heatingCosts     Int
+  waterCosts       Int
+  electricityCosts Int
+  RentalObject     RentalObject[]
+}
+
+model RepairRequest {
+  id             Int                 @id @default(autoincrement())
+  createdAt      DateTime            @default(now())
+  name           String
+  status         RepairRequestStatus
+  comment        String?             @default("")
+  renterId       Int
+  rentalObjectId Int
+  renter         Renter              @relation(fields: [renterId], references: [id])
+  RentalObject   RentalObject        @relation(fields: [rentalObjectId], references: [id])
+
+  @@index([renterId])
+  @@index([rentalObjectId])
+}
+
+enum RentalObjectStatus {
+  INHABITED
+  UNINHABITED
+}
+
+enum RenterPaidStatus {
+  PAID
+  NOT_PAID
+  IN_ARREARS
+}
+
+enum RepairRequestStatus {
+  REQUESTED
+  REJECTED
+  DONE
+  CANCELED
+  IN_PROGRESS
+}

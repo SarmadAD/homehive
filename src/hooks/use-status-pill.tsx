@@ -1,4 +1,5 @@
 import { SeverityPill, SeverityPillColor } from "src/components/severity-pill";
+import { RentalObject, RentalObjectStatus } from "src/types/object";
 import { RenterPaidStatus } from "src/types/renter";
 import { RepairRequestStatus } from "src/types/repairRequest";
 
@@ -48,6 +49,26 @@ export const useRepairRequestStatusPill = (orderStatus: RepairRequestStatus): JS
   };
 
   const { text, color } = map[orderStatus];
+
+  return <SeverityPill color={color}>{text}</SeverityPill>;
+};
+
+export const useRentalObjectStatusPill = (rentalObject: RentalObject): JSX.Element => {
+  const map: Record<RentalObjectStatus, { color: SeverityPillColor; text: string }> = {
+    inhabited: {
+      color: "success",
+      text: "Bewohnt",
+    },
+    uninhabited: {
+      color: "info",
+      text: "Unbewohnt",
+    },
+  };
+  let status: RentalObjectStatus = "uninhabited";
+  if (rentalObject.renter && rentalObject.renter.length > 0) {
+    status = "inhabited";
+  }
+  const { text, color } = map[status];
 
   return <SeverityPill color={color}>{text}</SeverityPill>;
 };
