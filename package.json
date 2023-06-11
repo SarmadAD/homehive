@@ -2,7 +2,6 @@
   "name": "@devias-kit-pro/next",
   "version": "6.1.0",
   "author": "Devias",
-  "homepage": "https://devias.io",
   "private": true,
   "scripts": {
     "dev": "next",
@@ -11,6 +10,9 @@
     "export": "next export",
     "lint": "next lint",
     "lint-fix": "next lint --fix"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "2.0.3",
@@ -92,6 +94,7 @@
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
     "prisma": "^4.15.0",
+    "ts-node": "^10.9.1",
     "typescript": "4.9.5"
   }
 }

@@ -9,7 +9,7 @@ datasource db {
 }
 
 model RentalObject {
-  id                     Int                @id @default(autoincrement())
+  id                     String             @id @default(uuid())
   createdAt              DateTime           @default(now())
   name                   String
   image                  String
@@ -20,7 +20,7 @@ model RentalObject {
   city                   String
   postalCode             String
   areaSize               Int
-  rentalObjectInfoId     Int
+  rentalObjectInfoId     String
   renter                 Renter[]
   RentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
   repairRequests         RepairRequest[]
@@ -29,13 +29,13 @@ model RentalObject {
 }
 
 model Renter {
-  id             Int              @id @default(autoincrement())
+  id             String           @id @default(uuid())
   createdAt      DateTime         @default(now())
   name           String
   status         RenterPaidStatus
   email          String           @unique
   image          String
-  rentalObjectId Int?
+  rentalObjectId String?
   RentalObject   RentalObject?    @relation(fields: [rentalObjectId], references: [id])
   RepairRequest  RepairRequest[]
 
@@ -43,7 +43,7 @@ model Renter {
 }
 
 model RentalObjectInfo {
-  id               Int            @id @default(autoincrement())
+  id               String         @id @default(uuid())
   baseRent         Int
   heatingCosts     Int
   waterCosts       Int
@@ -52,13 +52,13 @@ model RentalObjectInfo {
 }
 
 model RepairRequest {
-  id             Int                 @id @default(autoincrement())
+  id             String              @id @default(uuid())
   createdAt      DateTime            @default(now())
   name           String
   status         RepairRequestStatus
   comment        String?             @default("")
-  renterId       Int
-  rentalObjectId Int
+  renterId       String
+  rentalObjectId String
   renter         Renter              @relation(fields: [renterId], references: [id])
   RentalObject   RentalObject        @relation(fields: [rentalObjectId], references: [id])
 
