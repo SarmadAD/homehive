@@ -1,6 +1,6 @@
-import { RentalObject } from "@prisma/client";
 import { atom, selector } from "recoil";
 import { objectsApi } from "src/api/objects";
+import { RentalObject } from "src/types/object";
 
 export const rentalObjectsAtom = atom<RentalObject[]>({
   key: "rentalObjectsAtom",

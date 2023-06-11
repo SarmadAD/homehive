@@ -1,8 +1,13 @@
 import type { FC, ReactElement } from 'react';
 import PropTypes from 'prop-types';
-import SunIcon from '@untitled-ui/icons-react/build/esm/Sun';
 import Moon01Icon from '@untitled-ui/icons-react/build/esm/Moon01';
-import { Chip, PaletteMode, Stack, SvgIcon, Typography } from '@mui/material';
+import SunIcon from '@untitled-ui/icons-react/build/esm/Sun';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import SvgIcon from '@mui/material/SvgIcon';
+import Typography from '@mui/material/Typography';
+
+import type { PaletteMode } from 'src/theme';
 
 interface Option {
   label: string;

@@ -1,6 +1,9 @@
 import type { FC } from 'react';
 import PropTypes from 'prop-types';
-import { Chip, Stack, Typography } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 import type { Contrast } from 'src/theme';
 
 interface Option {

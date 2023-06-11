@@ -102,13 +102,13 @@ export const paths = {
     },
     objects: {
       index: "/dashboard/objects",
-      details: "/dashboard/objects/",
+      details: "/dashboard/objects",
       edit: "/dashboard/objects/:objectId/edit",
       create: "/dashboard/objects/create",
     },
     renters: {
       index: "/dashboard/renters",
-      details: "/dashboard/renters/",
+      details: "/dashboard/renters",
       edit: "/dashboard/renter/:renterId/edit",
     },
   },
@@ -132,7 +132,7 @@ export const paths = {
     inputs: "/components/inputs",
   },
   docs: "https://material-kit-pro-react-docs.devias.io",
-  401: "/401",
-  404: "/404",
-  500: "/500",
+  notAuthorized: "/errors/401",
+  notFound: "/errors/404",
+  serverError: "/errors/500",
 };
