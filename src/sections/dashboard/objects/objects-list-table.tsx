@@ -160,7 +160,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                         <Link
                           color="inherit"
                           component={RouterLink}
-                          href={`${paths.dashboard.objects.details}/${encodeURIComponent(object.id)}`}
+                          href={`${paths.dashboard.objects.details}${encodeURIComponent(object.id)}`}
                           variant="subtitle2"
                         >
                           {object.name}

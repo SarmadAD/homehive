@@ -163,7 +163,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                         {getInitials(renter.name)}
                       </Avatar>
                       <div>
-                        <Link color="inherit" component={RouterLink} href={`${paths.dashboard.renters.details}/${renter.id}`} variant="subtitle2">
+                        <Link color="inherit" component={RouterLink} href={`${paths.dashboard.renters.details}${renter.id}`} variant="subtitle2">
                           {renter.name}
                         </Link>
                         <Typography color="text.secondary" variant="body2">

@@ -42,7 +42,6 @@ const tabs = [
 ];
 
 const useRentalObject = (objectId: string): RentalObject | null => {
-  const isMounted = useMounted();
   const [rentalObject, setRentalObject] = useRecoilState(rentalObjectAtom);
   const [selectedRentalObjectId, setSelectedRentalObjectId] = useRecoilState(selectedRentalObjectIdAtom);
 
@@ -122,10 +121,9 @@ const useCurrentRepairRequest = (repairRequests?: RepairRequest[], repairRequest
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
   const searchParams = useSearchParams();
-  const current = new URLSearchParams(searchParams);
-  const objectId = new URLSearchParams(current);
+  const objectId = searchParams.get("objectId");
 
-  const rentalObject = useRentalObject(objectId.toString());
+  const rentalObject = useRentalObject(objectId ?? "");
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
@@ -291,16 +289,16 @@ const Page: PageType = () => {
                   <div>
                     <Grid container spacing={4}>
                       <Grid xs={12} lg={4}>
-                        {/* <ObjectBasicDetails /> */}
+                        <ObjectBasicDetails />
                       </Grid>
                       <Grid xs={12} lg={8}>
-                        {/* <ObjectRentInfoChart
+                        <ObjectRentInfoChart
                           id={rentalObject.rentInfo.id}
                           baseRent={rentalObject.rentInfo.baseRent}
                           electricityCosts={rentalObject.rentInfo.electricityCosts}
                           heatingCosts={rentalObject.rentInfo.heatingCosts}
                           waterCosts={rentalObject.rentInfo.waterCosts}
-                        /> */}
+                        />
                       </Grid>
                     </Grid>
                   </div>

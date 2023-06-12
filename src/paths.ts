@@ -102,13 +102,13 @@ export const paths = {
     },
     objects: {
       index: "/dashboard/objects",
-      details: "/dashboard/objects",
+      details: "/dashboard/objects/:objectId?objectId=",
       edit: "/dashboard/objects/:objectId/edit",
       create: "/dashboard/objects/create",
     },
     renters: {
       index: "/dashboard/renters",
-      details: "/dashboard/renters",
+      details: "/dashboard/renters/:renterId?renterId=",
       edit: "/dashboard/renter/:renterId/edit",
     },
   },
