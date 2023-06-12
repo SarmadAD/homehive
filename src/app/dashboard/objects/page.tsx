@@ -9,7 +9,6 @@ import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
 import type { Page as PageType } from "src/types/page";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
-import { ObjectListTable } from "src/sections/dashboard/objects/objects-list-table";
 import { useCallback, useState, ChangeEvent, MouseEvent, useEffect, useMemo } from "react";
 import { useMounted } from "src/hooks/use-mounted";
 import { useSelection } from "src/hooks/use-selection";
@@ -18,6 +17,7 @@ import { objectsApi } from "src/api/objects";
 import { paths } from "src/paths";
 import { useRecoilValue } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import { ObjectListTable } from "./objects-list-table";
 
 interface Filters {
   query?: string;

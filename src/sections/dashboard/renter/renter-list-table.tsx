@@ -34,6 +34,9 @@ import { getInitials } from "src/utils/get-initials";
 import { Renter, RenterPaidStatus } from "src/types/renter";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 
+// import { PrismaClient } from "@prisma/client";
+// const prisma = new PrismaClient();
+
 const now = new Date();
 
 interface RenterListTableProps {

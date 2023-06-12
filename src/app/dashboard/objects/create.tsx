@@ -3,7 +3,7 @@ import { BreadcrumbsSeparator } from "src/components/breadcrumbs-separator";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
-import { ObjectCreateForm } from "src/sections/dashboard/objects/object-create-form";
+import { ObjectCreateForm } from "src/app/dashboard/objects/objects/object-create-form";
 import type { Page as PageType } from "src/types/page";
 
 const Page: PageType = () => {

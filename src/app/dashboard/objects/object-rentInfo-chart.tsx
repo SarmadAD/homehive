@@ -5,6 +5,8 @@ import { Box, Button, Card, CardActions, CardContent, CardHeader, Divider, Stack
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { RentalObjectInfo } from "src/types/RentalObjectInfo";
+import { useRecoilValue } from "recoil";
+import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
 const labels: string[] = ["Kaltmiete", "Heißkosten", "Stromkosten", "Wasserkosten"];
 
@@ -69,10 +71,10 @@ const useChartOptions = (): ApexOptions => {
   };
 };
 
-export const ObjectRentInfoChart: FC<RentalObjectInfo> = (props) => {
+export const ObjectRentInfoChart: FC = () => {
   const chartOptions = useChartOptions();
-
-  const { baseRent, electricityCosts, heatingCosts, waterCosts } = props;
+  const rentalObject = useRecoilValue(rentalObjectAtom);
+  const { baseRent, electricityCosts, heatingCosts, waterCosts } = rentalObject.rentInfo;
 
   const chartSeries: ChartSeries = [baseRent, electricityCosts, heatingCosts, waterCosts];
   const totalAmount = chartSeries.reduce((acc, item) => (acc += item), 0);

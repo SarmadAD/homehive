@@ -1,10 +1,11 @@
-import type { ChangeEvent, FC, MouseEvent } from "react";
-import numeral from "numeral";
-import PropTypes from "prop-types";
+import type { FC, ChangeEvent, MouseEvent } from "react";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
+import PropTypes from "prop-types";
+
 import {
   Avatar,
+  AvatarGroup,
   Box,
   Button,
   Checkbox,
@@ -18,29 +19,36 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import { RouterLink } from "src/components/router-link";
 import { Scrollbar } from "src/components/scrollbar";
+import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
-import type { Customer } from "src/types/customer";
 import { getInitials } from "src/utils/get-initials";
+import { RentalObject } from "src/types/object";
+import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
+import { collection, getDoc, getDocs } from "firebase/firestore";
+import { Renter } from "src/types/renter";
 
-interface CustomerListTableProps {
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+interface ObjectListTableProps {
   count?: number;
-  items?: Customer[];
+  items?: RentalObject[];
   onDeselectAll?: () => void;
-  onDeselectOne?: (customerId: string) => void;
+  onDeselectOne?: (objectId: string) => void;
   onPageChange?: (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   onRowsPerPageChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onSelectAll?: () => void;
-  onSelectOne?: (customerId: string) => void;
+  onSelectOne?: (objectId: string) => void;
   page?: number;
   rowsPerPage?: number;
   selected?: string[];
 }
 
-export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
+export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
   const {
     count = 0,
     items = [],
@@ -115,28 +123,26 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
                 />
               </TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Orders</TableCell>
-              <TableCell>Spent</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Mieter</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((customer) => {
-              const isSelected = selected.includes(customer.id);
-              const location = `${customer.city}, ${customer.state}, ${customer.country}`;
-              const totalSpent = numeral(customer.totalSpent).format(`${customer.currency}0,0.00`);
+            {items.map((object) => {
+              const isSelected = selected.includes(object.id);
+              const statusPill = useRentalObjectStatusPill(object);
 
               return (
-                <TableRow hover key={customer.id} selected={isSelected}>
+                <TableRow hover key={object.id} selected={isSelected}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>): void => {
                         if (event.target.checked) {
-                          onSelectOne?.(customer.id);
+                          onSelectOne?.(object.id);
                         } else {
-                          onDeselectOne?.(customer.id);
+                          onDeselectOne?.(object.id);
                         }
                       }}
                       value={isSelected}
@@ -145,36 +151,56 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
                   <TableCell>
                     <Stack alignItems="center" direction="row" spacing={1}>
                       <Avatar
-                        src={customer.avatar}
+                        src={object.image}
                         sx={{
                           height: 42,
                           width: 42,
                         }}
                       >
-                        {getInitials(customer.name)}
+                        {getInitials(object.name)}
                       </Avatar>
                       <div>
-                        <Link color="inherit" component={RouterLink} href={paths.dashboard.customers.details} variant="subtitle2">
-                          {customer.name}
+                        <Link
+                          color="inherit"
+                          component={RouterLink}
+                          href={`${paths.dashboard.objects.details}${encodeURIComponent(object.id)}`}
+                          variant="subtitle2"
+                        >
+                          {object.name}
                         </Link>
                         <Typography color="text.secondary" variant="body2">
-                          {customer.email}
+                          {object.name}
                         </Typography>
                       </div>
                     </Stack>
                   </TableCell>
-                  <TableCell>{location}</TableCell>
-                  <TableCell>{customer.totalOrders}</TableCell>
+                  <TableCell>{statusPill}</TableCell>
                   <TableCell>
-                    <Typography variant="subtitle2">{totalSpent}</Typography>
+                    <Stack alignItems="center" direction="row" spacing={1}>
+                      <AvatarGroup max={3}>
+                        {object.renter?.map((renter) => (
+                          <Tooltip key={renter.name} title={renter.name}>
+                            <Avatar
+                              src={object.image}
+                              sx={{
+                                height: 42,
+                                width: 42,
+                              }}
+                            >
+                              {getInitials(renter.name)}
+                            </Avatar>
+                          </Tooltip>
+                        ))}
+                      </AvatarGroup>
+                    </Stack>
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton component={RouterLink} href={paths.dashboard.customers.edit}>
+                    <IconButton component={RouterLink} href={paths.dashboard.objects.edit}>
                       <SvgIcon>
                         <Edit02Icon />
                       </SvgIcon>
                     </IconButton>
-                    <IconButton component={RouterLink} href={paths.dashboard.customers.details}>
+                    <IconButton component={RouterLink} href={`${paths.dashboard.objects.details}/${object.id}`}>
                       <SvgIcon>
                         <ArrowRightIcon />
                       </SvgIcon>
@@ -199,7 +225,7 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
   );
 };
 
-CustomerListTable.propTypes = {
+ObjectListTable.propTypes = {
   count: PropTypes.number,
   items: PropTypes.array,
   onDeselectAll: PropTypes.func,

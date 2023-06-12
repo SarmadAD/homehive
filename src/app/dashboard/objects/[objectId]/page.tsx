@@ -16,24 +16,24 @@ import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
 import { RentalObject } from "src/types/object";
 import { objectsApi } from "src/api/objects";
-import { ObjectBasicDetails } from "src/sections/dashboard/objects/object-basic-details";
-import { ObjectRentInfoChart } from "src/sections/dashboard/objects/object-rentInfo-chart";
 import { RenterListTable } from "src/sections/dashboard/renter/renter-list-table";
 import { useRentersSearch } from "src/hooks/use-renter-search";
 import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useDialog } from "src/hooks/use-dialog";
-import { ObjectSingleView } from "src/sections/dashboard/objects/renter/object-single-view";
+import { ObjectSingleView } from "src/app/dashboard/objects/renter/object-single-view";
 import { Renter } from "src/types/renter";
-import { ObjectRepairRequestList } from "src/sections/dashboard/objects/repairRequests/objects-repairRequests-list";
 import { RepairRequest } from "src/types/repairRequest";
 import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
-import { ObjectRepairRequestDrawer } from "src/sections/dashboard/objects/repairRequests/object-repairRequest-drawer";
-import { RenterDrawer } from "src/sections/dashboard/objects/renter/object-renter-drawer";
+import { RenterDrawer } from "src/app/dashboard/objects/renter/object-renter-drawer";
 import { useRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { useSearchParams } from "next/navigation";
+import { ObjectBasicDetails } from "../object-basic-details";
+import { ObjectRentInfoChart } from "../object-rentInfo-chart";
+import { ObjectRepairRequestDrawer } from "../repairRequests/object-repairRequest-drawer";
+import { ObjectRepairRequestList } from "../repairRequests/objects-repairRequests-list";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -68,24 +68,18 @@ const useRentalObject = (objectId: string): RentalObject | null => {
   return rentalObject;
 };
 
-const useRepairRequests = (): RepairRequest[] | undefined => {
-  const isMounted = useMounted();
+const useRepairRequests = (objectId: string): RepairRequest[] | undefined => {
   const [repairRequests, setRepairRequests] = useState<RepairRequest[] | undefined>(undefined);
 
-  const searchParams = useSearchParams();
-  const objectId = searchParams?.get("objectId");
-
-  const handleRepairRequsts = useCallback(async () => {
+  const handleRepairRequsts = async () => {
     try {
       const response = await objectsApi.getRepairRequests({ objectId: objectId?.toString() });
 
-      if (isMounted()) {
-        setRepairRequests(response);
-      }
+      setRepairRequests(response);
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted]);
+  };
 
   useEffect(
     () => {
@@ -132,7 +126,7 @@ const Page: PageType = () => {
   const rentersIds = useRentersIds(rentalObject?.renter);
   const rentersSelection = useSelection<string>(rentersIds);
 
-  const repairRequests = useRepairRequests();
+  const repairRequests = useRepairRequests(objectId ?? "");
   const repairRequestsSearch = useRepairRequestsSearch();
   const repairRequestsSelection = useSelection<string>(rentalObject?.repairRequestsIds);
 
@@ -285,20 +279,14 @@ const Page: PageType = () => {
                     <Divider />
                   </div>
                 </Stack>
-                {currentTab === "details" && (
+                {currentTab === "details" && rentalObject && (
                   <div>
                     <Grid container spacing={4}>
                       <Grid xs={12} lg={4}>
                         <ObjectBasicDetails />
                       </Grid>
                       <Grid xs={12} lg={8}>
-                        <ObjectRentInfoChart
-                          id={rentalObject.rentInfo.id}
-                          baseRent={rentalObject.rentInfo.baseRent}
-                          electricityCosts={rentalObject.rentInfo.electricityCosts}
-                          heatingCosts={rentalObject.rentInfo.heatingCosts}
-                          waterCosts={rentalObject.rentInfo.waterCosts}
-                        />
+                        <ObjectRentInfoChart />
                       </Grid>
                     </Grid>
                   </div>
