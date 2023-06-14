@@ -20,6 +20,7 @@ async function main() {
           city: rentalObject.city,
           postalCode: rentalObject.postalCode,
           rentalObjectInfoId: rentalObject.rentalObjectInfoId,
+          landlordId: rentalObject.landlordId,
           renter: {
             create: {
               createdAt: new Date("2023-06-01T12:00:00Z"),

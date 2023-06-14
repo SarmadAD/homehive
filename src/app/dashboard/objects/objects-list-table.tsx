@@ -28,11 +28,6 @@ import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { RentalObject } from "src/types/object";
 import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
-import { collection, getDoc, getDocs } from "firebase/firestore";
-import { Renter } from "src/types/renter";
-
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 
 interface ObjectListTableProps {
   count?: number;

@@ -24,8 +24,11 @@ model RentalObject {
   renter                 Renter[]
   RentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
   repairRequests         RepairRequest[]
+  landlord               Landlord           @relation(fields: [landlordId], references: [id])
+  landlordId             String
 
   @@index([rentalObjectInfoId])
+  @@index([landlordId])
 }
 
 model Renter {
@@ -40,6 +43,11 @@ model Renter {
   RepairRequest  RepairRequest[]
 
   @@index([rentalObjectId])
+}
+
+model Landlord {
+  id            String         @id @default(uuid())
+  rentalObjects RentalObject[]
 }
 
 model RentalObjectInfo {
