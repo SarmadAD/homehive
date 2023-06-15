@@ -4,16 +4,13 @@ import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Button, SvgI
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import { useSettings } from "src/hooks/use-settings";
-import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-repair-request";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
 import type { Page as PageType } from "src/types/page";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
-import { useCallback, useState, ChangeEvent, MouseEvent, useEffect, useMemo } from "react";
-import { useMounted } from "src/hooks/use-mounted";
+import { useCallback, useState, ChangeEvent, MouseEvent, useMemo } from "react";
 import { useSelection } from "src/hooks/use-selection";
 import { RentalObject } from "src/types/object";
-import { objectsApi } from "src/api/objects";
 import { paths } from "src/paths";
 import { useRecoilValue } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
@@ -77,45 +74,6 @@ const useObjectsSearch = () => {
     handlePageChange,
     handleRowsPerPageChange,
     state,
-  };
-};
-interface ObjectsStoreState {
-  objects: RentalObject[];
-  objectsCount: number;
-}
-
-const useObjectsStore = (searchState: ObjectsSearchState) => {
-  const isMounted = useMounted();
-  const [state, setState] = useState<ObjectsStoreState>({
-    objects: [],
-    objectsCount: 0,
-  });
-
-  const handleObjectsGet = useCallback(async () => {
-    try {
-      const response = await objectsApi.getObjects(searchState);
-
-      if (isMounted()) {
-        setState({
-          objects: response.data,
-          objectsCount: response.count,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [searchState, isMounted]);
-
-  useEffect(
-    () => {
-      handleObjectsGet();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchState]
-  );
-
-  return {
-    ...state,
   };
 };
 

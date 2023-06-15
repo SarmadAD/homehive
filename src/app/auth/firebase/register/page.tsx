@@ -1,31 +1,33 @@
-'use client';
+"use client";
 
-import { useCallback } from 'react';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import Checkbox from '@mui/material/Checkbox';
-import Divider from '@mui/material/Divider';
-import FormHelperText from '@mui/material/FormHelperText';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import { useCallback } from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+import Checkbox from "@mui/material/Checkbox";
+import Divider from "@mui/material/Divider";
+import FormHelperText from "@mui/material/FormHelperText";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 
-import { RouterLink } from 'src/components/router-link';
-import { Seo } from 'src/components/seo';
-import type { AuthContextType } from 'src/contexts/auth/firebase';
-import { useAuth } from 'src/hooks/use-auth';
-import { useMounted } from 'src/hooks/use-mounted';
-import { usePageView } from 'src/hooks/use-page-view';
-import { useRouter } from 'src/hooks/use-router';
-import { useSearchParams } from 'src/hooks/use-search-params';
-import { paths } from 'src/paths';
-import { AuthIssuer } from 'src/sections/auth/auth-issuer';
+import { RouterLink } from "src/components/router-link";
+import { Seo } from "src/components/seo";
+import type { AuthContextType } from "src/contexts/auth/firebase";
+import { useAuth } from "src/hooks/use-auth";
+import { useMounted } from "src/hooks/use-mounted";
+import { usePageView } from "src/hooks/use-page-view";
+import { useRouter } from "src/hooks/use-router";
+import { useSearchParams } from "src/hooks/use-search-params";
+import { paths } from "src/paths";
+import { AuthIssuer } from "src/sections/auth/auth-issuer";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 interface Values {
   email: string;
@@ -35,34 +37,26 @@ interface Values {
 }
 
 const initialValues: Values = {
-  email: '',
-  password: '',
+  email: "",
+  password: "",
   policy: true,
-  submit: null
+  submit: null,
 };
 
 const validationSchema = Yup.object({
-  email: Yup
-    .string()
-    .email('Must be a valid email')
-    .max(255)
-    .required('Email is required'),
-  password: Yup
-    .string()
-    .min(7)
-    .max(255)
-    .required('Password is required'),
-  policy: Yup
-    .boolean()
-    .oneOf([true], 'This field must be checked')
+  email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
+  password: Yup.string().min(7).max(255).required("Password is required"),
+  policy: Yup.boolean().oneOf([true], "This field must be checked"),
 });
 
 const Page = () => {
   const isMounted = useMounted();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnTo = searchParams.get('returnTo');
-  const { issuer, createUserWithEmailAndPassword, signInWithGoogle } = useAuth<AuthContextType>();
+  const returnTo = searchParams.get("returnTo");
+  const [currentLandlord, setCurrentLandlord] = useRecoilState(currentLandlordAtom);
+  const { issuer, createUserWithEmailAndPassword, signInWithGoogle, user } = useAuth<AuthContextType>();
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -82,23 +76,23 @@ const Page = () => {
           helpers.setSubmitting(false);
         }
       }
-    }
+    },
   });
 
-  const handleGoogleClick = useCallback(
-    async (): Promise<void> => {
-      try {
-        await signInWithGoogle();
-
-        if (isMounted()) {
-          router.push(returnTo || paths.dashboard.index);
-        }
-      } catch (err) {
-        console.error(err);
+  const handleGoogleClick = useCallback(async (): Promise<void> => {
+    try {
+      await signInWithGoogle();
+      if (user) {
+        setCurrentLandlord({ ...currentLandlord, firebaseUserId: user.id });
+        // Make here the api Call
       }
-    },
-    [router, signInWithGoogle, isMounted, returnTo]
-  );
+      if (isMounted()) {
+        router.push(returnTo || paths.dashboard.index);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [router, signInWithGoogle, isMounted, returnTo]);
 
   usePageView();
 
@@ -108,35 +102,23 @@ const Page = () => {
       <div>
         <Card elevation={16}>
           <CardHeader
-            subheader={(
-              <Typography
-                color="text.secondary"
-                variant="body2"
-              >
-                Already have an account?
-                &nbsp;
-                <Link
-                  component={RouterLink}
-                  href={paths.auth.firebase.login}
-                  underline="hover"
-                  variant="subtitle2"
-                >
+            subheader={
+              <Typography color="text.secondary" variant="body2">
+                Already have an account? &nbsp;
+                <Link component={RouterLink} href={paths.auth.firebase.login} underline="hover" variant="subtitle2">
                   Log in
                 </Link>
               </Typography>
-            )}
+            }
             sx={{ pb: 0 }}
             title="Register"
           />
           <CardContent>
-            <form
-              noValidate
-              onSubmit={formik.handleSubmit}
-            >
+            <form noValidate onSubmit={formik.handleSubmit}>
               <Box
                 sx={{
                   flexGrow: 1,
-                  mt: 3
+                  mt: 3,
                 }}
               >
                 <Button
@@ -144,38 +126,29 @@ const Page = () => {
                   onClick={handleGoogleClick}
                   size="large"
                   sx={{
-                    backgroundColor: 'common.white',
-                    color: 'common.black',
-                    '&:hover': {
-                      backgroundColor: 'common.white',
-                      color: 'common.black'
-                    }
+                    backgroundColor: "common.white",
+                    color: "common.black",
+                    "&:hover": {
+                      backgroundColor: "common.white",
+                      color: "common.black",
+                    },
                   }}
                   variant="contained"
                 >
-                  <Box
-                    alt="Google"
-                    component="img"
-                    src="/assets/logos/logo-google.svg"
-                    sx={{ mr: 1 }}
-                  />
+                  <Box alt="Google" component="img" src="/assets/logos/logo-google.svg" sx={{ mr: 1 }} />
                   Google
                 </Button>
                 <Box
                   sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    mt: 2
+                    alignItems: "center",
+                    display: "flex",
+                    mt: 2,
                   }}
                 >
                   <Box sx={{ flexGrow: 1 }}>
                     <Divider orientation="horizontal" />
                   </Box>
-                  <Typography
-                    color="text.secondary"
-                    sx={{ m: 2 }}
-                    variant="body1"
-                  >
+                  <Typography color="text.secondary" sx={{ m: 2 }} variant="body1">
                     OR
                   </Typography>
                   <Box sx={{ flexGrow: 1 }}>
@@ -209,52 +182,28 @@ const Page = () => {
               </Stack>
               <Box
                 sx={{
-                  alignItems: 'center',
-                  display: 'flex',
+                  alignItems: "center",
+                  display: "flex",
                   ml: -1,
-                  mt: 1
+                  mt: 1,
                 }}
               >
-                <Checkbox
-                  checked={formik.values.policy}
-                  name="policy"
-                  onChange={formik.handleChange}
-                />
-                <Typography
-                  color="text.secondary"
-                  variant="body2"
-                >
-                  I have read the
-                  {' '}
-                  <Link
-                    component="a"
-                    href="#"
-                  >
+                <Checkbox checked={formik.values.policy} name="policy" onChange={formik.handleChange} />
+                <Typography color="text.secondary" variant="body2">
+                  I have read the{" "}
+                  <Link component="a" href="#">
                     Terms and Conditions
                   </Link>
                 </Typography>
               </Box>
-              {!!(formik.touched.policy && formik.errors.policy) && (
-                <FormHelperText error>
-                  {formik.errors.policy}
-                </FormHelperText>
-              )}
+              {!!(formik.touched.policy && formik.errors.policy) && <FormHelperText error>{formik.errors.policy}</FormHelperText>}
               {formik.errors.submit && (
-                <FormHelperText
-                  error
-                  sx={{ mt: 3 }}
-                >
+                <FormHelperText error sx={{ mt: 3 }}>
                   {formik.errors.submit as string}
                 </FormHelperText>
               )}
               <Box sx={{ mt: 2 }}>
-                <Button
-                  disabled={formik.isSubmitting}
-                  fullWidth
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                >
+                <Button disabled={formik.isSubmitting} fullWidth size="large" type="submit" variant="contained">
                   Register
                 </Button>
               </Box>

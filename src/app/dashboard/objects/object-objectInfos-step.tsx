@@ -1,8 +1,9 @@
-import type { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
+import type { ChangeEvent, FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Button, Chip, InputAdornment, Stack, SvgIcon, TextField, Typography } from "@mui/material";
+import { Button, Stack, SvgIcon, TextField } from "@mui/material";
 import { RentalObject } from "src/types/object";
+import { SetterOrUpdater } from "recoil";
 
 interface ObjectInfosStepProps {
   onNext?: () => void;

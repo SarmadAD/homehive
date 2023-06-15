@@ -3,7 +3,6 @@ import { useCallback, useMemo, useState } from "react";
 import CheckIcon from "@untitled-ui/icons-react/build/esm/Check";
 import type { StepIconProps } from "@mui/material";
 import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } from "@mui/material";
-import { JobPreview } from "../jobs/job-preview";
 import { ObjectBasicInfosStep } from "./object-basicinfos-step";
 import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
