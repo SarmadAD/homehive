@@ -20,10 +20,10 @@ model RentalObject {
   city                   String
   postalCode             String
   areaSize               Int
-  rentalObjectInfoId     String
   renter                 Renter[]
-  RentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
   repairRequests         RepairRequest[]
+  RentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
+  rentalObjectInfoId     String
   landlord               Landlord           @relation(fields: [landlordId], references: [id])
   landlordId             String
 

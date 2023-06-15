@@ -1,41 +1,22 @@
 import { PrismaClient } from "@prisma/client";
-import { rentalObjects } from "./seedData";
+import { landlords, rentalObjects, renters } from "./seedData";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const rentalObjectsData = [];
-  // await prisma.rentalObject.deleteMany();
-  for (const rentalObject of rentalObjects) {
-    rentalObjectsData.push(
-      prisma.rentalObject.create({
-        data: {
-          address: rentalObject.address,
-          areaSize: rentalObject.areaSize,
-          name: rentalObject.name,
-          image: rentalObject.image,
-          status: rentalObject.status,
-          houseNr: rentalObject.houseNr,
-          additionalHouseDetails: rentalObject.additionalHouseDetails,
-          city: rentalObject.city,
-          postalCode: rentalObject.postalCode,
-          rentalObjectInfoId: rentalObject.rentalObjectInfoId,
-          landlordId: rentalObject.landlordId,
-          renter: {
-            create: {
-              createdAt: new Date("2023-06-01T12:00:00Z"),
-              name: "John Doe",
-              status: "PAID",
-              email: "john.doe@exampla.com",
-              image: "https://example.com/john-doe.jpg",
-            },
-          },
-        },
-        include: { renter: true },
-      })
-    );
-  }
-  await prisma.$transaction(rentalObjectsData);
+  await prisma.rentalObject.deleteMany();
+  await prisma.landlord.deleteMany();
+  await prisma.renter.deleteMany();
+
+  await prisma.rentalObject.createMany({
+    data: rentalObjects,
+  });
+  await prisma.landlord.createMany({
+    data: landlords,
+  });
+  await prisma.renter.createMany({
+    data: renters,
+  });
 }
 
 main().finally(async () => await prisma.$disconnect());
