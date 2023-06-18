@@ -102,7 +102,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const signInWithGoogle = useCallback(async (): Promise<void> => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
-    setLandlord({ ...landlord, firebaseUserId: "aHVAVJTNzOQgvyHXW0wMOZLbLXK2" });
+    if (auth.currentUser) {
+      setLandlord({ ...landlord, firebaseUserId: auth.currentUser?.uid });
+    }
   }, []);
 
   const _createUserWithEmailAndPassword = useCallback(async (email: string, password: string): Promise<void> => {
