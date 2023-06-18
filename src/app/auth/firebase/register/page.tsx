@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Box from "@mui/material/Box";
@@ -26,7 +26,7 @@ import { useRouter } from "src/hooks/use-router";
 import { useSearchParams } from "src/hooks/use-search-params";
 import { paths } from "src/paths";
 import { AuthIssuer } from "src/sections/auth/auth-issuer";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 interface Values {
@@ -50,12 +50,13 @@ const validationSchema = Yup.object({
 });
 
 const Page = () => {
+  usePageView();
   const isMounted = useMounted();
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo");
-  const [currentLandlord, setCurrentLandlord] = useRecoilState(currentLandlordAtom);
-  const { issuer, createUserWithEmailAndPassword, signInWithGoogle, user } = useAuth<AuthContextType>();
+  const landlord = useRecoilValue(currentLandlordAtom);
+  const { issuer, createUserWithEmailAndPassword, signInWithGoogle } = useAuth<AuthContextType>();
 
   const formik = useFormik({
     initialValues,
@@ -79,13 +80,18 @@ const Page = () => {
     },
   });
 
+  useEffect(() => {
+    const setLandLord = async () => {
+      if (landlord.firebaseUserId) {
+        await createLandlord();
+      }
+    };
+    setLandLord();
+  }, [landlord]);
+
   const handleGoogleClick = useCallback(async (): Promise<void> => {
     try {
       await signInWithGoogle();
-      if (user) {
-        setCurrentLandlord({ ...currentLandlord, firebaseUserId: user.id });
-        // Make here the api Call
-      }
       if (isMounted()) {
         router.push(returnTo || paths.dashboard.index);
       }
@@ -94,7 +100,18 @@ const Page = () => {
     }
   }, [router, signInWithGoogle, isMounted, returnTo]);
 
-  usePageView();
+  async function createLandlord() {
+    const firebaseUserId = landlord.firebaseUserId;
+    await fetch("/api/landlord", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firebaseUserId,
+      }),
+    });
+  }
 
   return (
     <>

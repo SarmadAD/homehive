@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from "react";
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import PropTypes from "prop-types";
 import type { User as FirebaseUser } from "@firebase/auth";
 import {
@@ -18,6 +18,8 @@ import { Issuer } from "src/utils/auth";
 
 import type { State } from "./auth-context";
 import { AuthContext, initialState } from "./auth-context";
+import { useRecoilState } from "recoil";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 const auth = getAuth(firebaseApp);
 
@@ -57,6 +59,7 @@ interface AuthProviderProps {
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [landlord, setLandlord] = useRecoilState(currentLandlordAtom);
 
   const handleAuthStateChanged = useCallback(
     (user: FirebaseUser | null) => {
@@ -98,8 +101,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const signInWithGoogle = useCallback(async (): Promise<void> => {
     const provider = new GoogleAuthProvider();
-
     await signInWithPopup(auth, provider);
+    setLandlord({ ...landlord, firebaseUserId: "aHVAVJTNzOQgvyHXW0wMOZLbLXK2" });
   }, []);
 
   const _createUserWithEmailAndPassword = useCallback(async (email: string, password: string): Promise<void> => {

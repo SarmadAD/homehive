@@ -6,6 +6,7 @@
             "request": "launch",
             "name": "launch Chrome",
             "url": "http://localhost:3000/",
+            "port": 12345,
             "webRoot": "${workspaceFolder}"
         }
     ]

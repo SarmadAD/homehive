@@ -1,7 +1,7 @@
-import { createContext } from 'react';
+import { createContext } from "react";
 
-import type { User } from 'src/types/user';
-import { Issuer } from 'src/utils/auth';
+import type { User } from "src/types/user";
+import { Issuer } from "src/utils/auth";
 
 export interface State {
   isInitialized: boolean;
@@ -12,7 +12,7 @@ export interface State {
 export const initialState: State = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
 };
 
 export interface AuthContextType extends State {
@@ -29,5 +29,5 @@ export const AuthContext = createContext<AuthContextType>({
   createUserWithEmailAndPassword: () => Promise.resolve(),
   signInWithEmailAndPassword: () => Promise.resolve(),
   signInWithGoogle: () => Promise.resolve(),
-  signOut: () => Promise.resolve()
+  signOut: () => Promise.resolve(),
 });
