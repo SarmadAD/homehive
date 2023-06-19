@@ -47,7 +47,7 @@ model Renter {
 
 model Landlord {
   id             String         @id @default(uuid())
-  firebaseUserId String
+  firebaseUserId String         @unique
   rentalObjects  RentalObject[]
 }
 

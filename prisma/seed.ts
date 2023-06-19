@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   await prisma.rentalObject.deleteMany();
-  await prisma.landlord.deleteMany();
+  // await prisma.landlord.deleteMany();
   await prisma.renter.deleteMany();
 
   await prisma.rentalObject.createMany({

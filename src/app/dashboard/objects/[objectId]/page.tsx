@@ -43,7 +43,7 @@ const tabs = [
 
 const useRentalObject = (objectId: string): RentalObject | null => {
   const [rentalObject, setRentalObject] = useRecoilState(rentalObjectAtom);
-  const [selectedRentalObjectId, setSelectedRentalObjectId] = useRecoilState(selectedRentalObjectIdAtom);
+  const [selectedRentalObjectId, setSelectedRentalObjectId] = useRecoilState();
 
   const handleRentalObjectGet = async () => {
     try {

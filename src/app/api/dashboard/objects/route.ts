@@ -1,8 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export async function GET(request: Request) {
-    const objects = prisma.rentalObject
-  return NextResponse.json({});
+export async function GET(request: NextRequest) {
+  const landlordId = request.nextUrl.searchParams.get("lloId");
+  if (landlordId) {
+    const rentalObjects = await prisma.rentalObject.findMany({
+      where: { landlordId: landlordId },
+    });
+    if (rentalObjects.length > 0) {
+      return NextResponse.json(rentalObjects);
+    }
+    return NextResponse.json({ error: "error" });
+  }
 }

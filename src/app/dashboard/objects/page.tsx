@@ -8,13 +8,17 @@ import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
 import type { Page as PageType } from "src/types/page";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
-import { useCallback, useState, ChangeEvent, MouseEvent, useMemo } from "react";
+import { useCallback, useState, ChangeEvent, MouseEvent, useMemo, useEffect } from "react";
 import { useSelection } from "src/hooks/use-selection";
 import { RentalObject } from "src/types/object";
 import { paths } from "src/paths";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { ObjectListTable } from "./objects-list-table";
+import { useAuth } from "src/hooks/use-auth";
+import { AuthContextType } from "src/contexts/auth/firebase";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { Landlord } from "@prisma/client";
 
 interface Filters {
   query?: string;
@@ -84,15 +88,36 @@ const useObjectsIds = (objects: RentalObject[] = []) => {
 };
 
 const Page: PageType = () => {
+  usePageView();
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
 
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
+  const setLandlord = useSetRecoilState(currentLandlordAtom);
   const objectsIds = useObjectsIds(rentalObjects);
-
   const objectsSelection = useSelection<string>(objectsIds);
 
-  usePageView();
+  const { user } = useAuth<AuthContextType>();
+
+  useEffect(() => {
+    getLandlord();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function getLandlord() {
+    const firebaseUserId = user?.id;
+    const response = await fetch(`/api/landlord?fbId=${firebaseUserId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const landlord = (await response.json()) as Landlord;
+    setLandlord(landlord);
+  }
 
   return (
     <>
@@ -148,7 +173,7 @@ const Page: PageType = () => {
                 onFiltersChange={customersSearch.handleFiltersChange}
                 onSortChange={customersSearch.handleSortChange}
                 sortBy={customersSearch.state.sortBy}
-                sortDir={customersSearch.state.sortDir}
+                sortDir={customersSearch.state.sortDir} 
               /> */}
               <ObjectListTable
                 count={rentalObjects.length}
