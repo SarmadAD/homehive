@@ -18,4 +18,4 @@ export interface RentalObject {
   repairRequestsIds: string[];
 }
 
-export type RentalObjectStatus = "inhabited" | "uninhabited";
+export type RentalObjectStatus = "INHABITED" | "UNINHABITED";

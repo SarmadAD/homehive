@@ -43,13 +43,22 @@ const tabs = [
 
 const useRentalObject = (objectId: string): RentalObject | null => {
   const [rentalObject, setRentalObject] = useRecoilState(rentalObjectAtom);
-  const [selectedRentalObjectId, setSelectedRentalObjectId] = useRecoilState();
+  const [selectedRentalObjectId, setSelectedRentalObjectId] = useRecoilState(selectedRentalObjectIdAtom);
 
   const handleRentalObjectGet = async () => {
     try {
       if (objectId) {
-        const response = await objectsApi.getObject({ objectId: objectId.toString() });
-        setRentalObject(response);
+        const response = await fetch(`/api/dashboard/objects/${objectId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        const rentalObject = (await response.json()) as RentalObject;
+        setRentalObject(rentalObject);
         setSelectedRentalObjectId(objectId.toString() ?? "");
       }
     } catch (err) {
