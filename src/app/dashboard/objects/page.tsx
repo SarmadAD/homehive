@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Button, SvgIcon } from "@mui/material";
+import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Button, SvgIcon, CircularProgress } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import { useSettings } from "src/hooks/use-settings";
@@ -97,6 +97,7 @@ const Page: PageType = () => {
   const setLandlord = useSetRecoilState(currentLandlordAtom);
   const objectsIds = useObjectsIds(rentalObjects);
   const objectsSelection = useSelection<string>(objectsIds);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { user } = useAuth<AuthContextType>();
 
@@ -107,6 +108,7 @@ const Page: PageType = () => {
 
   async function getLandlord() {
     try {
+      setIsLoading(true);
       const firebaseUserId = user?.id;
       if (firebaseUserId) {
         const landlord = await agent.landlord.details(firebaseUserId);
@@ -114,6 +116,8 @@ const Page: PageType = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -173,19 +177,31 @@ const Page: PageType = () => {
                 sortBy={customersSearch.state.sortBy}
                 sortDir={customersSearch.state.sortDir} 
               /> */}
-              <ObjectListTable
-                count={rentalObjects.length}
-                items={rentalObjects}
-                onDeselectAll={objectsSelection.handleDeselectAll}
-                onDeselectOne={objectsSelection.handleDeselectOne}
-                onPageChange={objectsSearch.handlePageChange}
-                onRowsPerPageChange={objectsSearch.handleRowsPerPageChange}
-                onSelectAll={objectsSelection.handleSelectAll}
-                onSelectOne={objectsSelection.handleSelectOne}
-                page={objectsSearch.state.page}
-                rowsPerPage={objectsSearch.state.rowsPerPage}
-                selected={objectsSelection.selected}
-              />
+              {isLoading ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 3,
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <ObjectListTable
+                  count={rentalObjects.length}
+                  items={rentalObjects}
+                  onDeselectAll={objectsSelection.handleDeselectAll}
+                  onDeselectOne={objectsSelection.handleDeselectOne}
+                  onPageChange={objectsSearch.handlePageChange}
+                  onRowsPerPageChange={objectsSearch.handleRowsPerPageChange}
+                  onSelectAll={objectsSelection.handleSelectAll}
+                  onSelectOne={objectsSelection.handleSelectOne}
+                  page={objectsSearch.state.page}
+                  rowsPerPage={objectsSearch.state.rowsPerPage}
+                  selected={objectsSelection.selected}
+                />
+              )}
             </Grid>
           </Grid>
         </Container>
