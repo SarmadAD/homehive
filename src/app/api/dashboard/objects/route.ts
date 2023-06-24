@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
   if (landlordId) {
     const rentalObjects = await prisma.rentalObject.findMany({
       where: { landlordId: landlordId },
+      include: { renter: true, rentalObjectInfo: true, repairRequests: true },
     });
     if (rentalObjects.length > 0) {
       return NextResponse.json(rentalObjects);

@@ -22,8 +22,8 @@ model RentalObject {
   areaSize               Int
   renter                 Renter[]
   repairRequests         RepairRequest[]
-  RentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
-  rentalObjectInfoId     String
+  rentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
+  rentalObjectInfoId     String             @unique
   landlord               Landlord           @relation(fields: [landlordId], references: [id])
   landlordId             String
 
@@ -52,12 +52,12 @@ model Landlord {
 }
 
 model RentalObjectInfo {
-  id               String         @id @default(uuid())
+  id               String        @id @default(uuid())
   baseRent         Int
   heatingCosts     Int
   waterCosts       Int
   electricityCosts Int
-  RentalObject     RentalObject[]
+  rentalObject     RentalObject?
 }
 
 model RepairRequest {

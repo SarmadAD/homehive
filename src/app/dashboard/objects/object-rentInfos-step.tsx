@@ -54,8 +54,8 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
 
     setNewObject({
       ...newObject,
-      rentInfo: {
-        ...newObject?.rentInfo,
+      rentalObjectInfo: {
+        ...newObject?.rentalObjectInfo,
         [e.target.name]: e.target.value,
       },
     });
@@ -73,17 +73,31 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
   return (
     <Stack spacing={3} {...other}>
       <Stack spacing={3} direction="row">
-        <TextField fullWidth label="Kaltmiete" name="baseRent" value={newObject?.rentInfo?.baseRent} onChange={handleChange} type="number" />
-        <TextField fullWidth label="Heizkosten" name="heatingCosts" value={newObject?.rentInfo?.heatingCosts} onChange={handleChange} type="number" />
+        <TextField fullWidth label="Kaltmiete" name="baseRent" value={newObject?.rentalObjectInfo?.baseRent} onChange={handleChange} type="number" />
+        <TextField
+          fullWidth
+          label="Heizkosten"
+          name="heatingCosts"
+          value={newObject?.rentalObjectInfo?.heatingCosts}
+          onChange={handleChange}
+          type="number"
+        />
       </Stack>
 
       <Stack spacing={3} direction="row">
-        <TextField fullWidth label="Wasserkosten" name="waterCosts" value={newObject?.rentInfo?.waterCosts} onChange={handleChange} type="number" />
+        <TextField
+          fullWidth
+          label="Wasserkosten"
+          name="waterCosts"
+          value={newObject?.rentalObjectInfo?.waterCosts}
+          onChange={handleChange}
+          type="number"
+        />
         <TextField
           fullWidth
           label="Stromkosten"
           name="electricityCosts"
-          value={newObject?.rentInfo?.electricityCosts}
+          value={newObject?.rentalObjectInfo?.electricityCosts}
           onChange={handleChange}
           type="number"
         />

@@ -81,7 +81,7 @@ export const ObjectCreateForm: FC = () => {
       {
         ...newObject,
         id: uuidv4(),
-        status: "uninhabited",
+        status: "UNINHABITED",
       },
     ]);
     setIsComplete(false);

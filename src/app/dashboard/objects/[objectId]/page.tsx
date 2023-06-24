@@ -26,7 +26,7 @@ import { Renter } from "src/types/renter";
 import { RepairRequest } from "src/types/repairRequest";
 import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
 import { RenterDrawer } from "src/app/dashboard/objects/renter/object-renter-drawer";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { useSearchParams } from "next/navigation";
@@ -34,6 +34,8 @@ import { ObjectBasicDetails } from "../object-basic-details";
 import { ObjectRentInfoChart } from "../object-rentInfo-chart";
 import { ObjectRepairRequestDrawer } from "../repairRequests/object-repairRequest-drawer";
 import { ObjectRepairRequestList } from "../repairRequests/objects-repairRequests-list";
+import agent from "src/api/agent";
+import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -41,65 +43,29 @@ const tabs = [
   { label: "Wartung/Reperatur", value: "repairRequests" },
 ];
 
-const useRentalObject = (objectId: string): RentalObject | null => {
-  const [rentalObject, setRentalObject] = useRecoilState(rentalObjectAtom);
-  const [selectedRentalObjectId, setSelectedRentalObjectId] = useRecoilState(selectedRentalObjectIdAtom);
+// const useRepairRequests = (objectId: string): RepairRequest[] | undefined => {
+//   const [repairRequests, setRepairRequests] = useState<RepairRequest[] | undefined>(undefined);
 
-  const handleRentalObjectGet = async () => {
-    try {
-      if (objectId) {
-        const response = await fetch(`/api/dashboard/objects/${objectId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        const rentalObject = (await response.json()) as RentalObject;
-        setRentalObject(rentalObject);
-        setSelectedRentalObjectId(objectId.toString() ?? "");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+//   const handleRepairRequsts = async () => {
+//     try {
+//       const response = await objectsApi.getRepairRequests({ objectId: objectId?.toString() });
 
-  useEffect(
-    () => {
-      handleRentalObjectGet();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+//       setRepairRequests(response);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
 
-  return rentalObject;
-};
+//   useEffect(
+//     () => {
+//       handleRepairRequsts();
+//     },
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//     []
+//   );
 
-const useRepairRequests = (objectId: string): RepairRequest[] | undefined => {
-  const [repairRequests, setRepairRequests] = useState<RepairRequest[] | undefined>(undefined);
-
-  const handleRepairRequsts = async () => {
-    try {
-      const response = await objectsApi.getRepairRequests({ objectId: objectId?.toString() });
-
-      setRepairRequests(response);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(
-    () => {
-      handleRepairRequsts();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  return repairRequests;
-};
+//   return repairRequests;
+// };
 
 const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undefined => {
   return useMemo((): Renter | undefined => {
@@ -126,23 +92,39 @@ const Page: PageType = () => {
   const searchParams = useSearchParams();
   const objectId = searchParams.get("objectId");
 
-  const rentalObject = useRentalObject(objectId ?? "");
-
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
 
+  const rentalObject = useRecoilValue(rentalObjectAtom);
+  const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
+
   const rentersSearch = useRentersSearch();
+  const repairRequestsSearch = useRepairRequestsSearch();
+
   const rentersIds = useRentersIds(rentalObject?.renter);
   const rentersSelection = useSelection<string>(rentersIds);
 
-  const repairRequests = useRepairRequests(objectId ?? "");
-  const repairRequestsSearch = useRepairRequestsSearch();
-  const repairRequestsSelection = useSelection<string>(rentalObject?.repairRequestsIds);
+  const repairRequestsIds = useRepairRequestsIds(rentalObject?.repairRequests);
+  const repairRequestsSelection = useSelection<string>(repairRequestsIds);
 
   const currentRenter = useCurrentRenter(rentalObject?.renter, dialog.data);
-  const currentRepairRequest = useCurrentRepairRequest(repairRequests, dialog.data);
+  const currentRepairRequest = useCurrentRepairRequest(rentalObject?.repairRequests, dialog.data);
 
   usePageView();
+
+  async function setRentalObjectId() {
+    if (objectId) {
+      setSelectedRentalObjectId(objectId.toString() ?? "");
+    }
+  }
+
+  useEffect(
+    () => {
+      setRentalObjectId();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const handleDialog = useCallback(
     (id: string): void => {
@@ -167,10 +149,6 @@ const Page: PageType = () => {
   const handleRejectRepairRequest = () => {};
 
   if (!rentalObject) {
-    return null;
-  }
-
-  if (!repairRequests) {
     return null;
   }
 
@@ -318,8 +296,8 @@ const Page: PageType = () => {
                 )}
                 {currentTab === "repairRequests" && (
                   <ObjectRepairRequestList
-                    count={repairRequests?.length}
-                    items={repairRequests}
+                    count={rentalObject.repairRequests?.length}
+                    items={rentalObject.repairRequests}
                     onDeselectAll={repairRequestsSelection.handleDeselectAll}
                     onDeselectOne={repairRequestsSelection.handleDeselectOne}
                     onPageChange={repairRequestsSearch.handlePageChange}

@@ -1,5 +1,6 @@
 import { RentalObjectInfo } from "./RentalObjectInfo";
 import { Renter } from "./renter";
+import { RepairRequest } from "./repairRequest";
 
 export interface RentalObject {
   id: string;
@@ -14,8 +15,8 @@ export interface RentalObject {
   postalCode: string;
   areaSize: number;
   renter: Renter[];
-  rentInfo: RentalObjectInfo;
-  repairRequestsIds: string[];
+  rentalObjectInfo: RentalObjectInfo;
+  repairRequests: RepairRequest[];
 }
 
 export type RentalObjectStatus = "INHABITED" | "UNINHABITED";

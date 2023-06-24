@@ -19,6 +19,7 @@ import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { Landlord } from "@prisma/client";
+import agent from "src/api/agent";
 
 interface Filters {
   query?: string;
@@ -105,18 +106,15 @@ const Page: PageType = () => {
   }, []);
 
   async function getLandlord() {
-    const firebaseUserId = user?.id;
-    const response = await fetch(`/api/landlord?fbId=${firebaseUserId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error(response.statusText);
+    try {
+      const firebaseUserId = user?.id;
+      if (firebaseUserId) {
+        const landlord = await agent.landlord.details(firebaseUserId);
+        setLandlord(landlord);
+      }
+    } catch (error) {
+      console.error(error);
     }
-    const landlord = (await response.json()) as Landlord;
-    setLandlord(landlord);
   }
 
   return (

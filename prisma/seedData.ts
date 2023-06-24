@@ -14,7 +14,7 @@ const rentalObjects: RentalObject[] = [
     postalCode: "12345",
     areaSize: 100,
     rentalObjectInfoId: "fe7743a0-0ae2-11ee-be56-0242ac120002",
-    landlordId: "2fec6670-bd13-45d2-8bfd-a37bf6f906f8",
+    landlordId: "2fec6670-bd13-45d2-8bfd-a37bf6f906f8", 
   },
   {
     id: "21fd5324-0ae2-11ee-be56-0242ac120002",
