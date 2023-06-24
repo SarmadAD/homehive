@@ -32,10 +32,10 @@ export const ObjectBasicDetails: FC = () => {
 };
 
 ObjectBasicDetails.propTypes = {
-  address: PropTypes.string.isRequired,
-  areaSize: PropTypes.number.isRequired,
-  city: PropTypes.string.isRequired,
-  houseNr: PropTypes.number.isRequired,
-  postalCode: PropTypes.string.isRequired,
+  address: PropTypes.string,
+  areaSize: PropTypes.number,
+  city: PropTypes.string,
+  houseNr: PropTypes.number,
+  postalCode: PropTypes.string,
   additionalHouseDetails: PropTypes.string,
 };
