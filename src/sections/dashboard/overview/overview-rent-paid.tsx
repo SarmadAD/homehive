@@ -13,7 +13,7 @@ interface OverviewRentPaidProps {
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
-  const [renters, setRenters] = useRecoilState(rentersAtom);
+  const renters = useRecoilValue(rentersAtom);
   const lengthPaidRents = useRecoilValue(totalPaidRents);
 
   return (
