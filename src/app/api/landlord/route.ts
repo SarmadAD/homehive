@@ -1,6 +1,7 @@
-import { Landlord, PrismaClient } from "@prisma/client";
+import { Landlord } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-const prisma = new PrismaClient();
+
+import { prisma } from "src/app/db/db";
 
 export async function POST(req: Request) {
   const { firebaseUserId }: Partial<Landlord> = await req.json();
