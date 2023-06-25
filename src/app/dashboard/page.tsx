@@ -8,12 +8,36 @@ import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-
 import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-repair-request";
 import { OverviewRentalIncome } from "src/sections/dashboard/overview/overview-rental-income";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
+import { useEffect } from "react";
+import agent from "src/api/agent";
+import { useAuth } from "src/hooks/use-auth";
+import { AuthContextType } from "src/contexts/auth/firebase";
+import { useSetRecoilState } from "recoil";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 const Page = () => {
-  const settings = useSettings();
-
   usePageView();
+  const settings = useSettings();
+  const setLandlord = useSetRecoilState(currentLandlordAtom);
 
+  const { user } = useAuth<AuthContextType>();
+
+  useEffect(() => {
+    getLandlord();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function getLandlord() {
+    try {
+      const firebaseUserId = user?.id;
+      if (firebaseUserId) {
+        const landlord = await agent.landlord.details(firebaseUserId);
+        setLandlord(landlord);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <>
       <Seo title="Dashboard: Übersicht" />

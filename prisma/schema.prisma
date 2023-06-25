@@ -39,8 +39,9 @@ model Renter {
   email          String           @unique
   image          String
   rentalObjectId String?
-  RentalObject   RentalObject?    @relation(fields: [rentalObjectId], references: [id])
-  RepairRequest  RepairRequest[]
+  rentalObject   RentalObject?    @relation(fields: [rentalObjectId], references: [id])
+  repairRequest  RepairRequest[]
+  landlords      Landlord[]
 
   @@index([rentalObjectId])
 }
@@ -49,6 +50,7 @@ model Landlord {
   id             String         @id @default(uuid())
   firebaseUserId String         @unique
   rentalObjects  RentalObject[]
+  renters        Renter[]
 }
 
 model RentalObjectInfo {
@@ -82,8 +84,8 @@ enum RentalObjectStatus {
 
 enum RenterPaidStatus {
   PAID
-  NOT_PAID
-  IN_ARREARS
+  NOTPAID
+  INARREARS
 }
 
 enum RepairRequestStatus {
@@ -91,5 +93,5 @@ enum RepairRequestStatus {
   REJECTED
   DONE
   CANCELED
-  IN_PROGRESS
+  INPROGRESS
 }

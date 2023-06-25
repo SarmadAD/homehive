@@ -20,6 +20,9 @@ import type { State } from "./auth-context";
 import { AuthContext, initialState } from "./auth-context";
 import { useRecoilState } from "recoil";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { useAuth } from "src/hooks/use-auth";
+import { AuthContextType } from "../firebase-context";
+import agent from "src/api/agent";
 
 const auth = getAuth(firebaseApp);
 

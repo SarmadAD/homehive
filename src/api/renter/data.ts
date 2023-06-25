@@ -7,7 +7,7 @@ export const renters: Renter[] = [
     createdAt: 1664813832674,
     email: "carson.darrin@devias.io",
     name: "Carson Darrin",
-    status: "paid",
+    status: "PAID",
   },
   {
     id: "5ecb8a6d9f53bfae09e16118",
@@ -15,7 +15,7 @@ export const renters: Renter[] = [
     createdAt: 1664813832674,
     email: "emma.jones@example.com",
     name: "Emma Jones",
-    status: "paid",
+    status: "PAID",
   },
   {
     id: "5ecb8a6d9f53bfae09e16119",
@@ -23,6 +23,6 @@ export const renters: Renter[] = [
     createdAt: 1664813832674,
     email: "john.smith@example.com",
     name: "John Smith",
-    status: "notPaid",
+    status: "PAID",
   },
 ];

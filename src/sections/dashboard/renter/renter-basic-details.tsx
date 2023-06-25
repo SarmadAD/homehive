@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Button, Card, CardActions, CardHeader, Stack, TextField, Theme, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { RentalObject } from "src/types/object";
 import { Renter } from "src/types/renter";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 

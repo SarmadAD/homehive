@@ -1,4 +1,4 @@
-import { Landlord, RentalObject, RentalObjectInfo } from "@prisma/client";
+import { Landlord, RentalObject, RentalObjectInfo, Renter } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
@@ -11,8 +11,8 @@ const requests = {
 };
 
 const objects = {
-  list: (landlordId: string) => requests.get<RentalObject[]>(`/api/dashboard/objects?lloId=${landlordId}`),
-  details: (id: string) => requests.get<RentalObject>(`/api/dashboard/objects/${id}`),
+  list: (landlordId: string) => requests.get<RentalObject[]>(`/api/dashboard/objects/${landlordId}`),
+  details: (objectId: string) => requests.get<RentalObject>(`/api/dashboard/objects/object/${objectId}`),
   rentalObjectInfo: (id: string) => requests.get<RentalObjectInfo>(`/rentalObjectInfo/${id}`),
   //   create: (activity: ActivityFormValues) => requests.post<void>("/activities", activity),
   //   update: (activity: ActivityFormValues) => requests.put<void>(`/activities/${activity.id}`, activity),
@@ -24,9 +24,14 @@ const landlord = {
   details: (firebaseUserId: string) => requests.get<Landlord>(`/api/landlord?fbId=${firebaseUserId}`),
 };
 
+const renters = {
+  list: (landlordId: string) => requests.get<Renter>(`/api/dashboard/renters/${landlordId}`),
+};
+
 const agent = {
   objects,
   landlord,
+  renters,
 };
 
 export default agent;
