@@ -58,30 +58,6 @@ const tabs = [
   { label: "Wartung/Reperatur", value: "repairRequests" },
 ];
 
-// const useRepairRequests = (objectId: string): RepairRequest[] | undefined => {
-//   const [repairRequests, setRepairRequests] = useState<RepairRequest[] | undefined>(undefined);
-
-//   const handleRepairRequsts = async () => {
-//     try {
-//       const response = await objectsApi.getRepairRequests({ objectId: objectId?.toString() });
-
-//       setRepairRequests(response);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   useEffect(
-//     () => {
-//       handleRepairRequsts();
-//     },
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//     []
-//   );
-
-//   return repairRequests;
-// };
-
 const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undefined => {
   return useMemo((): Renter | undefined => {
     if (!renterId) {

@@ -19,78 +19,65 @@ import {
   Tabs,
   Typography,
   Unstable_Grid2 as Grid,
-  TextField,
+  CircularProgress,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
-import { useMounted } from "src/hooks/use-mounted";
 import { usePageView } from "src/hooks/use-page-view";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { paths } from "src/paths";
 import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
-import { Renter } from "src/types/renter";
-import { renterApi } from "src/api/renter";
 import { RenterBasicDetails } from "src/sections/dashboard/renter/renter-basic-details";
 import { useSearchParams } from "next/navigation";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
+import { renterAtom } from "src/state/atoms/renterAtom";
 
 const tabs = [{ label: "Details", value: "details" }];
 
-const useRenter = (): Renter | null => {
-  const isMounted = useMounted();
+const Page: PageType = () => {
+  const [currentTab, setCurrentTab] = useState<string>("details");
+
+  const renter = useRecoilValue(renterAtom);
+  usePageView();
+
+  const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
 
   const searchParams = useSearchParams();
   const renterId = searchParams?.get("renterId");
 
-  const [renter, setRenter] = useState<Renter | null>(null);
-
-  const handleRenterGet = useCallback(async () => {
-    try {
-      const response = await renterApi.getRenter({ renterId: renterId?.toString() });
-
-      if (isMounted()) {
-        setRenter(response);
-      }
-    } catch (err) {
-      console.error(err);
+  async function setRentalObjectId() {
+    if (renterId) {
+      setSelectedRenterIdAtom(renterId.toString() ?? "");
     }
-  }, [isMounted]);
+  }
 
   useEffect(
     () => {
-      handleRenterGet();
+      setRentalObjectId();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
-  return renter;
-};
-
-const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undefined => {
-  return useMemo((): Renter | undefined => {
-    if (!renterId) {
-      return undefined;
-    }
-
-    return renters?.find((renter) => renter.id === renterId);
-  }, [renters, renterId]);
-};
-
-const Page: PageType = () => {
-  const [currentTab, setCurrentTab] = useState<string>("details");
-  const renter = useRenter();
-
-  usePageView();
 
   const handleTabsChange = useCallback((event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   }, []);
 
   if (!renter) {
-    return null;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 3,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
-
   return (
     <>
       <Seo title="Objekt Details" />
