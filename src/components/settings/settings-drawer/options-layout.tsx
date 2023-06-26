@@ -1,8 +1,11 @@
 import type { FC, ReactElement } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Stack, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
+import { Logo } from 'src/components/logo';
 import type { Layout } from 'src/types/settings';
-import { Logo } from '../../logo';
 
 interface Option {
   label: string;

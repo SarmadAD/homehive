@@ -1,7 +1,7 @@
-import type { FC, ReactNode } from 'react';
-import { createContext, useCallback, useEffect, useReducer } from 'react';
-import PropTypes from 'prop-types';
-import type { User as FirebaseUser } from '@firebase/auth';
+import type { FC, ReactNode } from "react";
+import { createContext, useCallback, useEffect, useReducer } from "react";
+import PropTypes from "prop-types";
+import type { User as FirebaseUser } from "@firebase/auth";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -9,11 +9,11 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut
-} from 'firebase/auth';
-import { firebaseApp } from 'src/libs/firebase';
-import type { User } from 'src/types/user';
-import { Issuer } from 'src/utils/auth';
+  signOut,
+} from "firebase/auth";
+import { firebaseApp } from "src/libs/firebase";
+import type { User } from "src/types/user";
+import { Issuer } from "src/utils/auth";
 
 const auth = getAuth(firebaseApp);
 
@@ -24,7 +24,7 @@ interface State {
 }
 
 enum ActionType {
-  AUTH_STATE_CHANGED = 'AUTH_STATE_CHANGED'
+  AUTH_STATE_CHANGED = "AUTH_STATE_CHANGED",
 }
 
 type AuthStateChangedAction = {
@@ -40,18 +40,18 @@ type Action = AuthStateChangedAction;
 const initialState: State = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
 };
 
 const reducer = (state: State, action: Action): State => {
-  if (action.type === 'AUTH_STATE_CHANGED') {
+  if (action.type === "AUTH_STATE_CHANGED") {
     const { isAuthenticated, user } = action.payload;
 
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
-      user
+      user,
     };
   }
 
@@ -72,7 +72,7 @@ export const AuthContext = createContext<AuthContextType>({
   createUserWithEmailAndPassword: () => Promise.resolve(),
   signInWithEmailAndPassword: () => Promise.resolve(),
   signInWithGoogle: () => Promise.resolve(),
-  signOut: () => Promise.resolve()
+  signOut: () => Promise.resolve(),
 });
 
 interface AuthProviderProps {
@@ -86,8 +86,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const handleAuthStateChanged = useCallback(
     (user: FirebaseUser | null) => {
       if (user) {
-        // Here you should extract the complete user profile to make it available in your entire app.
-        // The auth state only provides basic information.
         dispatch({
           type: ActionType.AUTH_STATE_CHANGED,
           payload: {
@@ -95,19 +93,18 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
             user: {
               id: user.uid,
               avatar: user.photoURL || undefined,
-              email: user.email || 'anika.visser@devias.io',
-              name: 'Anika Visser',
-              plan: 'Premium'
-            }
-          }
+              email: user.email ?? "",
+              name: user.displayName ?? "",
+            },
+          },
         });
       } else {
         dispatch({
           type: ActionType.AUTH_STATE_CHANGED,
           payload: {
             isAuthenticated: false,
-            user: null
-          }
+            user: null,
+          },
         });
       }
     },
@@ -120,36 +117,23 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     []
   );
 
-  const _signInWithEmailAndPassword = useCallback(
-    async (email: string, password: string): Promise<void> => {
-      await signInWithEmailAndPassword(auth, email, password);
-    },
-    []
-  );
+  const _signInWithEmailAndPassword = useCallback(async (email: string, password: string): Promise<void> => {
+    await signInWithEmailAndPassword(auth, email, password);
+  }, []);
 
-  const signInWithGoogle = useCallback(
-    async (): Promise<void> => {
-      const provider = new GoogleAuthProvider();
+  const signInWithGoogle = useCallback(async (): Promise<void> => {
+    const provider = new GoogleAuthProvider();
 
-      await signInWithPopup(auth, provider);
-    },
-    []
-  );
+    await signInWithPopup(auth, provider);
+  }, []);
 
-  const _createUserWithEmailAndPassword = useCallback(
-    async (email: string,
-      password: string): Promise<void> => {
-      await createUserWithEmailAndPassword(auth, email, password);
-    },
-    []
-  );
+  const _createUserWithEmailAndPassword = useCallback(async (email: string, password: string): Promise<void> => {
+    await createUserWithEmailAndPassword(auth, email, password);
+  }, []);
 
-  const _signOut = useCallback(
-    async (): Promise<void> => {
-      await signOut(auth);
-    },
-    []
-  );
+  const _signOut = useCallback(async (): Promise<void> => {
+    await signOut(auth);
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -159,7 +143,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         createUserWithEmailAndPassword: _createUserWithEmailAndPassword,
         signInWithEmailAndPassword: _signInWithEmailAndPassword,
         signInWithGoogle,
-        signOut: _signOut
+        signOut: _signOut,
       }}
     >
       {children}
@@ -168,7 +152,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export const AuthConsumer = AuthContext.Consumer;

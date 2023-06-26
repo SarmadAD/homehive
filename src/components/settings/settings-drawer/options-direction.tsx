@@ -2,8 +2,12 @@ import type { FC, ReactElement } from 'react';
 import PropTypes from 'prop-types';
 import LeftIndent01Icon from '@untitled-ui/icons-react/build/esm/LeftIndent01';
 import RightIndent01Icon from '@untitled-ui/icons-react/build/esm/RightIndent01';
-import type { Direction } from '@mui/material';
-import { Chip, Stack, SvgIcon, Typography } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import SvgIcon from '@mui/material/SvgIcon';
+import Typography from '@mui/material/Typography';
+
+import type { Direction } from 'src/theme';
 
 interface Option {
   label: string;

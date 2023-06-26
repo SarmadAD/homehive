@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
@@ -13,7 +13,7 @@ interface OverviewRentPaidProps {
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
-  const [renters, setRenters] = useRecoilState(rentersAtom);
+  const renters = useRecoilValue(rentersAtom);
   const lengthPaidRents = useRecoilValue(totalPaidRents);
 
   return (

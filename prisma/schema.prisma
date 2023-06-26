@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model RentalObject {
+  id                     String             @id @default(uuid())
+  createdAt              DateTime           @default(now())
+  name                   String
+  image                  String
+  status                 RentalObjectStatus
+  address                String
+  houseNr                Int
+  additionalHouseDetails String?            @default("")
+  city                   String
+  postalCode             String
+  areaSize               Int
+  renter                 Renter[]
+  repairRequests         RepairRequest[]
+  rentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
+  rentalObjectInfoId     String             @unique
+  landlord               Landlord           @relation(fields: [landlordId], references: [id])
+  landlordId             String
+
+  @@index([rentalObjectInfoId])
+  @@index([landlordId])
+}
+
+model Renter {
+  id             String           @id @default(uuid())
+  createdAt      DateTime         @default(now())
+  name           String
+  status         RenterPaidStatus
+  email          String           @unique
+  image          String
+  rentalObjectId String?
+  rentalObject   RentalObject?    @relation(fields: [rentalObjectId], references: [id])
+  repairRequest  RepairRequest[]
+  landlords      Landlord[]
+
+  @@index([rentalObjectId])
+}
+
+model Landlord {
+  id             String         @id @default(uuid())
+  firebaseUserId String         @unique
+  rentalObjects  RentalObject[]
+  renters        Renter[]
+}
+
+model RentalObjectInfo {
+  id               String        @id @default(uuid())
+  baseRent         Int
+  heatingCosts     Int
+  waterCosts       Int
+  electricityCosts Int
+  rentalObject     RentalObject?
+}
+
+model RepairRequest {
+  id             String              @id @default(uuid())
+  createdAt      DateTime            @default(now())
+  name           String
+  status         RepairRequestStatus
+  comment        String?             @default("")
+  renterId       String
+  rentalObjectId String
+  renter         Renter              @relation(fields: [renterId], references: [id])
+  RentalObject   RentalObject        @relation(fields: [rentalObjectId], references: [id])
+
+  @@index([renterId])
+  @@index([rentalObjectId])
+}
+
+enum RentalObjectStatus {
+  INHABITED
+  UNINHABITED
+}
+
+enum RenterPaidStatus {
+  PAID
+  NOTPAID
+  INARREARS
+}
+
+enum RepairRequestStatus {
+  REQUESTED
+  REJECTED
+  DONE
+  CANCELED
+  INPROGRESS
+}

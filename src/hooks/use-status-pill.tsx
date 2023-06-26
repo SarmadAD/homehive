@@ -1,18 +1,19 @@
 import { SeverityPill, SeverityPillColor } from "src/components/severity-pill";
+import { RentalObject, RentalObjectStatus } from "src/types/object";
 import { RenterPaidStatus } from "src/types/renter";
 import { RepairRequestStatus } from "src/types/repairRequest";
 
 export const useRentPaidStatusPill = (rentPaidStatus: RenterPaidStatus): JSX.Element => {
   const map: Record<RenterPaidStatus, { color: SeverityPillColor; text: string }> = {
-    paid: {
+    PAID: {
       color: "success",
       text: "Bezahlt",
     },
-    notPaid: {
+    NOTPAID: {
       color: "warning",
       text: "Nicht bezahlt",
     },
-    inArrears: {
+    INARREARS: {
       color: "error",
       text: "Im Rückstand",
     },
@@ -25,29 +26,49 @@ export const useRentPaidStatusPill = (rentPaidStatus: RenterPaidStatus): JSX.Ele
 
 export const useRepairRequestStatusPill = (orderStatus: RepairRequestStatus): JSX.Element => {
   const map: Record<RepairRequestStatus, { color: SeverityPillColor; text: string }> = {
-    done: {
+    DONE: {
       color: "success",
       text: "Fertig",
     },
-    canceled: {
+    CANCELD: {
       color: "warning",
       text: "Abgebrochen",
     },
-    inProgress: {
+    INPROGRESS: {
       color: "info",
       text: "In Bearbeitung",
     },
-    rejected: {
+    REJECTED: {
       color: "error",
       text: "Abgelehnt",
     },
-    requested: {
+    REQUESTED: {
       color: "primary",
       text: "Angefragt",
     },
   };
 
   const { text, color } = map[orderStatus];
+
+  return <SeverityPill color={color}>{text}</SeverityPill>;
+};
+
+export const useRentalObjectStatusPill = (rentalObject: RentalObject): JSX.Element => {
+  const map: Record<RentalObjectStatus, { color: SeverityPillColor; text: string }> = {
+    INHABITED: {
+      color: "success",
+      text: "Bewohnt",
+    },
+    UNINHABITED: {
+      color: "info",
+      text: "Unbewohnt",
+    },
+  };
+  let status: RentalObjectStatus = "UNINHABITED";
+  if (rentalObject.renter && rentalObject.renter.length > 0) {
+    status = "INHABITED";
+  }
+  const { text, color } = map[status];
 
   return <SeverityPill color={color}>{text}</SeverityPill>;
 };

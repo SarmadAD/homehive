@@ -5,8 +5,9 @@ import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } f
 import { objectsApi } from "src/api/objects";
 import { RepairRequest } from "src/types/repairRequest";
 import { paths } from "src/paths";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { repairRequestsAtom } from "src/state/atoms/repairRequestsAtom";
+import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 
 interface OverviewRepairRequest {
   showActions: boolean;
@@ -14,8 +15,8 @@ interface OverviewRepairRequest {
 
 export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
   const { showActions } = props;
-  const [repairRequests, setRepairRequests] = useRecoilState(repairRequestsAtom);
-
+  const rentalObjects = useRecoilValue(rentalObjectsAtom);
+  const totalRepairRequests = rentalObjects.reduce((accumulator, rentalObject) => accumulator + rentalObject.repairRequests.length, 0);
   return (
     <Card>
       <Stack
@@ -38,7 +39,7 @@ export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
             Reperatur Anfragen
           </Typography>
           <Typography color="text.primary" variant="h4">
-            {repairRequests?.length}
+            {totalRepairRequests}
           </Typography>
         </Box>
       </Stack>

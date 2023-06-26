@@ -34,6 +34,9 @@ import { getInitials } from "src/utils/get-initials";
 import { Renter, RenterPaidStatus } from "src/types/renter";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 
+// import { PrismaClient } from "@prisma/client";
+// const prisma = new PrismaClient();
+
 const now = new Date();
 
 interface RenterListTableProps {
@@ -163,7 +166,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                         {getInitials(renter.name)}
                       </Avatar>
                       <div>
-                        <Link color="inherit" component={RouterLink} href={`${paths.dashboard.renters.details}/${renter.id}`} variant="subtitle2">
+                        <Link color="inherit" component={RouterLink} href={`${paths.dashboard.renters.details}${renter.id}`} variant="subtitle2">
                           {renter.name}
                         </Link>
                         <Typography color="text.secondary" variant="body2">

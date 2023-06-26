@@ -9,4 +9,4 @@ export interface RepairRequest {
   renter: Renter;
 }
 
-export type RepairRequestStatus = "requested" | "rejected" | "done" | "canceled" | "inProgress";
+export type RepairRequestStatus = "REQUESTED" | "REJECTED" | "DONE" | "CANCELD" | "INPROGRESS";

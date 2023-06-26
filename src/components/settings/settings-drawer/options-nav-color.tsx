@@ -1,5 +1,9 @@
 import type { FC } from 'react';
-import { Chip, Stack, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 import type { NavColor } from 'src/types/settings';
 
 interface Option {
@@ -13,8 +17,8 @@ const options: Option[] = [
     value: 'blend-in'
   },
   {
-    label: 'Discreet',
-    value: 'discreet'
+    label: 'Discrete',
+    value: 'discrete'
   },
   {
     label: 'Evident',
@@ -63,4 +67,9 @@ export const OptionsNavColor: FC<OptionsNavColorProps> = (props) => {
       </Stack>
     </Stack>
   );
+};
+
+OptionsNavColor.propTypes = {
+  onChange: PropTypes.func,
+  value: PropTypes.oneOf(['blend-in', 'discrete', 'evident'])
 };
