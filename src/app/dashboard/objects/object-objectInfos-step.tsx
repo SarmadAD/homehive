@@ -1,4 +1,4 @@
-import type { ChangeEvent, FC } from "react";
+import type { ChangeEvent, Dispatch, FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Button, Stack, SvgIcon, TextField } from "@mui/material";
@@ -9,7 +9,7 @@ interface ObjectInfosStepProps {
   onNext?: () => void;
   onBack?: () => void;
   newObject: RentalObject | undefined;
-  setNewObject: SetterOrUpdater<RentalObject>;
+  setNewObject: Dispatch<RentalObject>;
 }
 
 export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {

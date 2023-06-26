@@ -11,6 +11,7 @@ import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { v4 as uuidv4 } from "uuid";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import router from "next/router";
+import { RentalObject } from "src/types/object";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -43,8 +44,8 @@ const StepIcon: FC<StepIconProps> = (props) => {
 export const ObjectCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
-  const [newObject, setNewObject] = useRecoilState(rentalObjectAtom);
-  const [rentalObjects, setRentalObjects] = useRecoilState(rentalObjectsAtom);
+  const [newObject, setNewObject] = useState<RentalObject>();
+  const [rentalObjects, setRentalObjects] = useState<RentalObject[]>([]);
 
   const handleNext = useCallback(() => {
     setActiveStep((prevState) => prevState + 1);

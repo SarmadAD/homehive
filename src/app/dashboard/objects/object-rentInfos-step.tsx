@@ -13,7 +13,7 @@ interface ObjectRentInfosStep {
   onNext?: () => void;
   onBack?: () => void;
   newObject: RentalObject | undefined;
-  setNewObject: SetterOrUpdater<RentalObject>;
+  setNewObject: Dispatch<RentalObject>;
 }
 
 interface CategoryOption {

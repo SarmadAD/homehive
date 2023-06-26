@@ -1,10 +1,9 @@
-import { Box, Breadcrumbs, Container, Grid, Link, Stack, Typography } from "@mui/material";
-import { BreadcrumbsSeparator } from "src/components/breadcrumbs-separator";
+"use client";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
-import { Layout as DashboardLayout } from "src/layouts/dashboard";
-import { ObjectCreateForm } from "src/app/dashboard/objects/objects/object-create-form";
 import type { Page as PageType } from "src/types/page";
+import { ObjectCreateForm } from "../object-create-form";
 
 const Page: PageType = () => {
   usePageView();
@@ -55,7 +54,5 @@ const Page: PageType = () => {
     </>
   );
 };
-
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;

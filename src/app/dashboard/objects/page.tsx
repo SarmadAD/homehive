@@ -108,9 +108,9 @@ const Page: PageType = () => {
 
   async function getLandlord() {
     try {
-      setIsLoading(true);
       const firebaseUserId = user?.id;
       if (firebaseUserId) {
+        setIsLoading(true);
         const landlord = await agent.landlord.details(firebaseUserId);
         setLandlord(landlord);
       }
