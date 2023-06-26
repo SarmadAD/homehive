@@ -4,9 +4,35 @@ import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import type { Page as PageType } from "src/types/page";
 import { ObjectCreateForm } from "../object-create-form";
+import { useEffect } from "react";
+import { useAuth } from "src/hooks/use-auth";
+import { AuthContextType } from "src/contexts/auth/firebase";
+import agent from "src/api/agent";
+import { useSetRecoilState } from "recoil";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 const Page: PageType = () => {
   usePageView();
+
+  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const { user } = useAuth<AuthContextType>();
+
+  useEffect(() => {
+    getLandlord();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function getLandlord() {
+    try {
+      const firebaseUserId = user?.id;
+      if (firebaseUserId) {
+        const landlord = await agent.landlord.details(firebaseUserId);
+        setLandlord(landlord);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <>

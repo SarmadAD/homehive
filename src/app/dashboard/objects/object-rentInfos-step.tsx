@@ -7,18 +7,14 @@ import { MobileDatePicker } from "@mui/x-date-pickers";
 import { RentalObject } from "src/types/object";
 import { Renter } from "src/types/renter";
 import { renterApi } from "src/api/renter";
-import { SetterOrUpdater } from "recoil";
+import { SetterOrUpdater, useRecoilValue } from "recoil";
+import { rentersAtom } from "src/state/atoms/rentersAtom";
 
 interface ObjectRentInfosStep {
   onNext?: () => void;
   onBack?: () => void;
   newObject: RentalObject | undefined;
   setNewObject: Dispatch<RentalObject>;
-}
-
-interface CategoryOption {
-  label: string;
-  value: string;
 }
 
 const dueDateOfRent = [
@@ -37,17 +33,8 @@ const dueDateOfRent = [
 ];
 export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
   const { onBack, onNext, newObject, setNewObject, ...other } = props;
-  const [renters, setRenters] = useState<Renter[]>();
 
-  async function getAllRenters() {
-    const renters = await renterApi.getAllRenter();
-    if (renters.length > 0) {
-      setRenters(renters);
-    }
-  }
-  useEffect(() => {
-    getAllRenters();
-  }, []);
+  const renters = useRecoilValue(rentersAtom);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     if (newObject === undefined) return;

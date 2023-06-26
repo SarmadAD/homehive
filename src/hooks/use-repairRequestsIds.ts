@@ -1,5 +1,5 @@
+import { RepairRequest } from "@prisma/client";
 import { useMemo } from "react";
-import { RepairRequest } from "src/types/repairRequest";
 
 export const useRepairRequestsIds = (repairRequests: RepairRequest[] = []) => {
   return useMemo(() => {

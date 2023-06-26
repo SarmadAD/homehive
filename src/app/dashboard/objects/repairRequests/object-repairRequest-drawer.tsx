@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import XIcon from "@untitled-ui/icons-react/build/esm/X";
 import type { Theme } from "@mui/material";
 import { Box, Drawer, IconButton, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material";
-import { RepairRequest } from "src/types/repairRequest";
 import { RepairRequestDetails } from "./repairRequest-details";
+import { RepairRequest } from "prisma/types/repairRequest";
 
 interface ObjectRepairRequestDrawerProps {
   container?: HTMLDivElement | null;

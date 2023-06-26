@@ -6,10 +6,7 @@ import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } fr
 import { ObjectBasicInfosStep } from "./object-basicinfos-step";
 import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
-import { useRecoilState } from "recoil";
-import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { v4 as uuidv4 } from "uuid";
-import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import router from "next/router";
 import { RentalObject } from "src/types/object";
 
@@ -85,6 +82,7 @@ export const ObjectCreateForm: FC = () => {
         status: "UNINHABITED",
       },
     ]);
+    // hier API CALL
     setIsComplete(false);
     router.push("/dashboard/objects");
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useMemo } from "react";
+import { ChangeEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
@@ -193,7 +193,7 @@ const Page: PageType = () => {
                 <div>
                   <Grid container spacing={4}>
                     <Grid xs={12} lg={4}>
-                      <RenterBasicDetails email={renter.email} name={renter.name} status={renter.status} />
+                      <RenterBasicDetails renter={renter} />
                     </Grid>
                   </Grid>
                 </div>

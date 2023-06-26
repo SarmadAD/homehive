@@ -10,16 +10,15 @@ import type { Page as PageType } from "src/types/page";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { useCallback, useState, ChangeEvent, MouseEvent, useMemo, useEffect } from "react";
 import { useSelection } from "src/hooks/use-selection";
-import { RentalObject } from "src/types/object";
 import { paths } from "src/paths";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { ObjectListTable } from "./objects-list-table";
 import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
-import { Landlord } from "@prisma/client";
 import agent from "src/api/agent";
+import { RentalObject } from "prisma/types/objects";
 
 interface Filters {
   query?: string;

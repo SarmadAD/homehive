@@ -1,5 +1,5 @@
+import { Renter } from "@prisma/client";
 import { useMemo } from "react";
-import { Renter } from "src/types/renter";
 
 export const useRentersIds = (renters: Renter[] = []) => {
   return useMemo(() => {

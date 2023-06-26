@@ -24,8 +24,8 @@ import { Scrollbar } from "src/components/scrollbar";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
-import { RepairRequest } from "src/types/repairRequest";
 import { useRepairRequestStatusPill } from "src/hooks/use-status-pill";
+import { RepairRequest } from "prisma/types/repairRequest";
 
 interface ObjectRepairRequestListProps {
   count?: number;
