@@ -2,8 +2,7 @@ import type { ChangeEvent, Dispatch, FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Button, Stack, SvgIcon, TextField } from "@mui/material";
-import { RentalObject } from "src/types/object";
-import { SetterOrUpdater } from "recoil";
+import { RentalObject } from "prisma/types/objects";
 
 interface ObjectInfosStepProps {
   onNext?: () => void;
@@ -16,10 +15,12 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
   const { onBack, onNext, newObject, setNewObject, ...other } = props;
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setNewObject({
-      ...newObject,
-      [e.target.name]: e.target.value,
-    });
+    if (newObject) {
+      setNewObject({
+        ...newObject,
+        [e.target.name]: e.target.value,
+      });
+    }
   }
 
   return (
@@ -48,6 +49,5 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
 ObjectInfosStep.propTypes = {
   onBack: PropTypes.func,
   onNext: PropTypes.func,
-  newObject: PropTypes.object,
   setNewObject: PropTypes.func.isRequired,
 };

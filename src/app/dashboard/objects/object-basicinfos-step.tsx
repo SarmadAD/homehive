@@ -1,11 +1,8 @@
 import type { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
-import { useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Button, Chip, InputAdornment, Stack, SvgIcon, TextField, Typography } from "@mui/material";
-import { MobileDatePicker } from "@mui/x-date-pickers";
-import { RentalObject } from "src/types/object";
-import { SetterOrUpdater } from "recoil";
+import { RentalObject } from "prisma/types/objects";
 
 interface ObjectDetailsStepProps {
   onNext?: () => void;
@@ -18,10 +15,12 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
   const { onBack, onNext, newObject, setNewObject, ...other } = props;
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setNewObject({
-      ...newObject,
-      [e.target.name]: e.target.value,
-    });
+    if (newObject) {
+      setNewObject({
+        ...newObject,
+        [e.target.name]: e.target.value,
+      });
+    }
   }
 
   return (

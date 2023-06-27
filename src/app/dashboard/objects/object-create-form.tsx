@@ -8,7 +8,7 @@ import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
 import { v4 as uuidv4 } from "uuid";
 import router from "next/router";
-import { RentalObject } from "src/types/object";
+import { RentalObject } from "prisma/types/objects";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -73,7 +73,7 @@ export const ObjectCreateForm: FC = () => {
     ];
   }, [handleBack, handleNext, handleComplete, newObject]);
 
-  if (isComplete) {
+  if (isComplete && newObject) {
     setRentalObjects((oldRentalObjects) => [
       ...oldRentalObjects,
       {

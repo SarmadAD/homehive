@@ -1,14 +1,10 @@
-import { ChangeEvent, Dispatch, FC, SetStateAction, useEffect } from "react";
-import { useCallback, useState } from "react";
+import { ChangeEvent, Dispatch, FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Button, Chip, InputAdornment, MenuItem, Stack, SvgIcon, TextField, Typography } from "@mui/material";
-import { MobileDatePicker } from "@mui/x-date-pickers";
-import { RentalObject } from "src/types/object";
-import { Renter } from "src/types/renter";
-import { renterApi } from "src/api/renter";
-import { SetterOrUpdater, useRecoilValue } from "recoil";
+import { Button, MenuItem, Stack, SvgIcon, TextField, Typography } from "@mui/material";
+import { useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
+import { RentalObject } from "prisma/types/objects";
 
 interface ObjectRentInfosStep {
   onNext?: () => void;
@@ -52,7 +48,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
   function handleRenterChange(e: ChangeEvent<HTMLInputElement>) {
     if (newObject === undefined) return;
     const updatedRenter = Array.isArray(newObject.renter) ? [...newObject.renter, { name: e.target.value }] : [{ name: e.target.value }];
-    setNewObject({ ...newObject, renter: updatedRenter });
+    setNewObject({ ...newObject, renter: [...newObject.renter, updatedRenter] });
 
     console.log(newObject);
   }
