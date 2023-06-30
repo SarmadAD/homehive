@@ -5,13 +5,9 @@ import PropTypes from "prop-types";
 
 import {
   Avatar,
-  AvatarGroup,
   Box,
   Button,
-  Card,
-  CardHeader,
   Checkbox,
-  Divider,
   IconButton,
   Link,
   Stack,
@@ -22,22 +18,14 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import type { SeverityPillColor } from "src/components/severity-pill";
-import { SeverityPill } from "src/components/severity-pill";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
-import { Renter, RenterPaidStatus } from "src/types/renter";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
-
-// import { PrismaClient } from "@prisma/client";
-// const prisma = new PrismaClient();
-
-const now = new Date();
+import { Renter } from "@prisma/client";
 
 interface RenterListTableProps {
   count?: number;

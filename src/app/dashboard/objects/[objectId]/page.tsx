@@ -23,25 +23,19 @@ import {
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
-import { useMounted } from "src/hooks/use-mounted";
 import { usePageView } from "src/hooks/use-page-view";
-import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { paths } from "src/paths";
 import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
-import { RentalObject } from "src/types/object";
-import { objectsApi } from "src/api/objects";
 import { RenterListTable } from "src/sections/dashboard/renter/renter-list-table";
 import { useRentersSearch } from "src/hooks/use-renter-search";
 import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useDialog } from "src/hooks/use-dialog";
 import { ObjectSingleView } from "src/app/dashboard/objects/renter/object-single-view";
-import { Renter } from "src/types/renter";
-import { RepairRequest } from "src/types/repairRequest";
 import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
 import { RenterDrawer } from "src/app/dashboard/objects/renter/object-renter-drawer";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { useSearchParams } from "next/navigation";
@@ -49,8 +43,9 @@ import { ObjectBasicDetails } from "../object-basic-details";
 import { ObjectRentInfoChart } from "../object-rentInfo-chart";
 import { ObjectRepairRequestDrawer } from "../repairRequests/object-repairRequest-drawer";
 import { ObjectRepairRequestList } from "../repairRequests/objects-repairRequests-list";
-import agent from "src/api/agent";
 import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
+import { Renter } from "@prisma/client";
+import { RepairRequest } from "prisma/types/repairRequest";
 
 const tabs = [
   { label: "Details", value: "details" },

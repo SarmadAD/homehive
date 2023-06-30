@@ -1,14 +1,16 @@
-import { ChangeEvent, FC, useCallback, useState } from "react";
+import { FC } from "react";
 import PropTypes from "prop-types";
-import { Button, Card, CardActions, CardHeader, Stack, TextField, Theme, useMediaQuery } from "@mui/material";
+import { Card, CardHeader, Theme, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { Renter } from "src/types/renter";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
+import { Renter } from "@prisma/client";
 
-export const RenterBasicDetails: FC<Renter> = (props) => {
-  const { email, name, status } = props;
+interface Props {
+  renter: Renter;
+}
 
+export const RenterBasicDetails: FC<Props> = ({ renter: { email, name, status } }: Props) => {
   const statusPill = useRentPaidStatusPill(status);
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
@@ -29,6 +31,5 @@ export const RenterBasicDetails: FC<Renter> = (props) => {
 };
 
 RenterBasicDetails.propTypes = {
-  email: PropTypes.string,
-  name: PropTypes.string,
+  renter: PropTypes.object.isRequired,
 };

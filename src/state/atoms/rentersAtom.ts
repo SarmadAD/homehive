@@ -1,8 +1,7 @@
 import { atom, selector } from "recoil";
-import { renterApi } from "src/api/renter";
-import { Renter } from "src/types/renter";
 import { currentLandlordAtom } from "./currentLandlordAtom";
 import agent from "src/api/agent";
+import { Renter } from "@prisma/client";
 
 export const rentersAtom = atom<Renter[]>({
   key: "rentersAtom",

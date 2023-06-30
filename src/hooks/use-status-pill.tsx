@@ -1,7 +1,6 @@
+import { RentalObjectStatus, RenterPaidStatus, RepairRequestStatus } from "@prisma/client";
+import { RentalObject } from "prisma/types/objects";
 import { SeverityPill, SeverityPillColor } from "src/components/severity-pill";
-import { RentalObject, RentalObjectStatus } from "src/types/object";
-import { RenterPaidStatus } from "src/types/renter";
-import { RepairRequestStatus } from "src/types/repairRequest";
 
 export const useRentPaidStatusPill = (rentPaidStatus: RenterPaidStatus): JSX.Element => {
   const map: Record<RenterPaidStatus, { color: SeverityPillColor; text: string }> = {
@@ -30,7 +29,7 @@ export const useRepairRequestStatusPill = (orderStatus: RepairRequestStatus): JS
       color: "success",
       text: "Fertig",
     },
-    CANCELD: {
+    CANCELED: {
       color: "warning",
       text: "Abgebrochen",
     },

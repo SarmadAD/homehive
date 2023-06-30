@@ -6,7 +6,7 @@ import { Button, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
 import { useRepairRequestStatusPill } from "src/hooks/use-status-pill";
-import { RepairRequest } from "src/types/repairRequest";
+import { RepairRequest } from "prisma/types/repairRequest";
 
 interface RepairRequestDetailsProps {
   onEdit?: () => void;
@@ -25,8 +25,8 @@ export const RepairRequestDetails: FC<RepairRequestDetailsProps> = (props) => {
 
   function handleCommentChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setRepairRequest({
-      ...localRepairRequest, // Copy the old fields
-      comment: e.target.value, // But override this one
+      ...localRepairRequest,
+      comment: e.target.value,
     });
   }
 

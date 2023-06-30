@@ -1,13 +1,38 @@
-import { Box, Breadcrumbs, Container, Grid, Link, Stack, Typography } from "@mui/material";
-import { BreadcrumbsSeparator } from "src/components/breadcrumbs-separator";
+"use client";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
-import { Layout as DashboardLayout } from "src/layouts/dashboard";
-import { ObjectCreateForm } from "src/app/dashboard/objects/objects/object-create-form";
 import type { Page as PageType } from "src/types/page";
+import { ObjectCreateForm } from "../object-create-form";
+import { useEffect } from "react";
+import { useAuth } from "src/hooks/use-auth";
+import { AuthContextType } from "src/contexts/auth/firebase";
+import agent from "src/api/agent";
+import { useSetRecoilState } from "recoil";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 const Page: PageType = () => {
   usePageView();
+
+  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const { user } = useAuth<AuthContextType>();
+
+  useEffect(() => {
+    getLandlord();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function getLandlord() {
+    try {
+      const firebaseUserId = user?.id;
+      if (firebaseUserId) {
+        const landlord = await agent.landlord.details(firebaseUserId);
+        setLandlord(landlord);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <>
@@ -55,7 +80,5 @@ const Page: PageType = () => {
     </>
   );
 };
-
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default Page;
