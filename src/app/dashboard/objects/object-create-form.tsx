@@ -1,5 +1,7 @@
+"use client";
+
 import type { FC } from "react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import CheckIcon from "@untitled-ui/icons-react/build/esm/Check";
 import type { StepIconProps } from "@mui/material";
 import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } from "@mui/material";
@@ -7,8 +9,11 @@ import { ObjectBasicInfosStep } from "./object-basicinfos-step";
 import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
 import { v4 as uuidv4 } from "uuid";
-import router from "next/router";
-import { RentalObject } from "prisma/types/objects";
+import { RentalObject, rentalObjectDefault } from "prisma/types/objects";
+import agent from "src/api/agent";
+import { useRecoilValue } from "recoil";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { useRouter } from "src/hooks/use-router";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -41,8 +46,9 @@ const StepIcon: FC<StepIconProps> = (props) => {
 export const ObjectCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
-  const [newObject, setNewObject] = useState<RentalObject>();
-  const [rentalObjects, setRentalObjects] = useState<RentalObject[]>([]);
+  const [newObject, setNewObject] = useState<RentalObject>(rentalObjectDefault);
+  const landlord = useRecoilValue(currentLandlordAtom);
+  const router = useRouter();
 
   const handleNext = useCallback(() => {
     setActiveStep((prevState) => prevState + 1);
@@ -73,19 +79,29 @@ export const ObjectCreateForm: FC = () => {
     ];
   }, [handleBack, handleNext, handleComplete, newObject]);
 
-  if (isComplete && newObject) {
-    setRentalObjects((oldRentalObjects) => [
-      ...oldRentalObjects,
-      {
-        ...newObject,
-        id: uuidv4(),
-        status: "UNINHABITED",
-      },
-    ]);
-    // hier API CALL
-    setIsComplete(false);
-    router.push("/dashboard/objects");
+  async function createRentalObject() {
+    try {
+      if (newObject) {
+        await agent.objects.create(newObject);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
+
+  useEffect(() => {
+    if (isComplete && newObject) {
+      setNewObject({ ...newObject, landlord: landlord, createdAt: new Date() });
+    }
+  }, [isComplete]);
+
+  useEffect(() => {
+    if (isComplete && newObject.landlord.id) {
+      createRentalObject();
+      setIsComplete(false);
+      router.push("/dashboard/objects");
+    }
+  }, [newObject.landlord]);
 
   return (
     <Stepper

@@ -1,17 +1,22 @@
 import { ChangeEvent, Dispatch, FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Button, MenuItem, Stack, SvgIcon, TextField, Typography } from "@mui/material";
+import { Autocomplete, Button, MenuItem, Stack, SvgIcon, TextField, Typography } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { RentalObject } from "prisma/types/objects";
+import { Renter } from "@prisma/client";
 
 interface ObjectRentInfosStep {
   onNext?: () => void;
   onBack?: () => void;
-  newObject: RentalObject | undefined;
+  newObject: RentalObject;
   setNewObject: Dispatch<RentalObject>;
 }
+
+type Option = {
+  name: string;
+};
 
 const dueDateOfRent = [
   {
@@ -33,8 +38,6 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
   const renters = useRecoilValue(rentersAtom);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    if (newObject === undefined) return;
-
     setNewObject({
       ...newObject,
       rentalObjectInfo: {
@@ -42,15 +45,10 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
         [e.target.name]: e.target.value,
       },
     });
-    console.log(newObject);
   }
 
-  function handleRenterChange(e: ChangeEvent<HTMLInputElement>) {
-    if (newObject === undefined) return;
-    const updatedRenter = Array.isArray(newObject.renter) ? [...newObject.renter, { name: e.target.value }] : [{ name: e.target.value }];
-    setNewObject({ ...newObject, renter: [...newObject.renter, updatedRenter] });
-
-    console.log(newObject);
+  function handleRenterChange(event: React.SyntheticEvent, value: Renter, reason: string, details?: string) {
+    setNewObject({ ...newObject, renter: [value] });
   }
 
   return (
@@ -61,7 +59,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           fullWidth
           label="Heizkosten"
           name="heatingCosts"
-          value={newObject?.rentalObjectInfo?.heatingCosts}
+          value={newObject.rentalObjectInfo.heatingCosts}
           onChange={handleChange}
           type="number"
         />
@@ -72,7 +70,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           fullWidth
           label="Wasserkosten"
           name="waterCosts"
-          value={newObject?.rentalObjectInfo?.waterCosts}
+          value={newObject.rentalObjectInfo.waterCosts}
           onChange={handleChange}
           type="number"
         />
@@ -80,7 +78,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           fullWidth
           label="Stromkosten"
           name="electricityCosts"
-          value={newObject?.rentalObjectInfo?.electricityCosts}
+          value={newObject.rentalObjectInfo.electricityCosts}
           onChange={handleChange}
           type="number"
         />
@@ -89,20 +87,12 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
         <div>
           <Typography variant="h6">Füge ein Mieter zu dem neuen Objekt hinzu</Typography>
         </div>
-        <TextField
-          fullWidth
-          label="Mieter"
-          name="renter"
+        <Autocomplete
           onChange={handleRenterChange}
-          select
-          value={newObject?.renter ? newObject.renter[0].name : ""}
-        >
-          {renters?.map((renter) => (
-            <MenuItem key={renter.id} value={renter.name}>
-              {renter.name}
-            </MenuItem>
-          ))}
-        </TextField>
+          getOptionLabel={(option: Option) => option.name}
+          options={renters}
+          renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
+        />
         <TextField fullWidth label="Fälligkeit der Miete" name="dueDateOfRent" onChange={handleChange} select>
           {dueDateOfRent.map((option) => (
             <MenuItem key={option.value} value={option.value}>

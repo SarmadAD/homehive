@@ -7,7 +7,7 @@ import { RentalObject } from "prisma/types/objects";
 interface ObjectInfosStepProps {
   onNext?: () => void;
   onBack?: () => void;
-  newObject: RentalObject | undefined;
+  newObject: RentalObject;
   setNewObject: Dispatch<RentalObject>;
 }
 
@@ -15,12 +15,13 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
   const { onBack, onNext, newObject, setNewObject, ...other } = props;
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    if (newObject) {
-      setNewObject({
-        ...newObject,
-        [e.target.name]: e.target.value,
-      });
-    }
+    const { value } = e.target;
+    const parseValue = parseInt(value) ? parseInt(value) : value;
+
+    setNewObject({
+      ...newObject,
+      [e.target.name]: parseValue,
+    });
   }
 
   return (

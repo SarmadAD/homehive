@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, RentalObjectStatus } from "@prisma/client";
 
 // 1: Define a type that includes the relation to `Post`
 const rentalObject = Prisma.validator<Prisma.RentalObjectArgs>()({
@@ -12,3 +12,26 @@ const rentalObject = Prisma.validator<Prisma.RentalObjectArgs>()({
 
 // 3: This type will include a user and all their posts
 export type RentalObject = Prisma.RentalObjectGetPayload<typeof rentalObject>;
+
+export const rentalObjectDefault: RentalObject = {
+  id: "",
+  createdAt: new Date(),
+  name: "",
+  image: "",
+  status: RentalObjectStatus.UNINHABITED,
+  address: "",
+  houseNr: 0,
+  additionalHouseDetails: "",
+  city: "",
+  postalCode: "",
+  areaSize: 0,
+  renter: [],
+  repairRequests: [],
+  rentalObjectInfo: { id: "", baseRent: 0, electricityCosts: 0, heatingCosts: 0, waterCosts: 0 },
+  rentalObjectInfoId: "",
+  landlord: {
+    id: "",
+    firebaseUserId: "",
+  },
+  landlordId: "",
+};
