@@ -26,8 +26,8 @@ import { Scrollbar } from "src/components/scrollbar";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
-import { RentalObject } from "src/types/object";
 import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
+import { RentalObject } from "prisma/types/objects";
 
 interface ObjectListTableProps {
   count?: number;
