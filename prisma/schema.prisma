@@ -59,6 +59,7 @@ model RentalObjectInfo {
   heatingCosts     Int
   waterCosts       Int
   electricityCosts Int
+  dueDateOfRent    DueDateOfRent
   rentalObject     RentalObject?
 }
 
@@ -80,6 +81,12 @@ model RepairRequest {
 enum RentalObjectStatus {
   INHABITED
   UNINHABITED
+}
+
+enum DueDateOfRent {
+  FIRSTMONTH
+  MIDDLEMONTH
+  ENDMONTH
 }
 
 enum RenterPaidStatus {
