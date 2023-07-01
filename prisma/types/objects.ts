@@ -27,7 +27,7 @@ export const rentalObjectDefault: RentalObject = {
   areaSize: 0,
   renter: [],
   repairRequests: [],
-  rentalObjectInfo: { id: "", baseRent: 0, electricityCosts: 0, heatingCosts: 0, waterCosts: 0 },
+  rentalObjectInfo: { id: "", baseRent: 0, electricityCosts: 0, heatingCosts: 0, waterCosts: 0, dueDateOfRent: "ENDMONTH" },
   rentalObjectInfoId: "",
   landlord: {
     id: "",
