@@ -190,7 +190,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                     </Stack>
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton component={RouterLink} href={paths.dashboard.objects.edit}>
+                    <IconButton component={RouterLink} href={`${paths.dashboard.objects.edit}${object.id}`}>
                       <SvgIcon>
                         <Edit02Icon />
                       </SvgIcon>
