@@ -1,6 +1,7 @@
 import { Landlord, RentalObjectInfo, Renter } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
 import { RentalObject } from "prisma/types/objects";
+import { RepairRequest } from "prisma/types/repairRequest";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -14,9 +15,11 @@ const requests = {
 const objects = {
   list: (landlordId: string) => requests.get<RentalObject[]>(`/api/dashboard/objects/${landlordId}`),
   details: (objectId: string) => requests.get<RentalObject>(`/api/dashboard/objects/object/${objectId}`),
-  rentalObjectInfo: (id: string) => requests.get<RentalObjectInfo>(`/rentalObjectInfo/${id}`),
   create: (object: RentalObject) => requests.post<void>(`/api/dashboard/objects/${object.landlord.id}`, object),
   update: (object: RentalObject) => requests.put<void>(`/api/dashboard/objects/object/${object.id}`, object),
+  rentalObjectInfo: (id: string) => requests.get<RentalObjectInfo>(`/rentalObjectInfo/${id}`),
+  updateRepairRequest: (repairRequest: RepairRequest) =>
+    requests.put<void>(`/api/dashboard/objects/object/repairRequest/${repairRequest.id}`, repairRequest),
   //   delete: (id: string) => requests.del<void>(`/activities/${id}`),
   //   attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
 };

@@ -14,10 +14,12 @@ interface RepairRequestDetailsProps {
   repairRequest: RepairRequest;
   handleAcceptRepairRequest: () => void;
   handleRejectRepairRequest: () => void;
+  handleDoneRepairRequest: () => void;
+  handleCanceledRepairRequest: () => void;
 }
 
 export const RepairRequestDetails: FC<RepairRequestDetailsProps> = (props) => {
-  const { onEdit, repairRequest, handleRejectRepairRequest, handleAcceptRepairRequest } = props;
+  const { onEdit, repairRequest, handleRejectRepairRequest, handleAcceptRepairRequest, handleDoneRepairRequest, handleCanceledRepairRequest } = props;
   const [localRepairRequest, setRepairRequest] = useState<RepairRequest>(repairRequest);
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
@@ -30,6 +32,14 @@ export const RepairRequestDetails: FC<RepairRequestDetailsProps> = (props) => {
     });
   }
 
+  /**
+ * 
+  REQUESTED => Button: Annhemen(Status:In Progress) und Ablehnen(Status:Rejected)
+  REJECTED => Kein Buttons
+  DONE => Keine Buttons
+  CANCELED => Keine Buttons
+  INPROGRESS => Buttons: Fertig(Status:done) und Abbrechen (Canceld)
+ */
   const statusPill = useRepairRequestStatusPill(repairRequest.status);
   return (
     <Stack spacing={6}>
@@ -64,14 +74,27 @@ export const RepairRequestDetails: FC<RepairRequestDetailsProps> = (props) => {
             {statusPill}
           </PropertyListItem>
         </PropertyList>
-        <Stack alignItems="center" direction="row" flexWrap="wrap" justifyContent="flex-end" spacing={2}>
-          <Button onClick={handleAcceptRepairRequest} size="small" variant="contained" color="success">
-            Annehmen
-          </Button>
-          <Button onClick={handleRejectRepairRequest} size="small" variant="contained" color="warning">
-            Ablehnen
-          </Button>
-        </Stack>
+
+        {localRepairRequest.status === "REQUESTED" && (
+          <Stack alignItems="center" direction="row" flexWrap="wrap" justifyContent="flex-end" spacing={2}>
+            <Button onClick={handleAcceptRepairRequest} size="small" variant="contained" color="success">
+              Annehmen
+            </Button>
+            <Button onClick={handleRejectRepairRequest} size="small" variant="contained" color="warning">
+              Ablehnen
+            </Button>
+          </Stack>
+        )}
+        {localRepairRequest.status === "INPROGRESS" && (
+          <Stack alignItems="center" direction="row" flexWrap="wrap" justifyContent="flex-end" spacing={2}>
+            <Button onClick={handleDoneRepairRequest} size="small" variant="contained" color="success">
+              Fertig
+            </Button>
+            <Button onClick={handleCanceledRepairRequest} size="small" variant="contained" color="error">
+              Abbrechen
+            </Button>
+          </Stack>
+        )}
       </Stack>
     </Stack>
   );

@@ -44,8 +44,9 @@ import { ObjectRentInfoChart } from "../object-rentInfo-chart";
 import { ObjectRepairRequestDrawer } from "../repairRequests/object-repairRequest-drawer";
 import { ObjectRepairRequestList } from "../repairRequests/objects-repairRequests-list";
 import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
-import { Renter } from "@prisma/client";
 import { RepairRequest } from "prisma/types/repairRequest";
+import { Renter } from "prisma/types/renter";
+import agent from "src/api/agent";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -131,8 +132,45 @@ const Page: PageType = () => {
     dialog.handleClose();
   }, []);
 
-  const handleAcceptRepairRequest = () => {};
-  const handleRejectRepairRequest = () => {};
+  async function updateRepairRequest(repairRequest: RepairRequest) {
+    try {
+      if (repairRequest) {
+        await agent.objects.updateRepairRequest(repairRequest);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleAcceptRepairRequest = async () => {
+    if (currentRepairRequest) {
+      let newRepairRequest = { ...currentRepairRequest };
+      newRepairRequest.status = "INPROGRESS";
+      await updateRepairRequest(newRepairRequest);
+    }
+  };
+
+  const handleRejectRepairRequest = async () => {
+    if (currentRepairRequest) {
+      let newRepairRequest = { ...currentRepairRequest };
+      newRepairRequest.status = "REJECTED";
+      await updateRepairRequest(newRepairRequest);
+    }
+  };
+  const handleDoneRepairRequest = async () => {
+    if (currentRepairRequest) {
+      let newRepairRequest = { ...currentRepairRequest };
+      newRepairRequest.status = "DONE";
+      await updateRepairRequest(newRepairRequest);
+    }
+  };
+  const handleCanceledRepairRequest = async () => {
+    if (currentRepairRequest) {
+      let newRepairRequest = { ...currentRepairRequest };
+      newRepairRequest.status = "CANCELED";
+      await updateRepairRequest(newRepairRequest);
+    }
+  };
 
   if (!rentalObject) {
     return (
@@ -317,6 +355,8 @@ const Page: PageType = () => {
               repairRequest={currentRepairRequest}
               handleAcceptRepairRequest={handleAcceptRepairRequest}
               handleRejectRepairRequest={handleRejectRepairRequest}
+              handleDoneRepairRequest={handleDoneRepairRequest}
+              handleCanceledRepairRequest={handleCanceledRepairRequest}
             />
           ) : (
             <RenterDrawer container={rootRef.current} onClose={dialog.handleClose} open={dialog.open} renter={currentRenter} />
