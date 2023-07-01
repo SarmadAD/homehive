@@ -229,7 +229,7 @@ const Page: PageType = () => {
                             <Edit02Icon />
                           </SvgIcon>
                         }
-                        href={paths.dashboard.objects.edit}
+                        href={`${paths.dashboard.objects.edit}${rentalObject.id}`}
                       >
                         Edit
                       </Button>

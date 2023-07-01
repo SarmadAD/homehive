@@ -45,6 +45,7 @@ export async function POST(request: Request, { params }: { params: { landlordId:
               electricityCosts: rentalObject.rentalObjectInfo.electricityCosts,
               heatingCosts: rentalObject.rentalObjectInfo.heatingCosts,
               waterCosts: rentalObject.rentalObjectInfo.waterCosts,
+              dueDateOfRent: rentalObject.rentalObjectInfo.dueDateOfRent,
             },
           },
           landlord: {
@@ -60,20 +61,14 @@ export async function POST(request: Request, { params }: { params: { landlordId:
     }
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      // The .code property can be accessed in a type-safe manner
-      console.log(e.message);
       return NextResponse.json({ error: e.message });
     } else if (e instanceof Prisma.PrismaClientUnknownRequestError) {
-      console.log(e);
-      return NextResponse.json({ error: e });
+      return NextResponse.json({ error: e.message });
     } else if (e instanceof Prisma.PrismaClientRustPanicError) {
-      console.log(e);
-      return NextResponse.json({ error: e });
+      return NextResponse.json({ error: e.message });
     } else if (e instanceof Prisma.PrismaClientInitializationError) {
-      console.log(e);
-      return NextResponse.json({ error: e });
+      return NextResponse.json({ error: e.message });
     } else if (e instanceof Prisma.PrismaClientValidationError) {
-      console.log(e);
       return NextResponse.json({ error: e.message });
     }
   }

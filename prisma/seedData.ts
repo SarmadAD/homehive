@@ -77,6 +77,7 @@ const rentalObjectInfos: RentalObjectInfo[] = [
     heatingCosts: 100,
     waterCosts: 50,
     electricityCosts: 75,
+    dueDateOfRent: "ENDMONTH",
   },
   {
     id: "81b2bd44-0ae3-11ee-be56-0242ac120002",
@@ -84,6 +85,8 @@ const rentalObjectInfos: RentalObjectInfo[] = [
     heatingCosts: 100,
     waterCosts: 50,
     electricityCosts: 75,
+
+    dueDateOfRent: "ENDMONTH",
   },
 ];
 

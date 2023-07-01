@@ -5,50 +5,68 @@ import { Autocomplete, Button, MenuItem, Stack, SvgIcon, TextField, Typography }
 import { useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { RentalObject } from "prisma/types/objects";
-import { Renter } from "@prisma/client";
+import { DueDateOfRent, Renter } from "@prisma/client";
 
 interface ObjectRentInfosStep {
   onNext?: () => void;
   onBack?: () => void;
   newObject: RentalObject;
   setNewObject: Dispatch<RentalObject>;
+  showDueDateAndRenter: boolean;
 }
 
-type Option = {
+type OptionRenter = {
   name: string;
 };
 
-const dueDateOfRent = [
+type OptionDueDate = {
+  label: string;
+  value: DueDateOfRent;
+};
+
+const dueDateOfRentList = [
   {
     label: "Zum 1 des Monats",
-    value: "firstMonth",
+    value: DueDateOfRent.FIRSTMONTH,
   },
   {
     label: "Zum 15 des Monats",
-    value: "middleMonth",
+    value: DueDateOfRent.MIDDLEMONTH,
   },
   {
     label: "Zum 27 des Monats",
-    value: "endMonth",
+    value: DueDateOfRent.ENDMONTH,
   },
 ];
 export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
-  const { onBack, onNext, newObject, setNewObject, ...other } = props;
+  const { onBack, onNext, newObject, setNewObject, showDueDateAndRenter, ...other } = props;
 
   const renters = useRecoilValue(rentersAtom);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const { value } = e.target;
+    const parseValue = parseInt(value) ? parseInt(value) : value;
     setNewObject({
       ...newObject,
       rentalObjectInfo: {
         ...newObject?.rentalObjectInfo,
-        [e.target.name]: e.target.value,
+        [e.target.name]: parseValue,
       },
     });
   }
 
   function handleRenterChange(event: React.SyntheticEvent, value: Renter, reason: string, details?: string) {
     setNewObject({ ...newObject, renter: [value] });
+  }
+
+  function handleDueDateChange(e: React.SyntheticEvent, dueDate: OptionDueDate, reason: string, details?: string) {
+    setNewObject({
+      ...newObject,
+      rentalObjectInfo: {
+        ...newObject?.rentalObjectInfo,
+        dueDateOfRent: dueDate.value,
+      },
+    });
   }
 
   return (
@@ -83,24 +101,26 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           type="number"
         />
       </Stack>
-      <Stack spacing={3} direction="column">
-        <div>
-          <Typography variant="h6">Füge ein Mieter zu dem neuen Objekt hinzu</Typography>
-        </div>
-        <Autocomplete
-          onChange={handleRenterChange}
-          getOptionLabel={(option: Option) => option.name}
-          options={renters}
-          renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
-        />
-        <TextField fullWidth label="Fälligkeit der Miete" name="dueDateOfRent" onChange={handleChange} select>
-          {dueDateOfRent.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>{" "}
-      </Stack>
+      {showDueDateAndRenter && (
+        <Stack spacing={3} direction="column">
+          <div>
+            <Typography variant="h6">Füge ein Mieter zu dem Objekt hinzu</Typography>
+          </div>
+          <Autocomplete
+            onChange={handleRenterChange}
+            getOptionLabel={(option: OptionRenter) => option.name}
+            options={renters}
+            renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
+          />
+          <Autocomplete
+            onChange={handleDueDateChange}
+            getOptionLabel={(option: OptionDueDate) => option.label}
+            options={dueDateOfRentList}
+            value={dueDateOfRentList.find((x) => x.value === newObject.rentalObjectInfo.dueDateOfRent)}
+            renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />}
+          />
+        </Stack>
+      )}
 
       <Stack alignItems="center" direction="row" spacing={2}>
         <Button
@@ -112,7 +132,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           onClick={onNext}
           variant="contained"
         >
-          Objekt Erstellen
+          Speichern
         </Button>
         <Button color="inherit" onClick={onBack}>
           Zurück

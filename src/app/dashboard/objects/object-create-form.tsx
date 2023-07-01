@@ -74,7 +74,15 @@ export const ObjectCreateForm: FC = () => {
       },
       {
         label: "Mietinformationen",
-        content: <ObjectRentInfosStep onBack={handleBack} onNext={handleComplete} newObject={newObject} setNewObject={setNewObject} />,
+        content: (
+          <ObjectRentInfosStep
+            onBack={handleBack}
+            onNext={handleComplete}
+            newObject={newObject}
+            setNewObject={setNewObject}
+            showDueDateAndRenter={true}
+          />
+        ),
       },
     ];
   }, [handleBack, handleNext, handleComplete, newObject]);
