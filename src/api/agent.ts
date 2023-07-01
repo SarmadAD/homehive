@@ -16,7 +16,7 @@ const objects = {
   details: (objectId: string) => requests.get<RentalObject>(`/api/dashboard/objects/object/${objectId}`),
   rentalObjectInfo: (id: string) => requests.get<RentalObjectInfo>(`/rentalObjectInfo/${id}`),
   create: (object: RentalObject) => requests.post<void>(`/api/dashboard/objects/${object.landlord.id}`, object),
-  //   update: (activity: ActivityFormValues) => requests.put<void>(`/activities/${activity.id}`, activity),
+  update: (object: RentalObject) => requests.put<void>(`/api/dashboard/objects/object/${object.id}`, object),
   //   delete: (id: string) => requests.del<void>(`/activities/${id}`),
   //   attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
 };

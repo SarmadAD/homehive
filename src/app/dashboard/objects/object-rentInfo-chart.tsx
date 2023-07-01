@@ -4,7 +4,6 @@ import numeral from "numeral";
 import { Box, Button, Card, CardActions, CardContent, CardHeader, Divider, Stack, SvgIcon, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
-import { RentalObjectInfo } from "src/types/RentalObjectInfo";
 import { useRecoilValue } from "recoil";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { Landlord } from "@prisma/client";

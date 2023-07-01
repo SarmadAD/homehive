@@ -12,6 +12,7 @@ interface ObjectRentInfosStep {
   onBack?: () => void;
   newObject: RentalObject;
   setNewObject: Dispatch<RentalObject>;
+  showDueDateAndRenter: boolean;
 }
 
 type OptionRenter = {
@@ -38,16 +39,18 @@ const dueDateOfRentList = [
   },
 ];
 export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
-  const { onBack, onNext, newObject, setNewObject, ...other } = props;
+  const { onBack, onNext, newObject, setNewObject, showDueDateAndRenter, ...other } = props;
 
   const renters = useRecoilValue(rentersAtom);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const { value } = e.target;
+    const parseValue = parseInt(value) ? parseInt(value) : value;
     setNewObject({
       ...newObject,
       rentalObjectInfo: {
         ...newObject?.rentalObjectInfo,
-        [e.target.name]: e.target.value,
+        [e.target.name]: parseValue,
       },
     });
   }
@@ -98,23 +101,26 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           type="number"
         />
       </Stack>
-      <Stack spacing={3} direction="column">
-        <div>
-          <Typography variant="h6">Füge ein Mieter zu dem neuen Objekt hinzu</Typography>
-        </div>
-        <Autocomplete
-          onChange={handleRenterChange}
-          getOptionLabel={(option: OptionRenter) => option.name}
-          options={renters}
-          renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
-        />
-        <Autocomplete
-          onChange={handleDueDateChange}
-          getOptionLabel={(option: OptionDueDate) => option.label}
-          options={dueDateOfRentList}
-          renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />}
-        />
-      </Stack>
+      {showDueDateAndRenter && (
+        <Stack spacing={3} direction="column">
+          <div>
+            <Typography variant="h6">Füge ein Mieter zu dem Objekt hinzu</Typography>
+          </div>
+          <Autocomplete
+            onChange={handleRenterChange}
+            getOptionLabel={(option: OptionRenter) => option.name}
+            options={renters}
+            renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
+          />
+          <Autocomplete
+            onChange={handleDueDateChange}
+            getOptionLabel={(option: OptionDueDate) => option.label}
+            options={dueDateOfRentList}
+            value={dueDateOfRentList.find((x) => x.value === newObject.rentalObjectInfo.dueDateOfRent)}
+            renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />}
+          />
+        </Stack>
+      )}
 
       <Stack alignItems="center" direction="row" spacing={2}>
         <Button
@@ -126,7 +132,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           onClick={onNext}
           variant="contained"
         >
-          Objekt Erstellen
+          Speichern
         </Button>
         <Button color="inherit" onClick={onBack}>
           Zurück
