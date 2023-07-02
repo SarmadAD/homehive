@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { landlords, rentalObjectInfos, rentalObjects, renters, repairRequests } from "./seedData";
+import { landlords, rentalObjectInfos, repairRequests } from "./seedData";
 
 const prisma = new PrismaClient();
 
@@ -24,18 +24,13 @@ async function main() {
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac120002",
       createdAt: new Date("2023-06-01T12:00:00Z"),
-      name: "John Doe",
+      firstname: "John",
+      surname: "Doe",
       status: "PAID",
       email: "john.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
-      // rentalObject: {
-      //   connect: { id: "e467a9e6-0ae2-11ee-be56-0242ac120002" },
-      // },
       landlords: {
         connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-      },
-      repairRequest: {
-        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120002" }],
       },
     },
   });
@@ -44,18 +39,13 @@ async function main() {
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac130008",
       createdAt: new Date("2023-06-01T12:00:00Z"),
-      name: "Sarmad Doe",
+      firstname: "Sarmad",
+      surname: "Doe",
       status: "PAID",
       email: "sarmad.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
-      // rentalObject: {
-      //   connect: { id: "e467a9e6-0ae2-11ee-be56-0242ac120002" },
-      // },
       landlords: {
         connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-      },
-      repairRequest: {
-        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120002" }],
       },
     },
   });
@@ -64,18 +54,13 @@ async function main() {
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac130015",
       createdAt: new Date("2023-06-01T12:00:00Z"),
-      name: "Hamza Doe",
+      firstname: "Hamza",
+      surname: "Doe",
       status: "PAID",
       email: "hamza.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
-      // rentalObject: {
-      //   connect: { id: "21fd5324-0ae2-11ee-be56-0242ac120002" },
-      // },
       landlords: {
         connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-      },
-      repairRequest: {
-        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120002" }],
       },
     },
   });
@@ -99,7 +84,7 @@ async function main() {
         connect: [{ id: "0fc15dda-0ae3-11ee-be56-0242ac120002" }, { id: "0fc15dda-0ae3-11ee-be56-0242ac130008" }],
       },
       repairRequests: {
-        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120002" }],
+        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120009" }],
       },
     },
     include: {

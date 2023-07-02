@@ -28,6 +28,7 @@ import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
 import { RentalObject } from "prisma/types/objects";
+import { getRenterName } from "src/utils/get-renter-name";
 
 interface ObjectListTableProps {
   count?: number;
@@ -174,7 +175,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                     <Stack alignItems="center" direction="row" spacing={1}>
                       <AvatarGroup max={3}>
                         {object.renter?.map((renter) => (
-                          <Tooltip key={renter.name} title={renter.name}>
+                          <Tooltip key={getRenterName(renter.firstname, renter.surname)} title={getRenterName(renter.firstname, renter.surname)}>
                             <Avatar
                               src={object.image}
                               sx={{
@@ -182,7 +183,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                                 width: 42,
                               }}
                             >
-                              {getInitials(renter.name)}
+                              {getInitials(getRenterName(renter.firstname, renter.surname))}
                             </Avatar>
                           </Tooltip>
                         ))}

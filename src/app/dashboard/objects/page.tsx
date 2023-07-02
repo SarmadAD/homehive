@@ -144,21 +144,19 @@ const Page: PageType = () => {
                 <div>
                   <Typography variant="h4">Objekte</Typography>
                 </div>
-                <div>
-                  <Stack direction="row" spacing={4}>
-                    <Button
-                      startIcon={
-                        <SvgIcon>
-                          <PlusIcon />
-                        </SvgIcon>
-                      }
-                      variant="contained"
-                      href={paths.dashboard.objects.create}
-                    >
-                      Hinzufügen
-                    </Button>
-                  </Stack>
-                </div>
+                <Stack direction="row" spacing={4}>
+                  <Button
+                    startIcon={
+                      <SvgIcon>
+                        <PlusIcon />
+                      </SvgIcon>
+                    }
+                    variant="contained"
+                    href={paths.dashboard.objects.create}
+                  >
+                    Hinzufügen
+                  </Button>
+                </Stack>
               </Stack>
             </Grid>
             <Grid xs={12} md={4}>

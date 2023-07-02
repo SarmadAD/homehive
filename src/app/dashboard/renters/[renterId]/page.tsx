@@ -33,6 +33,7 @@ import { useSearchParams } from "next/navigation";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
 import { renterAtom } from "src/state/atoms/renterAtom";
+import { getRenterName } from "src/utils/get-renter-name";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -137,10 +138,10 @@ const Page: PageType = () => {
                         width: 64,
                       }}
                     >
-                      {getInitials(renter.name)}
+                      {getInitials(getRenterName(renter.firstname, renter.surname))}
                     </Avatar>
                     <Stack spacing={1}>
-                      <Typography variant="h4">{renter.name}</Typography>
+                      <Typography variant="h4">{getRenterName(renter.firstname, renter.surname)}</Typography>
                       <Stack alignItems="center" direction="row" spacing={1}>
                         <Typography variant="subtitle2">user_id:</Typography>
                         <Chip label={renter.id} size="small" />

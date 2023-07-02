@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, CircularProgress } from "@mui/material";
+import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, CircularProgress, Button, SvgIcon } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
@@ -12,12 +12,14 @@ import { useRentersSearch } from "src/hooks/use-renter-search";
 import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useSettings } from "src/hooks/use-settings";
+import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
 import { RenterListTable } from "src/sections/dashboard/renter/renter-list-table";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
+import { paths } from "src/paths";
 
 const Page: PageType = () => {
   usePageView();
@@ -78,6 +80,19 @@ const Page: PageType = () => {
                 <div>
                   <Typography variant="h4">Mieter</Typography>
                 </div>
+                <Stack direction="row" spacing={4}>
+                  <Button
+                    startIcon={
+                      <SvgIcon>
+                        <PlusIcon />
+                      </SvgIcon>
+                    }
+                    variant="contained"
+                    href={paths.dashboard.renters.create}
+                  >
+                    Hinzufügen
+                  </Button>
+                </Stack>
               </Stack>
             </Grid>
             <Grid xs={12} md={4}>

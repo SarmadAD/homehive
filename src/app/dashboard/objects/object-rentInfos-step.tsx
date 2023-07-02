@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { RentalObject } from "prisma/types/objects";
 import { DueDateOfRent, Renter } from "@prisma/client";
+import { getRenterName } from "src/utils/get-renter-name";
 
 interface ObjectRentInfosStep {
   onNext?: () => void;
@@ -16,7 +17,8 @@ interface ObjectRentInfosStep {
 }
 
 type OptionRenter = {
-  name: string;
+  surname: string;
+  firstname: string;
 };
 
 type OptionDueDate = {
@@ -108,7 +110,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           </div>
           <Autocomplete
             onChange={handleRenterChange}
-            getOptionLabel={(option: OptionRenter) => option.name}
+            getOptionLabel={(option: OptionRenter) => getRenterName(option.firstname, option.surname)}
             options={renters}
             renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
           />

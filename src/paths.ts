@@ -110,6 +110,7 @@ export const paths = {
       index: "/dashboard/renters",
       details: "/dashboard/renters/:renterId?renterId=",
       edit: "/dashboard/renter/:renterId/edit",
+      create: "/dashboard/renters/create",
     },
   },
   components: {

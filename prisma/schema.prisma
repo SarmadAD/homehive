@@ -34,7 +34,8 @@ model RentalObject {
 model Renter {
   id             String           @id @default(uuid())
   createdAt      DateTime         @default(now())
-  name           String
+  surname        String
+  firstname      String
   status         RenterPaidStatus
   email          String           @unique
   image          String
