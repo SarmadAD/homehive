@@ -52,6 +52,7 @@
     "mapbox-gl": "2.12.1",
     "mui-one-time-password-input": "1.0.4",
     "next": "^13.4.5",
+    "node-mailjet": "^6.0.2",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "prop-types": "15.8.1",

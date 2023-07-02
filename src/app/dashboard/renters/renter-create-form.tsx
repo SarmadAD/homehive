@@ -73,29 +73,24 @@ export const RenterCreateForm: FC = () => {
     ];
   }, [handleBack, handleNext, handleComplete, newRenter]);
 
-  // async function createRentalObject() {
-  //   try {
-  //     if (newRenter) {
-  //       await agent.objects.create(newRenter);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  async function createRenter() {
+    try {
+      if (newRenter) {
+        await agent.renters.create(newRenter, landlord.id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-  // useEffect(() => {
-  //   if (isComplete && newRenter) {
-  //     setNewRenter({ ...newRenter, landlord: landlord, createdAt: new Date() });
-  //   }
-  // }, [isComplete]);
-
-  // useEffect(() => {
-  //   if (isComplete && newRenter.landlord.id) {
-  //     createRentalObject();
-  //     setIsComplete(false);
-  //     router.push("/dashboard/objects");
-  //   }
-  // }, [newRenter.landlord]);
+  useEffect(() => {
+    if (isComplete) {
+      setNewRenter({ ...newRenter, createdAt: new Date(), status: "NOTPAID" });
+      createRenter();
+      setIsComplete(false);
+      router.push("/dashboard/renters");
+    }
+  }, [isComplete]);
 
   return (
     <Stepper
