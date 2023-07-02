@@ -26,6 +26,7 @@ import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 import { Renter } from "@prisma/client";
+import { getRenterName } from "src/utils/get-renter-name";
 
 interface RenterListTableProps {
   count?: number;
@@ -151,14 +152,14 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                           width: 42,
                         }}
                       >
-                        {getInitials(renter.name)}
+                        {getInitials(getRenterName(renter.firstname, renter.surname))}
                       </Avatar>
                       <div>
                         <Link color="inherit" component={RouterLink} href={`${paths.dashboard.renters.details}${renter.id}`} variant="subtitle2">
-                          {renter.name}
+                          {getRenterName(renter.firstname, renter.surname)}
                         </Link>
                         <Typography color="text.secondary" variant="body2">
-                          {renter.name}
+                          {getRenterName(renter.firstname, renter.surname)}
                         </Typography>
                       </div>
                     </Stack>

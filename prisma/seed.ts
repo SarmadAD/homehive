@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { landlords, rentalObjectInfos, rentalObjects, renters, repairRequests } from "./seedData";
+import { landlords, rentalObjectInfos, repairRequests } from "./seedData";
 
 const prisma = new PrismaClient();
 
@@ -24,7 +24,8 @@ async function main() {
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac120002",
       createdAt: new Date("2023-06-01T12:00:00Z"),
-      name: "John Doe",
+      firstname: "John",
+      surname: "Doe",
       status: "PAID",
       email: "john.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
@@ -38,7 +39,8 @@ async function main() {
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac130008",
       createdAt: new Date("2023-06-01T12:00:00Z"),
-      name: "Sarmad Doe",
+      firstname: "Sarmad",
+      surname: "Doe",
       status: "PAID",
       email: "sarmad.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
@@ -52,7 +54,8 @@ async function main() {
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac130015",
       createdAt: new Date("2023-06-01T12:00:00Z"),
-      name: "Hamza Doe",
+      firstname: "Hamza",
+      surname: "Doe",
       status: "PAID",
       email: "hamza.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
