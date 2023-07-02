@@ -11,6 +11,7 @@ import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { useRouter } from "src/hooks/use-router";
 import { RenterBasicInfosStep } from "./renter-basicinfos-step";
 import { Renter, renterDefault } from "prisma/types/renter";
+import { RenterSendInviteStep } from "./renter-send-invite-step";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -64,6 +65,10 @@ export const RenterCreateForm: FC = () => {
       {
         label: "Basisinformationen",
         content: <RenterBasicInfosStep onBack={handleBack} onNext={handleNext} newRenter={newRenter} setNewRenter={setNewRenter} />,
+      },
+      {
+        label: "Einladung versenden",
+        content: <RenterSendInviteStep onBack={handleBack} handleComplete={handleComplete} newRenter={newRenter} setNewRenter={setNewRenter} />,
       },
     ];
   }, [handleBack, handleNext, handleComplete, newRenter]);

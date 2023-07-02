@@ -27,8 +27,8 @@ export const RenterBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
   return (
     <Stack spacing={3} {...other}>
       <Stack spacing={3} direction="row">
-        <TextField fullWidth label="Vorname" name="firstname" value={newRenter.name} onChange={handleChange} />
-        <TextField fullWidth label="Nachname" name="surname" value={newRenter.name} onChange={handleChange} />
+        <TextField fullWidth label="Vorname" name="firstname" value={newRenter.firstname} onChange={handleChange} />
+        <TextField fullWidth label="Nachname" name="surname" value={newRenter.surname} onChange={handleChange} />
       </Stack>
       <div>
         <Typography variant="h6">An dieser E-Mail wird eine Einladung an den Mieter gesendet</Typography>
