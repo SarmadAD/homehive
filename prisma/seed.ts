@@ -28,14 +28,8 @@ async function main() {
       status: "PAID",
       email: "john.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
-      // rentalObject: {
-      //   connect: { id: "e467a9e6-0ae2-11ee-be56-0242ac120002" },
-      // },
       landlords: {
         connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-      },
-      repairRequest: {
-        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120002" }],
       },
     },
   });
@@ -48,14 +42,8 @@ async function main() {
       status: "PAID",
       email: "sarmad.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
-      // rentalObject: {
-      //   connect: { id: "e467a9e6-0ae2-11ee-be56-0242ac120002" },
-      // },
       landlords: {
         connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-      },
-      repairRequest: {
-        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120002" }],
       },
     },
   });
@@ -68,14 +56,8 @@ async function main() {
       status: "PAID",
       email: "hamza.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
-      // rentalObject: {
-      //   connect: { id: "21fd5324-0ae2-11ee-be56-0242ac120002" },
-      // },
       landlords: {
         connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-      },
-      repairRequest: {
-        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120002" }],
       },
     },
   });
@@ -99,7 +81,7 @@ async function main() {
         connect: [{ id: "0fc15dda-0ae3-11ee-be56-0242ac120002" }, { id: "0fc15dda-0ae3-11ee-be56-0242ac130008" }],
       },
       repairRequests: {
-        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120002" }],
+        connect: [{ id: "20f9fbe2-0855-11ee-be56-0242ac120009" }],
       },
     },
     include: {
