@@ -1,5 +1,9 @@
+import { Prisma, Renter as ClientRenter } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { Renter } from "prisma/types/renter";
 import { prisma } from "src/app/db/db";
+import formData from "form-data";
+import Mailgun from "mailgun.js";
 
 export async function GET(request: Request, { params }: { params: { landlordId: string } }) {
   const { landlordId } = params;
@@ -13,4 +17,65 @@ export async function GET(request: Request, { params }: { params: { landlordId: 
     }
     return NextResponse.json({ error: "error" });
   }
+}
+
+export async function POST(request: Request, { params }: { params: { landlordId: string } }) {
+  try {
+    const { landlordId } = params;
+    const renter: Renter = await request.json();
+    if (landlordId) {
+      const createdRenter = await prisma.renter.create({
+        data: {
+          firstname: renter.firstname,
+          firebaseUserId: "",
+          surname: renter.surname,
+          email: renter.email,
+          image: "",
+          status: renter.status,
+          createdAt: renter.createdAt,
+          landlords: { connect: [{ id: landlordId }] },
+        },
+      });
+      if (createdRenter) {
+        sendInvite(createdRenter)
+          .then((status) => {
+            console.log(status);
+            return NextResponse.json(status);
+          })
+          .catch((error) => {
+            console.log("Fehler beim Senden der Einladung:", error);
+            return NextResponse.json("Fehler beim Senden der Einladung:", error);
+          });
+      }
+    }
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientUnknownRequestError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientRustPanicError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientInitializationError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientValidationError) {
+      return NextResponse.json({ error: e.message });
+    }
+  }
+}
+
+async function sendInvite(createdRenter: ClientRenter) {
+  const mailgun = new Mailgun(formData);
+  const mg = mailgun.client({
+    username: "api",
+    key: process.env.NEXT_PUBLIC_API_KEY ?? "",
+  });
+  mg.messages
+    .create("sandbox586512d4d8d94bb3b7cede5505516700.mailgun.org", {
+      from: "Mailgun Sandbox <postmaster@sandbox586512d4d8d94bb3b7cede5505516700.mailgun.org>",
+      to: [createdRenter.email],
+      subject: "Sie wurden von Ihren Mieter in das Mieterportal eingeladen!",
+      text: `Klicken Sie auf diesen Link, um sich in das Portal anzumelden: http://localhost:3000/auth/firebase/register/invite/:renterId?renterId=${createdRenter.id}`,
+    })
+    .then((msg) => console.log(msg))
+    .catch((err) => console.log(err));
 }

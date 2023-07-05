@@ -19,10 +19,7 @@ import { Issuer } from "src/utils/auth";
 import type { State } from "./auth-context";
 import { AuthContext, initialState } from "./auth-context";
 import { useRecoilState } from "recoil";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
-import { useAuth } from "src/hooks/use-auth";
-import { AuthContextType } from "../firebase-context";
-import agent from "src/api/agent";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 
 const auth = getAuth(firebaseApp);
 
@@ -62,7 +59,7 @@ interface AuthProviderProps {
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [landlord, setLandlord] = useRecoilState(currentLandlordAtom);
+  const [user, setUser] = useRecoilState(currentUserAtom);
 
   const handleAuthStateChanged = useCallback(
     (user: FirebaseUser | null) => {
@@ -106,7 +103,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
     if (auth.currentUser) {
-      setLandlord({ ...landlord, firebaseUserId: auth.currentUser?.uid });
+      setUser({ ...user, firebaseUserId: auth.currentUser?.uid });
     }
   }, []);
 

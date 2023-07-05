@@ -33,6 +33,7 @@ model RentalObject {
 
 model Renter {
   id             String           @id @default(uuid())
+  firebaseUserId String
   createdAt      DateTime         @default(now())
   surname        String
   firstname      String

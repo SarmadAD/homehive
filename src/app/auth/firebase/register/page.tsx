@@ -27,7 +27,7 @@ import { useSearchParams } from "src/hooks/use-search-params";
 import { paths } from "src/paths";
 import { AuthIssuer } from "src/sections/auth/auth-issuer";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 
 interface Values {
   email: string;
@@ -55,7 +55,8 @@ const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo");
-  const landlord = useRecoilValue(currentLandlordAtom);
+
+  const landlord = useRecoilValue(currentUserAtom);
   const { issuer, createUserWithEmailAndPassword, signInWithGoogle } = useAuth<AuthContextType>();
 
   const formik = useFormik({

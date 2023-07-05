@@ -31,6 +31,8 @@ const landlord = {
 const renters = {
   list: (landlordId: string) => requests.get<Renter[]>(`/api/dashboard/renters/${landlordId}`),
   details: (renterId: string) => requests.get<Renter>(`/api/dashboard/renters/renter/${renterId}`),
+  create: (renter: Renter, landlordId: string) => requests.post<void>(`/api/dashboard/renters/${landlordId}`, renter),
+  updateFirebaseUserId: (renterId: string, firebaseUserId: string) => requests.put<void>(`/api/dashboard/renters/renter/${renterId}`, firebaseUserId),
 };
 
 const agent = {

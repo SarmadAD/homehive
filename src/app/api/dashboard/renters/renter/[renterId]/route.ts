@@ -13,3 +13,20 @@ export async function GET(request: Request, { params }: { params: { renterId: st
     return NextResponse.json({ error: "renter not found" });
   }
 }
+
+export async function PUT(request: Request, { params }: { params: { renterId: string } }) {
+  const { renterId } = params;
+  const firebaseUserId: string = await request.text();
+  if (renterId) {
+    const renter = await prisma.renter.update({
+      where: { id: renterId },
+      data: {
+        firebaseUserId: firebaseUserId,
+      },
+    });
+    if (renter) {
+      return NextResponse.json(renter);
+    }
+    return NextResponse.json({ error: "renter not found" });
+  }
+}

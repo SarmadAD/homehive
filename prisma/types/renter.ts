@@ -16,7 +16,8 @@ export type Renter = Prisma.RenterGetPayload<typeof renter>;
 export const renterDefault: Renter = {
   id: "",
   createdAt: new Date(),
-  name: "",
+  firstname: "",
+  surname: "",
   image: "",
   email: "",
   rentalObject: {

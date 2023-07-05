@@ -16,7 +16,7 @@ import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { ObjectListTable } from "./objects-list-table";
 import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
 
@@ -93,7 +93,7 @@ const Page: PageType = () => {
   const objectsSearch = useObjectsSearch();
 
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
-  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const setLandlord = useSetRecoilState(currentUserAtom);
   const objectsIds = useObjectsIds(rentalObjects);
   const objectsSelection = useSelection<string>(objectsIds);
   const [isLoading, setIsLoading] = useState(false);

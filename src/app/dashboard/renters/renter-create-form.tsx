@@ -7,10 +7,11 @@ import type { StepIconProps } from "@mui/material";
 import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } from "@mui/material";
 import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
 import { RenterBasicInfosStep } from "./renter-basicinfos-step";
 import { Renter, renterDefault } from "prisma/types/renter";
+import { RenterSendInviteStep } from "./renter-send-invite-step";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -44,7 +45,7 @@ export const RenterCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newRenter, setNewRenter] = useState<Renter>(renterDefault);
-  const landlord = useRecoilValue(currentLandlordAtom);
+  const landlord = useRecoilValue(currentUserAtom);
   const router = useRouter();
 
   const handleNext = useCallback(() => {
@@ -65,32 +66,31 @@ export const RenterCreateForm: FC = () => {
         label: "Basisinformationen",
         content: <RenterBasicInfosStep onBack={handleBack} onNext={handleNext} newRenter={newRenter} setNewRenter={setNewRenter} />,
       },
+      {
+        label: "Einladung versenden",
+        content: <RenterSendInviteStep onBack={handleBack} handleComplete={handleComplete} newRenter={newRenter} setNewRenter={setNewRenter} />,
+      },
     ];
   }, [handleBack, handleNext, handleComplete, newRenter]);
 
-  // async function createRentalObject() {
-  //   try {
-  //     if (newRenter) {
-  //       await agent.objects.create(newRenter);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  async function createRenter() {
+    try {
+      if (newRenter) {
+        await agent.renters.create(newRenter, landlord.id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-  // useEffect(() => {
-  //   if (isComplete && newRenter) {
-  //     setNewRenter({ ...newRenter, landlord: landlord, createdAt: new Date() });
-  //   }
-  // }, [isComplete]);
-
-  // useEffect(() => {
-  //   if (isComplete && newRenter.landlord.id) {
-  //     createRentalObject();
-  //     setIsComplete(false);
-  //     router.push("/dashboard/objects");
-  //   }
-  // }, [newRenter.landlord]);
+  useEffect(() => {
+    if (isComplete) {
+      setNewRenter({ ...newRenter, createdAt: new Date(), status: "NOTPAID" });
+      createRenter();
+      setIsComplete(false);
+      router.push("/dashboard/renters");
+    }
+  }, [isComplete]);
 
   return (
     <Stepper
