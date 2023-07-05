@@ -2,7 +2,8 @@ import { Prisma, Renter as ClientRenter } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { Renter } from "prisma/types/renter";
 import { prisma } from "src/app/db/db";
-import { Client, SendEmailV3_1, LibraryResponse } from "node-mailjet";
+import formData from "form-data";
+import Mailgun from "mailgun.js";
 
 export async function GET(request: Request, { params }: { params: { landlordId: string } }) {
   const { landlordId } = params;
@@ -26,6 +27,7 @@ export async function POST(request: Request, { params }: { params: { landlordId:
       const createdRenter = await prisma.renter.create({
         data: {
           firstname: renter.firstname,
+          firebaseUserId: "",
           surname: renter.surname,
           email: renter.email,
           image: "",
@@ -62,31 +64,18 @@ export async function POST(request: Request, { params }: { params: { landlordId:
 }
 
 async function sendInvite(createdRenter: ClientRenter) {
-  const mailjet = new Client({
-    apiKey: process.env.NEXT_PUBLIC_API_PUBLIC_KEY,
-    apiSecret: process.env.NEXT_PUBLIC_API_SECRET_KEY,
+  const mailgun = new Mailgun(formData);
+  const mg = mailgun.client({
+    username: "api",
+    key: process.env.NEXT_PUBLIC_API_KEY ?? "",
   });
-
-  const data: SendEmailV3_1.Body = {
-    Messages: [
-      {
-        From: {
-          Email: "sarmadthebest@gmail.com",
-        },
-        To: [
-          {
-            Email: createdRenter.email,
-          },
-        ],
-        Subject: "Einladung zum Mieter-Portal!",
-        HTMLPart:
-          "<h3>Hallo! Sie wurden von Ihrem Vermieter in das Mieter Portal eingeladen!</h3><br />Klicken Sie auf diesen Link um sich zu registrieren",
-        TextPart: "Hallo! Sie wurden von Ihrem Vermieter in das Mieter Portal eingeladen! Klicken Sie auf diesen Link um sich zu registrieren",
-      },
-    ],
-  };
-
-  const result: LibraryResponse<SendEmailV3_1.Response> = await mailjet.post("send", { version: "v3.1" }).request(data);
-  const { Status } = result.body.Messages[0];
-  return Status;
+  mg.messages
+    .create("sandbox586512d4d8d94bb3b7cede5505516700.mailgun.org", {
+      from: "Mailgun Sandbox <postmaster@sandbox586512d4d8d94bb3b7cede5505516700.mailgun.org>",
+      to: [createdRenter.email],
+      subject: "Sie wurden von Ihren Mieter in das Mieterportal eingeladen!",
+      text: `Klicken Sie auf diesen Link, um sich in das Portal anzumelden: http://localhost:3000/auth/firebase/register/invite/:renterId?renterId=${createdRenter.id}`,
+    })
+    .then((msg) => console.log(msg))
+    .catch((err) => console.log(err));
 }

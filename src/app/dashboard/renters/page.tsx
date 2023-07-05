@@ -16,7 +16,7 @@ import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
 import { RenterListTable } from "src/sections/dashboard/renter/renter-list-table";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
@@ -32,7 +32,7 @@ const Page: PageType = () => {
   const rentersSelection = useSelection<string>(rentersIds);
   const [isLoading, setIsLoading] = useState(false);
 
-  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const setLandlord = useSetRecoilState(currentUserAtom);
 
   const { user } = useAuth<AuthContextType>();
 

@@ -9,12 +9,12 @@ import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
 import agent from "src/api/agent";
 import { useSetRecoilState } from "recoil";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 
 const Page: PageType = () => {
   usePageView();
 
-  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const setLandlord = useSetRecoilState(currentUserAtom);
   const { user } = useAuth<AuthContextType>();
 
   useEffect(() => {

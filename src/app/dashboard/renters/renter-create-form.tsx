@@ -7,7 +7,7 @@ import type { StepIconProps } from "@mui/material";
 import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } from "@mui/material";
 import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
 import { RenterBasicInfosStep } from "./renter-basicinfos-step";
 import { Renter, renterDefault } from "prisma/types/renter";
@@ -45,7 +45,7 @@ export const RenterCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newRenter, setNewRenter] = useState<Renter>(renterDefault);
-  const landlord = useRecoilValue(currentLandlordAtom);
+  const landlord = useRecoilValue(currentUserAtom);
   const router = useRouter();
 
   const handleNext = useCallback(() => {

@@ -23,6 +23,7 @@ async function main() {
   await prisma.renter.create({
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac120002",
+      firebaseUserId: "BeispielfirebaseId1",
       createdAt: new Date("2023-06-01T12:00:00Z"),
       firstname: "John",
       surname: "Doe",
@@ -38,6 +39,7 @@ async function main() {
   await prisma.renter.create({
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac130008",
+      firebaseUserId: "BeispielfirebaseId2",
       createdAt: new Date("2023-06-01T12:00:00Z"),
       firstname: "Sarmad",
       surname: "Doe",
@@ -53,6 +55,7 @@ async function main() {
   await prisma.renter.create({
     data: {
       id: "0fc15dda-0ae3-11ee-be56-0242ac130015",
+      firebaseUserId: "BeispielfirebaseId3",
       createdAt: new Date("2023-06-01T12:00:00Z"),
       firstname: "Hamza",
       surname: "Doe",

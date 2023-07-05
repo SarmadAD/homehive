@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { RentalObject, rentalObjectDefault } from "prisma/types/objects";
 import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
 
 const StepIcon: FC<StepIconProps> = (props) => {
@@ -47,7 +47,7 @@ export const ObjectCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newObject, setNewObject] = useState<RentalObject>(rentalObjectDefault);
-  const landlord = useRecoilValue(currentLandlordAtom);
+  const landlord = useRecoilValue(currentUserAtom);
   const router = useRouter();
 
   const handleNext = useCallback(() => {
