@@ -20,6 +20,7 @@ import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
+import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 const Page: PageType = () => {
   usePageView();
@@ -59,76 +60,79 @@ const Page: PageType = () => {
   return (
     <>
       <Seo title="Dashboard: Übersicht" />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
-        <Container maxWidth={settings.stretch ? false : "xl"}>
-          <Grid
-            container
-            disableEqualOverflow
-            spacing={{
-              xs: 3,
-              lg: 4,
-            }}
-          >
-            <Grid xs={12}>
-              <Stack direction="row" justifyContent="space-between" spacing={4}>
-                <div>
-                  <Typography variant="h4">Mieter</Typography>
-                </div>
-                <Stack direction="row" spacing={4}>
-                  <Button
-                    startIcon={
-                      <SvgIcon>
-                        <PlusIcon />
-                      </SvgIcon>
-                    }
-                    variant="contained"
-                    href={paths.dashboard.renters.create}
-                  >
-                    Hinzufügen
-                  </Button>
-                </Stack>
-              </Stack>
-            </Grid>
-            <Grid xs={12} md={4}>
-              <OverviewRentPaid showActions={false} />
-            </Grid>
 
-            <Grid xs={12} md={12}>
-              {isLoading ? (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    mt: 3,
-                  }}
-                >
-                  <CircularProgress />
-                </Box>
-              ) : (
-                <RenterListTable
-                  count={renters.length}
-                  items={renters}
-                  onDeselectAll={rentersSelection.handleDeselectAll}
-                  onDeselectOne={rentersSelection.handleDeselectOne}
-                  onPageChange={rentersSearch.handlePageChange}
-                  onRowsPerPageChange={rentersSearch.handleRowsPerPageChange}
-                  onSelectAll={rentersSelection.handleSelectAll}
-                  onSelectOne={rentersSelection.handleSelectOne}
-                  page={rentersSearch.state.page}
-                  rowsPerPage={rentersSearch.state.rowsPerPage}
-                  selected={rentersSelection.selected}
-                />
-              )}
+      <RoleBasedGuard permission="dashboard/renters">
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            py: 8,
+          }}
+        >
+          <Container maxWidth={settings.stretch ? false : "xl"}>
+            <Grid
+              container
+              disableEqualOverflow
+              spacing={{
+                xs: 3,
+                lg: 4,
+              }}
+            >
+              <Grid xs={12}>
+                <Stack direction="row" justifyContent="space-between" spacing={4}>
+                  <div>
+                    <Typography variant="h4">Mieter</Typography>
+                  </div>
+                  <Stack direction="row" spacing={4}>
+                    <Button
+                      startIcon={
+                        <SvgIcon>
+                          <PlusIcon />
+                        </SvgIcon>
+                      }
+                      variant="contained"
+                      href={paths.dashboard.renters.create}
+                    >
+                      Hinzufügen
+                    </Button>
+                  </Stack>
+                </Stack>
+              </Grid>
+              <Grid xs={12} md={4}>
+                <OverviewRentPaid showActions={false} />
+              </Grid>
+
+              <Grid xs={12} md={12}>
+                {isLoading ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      mt: 3,
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <RenterListTable
+                    count={renters.length}
+                    items={renters}
+                    onDeselectAll={rentersSelection.handleDeselectAll}
+                    onDeselectOne={rentersSelection.handleDeselectOne}
+                    onPageChange={rentersSearch.handlePageChange}
+                    onRowsPerPageChange={rentersSearch.handleRowsPerPageChange}
+                    onSelectAll={rentersSelection.handleSelectAll}
+                    onSelectOne={rentersSelection.handleSelectOne}
+                    page={rentersSearch.state.page}
+                    rowsPerPage={rentersSearch.state.rowsPerPage}
+                    selected={rentersSelection.selected}
+                  />
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </Box>
+          </Container>
+        </Box>
+      </RoleBasedGuard>
     </>
   );
 };

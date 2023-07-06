@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { landlords, rentalObjectInfos, repairRequests } from "./seedData";
+import { landlords, rentalObjectInfos, repairRequests, role, userRole } from "./seedData";
 
 const prisma = new PrismaClient();
 
@@ -12,12 +12,23 @@ async function main() {
   await prisma.renter.deleteMany();
   await prisma.rentalObjectInfo.deleteMany();
 
+  await prisma.userRole.deleteMany();
+  await prisma.role.deleteMany();
+
   await prisma.repairRequest.createMany({
     data: repairRequests,
   });
 
   await prisma.rentalObjectInfo.createMany({
     data: rentalObjectInfos,
+  });
+
+  await prisma.role.createMany({
+    data: role,
+  });
+
+  await prisma.userRole.createMany({
+    data: userRole,
   });
 
   await prisma.renter.create({
