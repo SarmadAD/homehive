@@ -1,7 +1,8 @@
-import type { FC, ReactNode } from 'react';
-import PropTypes from 'prop-types';
-import { Box, Stack } from '@mui/material';
-import { SideNavItem } from './side-nav-item';
+import type { FC, ReactNode } from "react";
+import PropTypes from "prop-types";
+import { Box, Stack } from "@mui/material";
+import { SideNavItem } from "./side-nav-item";
+import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 interface Item {
   disabled?: boolean;
@@ -13,29 +14,23 @@ interface Item {
   title: string;
 }
 
-const renderItems = ({
-  depth = 0,
-  items,
-  pathname
-}: {
-  depth?: number;
-  items: Item[];
-  pathname?: string | null;
-}): JSX.Element[] => items.reduce(
-  (acc: JSX.Element[], item) => reduceChildRoutes({
-    acc,
-    depth,
-    item,
-    pathname
-  }),
-  []
-);
+const renderItems = ({ depth = 0, items, pathname }: { depth?: number; items: Item[]; pathname?: string | null }): JSX.Element[] =>
+  items.reduce(
+    (acc: JSX.Element[], item) =>
+      reduceChildRoutes({
+        acc,
+        depth,
+        item,
+        pathname,
+      }),
+    []
+  );
 
 const reduceChildRoutes = ({
   acc,
   depth,
   item,
-  pathname
+  pathname,
 }: {
   acc: JSX.Element[];
   depth: number;
@@ -48,6 +43,7 @@ const reduceChildRoutes = ({
 
   if (item.items) {
     acc.push(
+      // <RoleBasedGuard permission={pathname ?? ""}>
       <SideNavItem
         active={partialMatch}
         depth={depth}
@@ -62,32 +58,35 @@ const reduceChildRoutes = ({
           component="ul"
           spacing={0.5}
           sx={{
-            listStyle: 'none',
+            listStyle: "none",
             m: 0,
-            p: 0
+            p: 0,
           }}
         >
           {renderItems({
             depth: depth + 1,
             items: item.items,
-            pathname
+            pathname,
           })}
         </Stack>
       </SideNavItem>
+      // </RoleBasedGuard>
     );
   } else {
     acc.push(
-      <SideNavItem
-        active={exactMatch}
-        depth={depth}
-        disabled={item.disabled}
-        external={item.external}
-        icon={item.icon}
-        key={item.title}
-        label={item.label}
-        path={item.path}
-        title={item.title}
-      />
+      <RoleBasedGuard permission={item.path ?? ""}>
+        <SideNavItem
+          active={exactMatch}
+          depth={depth}
+          disabled={item.disabled}
+          external={item.external}
+          icon={item.icon}
+          key={item.title}
+          label={item.label}
+          path={item.path}
+          title={item.title}
+        />
+      </RoleBasedGuard>
     );
   }
 
@@ -101,16 +100,16 @@ interface SideNavSectionProps {
 }
 
 export const SideNavSection: FC<SideNavSectionProps> = (props) => {
-  const { items = [], pathname, subheader = '', ...other } = props;
+  const { items = [], pathname, subheader = "", ...other } = props;
 
   return (
     <Stack
       component="ul"
       spacing={0.5}
       sx={{
-        listStyle: 'none',
+        listStyle: "none",
         m: 0,
-        p: 0
+        p: 0,
       }}
       {...other}
     >
@@ -118,13 +117,13 @@ export const SideNavSection: FC<SideNavSectionProps> = (props) => {
         <Box
           component="li"
           sx={{
-            color: 'var(--nav-section-title-color)',
+            color: "var(--nav-section-title-color)",
             fontSize: 12,
             fontWeight: 700,
             lineHeight: 1.66,
             mb: 1,
             ml: 1,
-            textTransform: 'uppercase'
+            textTransform: "uppercase",
           }}
         >
           {subheader}
@@ -138,5 +137,5 @@ export const SideNavSection: FC<SideNavSectionProps> = (props) => {
 SideNavSection.propTypes = {
   items: PropTypes.array,
   pathname: PropTypes.string,
-  subheader: PropTypes.string
+  subheader: PropTypes.string,
 };

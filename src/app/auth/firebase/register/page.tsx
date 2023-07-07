@@ -28,6 +28,7 @@ import { paths } from "src/paths";
 import { AuthIssuer } from "src/sections/auth/auth-issuer";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import agent from "src/api/agent";
 
 interface Values {
   email: string;
@@ -102,16 +103,12 @@ const Page = () => {
   }, [router, signInWithGoogle, isMounted, returnTo]);
 
   async function createLandlord() {
-    const firebaseUserId = landlord.firebaseUserId;
-    await fetch("/api/landlord", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firebaseUserId,
-      }),
-    });
+    try {
+      const firebaseUserId = landlord.firebaseUserId;
+      await agent.landlord.create(firebaseUserId);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

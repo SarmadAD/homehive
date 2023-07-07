@@ -20,6 +20,7 @@ export const renterDefault: Renter = {
   surname: "",
   image: "",
   email: "",
+  firebaseUserId: "",
   rentalObject: {
     id: "",
     createdAt: new Date(),

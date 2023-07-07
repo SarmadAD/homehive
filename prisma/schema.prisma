@@ -80,6 +80,19 @@ model RepairRequest {
   @@index([rentalObjectId])
 }
 
+model UserRole {
+  id             String @id @default(uuid())
+  firebaseUserId String
+  role           Role   @relation(fields: [roleId], references: [id])
+  roleId         String
+}
+
+model Role {
+  id       String     @id @default(uuid())
+  role     String
+  UserRole UserRole[]
+}
+
 enum RentalObjectStatus {
   INHABITED
   UNINHABITED

@@ -2,6 +2,7 @@ import { Landlord, RentalObjectInfo, Renter } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
 import { RentalObject } from "prisma/types/objects";
 import { RepairRequest } from "prisma/types/repairRequest";
+import { UserRole } from "prisma/types/userrole";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -26,6 +27,7 @@ const objects = {
 
 const landlord = {
   details: (firebaseUserId: string) => requests.get<Landlord>(`/api/landlord?fbId=${firebaseUserId}`),
+  create: (firebaseUserId: string) => requests.post<void>(`/api/landlord/`, firebaseUserId),
 };
 
 const renters = {
@@ -35,10 +37,15 @@ const renters = {
   updateFirebaseUserId: (renterId: string, firebaseUserId: string) => requests.put<void>(`/api/dashboard/renters/renter/${renterId}`, firebaseUserId),
 };
 
+const userRoles = {
+  details: (firebaseUserId: string) => requests.get<UserRole>(`/api/role/${firebaseUserId}`),
+};
+
 const agent = {
   objects,
   landlord,
   renters,
+  userRoles,
 };
 
 export default agent;

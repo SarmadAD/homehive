@@ -12,8 +12,16 @@ export async function POST(req: Request) {
 
 const createLandlord = async (firebaseUserId: string) => {
   try {
+    //create landlord
     await prisma.landlord.create({
       data: { firebaseUserId: firebaseUserId },
+    });
+    //assign user-Role Landlord
+    await prisma.userRole.create({
+      data: {
+        firebaseUserId: firebaseUserId,
+        role: { connect: { id: "20f9fbe2-0855-11ee-be56-0242ac130052" } },
+      },
     });
   } catch (error) {
     console.error(error);
