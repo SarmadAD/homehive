@@ -61,7 +61,7 @@ const Page: PageType = () => {
     <>
       <Seo title="Dashboard: Übersicht" />
 
-      <RoleBasedGuard permission="dashboard/renters">
+      <RoleBasedGuard permission="/dashboard/renters">
         <Box
           component="main"
           sx={{

@@ -19,6 +19,7 @@ import { AuthContextType } from "src/contexts/auth/firebase";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
+import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 interface Filters {
   query?: string;
@@ -123,86 +124,88 @@ const Page: PageType = () => {
   return (
     <>
       <Seo title="Dashboard: Übersicht" />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
-        <Container maxWidth={settings.stretch ? false : "xl"}>
-          <Grid
-            container
-            disableEqualOverflow
-            spacing={{
-              xs: 3,
-              lg: 4,
-            }}
-          >
-            <Grid xs={12}>
-              <Stack direction="row" justifyContent="space-between" spacing={4}>
-                <div>
-                  <Typography variant="h4">Objekte</Typography>
-                </div>
-                <Stack direction="row" spacing={4}>
-                  <Button
-                    startIcon={
-                      <SvgIcon>
-                        <PlusIcon />
-                      </SvgIcon>
-                    }
-                    variant="contained"
-                    href={paths.dashboard.objects.create}
-                  >
-                    Hinzufügen
-                  </Button>
+      <RoleBasedGuard permission="/dashboard/objects">
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            py: 8,
+          }}
+        >
+          <Container maxWidth={settings.stretch ? false : "xl"}>
+            <Grid
+              container
+              disableEqualOverflow
+              spacing={{
+                xs: 3,
+                lg: 4,
+              }}
+            >
+              <Grid xs={12}>
+                <Stack direction="row" justifyContent="space-between" spacing={4}>
+                  <div>
+                    <Typography variant="h4">Objekte</Typography>
+                  </div>
+                  <Stack direction="row" spacing={4}>
+                    <Button
+                      startIcon={
+                        <SvgIcon>
+                          <PlusIcon />
+                        </SvgIcon>
+                      }
+                      variant="contained"
+                      href={paths.dashboard.objects.create}
+                    >
+                      Hinzufügen
+                    </Button>
+                  </Stack>
                 </Stack>
-              </Stack>
-            </Grid>
-            <Grid xs={12} md={4}>
-              <OverviewRepairRequest showActions={false} />
-            </Grid>
-            <Grid xs={12} md={4}>
-              <OverviewStatusObjects showActions={false} />
-            </Grid>
-            <Grid xs={12} md={12}>
-              {/* <ObjectsListTable />
-               */}
-              {/* <CustomerListSearch
+              </Grid>
+              <Grid xs={12} md={4}>
+                <OverviewRepairRequest showActions={false} />
+              </Grid>
+              <Grid xs={12} md={4}>
+                <OverviewStatusObjects showActions={false} />
+              </Grid>
+              <Grid xs={12} md={12}>
+                {/* <ObjectsListTable />
+                 */}
+                {/* <CustomerListSearch
                 onFiltersChange={customersSearch.handleFiltersChange}
                 onSortChange={customersSearch.handleSortChange}
                 sortBy={customersSearch.state.sortBy}
                 sortDir={customersSearch.state.sortDir} 
               /> */}
-              {isLoading ? (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    mt: 3,
-                  }}
-                >
-                  <CircularProgress />
-                </Box>
-              ) : (
-                <ObjectListTable
-                  count={rentalObjects.length}
-                  items={rentalObjects}
-                  onDeselectAll={objectsSelection.handleDeselectAll}
-                  onDeselectOne={objectsSelection.handleDeselectOne}
-                  onPageChange={objectsSearch.handlePageChange}
-                  onRowsPerPageChange={objectsSearch.handleRowsPerPageChange}
-                  onSelectAll={objectsSelection.handleSelectAll}
-                  onSelectOne={objectsSelection.handleSelectOne}
-                  page={objectsSearch.state.page}
-                  rowsPerPage={objectsSearch.state.rowsPerPage}
-                  selected={objectsSelection.selected}
-                />
-              )}
+                {isLoading ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      mt: 3,
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <ObjectListTable
+                    count={rentalObjects.length}
+                    items={rentalObjects}
+                    onDeselectAll={objectsSelection.handleDeselectAll}
+                    onDeselectOne={objectsSelection.handleDeselectOne}
+                    onPageChange={objectsSearch.handlePageChange}
+                    onRowsPerPageChange={objectsSearch.handleRowsPerPageChange}
+                    onSelectAll={objectsSelection.handleSelectAll}
+                    onSelectOne={objectsSelection.handleSelectOne}
+                    page={objectsSearch.state.page}
+                    rowsPerPage={objectsSearch.state.rowsPerPage}
+                    selected={objectsSelection.selected}
+                  />
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </Box>
+          </Container>
+        </Box>
+      </RoleBasedGuard>
     </>
   );
 };

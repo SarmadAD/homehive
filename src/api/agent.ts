@@ -27,6 +27,7 @@ const objects = {
 
 const landlord = {
   details: (firebaseUserId: string) => requests.get<Landlord>(`/api/landlord?fbId=${firebaseUserId}`),
+  create: (firebaseUserId: string) => requests.post<void>(`/api/landlord/`, firebaseUserId),
 };
 
 const renters = {

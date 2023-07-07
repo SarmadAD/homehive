@@ -42,51 +42,53 @@ const Page = () => {
   return (
     <>
       <Seo title="Dashboard: Übersicht" />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
-        <Container maxWidth={settings.stretch ? false : "xl"}>
-          <Grid
-            container
-            disableEqualOverflow
-            spacing={{
-              xs: 3,
-              lg: 4,
-            }}
-          >
-            <Grid xs={12}>
-              <Stack direction="row" justifyContent="space-between" spacing={4}>
-                <div>
-                  <Typography variant="h4">Dashboard</Typography>
-                </div>
-              </Stack>
+      <RoleBasedGuard permission="/dashboard">
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            py: 8,
+          }}
+        >
+          <Container maxWidth={settings.stretch ? false : "xl"}>
+            <Grid
+              container
+              disableEqualOverflow
+              spacing={{
+                xs: 3,
+                lg: 4,
+              }}
+            >
+              <Grid xs={12}>
+                <Stack direction="row" justifyContent="space-between" spacing={4}>
+                  <div>
+                    <Typography variant="h4">Dashboard</Typography>
+                  </div>
+                </Stack>
+              </Grid>
+              <Grid xs={12} md={4}>
+                <OverviewRentPaid showActions={true} />
+              </Grid>
+              <Grid xs={12} md={4}>
+                <OverviewRepairRequest showActions={true} />
+              </Grid>
+              <Grid xs={12} md={4}>
+                <OverviewStatusObjects showActions={true} />
+              </Grid>
+              <Grid xs={12} md={12}>
+                <OverviewRentalIncome
+                  chartSeries={[
+                    {
+                      name: "This year",
+                      data: [40, 37, 41, 42, 45, 42, 36, 45, 40, 44, 38, 41],
+                    },
+                  ]}
+                />
+              </Grid>
             </Grid>
-            <Grid xs={12} md={4}>
-              <OverviewRentPaid showActions={true} />
-            </Grid>
-            <Grid xs={12} md={4}>
-              <OverviewRepairRequest showActions={true} />
-            </Grid>
-            <Grid xs={12} md={4}>
-              <OverviewStatusObjects showActions={true} />
-            </Grid>
-            <Grid xs={12} md={12}>
-              <OverviewRentalIncome
-                chartSeries={[
-                  {
-                    name: "This year",
-                    data: [40, 37, 41, 42, 45, 42, 36, 45, 40, 44, 38, 41],
-                  },
-                ]}
-              />
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+          </Container>
+        </Box>
+      </RoleBasedGuard>
     </>
   );
 };

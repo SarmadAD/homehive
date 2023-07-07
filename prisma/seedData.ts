@@ -61,13 +61,18 @@ const role: Role[] = [
 const userRole: UserRole[] = [
   {
     id: "20f9fbe2-0855-11ee-be56-0242ac130052",
-    firebaseUserId: "aHVAVJTNzOQgvyHXW0wMOZLbLXK2",
+    firebaseUserId: "beispielId",
     roleId: "20f9fbe2-0855-11ee-be56-0242ac130052",
   },
   {
     id: "20f9fbe2-0855-11ee-be56-0252ac130052",
-    firebaseUserId: "oZwRCKikouSYKpDNNq5kjvCNjbX2",
+    firebaseUserId: "beispielId",
     roleId: "20f9fbe2-0855-11ee-be56-0242ac120052",
+  },
+  {
+    id: "20f9fbe2-0855-11ee-be57-0252ac130052",
+    firebaseUserId: "aHVAVJTNzOQgvyHXW0wMOZLbLXK2",
+    roleId: "20f9fbe2-0855-11ee-be56-0242ac130052",
   },
 ];
 

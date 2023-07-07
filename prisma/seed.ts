@@ -13,7 +13,7 @@ async function main() {
   await prisma.rentalObjectInfo.deleteMany();
 
   await prisma.userRole.deleteMany();
-  await prisma.role.deleteMany();
+  // await prisma.role.deleteMany();
 
   await prisma.repairRequest.createMany({
     data: repairRequests,
@@ -21,10 +21,6 @@ async function main() {
 
   await prisma.rentalObjectInfo.createMany({
     data: rentalObjectInfos,
-  });
-
-  await prisma.role.createMany({
-    data: role,
   });
 
   await prisma.userRole.createMany({
@@ -135,6 +131,10 @@ async function main() {
       repairRequests: true,
       rentalObjectInfo: true,
     },
+  });
+
+  await prisma.role.createMany({
+    data: role,
   });
   await prisma.landlord.createMany({
     data: landlords,

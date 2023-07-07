@@ -11,11 +11,15 @@ interface Props {
 
 const permissions = [
   {
-    permission: "dashboard/objects",
+    permission: "/dashboard",
     role: "Landlord",
   },
   {
-    permission: "dashboard/renters",
+    permission: "/dashboard/objects",
+    role: "Landlord",
+  },
+  {
+    permission: "/dashboard/renters",
     role: "Landlord",
   },
 ];

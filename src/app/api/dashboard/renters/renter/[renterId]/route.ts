@@ -24,6 +24,12 @@ export async function PUT(request: Request, { params }: { params: { renterId: st
         firebaseUserId: firebaseUserId,
       },
     });
+    await prisma.userRole.create({
+      data: {
+        firebaseUserId: firebaseUserId,
+        role: { connect: { id: "20f9fbe2-0855-11ee-be56-0242ac120052" } },
+      },
+    });
     if (renter) {
       return NextResponse.json(renter);
     }
