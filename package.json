@@ -10,7 +10,7 @@
     "export": "next export",
     "lint": "next lint",
     "lint-fix": "next lint --fix",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && prisma migrate deploy && next build"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
