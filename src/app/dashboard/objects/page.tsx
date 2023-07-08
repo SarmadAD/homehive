@@ -84,7 +84,7 @@ const useObjectsSearch = () => {
 
 const useObjectsIds = (objects: RentalObject[] = []) => {
   return useMemo(() => {
-    return objects.map((object) => object.id);
+    return objects.length > 0 ? objects.map((object) => object.id) : [];
   }, [objects]);
 };
 

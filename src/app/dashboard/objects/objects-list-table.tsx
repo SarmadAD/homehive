@@ -125,87 +125,89 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((object) => {
-              const isSelected = selected.includes(object.id);
-              // eslint-disable-next-line react-hooks/rules-of-hooks
-              const statusPill = useRentalObjectStatusPill(object);
+            {items.length > 0
+              ? items.map((object) => {
+                  const isSelected = selected.includes(object.id);
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  const statusPill = useRentalObjectStatusPill(object);
 
-              return (
-                <TableRow hover key={object.id} selected={isSelected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(event: ChangeEvent<HTMLInputElement>): void => {
-                        if (event.target.checked) {
-                          onSelectOne?.(object.id);
-                        } else {
-                          onDeselectOne?.(object.id);
-                        }
-                      }}
-                      value={isSelected}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Stack alignItems="center" direction="row" spacing={1}>
-                      <Avatar
-                        src={object.image}
-                        sx={{
-                          height: 42,
-                          width: 42,
-                        }}
-                      >
-                        {getInitials(object.name)}
-                      </Avatar>
-                      <div>
-                        <Link
-                          color="inherit"
-                          component={RouterLink}
-                          href={`${paths.dashboard.objects.details}${encodeURIComponent(object.id)}`}
-                          variant="subtitle2"
-                        >
-                          {object.name}
-                        </Link>
-                        <Typography color="text.secondary" variant="body2">
-                          {object.name}
-                        </Typography>
-                      </div>
-                    </Stack>
-                  </TableCell>
-                  <TableCell>{statusPill}</TableCell>
-                  <TableCell>
-                    <Stack alignItems="center" direction="row" spacing={1}>
-                      <AvatarGroup max={3}>
-                        {object.renter?.map((renter) => (
-                          <Tooltip key={getRenterName(renter.firstname, renter.surname)} title={getRenterName(renter.firstname, renter.surname)}>
-                            <Avatar
-                              src={object.image}
-                              sx={{
-                                height: 42,
-                                width: 42,
-                              }}
+                  return (
+                    <TableRow hover key={object.id} selected={isSelected}>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={isSelected}
+                          onChange={(event: ChangeEvent<HTMLInputElement>): void => {
+                            if (event.target.checked) {
+                              onSelectOne?.(object.id);
+                            } else {
+                              onDeselectOne?.(object.id);
+                            }
+                          }}
+                          value={isSelected}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Stack alignItems="center" direction="row" spacing={1}>
+                          <Avatar
+                            src={object.image}
+                            sx={{
+                              height: 42,
+                              width: 42,
+                            }}
+                          >
+                            {getInitials(object.name)}
+                          </Avatar>
+                          <div>
+                            <Link
+                              color="inherit"
+                              component={RouterLink}
+                              href={`${paths.dashboard.objects.details}${encodeURIComponent(object.id)}`}
+                              variant="subtitle2"
                             >
-                              {getInitials(getRenterName(renter.firstname, renter.surname))}
-                            </Avatar>
-                          </Tooltip>
-                        ))}
-                      </AvatarGroup>
-                    </Stack>
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton component={RouterLink} href={`${paths.dashboard.objects.edit}${object.id}`}>
-                      <SvgIcon>
-                        <Edit02Icon />
-                      </SvgIcon>
-                    </IconButton>
-                    <IconButton component={RouterLink} href={`${paths.dashboard.objects.details}/${object.id}`}>
-                      <SvgIcon>
-                        <ArrowRightIcon />
-                      </SvgIcon>
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                              {object.name}
+                            </Link>
+                            <Typography color="text.secondary" variant="body2">
+                              {object.name}
+                            </Typography>
+                          </div>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>{statusPill}</TableCell>
+                      <TableCell>
+                        <Stack alignItems="center" direction="row" spacing={1}>
+                          <AvatarGroup max={3}>
+                            {object.renter?.map((renter) => (
+                              <Tooltip key={getRenterName(renter.firstname, renter.surname)} title={getRenterName(renter.firstname, renter.surname)}>
+                                <Avatar
+                                  src={object.image}
+                                  sx={{
+                                    height: 42,
+                                    width: 42,
+                                  }}
+                                >
+                                  {getInitials(getRenterName(renter.firstname, renter.surname))}
+                                </Avatar>
+                              </Tooltip>
+                            ))}
+                          </AvatarGroup>
+                        </Stack>
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton component={RouterLink} href={`${paths.dashboard.objects.edit}${object.id}`}>
+                          <SvgIcon>
+                            <Edit02Icon />
+                          </SvgIcon>
+                        </IconButton>
+                        <IconButton component={RouterLink} href={`${paths.dashboard.objects.details}/${object.id}`}>
+                          <SvgIcon>
+                            <ArrowRightIcon />
+                          </SvgIcon>
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              : []}
           </TableBody>
         </Table>
       </Scrollbar>
