@@ -1,10 +1,10 @@
-import type { FC } from 'react';
-import PropTypes from 'prop-types';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import type { FC } from "react";
+import PropTypes from "prop-types";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import type { NavColor } from 'src/types/settings';
+import type { NavColor } from "src/types/settings";
 
 interface Option {
   label: string;
@@ -13,17 +13,17 @@ interface Option {
 
 const options: Option[] = [
   {
-    label: 'Blend-in',
-    value: 'blend-in'
+    label: "Blend-in",
+    value: "blend-in",
   },
   {
-    label: 'Discrete',
-    value: 'discrete'
+    label: "Discrete",
+    value: "discreet",
   },
   {
-    label: 'Evident',
-    value: 'evident'
-  }
+    label: "Evident",
+    value: "evident",
+  },
 ];
 
 interface OptionsNavColorProps {
@@ -36,31 +36,23 @@ export const OptionsNavColor: FC<OptionsNavColorProps> = (props) => {
 
   return (
     <Stack spacing={1}>
-      <Typography
-        color="text.secondary"
-        variant="overline"
-      >
+      <Typography color="text.secondary" variant="overline">
         Nav Color
       </Typography>
-      <Stack
-        alignItems="center"
-        direction="row"
-        flexWrap="wrap"
-        gap={2}
-      >
+      <Stack alignItems="center" direction="row" flexWrap="wrap" gap={2}>
         {options.map((option) => (
           <Chip
             key={option.label}
             label={option.label}
             onClick={() => onChange?.(option.value)}
             sx={{
-              borderColor: 'transparent',
+              borderColor: "transparent",
               borderRadius: 1.5,
-              borderStyle: 'solid',
+              borderStyle: "solid",
               borderWidth: 2,
               ...(option.value === value && {
-                borderColor: 'primary.main'
-              })
+                borderColor: "primary.main",
+              }),
             }}
           />
         ))}
@@ -71,5 +63,5 @@ export const OptionsNavColor: FC<OptionsNavColorProps> = (props) => {
 
 OptionsNavColor.propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.oneOf(['blend-in', 'discrete', 'evident'])
+  // value: PropTypes.oneOf(["blend-in", "discrete", "evident"]),
 };

@@ -94,8 +94,8 @@ const Page: PageType = () => {
   const repairRequestsIds = useRepairRequestsIds(rentalObject?.repairRequests);
   const repairRequestsSelection = useSelection<string>(repairRequestsIds);
 
-  const currentRenter = useCurrentRenter(rentalObject?.renter, dialog.data);
-  const currentRepairRequest = useCurrentRepairRequest(rentalObject?.repairRequests, dialog.data);
+  const currentRenter = useCurrentRenter(rentalObject?.renter as Renter[], dialog.data);
+  const currentRepairRequest = useCurrentRepairRequest(rentalObject?.repairRequests as RepairRequest[], dialog.data);
 
   usePageView();
 
@@ -315,7 +315,7 @@ const Page: PageType = () => {
                 {currentTab === "renter" && (
                   <RenterListTable
                     count={rentalObject.renter.length}
-                    items={rentalObject.renter}
+                    items={rentalObject.renter as Renter[]}
                     onDeselectAll={rentersSelection.handleDeselectAll}
                     onDeselectOne={rentersSelection.handleDeselectOne}
                     onPageChange={rentersSearch.handlePageChange}
@@ -331,7 +331,7 @@ const Page: PageType = () => {
                 {currentTab === "repairRequests" && (
                   <ObjectRepairRequestList
                     count={rentalObject.repairRequests?.length}
-                    items={rentalObject.repairRequests}
+                    items={rentalObject.repairRequests as RepairRequest[]}
                     onDeselectAll={repairRequestsSelection.handleDeselectAll}
                     onDeselectOne={repairRequestsSelection.handleDeselectOne}
                     onPageChange={repairRequestsSearch.handlePageChange}

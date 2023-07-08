@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
 import { paths } from "src/paths";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { totalPaidRents } from "src/state/selectors/totalPaidRents";
 
@@ -69,5 +69,5 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
 };
 
 OverviewRentPaid.propTypes = {
-  showActions: PropTypes.bool,
+  showActions: PropTypes.bool.isRequired,
 };

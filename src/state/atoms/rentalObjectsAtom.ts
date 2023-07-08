@@ -1,4 +1,4 @@
-import { atom, selector, useRecoilValue } from "recoil";
+import { atom, selector } from "recoil";
 import { currentUserAtom } from "./currentUserAtom";
 import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";

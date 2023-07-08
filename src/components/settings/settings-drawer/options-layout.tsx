@@ -1,11 +1,11 @@
-import type { FC, ReactElement } from 'react';
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import type { FC, ReactElement } from "react";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { Logo } from 'src/components/logo';
-import type { Layout } from 'src/types/settings';
+import { Logo } from "src/components/logo";
+import type { Layout } from "src/types/settings";
 
 interface Option {
   label: string;
@@ -15,181 +15,157 @@ interface Option {
 
 const options: Option[] = [
   {
-    label: 'Vertical',
-    value: 'vertical',
+    label: "Vertical",
+    value: "vertical",
     icon: (
       <Box
         sx={{
-          display: 'flex',
-          flex: '1 1 auto'
+          display: "flex",
+          flex: "1 1 auto",
         }}
       >
         <Box
           sx={{
-            borderRightColor: (theme) => theme.palette.mode === 'dark'
-              ? 'neutral.500'
-              : 'neutral.300',
-            borderRightStyle: 'dashed',
+            borderRightColor: (theme) => (theme.palette.mode === "dark" ? "neutral.500" : "neutral.300"),
+            borderRightStyle: "dashed",
             borderRightWidth: 1,
             px: 1,
-            py: 0.5
+            py: 0.5,
           }}
         >
           <Stack spacing={1}>
             <Box
               sx={{
-                display: 'inline-flex',
+                display: "inline-flex",
                 height: 12,
-                width: 12
+                width: 12,
               }}
             >
               <Logo />
             </Box>
             <Box
               sx={{
-                backgroundColor: 'primary.main',
-                borderRadius: '2px',
+                backgroundColor: "primary.main",
+                borderRadius: "2px",
                 height: 4,
-                width: 26
+                width: 26,
               }}
             />
             <Box
               sx={{
-                backgroundColor: (theme) => theme.palette.mode === 'dark'
-                  ? 'neutral.600'
-                  : 'neutral.300',
-                borderRadius: '2px',
+                backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.600" : "neutral.300"),
+                borderRadius: "2px",
                 height: 4,
-                width: 26
+                width: 26,
               }}
             />
             <Box
               sx={{
-                backgroundColor: (theme) => theme.palette.mode === 'dark'
-                  ? 'neutral.600'
-                  : 'neutral.300',
-                borderRadius: '2px',
+                backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.600" : "neutral.300"),
+                borderRadius: "2px",
                 height: 4,
-                width: 26
+                width: 26,
               }}
             />
           </Stack>
         </Box>
         <Box
           sx={{
-            display: 'flex',
-            flex: '1 1 auto',
-            p: 1
+            display: "flex",
+            flex: "1 1 auto",
+            p: 1,
           }}
         >
           <Box
             sx={{
-              backgroundColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.800'
-                : 'neutral.50',
-              borderColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.500'
-                : 'neutral.300',
+              backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.800" : "neutral.50"),
+              borderColor: (theme) => (theme.palette.mode === "dark" ? "neutral.500" : "neutral.300"),
               borderRadius: 1,
-              borderStyle: 'dashed',
+              borderStyle: "dashed",
               borderWidth: 1,
-              flex: '1 1 auto'
+              flex: "1 1 auto",
             }}
           />
         </Box>
       </Box>
-    )
+    ),
   },
   {
-    label: 'Horizontal',
-    value: 'horizontal',
+    label: "Horizontal",
+    value: "horizontal",
     icon: (
       <Box
         sx={{
-          display: 'flex',
-          flex: '1 1 auto',
-          flexDirection: 'column'
+          display: "flex",
+          flex: "1 1 auto",
+          flexDirection: "column",
         }}
       >
         <Box
           sx={{
-            borderBottomColor: (theme) => theme.palette.mode === 'dark'
-              ? 'neutral.500'
-              : 'neutral.300',
-            borderBottomStyle: 'dashed',
+            borderBottomColor: (theme) => (theme.palette.mode === "dark" ? "neutral.500" : "neutral.300"),
+            borderBottomStyle: "dashed",
             borderBottomWidth: 1,
-            px: 1
+            px: 1,
           }}
         >
-          <Stack
-            alignItems="center"
-            direction="row"
-            spacing={1}
-          >
+          <Stack alignItems="center" direction="row" spacing={1}>
             <Box
               sx={{
-                display: 'inline-flex',
+                display: "inline-flex",
                 height: 12,
-                width: 12
+                width: 12,
               }}
             >
               <Logo />
             </Box>
             <Box
               sx={{
-                backgroundColor: 'primary.main',
-                borderRadius: '2px',
+                backgroundColor: "primary.main",
+                borderRadius: "2px",
                 height: 4,
-                width: 16
+                width: 16,
               }}
             />
             <Box
               sx={{
-                backgroundColor: (theme) => theme.palette.mode === 'dark'
-                  ? 'neutral.600'
-                  : 'neutral.300',
-                borderRadius: '2px',
+                backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.600" : "neutral.300"),
+                borderRadius: "2px",
                 height: 4,
-                width: 16
+                width: 16,
               }}
             />
             <Box
               sx={{
-                backgroundColor: (theme) => theme.palette.mode === 'dark'
-                  ? 'neutral.600'
-                  : 'neutral.300',
-                borderRadius: '2px',
+                backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.600" : "neutral.300"),
+                borderRadius: "2px",
                 height: 4,
-                width: 16
+                width: 16,
               }}
             />
           </Stack>
         </Box>
         <Box
           sx={{
-            display: 'flex',
-            flex: '1 1 auto',
-            p: 1
+            display: "flex",
+            flex: "1 1 auto",
+            p: 1,
           }}
         >
           <Box
             sx={{
-              backgroundColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.800'
-                : 'neutral.50',
-              borderColor: (theme) => theme.palette.mode === 'dark'
-                ? 'neutral.500'
-                : 'neutral.300',
+              backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.800" : "neutral.50"),
+              borderColor: (theme) => (theme.palette.mode === "dark" ? "neutral.500" : "neutral.300"),
               borderRadius: 1,
-              borderStyle: 'dashed',
+              borderStyle: "dashed",
               borderWidth: 1,
-              flex: '1 1 auto'
+              flex: "1 1 auto",
             }}
           />
         </Box>
       </Box>
-    )
-  }
+    ),
+  },
 ];
 
 interface OptionsLayoutProps {
@@ -202,49 +178,37 @@ export const OptionsLayout: FC<OptionsLayoutProps> = (props) => {
 
   return (
     <Stack spacing={1}>
-      <Typography
-        color="text.secondary"
-        variant="overline"
-      >
+      <Typography color="text.secondary" variant="overline">
         Layout
       </Typography>
       <Box
         sx={{
-          display: 'grid',
+          display: "grid",
           gap: 1,
-          gridTemplateColumns: 'repeat(2, minmax(0, 140px))'
+          gridTemplateColumns: "repeat(2, minmax(0, 140px))",
         }}
       >
         {options.map((option) => (
-          <Stack
-            key={option.value}
-            spacing={1}
-          >
+          <Stack key={option.value} spacing={1}>
             <Box
               onClick={() => onChange?.(option.value)}
               sx={{
-                backgroundColor: (theme) => theme.palette.mode === 'dark'
-                  ? 'neutral.900'
-                  : 'background.paper',
-                borderColor: 'divider',
+                backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.900" : "background.paper"),
+                borderColor: "divider",
                 borderRadius: 1,
-                borderStyle: 'solid',
+                borderStyle: "solid",
                 borderWidth: 2,
-                cursor: 'pointer',
-                display: 'flex',
+                cursor: "pointer",
+                display: "flex",
                 height: 88,
                 ...(option.value === value && {
-                  borderColor: 'primary.main'
-                })
+                  borderColor: "primary.main",
+                }),
               }}
             >
               {option.icon}
             </Box>
-            <Typography
-              align="center"
-              sx={{ fontWight: 500 }}
-              variant="body2"
-            >
+            <Typography align="center" sx={{ fontWight: 500 }} variant="body2">
               {option.label}
             </Typography>
           </Stack>
@@ -256,5 +220,5 @@ export const OptionsLayout: FC<OptionsLayoutProps> = (props) => {
 
 OptionsLayout.propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.oneOf(['horizontal', 'vertical'])
+  value: PropTypes.oneOf(["horizontal", "vertical"]),
 };

@@ -1,12 +1,8 @@
-import { FC, useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { FC } from "react";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
-import { objectsApi } from "src/api/objects";
-import { RepairRequest } from "src/types/repairRequest";
 import { paths } from "src/paths";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { repairRequestsAtom } from "src/state/atoms/repairRequestsAtom";
+import { useRecoilValue } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 
 interface OverviewRepairRequest {

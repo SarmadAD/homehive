@@ -103,7 +103,7 @@ const sections: Section[] = [
       },
       {
         title: "Error",
-        path: paths[404],
+        path: paths.notFound,
         icon: (
           <SvgIcon fontSize="small">
             <XSquareIcon />

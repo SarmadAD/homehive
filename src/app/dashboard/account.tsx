@@ -6,11 +6,6 @@ import { Seo } from "src/components/seo";
 import { useMockedUser } from "src/hooks/use-mocked-user";
 import { usePageView } from "src/hooks/use-page-view";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
-import { AccountBillingSettings } from "src/sections/dashboard/account/account-billing-settings";
-import { AccountGeneralSettings } from "src/sections/dashboard/account/account-general-settings";
-import { AccountNotificationsSettings } from "src/sections/dashboard/account/account-notifications-settings";
-import { AccountTeamSettings } from "src/sections/dashboard/account/account-team-settings";
-import { AccountSecuritySettings } from "src/sections/dashboard/account/account-security-settings";
 import type { Page as PageType } from "src/types/page";
 
 const now = new Date();
@@ -62,7 +57,7 @@ const Page: PageType = () => {
               <Divider />
             </div>
           </Stack>
-          {currentTab === "general" && <AccountGeneralSettings avatar={user.avatar || ""} email={user.email || ""} name={user.name || ""} />}
+          {/* {currentTab === "general" && <AccountGeneralSettings avatar={user.avatar || ""} email={user.email || ""} name={user.name || ""} />}
           {currentTab === "billing" && (
             <AccountBillingSettings
               plan="standard"
@@ -102,8 +97,8 @@ const Page: PageType = () => {
                 },
               ]}
             />
-          )}
-          {currentTab === "notifications" && <AccountNotificationsSettings />}
+          )} */}
+          {/* {currentTab === "notifications" && <AccountNotificationsSettings />}
           {currentTab === "security" && (
             <AccountSecuritySettings
               loginEvents={[
@@ -123,7 +118,7 @@ const Page: PageType = () => {
                 },
               ]}
             />
-          )}
+          )} */}
         </Container>
       </Box>
     </>

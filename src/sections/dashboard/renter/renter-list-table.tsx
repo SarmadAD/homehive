@@ -25,8 +25,8 @@ import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
-import { Renter } from "@prisma/client";
 import { getRenterName } from "src/utils/get-renter-name";
+import { Renter } from "prisma/types/renter";
 
 interface RenterListTableProps {
   count?: number;
@@ -126,6 +126,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
           <TableBody>
             {items.map((renter) => {
               const isSelected = selected.includes(renter.id);
+              // eslint-disable-next-line react-hooks/rules-of-hooks
               const statusPill = useRentPaidStatusPill(renter.status);
 
               return (

@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import XIcon from "@untitled-ui/icons-react/build/esm/X";
 import type { Theme } from "@mui/material";
 import { Box, Drawer, IconButton, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material";
-import { Renter } from "src/types/renter";
 import { RenterDetails } from "./renter-details";
+import { Renter } from "prisma/types/renter";
+import { getRenterName } from "src/utils/get-renter-name";
 
 interface RenterDrawerProps {
   container?: HTMLDivElement | null;
@@ -42,7 +43,7 @@ export const RenterDrawer: FC<RenterDrawerProps> = (props) => {
           }}
         >
           <Typography color="inherit" variant="h6">
-            {renter.name}
+            {getRenterName(renter.firstname, renter.surname)}
           </Typography>
           <IconButton color="inherit" onClick={onClose}>
             <SvgIcon>

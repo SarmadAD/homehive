@@ -26,6 +26,7 @@ import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { useRepairRequestStatusPill } from "src/hooks/use-status-pill";
 import { RepairRequest } from "prisma/types/repairRequest";
+import { getRenterName } from "src/utils/get-renter-name";
 
 interface ObjectRepairRequestListProps {
   count?: number;
@@ -126,6 +127,7 @@ export const ObjectRepairRequestList: FC<ObjectRepairRequestListProps> = (props)
           <TableBody>
             {items.map((repairRequest) => {
               const isSelected = selected.includes(repairRequest.id);
+              // eslint-disable-next-line react-hooks/rules-of-hooks
               const statusPill = useRepairRequestStatusPill(repairRequest.status);
 
               return (
@@ -156,7 +158,10 @@ export const ObjectRepairRequestList: FC<ObjectRepairRequestListProps> = (props)
                   <TableCell>
                     <Stack alignItems="center" direction="row" spacing={1}>
                       <AvatarGroup max={3}>
-                        <Tooltip key={repairRequest.renter.name} title={repairRequest.renter.name}>
+                        <Tooltip
+                          key={getRenterName(repairRequest.renter.firstname, repairRequest.renter.surname)}
+                          title={getRenterName(repairRequest.renter.firstname, repairRequest.renter.surname)}
+                        >
                           <Avatar
                             src={repairRequest.renter.image}
                             sx={{
@@ -164,7 +169,7 @@ export const ObjectRepairRequestList: FC<ObjectRepairRequestListProps> = (props)
                               width: 42,
                             }}
                           >
-                            {getInitials(repairRequest.renter.name)}
+                            {getInitials(getRenterName(repairRequest.renter.firstname, repairRequest.renter.surname))}
                           </Avatar>
                         </Tooltip>
                       </AvatarGroup>

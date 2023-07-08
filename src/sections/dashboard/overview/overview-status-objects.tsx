@@ -12,6 +12,7 @@ import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesDa
 interface OverviewStatusObjects {
   showActions: boolean;
 }
+
 const labels: string[] = ["Bewohnt", "Unbewohnt"];
 
 const useChartOptions = (): ApexOptions => {
@@ -74,14 +75,13 @@ const useChartOptions = (): ApexOptions => {
     },
   };
 };
-export const OverviewStatusObjects: FC<OverviewStatusObjects> = (props) => {
+export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) => {
   const chartOptions = useChartOptions();
-  const { showActions } = props;
   const [allRentalObjects, setAllRentalObjects] = useRecoilState(rentalObjectsAtom);
   const objectStatusData = useRecoilValue(objectStatusSeriesData);
 
   if (allRentalObjects === undefined) {
-    return undefined;
+    return <></>;
   }
 
   return (
