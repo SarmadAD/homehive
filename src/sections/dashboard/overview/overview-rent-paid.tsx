@@ -37,9 +37,15 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
           <Typography color="text.secondary" variant="body2">
             Mieten bezahlt
           </Typography>
-          <Typography color="text.primary" variant="h4">
-            {lengthPaidRents} / {renters.length}
-          </Typography>
+          {lengthPaidRents !== 0 ? (
+            <Typography color="text.primary" variant="h4">
+              {lengthPaidRents} / {renters.length}
+            </Typography>
+          ) : (
+            <Typography color="text.primary" variant="body2">
+              Legen Sie Mieter an um hier die Anzahl der bezahlten Mieten zusehen
+            </Typography>
+          )}
         </Box>
       </Stack>
 

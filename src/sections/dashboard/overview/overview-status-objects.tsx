@@ -1,7 +1,7 @@
 import { FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Box, Button, Card, CardActions, CardContent, Container, Divider, Stack, SvgIcon, useTheme } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, Container, Divider, Stack, SvgIcon, Typography, useTheme } from "@mui/material";
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
@@ -92,13 +92,24 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
           xs: "column",
           sm: "row",
         }}
+        spacing={3}
+        sx={{
+          px: 4,
+          py: 3,
+        }}
       >
-        <Box>
-          <Container maxWidth="sm">
-            <CardContent>
-              <Chart height={500} width={300} options={chartOptions} series={objectStatusData} type="donut" />
-            </CardContent>
-          </Container>
+        <Box sx={{ flexGrow: 1 }}>
+          {objectStatusData[0] !== 0 && objectStatusData[1] !== 0 ? (
+            <Container maxWidth="sm">
+              <CardContent>
+                <Chart height={500} width={300} options={chartOptions} series={objectStatusData} type="donut" />
+              </CardContent>
+            </Container>
+          ) : (
+            <Typography color="text.primary" variant="body2">
+              Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zusehen
+            </Typography>
+          )}
         </Box>
       </Stack>
       <Divider />

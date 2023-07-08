@@ -12,7 +12,8 @@ interface OverviewRepairRequest {
 export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
   const { showActions } = props;
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
-  const totalRepairRequests = rentalObjects.reduce((accumulator, rentalObject) => accumulator + rentalObject.repairRequests.length, 0);
+  const totalRepairRequests =
+    rentalObjects.length > 0 ? rentalObjects.reduce((accumulator, rentalObject) => accumulator + rentalObject.repairRequests.length, 0) : 0;
   return (
     <Card>
       <Stack

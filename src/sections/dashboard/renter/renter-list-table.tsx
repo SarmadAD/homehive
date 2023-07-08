@@ -124,63 +124,65 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((renter) => {
-              const isSelected = selected.includes(renter.id);
-              // eslint-disable-next-line react-hooks/rules-of-hooks
-              const statusPill = useRentPaidStatusPill(renter.status);
+            {items.length > 0
+              ? items.map((renter) => {
+                  const isSelected = selected.includes(renter.id);
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  const statusPill = useRentPaidStatusPill(renter.status);
 
-              return (
-                <TableRow hover key={renter.id} selected={isSelected} onClick={() => onSelect?.(renter.id)}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(event: ChangeEvent<HTMLInputElement>): void => {
-                        if (event.target.checked) {
-                          onSelectOne?.(renter.id);
-                        } else {
-                          onDeselectOne?.(renter.id);
-                        }
-                      }}
-                      value={isSelected}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Stack alignItems="center" direction="row" spacing={1}>
-                      <Avatar
-                        src={renter.image}
-                        sx={{
-                          height: 42,
-                          width: 42,
-                        }}
-                      >
-                        {getInitials(getRenterName(renter.firstname, renter.surname))}
-                      </Avatar>
-                      <div>
-                        <Link color="inherit" component={RouterLink} href={`${paths.dashboard.renters.details}${renter.id}`} variant="subtitle2">
-                          {getRenterName(renter.firstname, renter.surname)}
-                        </Link>
-                        <Typography color="text.secondary" variant="body2">
-                          {getRenterName(renter.firstname, renter.surname)}
-                        </Typography>
-                      </div>
-                    </Stack>
-                  </TableCell>
-                  <TableCell>{statusPill}</TableCell>
-                  <TableCell align="right">
-                    <IconButton component={RouterLink} href={paths.dashboard.renters.edit}>
-                      <SvgIcon>
-                        <Edit02Icon />
-                      </SvgIcon>
-                    </IconButton>
-                    <IconButton component={RouterLink} href={`${paths.dashboard.renters.details}/${renter.id}`}>
-                      <SvgIcon>
-                        <ArrowRightIcon />
-                      </SvgIcon>
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                  return (
+                    <TableRow hover key={renter.id} selected={isSelected} onClick={() => onSelect?.(renter.id)}>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={isSelected}
+                          onChange={(event: ChangeEvent<HTMLInputElement>): void => {
+                            if (event.target.checked) {
+                              onSelectOne?.(renter.id);
+                            } else {
+                              onDeselectOne?.(renter.id);
+                            }
+                          }}
+                          value={isSelected}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Stack alignItems="center" direction="row" spacing={1}>
+                          <Avatar
+                            src={renter.image}
+                            sx={{
+                              height: 42,
+                              width: 42,
+                            }}
+                          >
+                            {getInitials(getRenterName(renter.firstname, renter.surname))}
+                          </Avatar>
+                          <div>
+                            <Link color="inherit" component={RouterLink} href={`${paths.dashboard.renters.details}${renter.id}`} variant="subtitle2">
+                              {getRenterName(renter.firstname, renter.surname)}
+                            </Link>
+                            <Typography color="text.secondary" variant="body2">
+                              {getRenterName(renter.firstname, renter.surname)}
+                            </Typography>
+                          </div>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>{statusPill}</TableCell>
+                      <TableCell align="right">
+                        <IconButton component={RouterLink} href={paths.dashboard.renters.edit}>
+                          <SvgIcon>
+                            <Edit02Icon />
+                          </SvgIcon>
+                        </IconButton>
+                        <IconButton component={RouterLink} href={`${paths.dashboard.renters.details}/${renter.id}`}>
+                          <SvgIcon>
+                            <ArrowRightIcon />
+                          </SvgIcon>
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              : []}
           </TableBody>
         </Table>
       </Scrollbar>

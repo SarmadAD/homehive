@@ -5,7 +5,10 @@ export const totalPaidRents = selector({
   key: "totalPaidRents",
   get: ({ get }) => {
     const renters = get(rentersAtom);
-    const lengthPaidRents = renters?.filter((renter) => renter.status === "PAID").length;
-    return lengthPaidRents;
+    if (renters.length > 0) {
+      const lengthPaidRents = renters?.filter((renter) => renter.status === "PAID").length;
+      return lengthPaidRents;
+    }
+    return 0;
   },
 });
