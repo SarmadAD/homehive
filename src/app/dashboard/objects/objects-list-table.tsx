@@ -127,6 +127,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
           <TableBody>
             {items.map((object) => {
               const isSelected = selected.includes(object.id);
+              // eslint-disable-next-line react-hooks/rules-of-hooks
               const statusPill = useRentalObjectStatusPill(object);
 
               return (

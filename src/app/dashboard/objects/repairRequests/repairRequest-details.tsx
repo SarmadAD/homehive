@@ -7,6 +7,7 @@ import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
 import { useRepairRequestStatusPill } from "src/hooks/use-status-pill";
 import { RepairRequest } from "prisma/types/repairRequest";
+import { getRenterName } from "src/utils/get-renter-name";
 
 interface RepairRequestDetailsProps {
   onEdit?: () => void;
@@ -62,7 +63,7 @@ export const RepairRequestDetails: FC<RepairRequestDetailsProps> = (props) => {
         <PropertyList>
           <PropertyListItem align={align} disableGutters divider label="Mieter">
             <Typography color="text.secondary" variant="body2">
-              {repairRequest.renter.name}
+              {getRenterName(repairRequest.renter.firstname, repairRequest.renter.surname)}
             </Typography>
           </PropertyListItem>
 

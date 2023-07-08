@@ -1,13 +1,13 @@
-import type { FC, ReactElement } from 'react';
-import PropTypes from 'prop-types';
-import LeftIndent01Icon from '@untitled-ui/icons-react/build/esm/LeftIndent01';
-import RightIndent01Icon from '@untitled-ui/icons-react/build/esm/RightIndent01';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import SvgIcon from '@mui/material/SvgIcon';
-import Typography from '@mui/material/Typography';
+import type { FC, ReactElement } from "react";
+import PropTypes from "prop-types";
+import LeftIndent01Icon from "@untitled-ui/icons-react/build/esm/LeftIndent01";
+import RightIndent01Icon from "@untitled-ui/icons-react/build/esm/RightIndent01";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import SvgIcon from "@mui/material/SvgIcon";
+import Typography from "@mui/material/Typography";
 
-import type { Direction } from 'src/theme';
+import type { Direction } from "@mui/material";
 
 interface Option {
   label: string;
@@ -17,23 +17,23 @@ interface Option {
 
 const options: Option[] = [
   {
-    label: 'Left-to-right',
-    value: 'ltr',
+    label: "Left-to-right",
+    value: "ltr",
     icon: (
       <SvgIcon fontSize="small">
         <LeftIndent01Icon />
       </SvgIcon>
-    )
+    ),
   },
   {
-    label: 'Right-to-left',
-    value: 'rtl',
+    label: "Right-to-left",
+    value: "rtl",
     icon: (
       <SvgIcon fontSize="small">
         <RightIndent01Icon />
       </SvgIcon>
-    )
-  }
+    ),
+  },
 ];
 
 interface OptionsDirectionProps {
@@ -46,18 +46,10 @@ export const OptionsDirection: FC<OptionsDirectionProps> = (props) => {
 
   return (
     <Stack spacing={1}>
-      <Typography
-        color="text.secondary"
-        variant="overline"
-      >
+      <Typography color="text.secondary" variant="overline">
         Orientation
       </Typography>
-      <Stack
-        alignItems="center"
-        direction="row"
-        flexWrap="wrap"
-        gap={2}
-      >
+      <Stack alignItems="center" direction="row" flexWrap="wrap" gap={2}>
         {options.map((option) => (
           <Chip
             icon={option.icon}
@@ -65,13 +57,13 @@ export const OptionsDirection: FC<OptionsDirectionProps> = (props) => {
             label={option.label}
             onClick={() => onChange?.(option.value)}
             sx={{
-              borderColor: 'transparent',
+              borderColor: "transparent",
               borderRadius: 1.5,
-              borderStyle: 'solid',
+              borderStyle: "solid",
               borderWidth: 2,
               ...(option.value === value && {
-                borderColor: 'primary.main'
-              })
+                borderColor: "primary.main",
+              }),
             }}
           />
         ))}
@@ -82,5 +74,5 @@ export const OptionsDirection: FC<OptionsDirectionProps> = (props) => {
 
 OptionsDirection.propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.oneOf(['ltr', 'rtl'])
+  value: PropTypes.oneOf(["ltr", "rtl"]),
 };

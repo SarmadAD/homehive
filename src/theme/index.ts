@@ -1,10 +1,10 @@
-import type { Direction, PaletteMode, Theme } from '@mui/material';
-import { createTheme as createMuiTheme, responsiveFontSizes } from '@mui/material/styles';
-import { createOptions as createBaseOptions } from './base/create-options';
-import { createOptions as createDarkOptions } from './dark/create-options';
-import { createOptions as createLightOptions } from './light/create-options';
+import type { Direction, PaletteMode, Theme } from "@mui/material";
+import { createTheme as createMuiTheme, responsiveFontSizes } from "@mui/material/styles";
+import { createOptions as createBaseOptions } from "./base/create-options";
+import { createOptions as createDarkOptions } from "./dark/create-options";
+import { createOptions as createLightOptions } from "./light/create-options";
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   export interface NeutralColors {
     50: string;
     100: string;
@@ -42,12 +42,12 @@ declare module '@mui/material/styles' {
   }
 }
 
-export type ColorPreset = 'blue' | 'green' | 'indigo' | 'purple';
+export type ColorPreset = "blue" | "green" | "indigo" | "purple";
 
-export type Contrast = 'normal' | 'high';
+export type Contrast = "normal" | "high";
 
 interface ThemeConfig {
-  colorPreset?: ColorPreset,
+  colorPreset?: ColorPreset;
   contrast?: Contrast;
   direction?: Direction;
   paletteMode?: PaletteMode;
@@ -58,18 +58,18 @@ export const createTheme = (config: ThemeConfig): Theme => {
   let theme = createMuiTheme(
     // Base options available for both dark and light palette modes
     createBaseOptions({
-      direction: config.direction
+      direction: config.direction,
     }),
     // Options based on selected palette mode, color preset and contrast
-    config.paletteMode === 'dark'
+    config.paletteMode === "dark"
       ? createDarkOptions({
-        colorPreset: config.colorPreset,
-        contrast: config.contrast
-      })
+          colorPreset: config.colorPreset,
+          contrast: config.contrast,
+        })
       : createLightOptions({
-        colorPreset: config.colorPreset,
-        contrast: config.contrast
-      })
+          colorPreset: config.colorPreset,
+          contrast: config.contrast,
+        })
   );
 
   if (config.responsiveFontSizes) {

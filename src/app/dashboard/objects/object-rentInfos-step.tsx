@@ -1,12 +1,13 @@
 import { ChangeEvent, Dispatch, FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Autocomplete, Button, MenuItem, Stack, SvgIcon, TextField, Typography } from "@mui/material";
+import { Autocomplete, Button, Stack, SvgIcon, TextField, Typography } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { RentalObject } from "prisma/types/objects";
-import { DueDateOfRent, Renter } from "@prisma/client";
+import { DueDateOfRent } from "@prisma/client";
 import { getRenterName } from "src/utils/get-renter-name";
+import { Renter } from "prisma/types/renter";
 
 interface ObjectRentInfosStep {
   onNext?: () => void;
@@ -26,7 +27,7 @@ type OptionDueDate = {
   value: DueDateOfRent;
 };
 
-const dueDateOfRentList = [
+const dueDateOfRentList: OptionDueDate[] = [
   {
     label: "Zum 1 des Monats",
     value: DueDateOfRent.FIRSTMONTH,
@@ -57,18 +58,22 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
     });
   }
 
-  function handleRenterChange(event: React.SyntheticEvent, value: Renter, reason: string, details?: string) {
-    setNewObject({ ...newObject, renter: [value] });
+  function handleRenterChange(event: React.SyntheticEvent, renter: Renter | null) {
+    if (renter) {
+      setNewObject({ ...newObject, renter: [renter] });
+    }
   }
 
-  function handleDueDateChange(e: React.SyntheticEvent, dueDate: OptionDueDate, reason: string, details?: string) {
-    setNewObject({
-      ...newObject,
-      rentalObjectInfo: {
-        ...newObject?.rentalObjectInfo,
-        dueDateOfRent: dueDate.value,
-      },
-    });
+  function handleDueDateChange(event: React.SyntheticEvent, dueDate: OptionDueDate | null) {
+    if (dueDate) {
+      setNewObject({
+        ...newObject,
+        rentalObjectInfo: {
+          ...newObject?.rentalObjectInfo,
+          dueDateOfRent: dueDate.value,
+        },
+      });
+    }
   }
 
   return (

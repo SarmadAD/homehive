@@ -76,7 +76,7 @@ const items: Item[] = [
           },
           {
             title: "Error",
-            path: paths[404],
+            path: paths.notFound,
           },
         ],
       },

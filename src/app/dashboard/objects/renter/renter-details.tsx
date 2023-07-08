@@ -5,8 +5,8 @@ import { Theme } from "@mui/material";
 import { Button, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { Renter } from "src/types/renter";
 import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
+import { Renter } from "prisma/types/renter";
 
 interface RenterDetailsProps {
   onEdit?: () => void;
@@ -43,7 +43,7 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
         <PropertyList>
           <PropertyListItem align={align} disableGutters divider label="Kontaktdaten">
             <Typography color="text.secondary" variant="body2">
-              0123123123
+              00123123123
             </Typography>
             <Typography color="text.secondary" variant="body2">
               {renter.email}

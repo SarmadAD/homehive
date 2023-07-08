@@ -32,5 +32,5 @@ export const RenterBasicDetails: FC<Props> = ({ renter: { email, firstname, surn
 };
 
 RenterBasicDetails.propTypes = {
-  renter: PropTypes.object.isRequired,
+  // renter: PropTypes.object.isRequired,
 };

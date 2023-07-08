@@ -1,12 +1,12 @@
-import type { FC } from 'react';
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import type { FC } from "react";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import type { ColorPreset } from 'src/theme';
-import { blue, green, indigo, purple } from 'src/theme/colors';
+import type { ColorPreset } from "src/theme";
+import { blue, green, indigo, purple } from "src/theme/colors";
 
 interface Option {
   label: string;
@@ -24,65 +24,57 @@ export const OptionsColorPreset: FC<OptionsColorPresetProps> = (props) => {
 
   const options: Option[] = [
     {
-      label: 'Green',
-      value: 'green',
-      color: green.main
+      label: "Green",
+      value: "green",
+      color: green.main,
     },
     {
-      label: 'Blue',
-      value: 'blue',
-      color: blue.main
+      label: "Blue",
+      value: "blue",
+      color: blue.main,
     },
     {
-      label: 'Indigo',
-      value: 'indigo',
-      color: indigo.main
+      label: "Indigo",
+      value: "indigo",
+      color: indigo.main,
     },
     {
-      label: 'Purple',
-      value: 'purple',
-      color: purple.main
-    }
+      label: "Purple",
+      value: "purple",
+      color: purple.main,
+    },
   ];
 
   return (
     <Stack spacing={1}>
-      <Typography
-        color="text.secondary"
-        variant="overline"
-      >
+      <Typography color="text.secondary" variant="overline">
         Primary Color
       </Typography>
-      <Stack
-        alignItems="center"
-        direction="row"
-        flexWrap="wrap"
-        gap={2}
-      >
+      <Stack alignItems="center" direction="row" flexWrap="wrap" gap={2}>
         {options.map((option) => (
           <Chip
-            icon={(
+            icon={
               <Box
                 sx={{
                   backgroundColor: option.color,
-                  borderRadius: '50%',
+                  borderRadius: "50%",
                   flexShrink: 0,
                   height: 24,
-                  width: 24
+                  width: 24,
                 }}
               />
-            )}
+            }
             key={option.value}
             label={option.label}
             onClick={() => onChange?.(option.value)}
             sx={{
-              borderColor: 'transparent',
+              borderColor: "transparent",
               borderRadius: 1.5,
-              borderStyle: 'solid',
+              borderStyle: "solid",
               borderWidth: 2,
               ...(option.value === value && {
-                borderColor: 'primary.main'
-              })
+                borderColor: "primary.main",
+              }),
             }}
           />
         ))}
@@ -93,5 +85,5 @@ export const OptionsColorPreset: FC<OptionsColorPresetProps> = (props) => {
 
 OptionsColorPreset.propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.oneOf(['blue', 'green', 'indigo', 'purple'])
+  value: PropTypes.oneOf(["blue", "green", "indigo", "purple"]),
 };

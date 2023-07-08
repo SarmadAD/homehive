@@ -1,7 +1,7 @@
 import { atom, selector } from "recoil";
 import agent from "src/api/agent";
 import { selectedRenterIdAtom } from "./selectedRenterIdAtom";
-import { Renter } from "@prisma/client";
+import { Renter, renterDefault } from "prisma/types/renter";
 
 export const renterAtom = atom<Renter>({
   key: "renterAtom",
@@ -13,6 +13,7 @@ export const renterAtom = atom<Renter>({
         const response = await agent.renters.details(id);
         return response;
       }
+      return renterDefault;
     },
   }),
 });
