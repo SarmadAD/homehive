@@ -13,8 +13,6 @@ import { useTheme } from "@mui/material/styles";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 
-import { HomeCodeSamples } from "./home-code-samples";
-
 export const HomeHero: FC = () => {
   const theme = useTheme();
 
