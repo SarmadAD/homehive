@@ -30,6 +30,14 @@ const permissions = [
     permission: "/renterportal/dashboard",
     role: "Renter",
   },
+  {
+    permission: "showRenterPortalName",
+    role: "Renter",
+  },
+  {
+    permission: "showLandlordPortalName",
+    role: "Landlord",
+  },
 ];
 
 export const RoleBasedGuard = ({ children, permission }: Props) => {

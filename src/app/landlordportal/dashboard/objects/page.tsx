@@ -29,6 +29,7 @@ import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
+import { SplashScreen } from "src/components/splash-screen";
 
 interface Filters {
   query?: string;
@@ -128,6 +129,10 @@ const Page: PageType = () => {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (isLoading) {
+    return <SplashScreen />;
   }
 
   return (
