@@ -1,7 +1,8 @@
-import type { FC, ReactNode } from 'react';
-import PropTypes from 'prop-types';
-import { Box, Stack } from '@mui/material';
-import { MobileNavItem } from './mobile-nav-item';
+import type { FC, ReactNode } from "react";
+import PropTypes from "prop-types";
+import { Box, Stack } from "@mui/material";
+import { MobileNavItem } from "./mobile-nav-item";
+import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 interface Item {
   disabled?: boolean;
@@ -16,26 +17,28 @@ interface Item {
 const renderItems = ({
   depth = 0,
   items,
-  pathname
+  pathname,
 }: {
   depth?: number;
   items: Item[];
   pathname?: string | null;
-}): JSX.Element[] => items.reduce(
-  (acc: JSX.Element[], item) => reduceChildRoutes({
-    acc,
-    depth,
-    item,
-    pathname
-  }),
-  []
-);
+}): JSX.Element[] =>
+  items.reduce(
+    (acc: JSX.Element[], item) =>
+      reduceChildRoutes({
+        acc,
+        depth,
+        item,
+        pathname,
+      }),
+    []
+  );
 
 const reduceChildRoutes = ({
   acc,
   depth,
   item,
-  pathname
+  pathname,
 }: {
   acc: JSX.Element[];
   depth: number;
@@ -62,32 +65,34 @@ const reduceChildRoutes = ({
           component="ul"
           spacing={0.5}
           sx={{
-            listStyle: 'none',
+            listStyle: "none",
             m: 0,
-            p: 0
+            p: 0,
           }}
         >
           {renderItems({
             depth: depth + 1,
             items: item.items,
-            pathname
+            pathname,
           })}
         </Stack>
       </MobileNavItem>
     );
   } else {
     acc.push(
-      <MobileNavItem
-        active={exactMatch}
-        depth={depth}
-        disabled={item.disabled}
-        external={item.external}
-        icon={item.icon}
-        key={item.title}
-        label={item.label}
-        path={item.path}
-        title={item.title}
-      />
+      <RoleBasedGuard permission={item.path ?? ""}>
+        <MobileNavItem
+          active={exactMatch}
+          depth={depth}
+          disabled={item.disabled}
+          external={item.external}
+          icon={item.icon}
+          key={item.title}
+          label={item.label}
+          path={item.path}
+          title={item.title}
+        />
+      </RoleBasedGuard>
     );
   }
 
@@ -101,16 +106,16 @@ interface MobileNavSectionProps {
 }
 
 export const MobileNavSection: FC<MobileNavSectionProps> = (props) => {
-  const { items = [], pathname, subheader = '', ...other } = props;
+  const { items = [], pathname, subheader = "", ...other } = props;
 
   return (
     <Stack
       component="ul"
       spacing={0.5}
       sx={{
-        listStyle: 'none',
+        listStyle: "none",
         m: 0,
-        p: 0
+        p: 0,
       }}
       {...other}
     >
@@ -118,13 +123,13 @@ export const MobileNavSection: FC<MobileNavSectionProps> = (props) => {
         <Box
           component="li"
           sx={{
-            color: 'var(--nav-section-title-color)',
+            color: "var(--nav-section-title-color)",
             fontSize: 14,
             fontWeight: 700,
             lineHeight: 1.66,
             mb: 1,
             ml: 1,
-            textTransform: 'uppercase'
+            textTransform: "uppercase",
           }}
         >
           {subheader}
@@ -138,5 +143,5 @@ export const MobileNavSection: FC<MobileNavSectionProps> = (props) => {
 MobileNavSection.propTypes = {
   items: PropTypes.array,
   pathname: PropTypes.string,
-  subheader: PropTypes.string
+  subheader: PropTypes.string,
 };
