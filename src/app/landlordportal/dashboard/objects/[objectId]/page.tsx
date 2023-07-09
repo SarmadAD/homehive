@@ -47,6 +47,7 @@ import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
 import { RepairRequest } from "prisma/types/repairRequest";
 import { Renter } from "prisma/types/renter";
 import agent from "src/api/agent";
+import { SplashScreen } from "src/components/splash-screen";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -175,18 +176,8 @@ const Page: PageType = () => {
     }
   };
 
-  if (!rentalObject) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mt: 3,
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+  if (!rentalObject.id) {
+    return <SplashScreen />;
   }
 
   return (

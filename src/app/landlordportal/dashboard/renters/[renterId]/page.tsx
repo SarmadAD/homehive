@@ -34,6 +34,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
 import { renterAtom } from "src/state/atoms/renterAtom";
 import { getRenterName } from "src/utils/get-renter-name";
+import { SplashScreen } from "src/components/splash-screen";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -66,18 +67,8 @@ const Page: PageType = () => {
     setCurrentTab(value);
   }, []);
 
-  if (!renter) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mt: 3,
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+  if (!renter.id) {
+    return <SplashScreen />;
   }
   return (
     <>

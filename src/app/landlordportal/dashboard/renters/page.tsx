@@ -30,6 +30,7 @@ import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
+import { SplashScreen } from "src/components/splash-screen";
 
 const Page: PageType = () => {
   usePageView();
@@ -64,6 +65,10 @@ const Page: PageType = () => {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (isLoading) {
+    return <SplashScreen />;
   }
 
   return (

@@ -30,11 +30,11 @@ export const HomeHero: FC = () => {
       <Container maxWidth="lg">
         <Box maxWidth="sm">
           <Typography variant="h1" sx={{ mb: 2 }}>
-            Let us worry about the&nbsp;
+            Die einzige &nbsp;
             <Typography component="span" color="primary.main" variant="inherit">
-              User Experience
+              Immobilienverwaltung &nbsp;
             </Typography>
-            , you focus on Developing.
+            die du brauchen wirst
           </Typography>
           <Typography
             color="text.secondary"
