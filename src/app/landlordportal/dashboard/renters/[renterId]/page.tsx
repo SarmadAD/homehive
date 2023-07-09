@@ -108,7 +108,7 @@ const Page: PageType = () => {
                   <Link
                     color="text.primary"
                     component={RouterLink}
-                    href={paths.dashboard.renters.index}
+                    href={paths.landlordportal.dashboard.renters.index}
                     sx={{
                       alignItems: "center",
                       display: "inline-flex",
@@ -157,7 +157,7 @@ const Page: PageType = () => {
                           <Edit02Icon />
                         </SvgIcon>
                       }
-                      href={paths.dashboard.objects.edit}
+                      href={paths.landlordportal.dashboard.objects.edit}
                     >
                       Edit
                     </Button>

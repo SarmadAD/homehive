@@ -14,7 +14,7 @@ import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
 import { useSetRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import { RoleBasedGuard } from "../auth/role/RoleBasedGuard";
+import { RoleBasedGuard } from "../../auth/role/RoleBasedGuard";
 
 const Page = () => {
   usePageView();
@@ -42,7 +42,7 @@ const Page = () => {
   return (
     <>
       <Seo title="Dashboard: Übersicht" />
-      <RoleBasedGuard permission="/dashboard">
+      <RoleBasedGuard permission="/landlordportal/dashboard">
         <Box
           component="main"
           sx={{

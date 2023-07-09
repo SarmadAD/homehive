@@ -22,7 +22,7 @@ import { useSelection } from "src/hooks/use-selection";
 import { paths } from "src/paths";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import { ObjectListTable } from "./objects-list-table";
+import { ObjectListTable } from "../../../components/objects-list-table";
 import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
@@ -133,7 +133,7 @@ const Page: PageType = () => {
   return (
     <>
       <Seo title="Dashboard: Übersicht" />
-      <RoleBasedGuard permission="/dashboard/objects">
+      <RoleBasedGuard permission="/renterportal/dashboard/objects">
         <Box
           component="main"
           sx={{
@@ -163,7 +163,7 @@ const Page: PageType = () => {
                         </SvgIcon>
                       }
                       variant="contained"
-                      href={paths.dashboard.objects.create}
+                      href={paths.landlordportal.dashboard.objects.create}
                     >
                       Hinzufügen
                     </Button>

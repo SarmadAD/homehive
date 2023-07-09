@@ -45,7 +45,7 @@ export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
         <CardActions>
           <Button
             color="inherit"
-            href={paths.dashboard.objects.index}
+            href={paths.landlordportal.dashboard.objects.index}
             endIcon={
               <SvgIcon>
                 <ArrowRightIcon />

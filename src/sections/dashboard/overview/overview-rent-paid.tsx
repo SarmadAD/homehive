@@ -61,7 +61,7 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
                 </SvgIcon>
               }
               size="small"
-              href={paths.dashboard.renters.index}
+              href={paths.landlordportal.dashboard.renters.index}
             >
               Mieter anzeigen
             </Button>

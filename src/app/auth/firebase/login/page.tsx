@@ -3,7 +3,20 @@
 import { useCallback } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Alert, Box, Button, Card, CardContent, CardHeader, Divider, FormHelperText, Link, Stack, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  FormHelperText,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
 import type { AuthContextType } from "src/contexts/auth/firebase-context";
@@ -50,7 +63,7 @@ const Page: PageType = () => {
 
         if (isMounted()) {
           // returnTo could be an absolute path
-          window.location.href = returnTo || paths.dashboard.index;
+          window.location.href = returnTo || paths.landlordportal.dashboard.index;
         }
       } catch (err) {
         console.error(err);
@@ -70,7 +83,7 @@ const Page: PageType = () => {
 
       if (isMounted()) {
         // returnTo could be an absolute path
-        window.location.href = returnTo || paths.dashboard.index;
+        window.location.href = returnTo || paths.landlordportal.dashboard.index;
       }
     } catch (err) {
       console.error(err);

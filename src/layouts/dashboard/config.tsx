@@ -32,7 +32,7 @@ export const useSections = () => {
         items: [
           {
             title: t(tokens.nav.dashboard),
-            path: paths.dashboard.index,
+            path: paths.landlordportal.dashboard.index,
             icon: (
               <SvgIcon fontSize="small">
                 <LineChartUp01 />
@@ -41,7 +41,7 @@ export const useSections = () => {
           },
           {
             title: t(tokens.nav.objects),
-            path: paths.dashboard.objects.index,
+            path: paths.landlordportal.dashboard.objects.index,
             icon: (
               <SvgIcon fontSize="small">
                 <HomeSmileIcon />
@@ -50,10 +50,29 @@ export const useSections = () => {
           },
           {
             title: t(tokens.nav.renter),
-            path: paths.dashboard.renters.index,
+            path: paths.landlordportal.dashboard.renters.index,
             icon: (
               <SvgIcon fontSize="small">
                 <Person />
+              </SvgIcon>
+            ),
+          },
+
+          {
+            title: t(tokens.nav.dashboard),
+            path: paths.renterportal.dashboard.index,
+            icon: (
+              <SvgIcon fontSize="small">
+                <LineChartUp01 />
+              </SvgIcon>
+            ),
+          },
+          {
+            title: t(tokens.nav.objects),
+            path: paths.renterportal.dashboard.objects.index,
+            icon: (
+              <SvgIcon fontSize="small">
+                <HomeSmileIcon />
               </SvgIcon>
             ),
           },

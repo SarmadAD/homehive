@@ -35,10 +35,7 @@ interface ObjectListTableProps {
   items?: RentalObject[];
   onDeselectAll?: () => void;
   onDeselectOne?: (objectId: string) => void;
-  onPageChange?: (
-    event: MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => void;
+  onPageChange?: (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   onRowsPerPageChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onSelectAll?: () => void;
   onSelectOne?: (objectId: string) => void;
@@ -74,8 +71,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
           spacing={2}
           sx={{
             alignItems: "center",
-            backgroundColor: (theme) =>
-              theme.palette.mode === "dark" ? "neutral.800" : "neutral.50",
+            backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.800" : "neutral.50"),
             display: enableBulkActions ? "flex" : "none",
             position: "absolute",
             top: 0,
@@ -140,9 +136,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isSelected}
-                          onChange={(
-                            event: ChangeEvent<HTMLInputElement>
-                          ): void => {
+                          onChange={(event: ChangeEvent<HTMLInputElement>): void => {
                             if (event.target.checked) {
                               onSelectOne?.(object.id);
                             } else {
@@ -167,9 +161,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                             <Link
                               color="inherit"
                               component={RouterLink}
-                              href={`${
-                                paths.dashboard.objects.details
-                              }${encodeURIComponent(object.id)}`}
+                              href={`${paths.landlordportal.dashboard.objects.details}${encodeURIComponent(object.id)}`}
                               variant="subtitle2"
                             >
                               {object.name}
@@ -186,14 +178,8 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                           <AvatarGroup max={3}>
                             {object.renter?.map((renter) => (
                               <Tooltip
-                                key={getRenterName(
-                                  renter.firstname,
-                                  renter.surname
-                                )}
-                                title={getRenterName(
-                                  renter.firstname,
-                                  renter.surname
-                                )}
+                                key={getRenterName(renter.firstname, renter.surname)}
+                                title={getRenterName(renter.firstname, renter.surname)}
                               >
                                 <Avatar
                                   src={object.image}
@@ -202,12 +188,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                                     width: 42,
                                   }}
                                 >
-                                  {getInitials(
-                                    getRenterName(
-                                      renter.firstname,
-                                      renter.surname
-                                    )
-                                  )}
+                                  {getInitials(getRenterName(renter.firstname, renter.surname))}
                                 </Avatar>
                               </Tooltip>
                             ))}
@@ -217,7 +198,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                       <TableCell align="right">
                         <IconButton
                           component={RouterLink}
-                          href={`${paths.dashboard.objects.edit}${object.id}`}
+                          href={`${paths.landlordportal.dashboard.objects.edit}${object.id}`}
                         >
                           <SvgIcon>
                             <Edit02Icon />
@@ -225,7 +206,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                         </IconButton>
                         <IconButton
                           component={RouterLink}
-                          href={`${paths.dashboard.objects.details}/${object.id}`}
+                          href={`${paths.landlordportal.dashboard.objects.details}/${object.id}`}
                         >
                           <SvgIcon>
                             <ArrowRightIcon />
