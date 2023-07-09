@@ -48,7 +48,7 @@ const Page: PageType = () => {
   const searchParams = useSearchParams();
   const renterId = searchParams?.get("renterId");
 
-  async function setRentalObjectId() {
+  async function setRenterId() {
     if (renterId) {
       setSelectedRenterIdAtom(renterId.toString() ?? "");
     }
@@ -56,7 +56,7 @@ const Page: PageType = () => {
 
   useEffect(
     () => {
-      setRentalObjectId();
+      setRenterId();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

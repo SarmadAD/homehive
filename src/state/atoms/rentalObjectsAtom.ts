@@ -8,9 +8,9 @@ export const rentalObjectsAtom = atom<RentalObject[]>({
   default: selector({
     key: "rentalObjectsAtom/rentalObjects",
     get: async ({ get }) => {
-      const landlord = get(currentUserAtom);
-      if (landlord.id) {
-        const response = await agent.objects.list(landlord.id);
+      const user = get(currentUserAtom);
+      if (user.id) {
+        const response = await agent.objects.list(user.id);
         return response;
       }
       return [];

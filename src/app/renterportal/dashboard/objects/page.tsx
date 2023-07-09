@@ -20,7 +20,7 @@ import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { useCallback, useState, ChangeEvent, MouseEvent, useMemo, useEffect } from "react";
 import { useSelection } from "src/hooks/use-selection";
 import { paths } from "src/paths";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { ObjectListTable } from "../../../components/objects-list-table";
 import { useAuth } from "src/hooks/use-auth";
@@ -29,6 +29,8 @@ import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
+import { renterAtom } from "src/state/atoms/renterAtom";
+import { renterDefault } from "prisma/types/renter";
 
 interface Filters {
   query?: string;
@@ -103,7 +105,7 @@ const Page: PageType = () => {
   const objectsSearch = useObjectsSearch();
 
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
-  const setLandlord = useSetRecoilState(currentUserAtom);
+  const [renter, setRenter] = useState(renterDefault);
   const objectsIds = useObjectsIds(rentalObjects);
   const objectsSelection = useSelection<string>(objectsIds);
   const [isLoading, setIsLoading] = useState(false);
@@ -111,17 +113,17 @@ const Page: PageType = () => {
   const { user } = useAuth<AuthContextType>();
 
   useEffect(() => {
-    getLandlord();
+    getRenter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function getLandlord() {
+  async function getRenter() {
     try {
       const firebaseUserId = user?.id;
       if (firebaseUserId) {
         setIsLoading(true);
-        const landlord = await agent.landlord.details(firebaseUserId);
-        setLandlord(landlord);
+        const renter = await agent.renter.details(firebaseUserId);
+        setRenter(renter);
       }
     } catch (error) {
       console.error(error);
@@ -153,29 +155,34 @@ const Page: PageType = () => {
               <Grid xs={12}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
                   <div>
-                    <Typography variant="h4">Objekte</Typography>
+                    <Typography variant="h4">Objekt</Typography>
                   </div>
-                  <Stack direction="row" spacing={4}>
-                    <Button
-                      startIcon={
-                        <SvgIcon>
-                          <PlusIcon />
-                        </SvgIcon>
-                      }
-                      variant="contained"
-                      href={paths.landlordportal.dashboard.objects.create}
-                    >
-                      Hinzufügen
-                    </Button>
-                  </Stack>
+                  <RoleBasedGuard permission="/landlordportal/dashboard/objects">
+                    <Stack direction="row" spacing={4}>
+                      <Button
+                        startIcon={
+                          <SvgIcon>
+                            <PlusIcon />
+                          </SvgIcon>
+                        }
+                        variant="contained"
+                        href={paths.landlordportal.dashboard.objects.create}
+                      >
+                        Hinzufügen
+                      </Button>
+                    </Stack>
+                  </RoleBasedGuard>
                 </Stack>
               </Grid>
-              <Grid xs={12} md={4}>
-                <OverviewRepairRequest showActions={false} />
-              </Grid>
-              <Grid xs={12} md={4}>
-                <OverviewStatusObjects showActions={false} />
-              </Grid>
+
+              <RoleBasedGuard permission="/landlordportal/dashboard/objects">
+                <Grid xs={12} md={4}>
+                  <OverviewRepairRequest showActions={false} />
+                </Grid>
+                <Grid xs={12} md={4}>
+                  <OverviewStatusObjects showActions={false} />
+                </Grid>
+              </RoleBasedGuard>
               <Grid xs={12} md={12}>
                 {/* <ObjectsListTable />
                  */}
@@ -198,7 +205,11 @@ const Page: PageType = () => {
                 ) : (
                   <ObjectListTable
                     count={rentalObjects.length}
-                    items={rentalObjects}
+                    items={
+                      Array.isArray(renter.rentalObject)
+                        ? renter.rentalObject
+                        : ([renter.rentalObject] as RentalObject[])
+                    }
                     onDeselectAll={objectsSelection.handleDeselectAll}
                     onDeselectOne={objectsSelection.handleDeselectOne}
                     onPageChange={objectsSearch.handlePageChange}
