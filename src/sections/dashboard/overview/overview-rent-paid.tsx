@@ -37,7 +37,7 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
           <Typography color="text.secondary" variant="body2">
             Mieten bezahlt
           </Typography>
-          {lengthPaidRents !== 0 ? (
+          {lengthPaidRents !== undefined ? (
             <Typography color="text.primary" variant="h4">
               {lengthPaidRents} / {renters.length}
             </Typography>

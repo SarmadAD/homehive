@@ -9,6 +9,6 @@ export const totalPaidRents = selector({
       const lengthPaidRents = renters?.filter((renter) => renter.status === "PAID").length;
       return lengthPaidRents;
     }
-    return 0;
+    return undefined;
   },
 });
