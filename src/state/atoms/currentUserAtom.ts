@@ -4,5 +4,5 @@ import { atom } from "recoil";
 
 export const currentUserAtom = atom<Landlord | Renter>({
   key: "currentUserAtom",
-  default: { firebaseUserId: "", id: "" } as Landlord,
+  default: { firebaseUserId: "", id: "" } as Landlord | Renter,
 });

@@ -176,7 +176,7 @@ export const ObjectRepairRequestList: FC<ObjectRepairRequestListProps> = (props)
                     </Stack>
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton component={RouterLink} href={paths.dashboard.objects.edit}>
+                    <IconButton component={RouterLink} href={paths.landlordportal.dashboard.objects.edit}>
                       <SvgIcon>
                         <Edit02Icon />
                       </SvgIcon>

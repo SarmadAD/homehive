@@ -48,7 +48,7 @@ const Page: PageType = () => {
   const searchParams = useSearchParams();
   const renterId = searchParams?.get("renterId");
 
-  async function setRentalObjectId() {
+  async function setRenterId() {
     if (renterId) {
       setSelectedRenterIdAtom(renterId.toString() ?? "");
     }
@@ -56,7 +56,7 @@ const Page: PageType = () => {
 
   useEffect(
     () => {
-      setRentalObjectId();
+      setRenterId();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -108,7 +108,7 @@ const Page: PageType = () => {
                   <Link
                     color="text.primary"
                     component={RouterLink}
-                    href={paths.dashboard.renters.index}
+                    href={paths.landlordportal.dashboard.renters.index}
                     sx={{
                       alignItems: "center",
                       display: "inline-flex",
@@ -157,7 +157,7 @@ const Page: PageType = () => {
                           <Edit02Icon />
                         </SvgIcon>
                       }
-                      href={paths.dashboard.objects.edit}
+                      href={paths.landlordportal.dashboard.objects.edit}
                     >
                       Edit
                     </Button>

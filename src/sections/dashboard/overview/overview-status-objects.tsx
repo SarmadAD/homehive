@@ -1,7 +1,19 @@
 import { FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Box, Button, Card, CardActions, CardContent, Container, Divider, Stack, SvgIcon, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Container,
+  Divider,
+  Stack,
+  SvgIcon,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
@@ -117,7 +129,7 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
         <CardActions>
           <Button
             color="inherit"
-            href={paths.dashboard.objects.index}
+            href={paths.landlordportal.dashboard.objects.index}
             endIcon={
               <SvgIcon>
                 <ArrowRightIcon />

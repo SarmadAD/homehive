@@ -1,6 +1,15 @@
 "use client";
 
-import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, CircularProgress, Button, SvgIcon } from "@mui/material";
+import {
+  Box,
+  Container,
+  Stack,
+  Typography,
+  Unstable_Grid2 as Grid,
+  CircularProgress,
+  Button,
+  SvgIcon,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
@@ -61,7 +70,7 @@ const Page: PageType = () => {
     <>
       <Seo title="Dashboard: Übersicht" />
 
-      <RoleBasedGuard permission="/dashboard/renters">
+      <RoleBasedGuard permission="/landlordportal/dashboard/renters">
         <Box
           component="main"
           sx={{
@@ -91,7 +100,7 @@ const Page: PageType = () => {
                         </SvgIcon>
                       }
                       variant="contained"
-                      href={paths.dashboard.renters.create}
+                      href={paths.landlordportal.dashboard.renters.create}
                     >
                       Hinzufügen
                     </Button>

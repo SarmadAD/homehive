@@ -6,9 +6,13 @@ export const objectStatusSeriesData = selector({
   get: ({ get }) => {
     const rentalObjects = get(rentalObjectsAtom);
     if (rentalObjects.length > 0) {
-      const inhabitedData = (rentalObjects?.filter((rentalObject) => rentalObject.status === "INHABITED").length / rentalObjects.length) * 100;
-      const uninhabitedData = (rentalObjects?.filter((rentalObject) => rentalObject.status === "UNINHABITED").length / rentalObjects.length) * 100;
-      return [inhabitedData, uninhabitedData];
+      const inhabitedData =
+        (rentalObjects?.filter((rentalObject) => rentalObject.status === "INHABITED").length / rentalObjects.length) *
+        100;
+      const uninhabitedData =
+        (rentalObjects?.filter((rentalObject) => rentalObject.status === "UNINHABITED").length / rentalObjects.length) *
+        100;
+      return [Number(inhabitedData.toFixed(0)), Number(uninhabitedData.toFixed(0))];
     }
     return [0, 0];
   },

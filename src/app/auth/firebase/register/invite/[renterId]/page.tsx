@@ -70,7 +70,7 @@ const Page = () => {
         await createUserWithEmailAndPassword(values.email, values.password);
 
         if (isMounted()) {
-          router.push(returnTo || paths.dashboard.index);
+          router.push(returnTo || paths.renterportal.dashboard.index);
         }
       } catch (err) {
         console.error(err);
@@ -97,7 +97,7 @@ const Page = () => {
     try {
       await signInWithGoogle();
       if (isMounted()) {
-        router.push(returnTo || paths.dashboard.index);
+        router.push(returnTo || paths.renterportal.dashboard.index);
       }
     } catch (err) {
       console.error(err);
@@ -215,7 +215,9 @@ const Page = () => {
                   </Link>
                 </Typography>
               </Box>
-              {!!(formik.touched.policy && formik.errors.policy) && <FormHelperText error>{formik.errors.policy}</FormHelperText>}
+              {!!(formik.touched.policy && formik.errors.policy) && (
+                <FormHelperText error>{formik.errors.policy}</FormHelperText>
+              )}
               {formik.errors.submit && (
                 <FormHelperText error sx={{ mt: 3 }}>
                   {formik.errors.submit as string}

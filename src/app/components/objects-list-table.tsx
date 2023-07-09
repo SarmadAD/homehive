@@ -161,7 +161,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                             <Link
                               color="inherit"
                               component={RouterLink}
-                              href={`${paths.dashboard.objects.details}${encodeURIComponent(object.id)}`}
+                              href={`${paths.landlordportal.dashboard.objects.details}${encodeURIComponent(object.id)}`}
                               variant="subtitle2"
                             >
                               {object.name}
@@ -177,7 +177,10 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                         <Stack alignItems="center" direction="row" spacing={1}>
                           <AvatarGroup max={3}>
                             {object.renter?.map((renter) => (
-                              <Tooltip key={getRenterName(renter.firstname, renter.surname)} title={getRenterName(renter.firstname, renter.surname)}>
+                              <Tooltip
+                                key={getRenterName(renter.firstname, renter.surname)}
+                                title={getRenterName(renter.firstname, renter.surname)}
+                              >
                                 <Avatar
                                   src={object.image}
                                   sx={{
@@ -193,12 +196,18 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                         </Stack>
                       </TableCell>
                       <TableCell align="right">
-                        <IconButton component={RouterLink} href={`${paths.dashboard.objects.edit}${object.id}`}>
+                        <IconButton
+                          component={RouterLink}
+                          href={`${paths.landlordportal.dashboard.objects.edit}${object.id}`}
+                        >
                           <SvgIcon>
                             <Edit02Icon />
                           </SvgIcon>
                         </IconButton>
-                        <IconButton component={RouterLink} href={`${paths.dashboard.objects.details}/${object.id}`}>
+                        <IconButton
+                          component={RouterLink}
+                          href={`${paths.landlordportal.dashboard.objects.details}/${object.id}`}
+                        >
                           <SvgIcon>
                             <ArrowRightIcon />
                           </SvgIcon>

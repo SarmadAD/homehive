@@ -157,7 +157,12 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                             {getInitials(getRenterName(renter.firstname, renter.surname))}
                           </Avatar>
                           <div>
-                            <Link color="inherit" component={RouterLink} href={`${paths.dashboard.renters.details}${renter.id}`} variant="subtitle2">
+                            <Link
+                              color="inherit"
+                              component={RouterLink}
+                              href={`${paths.landlordportal.dashboard.renters.details}${renter.id}`}
+                              variant="subtitle2"
+                            >
                               {getRenterName(renter.firstname, renter.surname)}
                             </Link>
                             <Typography color="text.secondary" variant="body2">
@@ -168,12 +173,15 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                       </TableCell>
                       <TableCell>{statusPill}</TableCell>
                       <TableCell align="right">
-                        <IconButton component={RouterLink} href={paths.dashboard.renters.edit}>
+                        <IconButton component={RouterLink} href={paths.landlordportal.dashboard.renters.edit}>
                           <SvgIcon>
                             <Edit02Icon />
                           </SvgIcon>
                         </IconButton>
-                        <IconButton component={RouterLink} href={`${paths.dashboard.renters.details}/${renter.id}`}>
+                        <IconButton
+                          component={RouterLink}
+                          href={`${paths.landlordportal.dashboard.renters.details}/${renter.id}`}
+                        >
                           <SvgIcon>
                             <ArrowRightIcon />
                           </SvgIcon>

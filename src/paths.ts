@@ -46,73 +46,86 @@ export const paths = {
       modern: "/auth-demo/verify-code/modern",
     },
   },
-  dashboard: {
-    index: "/dashboard",
-    academy: {
-      index: "/dashboard/academy",
-      courseDetails: "/dashboard/academy/courses/:courseId",
-    },
-    account: "/dashboard/account",
-    analytics: "/dashboard/analytics",
-    blank: "/dashboard/blank",
-    blog: {
-      index: "/dashboard/blog",
-      postDetails: "/dashboard/blog/:postId",
-      postCreate: "/dashboard/blog/create",
-    },
-    calendar: "/dashboard/calendar",
-    chat: "/dashboard/chat",
-    crypto: "/dashboard/crypto",
-    customers: {
-      index: "/dashboard/customers",
-      details: "/dashboard/customers/:customerId",
-      edit: "/dashboard/customers/:customerId/edit",
-    },
-    ecommerce: "/dashboard/ecommerce",
-    fileManager: "/dashboard/file-manager",
-    invoices: {
-      index: "/dashboard/invoices",
-      details: "/dashboard/invoices/:orderId",
-    },
-    jobs: {
-      index: "/dashboard/jobs",
-      create: "/dashboard/jobs/create",
-      companies: {
-        details: "/dashboard/jobs/companies/:companyId",
+  landlordportal: {
+    dashboard: {
+      index: "/landlordportal/dashboard",
+      objects: {
+        index: "/landlordportal/dashboard/objects",
+        details: "/landlordportal/dashboard/objects/:objectId?objectId=",
+        edit: "/landlordportal/dashboard/objects/edit/:objectId?objectId=",
+        create: "/landlordportal/dashboard/objects/create",
+      },
+      renters: {
+        index: "/landlordportal/dashboard/renters",
+        details: "/landlordportal/dashboard/renters/:renterId?renterId=",
+        edit: "/landlordportal/dashboard/renter/:renterId/edit",
+        create: "/landlordportal/dashboard/renters/create",
       },
     },
-    kanban: "/dashboard/kanban",
-    logistics: {
-      index: "/dashboard/logistics",
-      fleet: "/dashboard/logistics/fleet",
-    },
-    mail: "/dashboard/mail",
-    orders: {
-      index: "/dashboard/orders",
-      details: "/dashboard/orders/:orderId",
-    },
-    products: {
-      index: "/dashboard/products",
-      create: "/dashboard/products/create",
-    },
-    social: {
-      index: "/dashboard/social",
-      profile: "/dashboard/social/profile",
-      feed: "/dashboard/social/feed",
-    },
-    objects: {
-      index: "/dashboard/objects",
-      details: "/dashboard/objects/:objectId?objectId=",
-      edit: "/dashboard/objects/edit/:objectId?objectId=",
-      create: "/dashboard/objects/create",
-    },
-    renters: {
-      index: "/dashboard/renters",
-      details: "/dashboard/renters/:renterId?renterId=",
-      edit: "/dashboard/renter/:renterId/edit",
-      create: "/dashboard/renters/create",
+  },
+
+  renterportal: {
+    dashboard: {
+      index: "/renterportal/dashboard",
+      objects: {
+        index: "/renterportal/dashboard/objects",
+      },
     },
   },
+
+  kanban: "/dashboard/kanban",
+  logistics: {
+    index: "/dashboard/logistics",
+    fleet: "/dashboard/logistics/fleet",
+  },
+  mail: "/dashboard/mail",
+  orders: {
+    index: "/dashboard/orders",
+    details: "/dashboard/orders/:orderId",
+  },
+  products: {
+    index: "/dashboard/products",
+    create: "/dashboard/products/create",
+  },
+  social: {
+    index: "/dashboard/social",
+    profile: "/dashboard/social/profile",
+    feed: "/dashboard/social/feed",
+  },
+  academy: {
+    index: "/dashboard/academy",
+    courseDetails: "/dashboard/academy/courses/:courseId",
+  },
+  account: "/dashboard/account",
+  analytics: "/dashboard/analytics",
+  blank: "/dashboard/blank",
+  blog: {
+    index: "/dashboard/blog",
+    postDetails: "/dashboard/blog/:postId",
+    postCreate: "/dashboard/blog/create",
+  },
+  calendar: "/dashboard/calendar",
+  chat: "/dashboard/chat",
+  crypto: "/dashboard/crypto",
+  customers: {
+    index: "/dashboard/customers",
+    details: "/dashboard/customers/:customerId",
+    edit: "/dashboard/customers/:customerId/edit",
+  },
+  ecommerce: "/dashboard/ecommerce",
+  fileManager: "/dashboard/file-manager",
+  invoices: {
+    index: "/dashboard/invoices",
+    details: "/dashboard/invoices/:orderId",
+  },
+  jobs: {
+    index: "/dashboard/jobs",
+    create: "/dashboard/jobs/create",
+    companies: {
+      details: "/dashboard/jobs/companies/:companyId",
+    },
+  },
+
   components: {
     index: "/components",
     dataDisplay: {

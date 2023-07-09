@@ -32,9 +32,9 @@ import { useRentersSearch } from "src/hooks/use-renter-search";
 import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useDialog } from "src/hooks/use-dialog";
-import { ObjectSingleView } from "src/app/dashboard/objects/renter/object-single-view";
+import { ObjectSingleView } from "src/app/landlordportal/dashboard/objects/renter/object-single-view";
 import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
-import { RenterDrawer } from "src/app/dashboard/objects/renter/object-renter-drawer";
+import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
@@ -64,7 +64,10 @@ const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undef
   }, [renters, renterId]);
 };
 
-const useCurrentRepairRequest = (repairRequests?: RepairRequest[], repairRequestId?: string): RepairRequest | undefined => {
+const useCurrentRepairRequest = (
+  repairRequests?: RepairRequest[],
+  repairRequestId?: string
+): RepairRequest | undefined => {
   return useMemo((): RepairRequest | undefined => {
     if (!repairRequestId) {
       return undefined;
@@ -218,7 +221,7 @@ const Page: PageType = () => {
                     <Link
                       color="text.primary"
                       component={RouterLink}
-                      href={paths.dashboard.objects.index}
+                      href={paths.landlordportal.dashboard.objects.index}
                       sx={{
                         alignItems: "center",
                         display: "inline-flex",
@@ -267,7 +270,7 @@ const Page: PageType = () => {
                             <Edit02Icon />
                           </SvgIcon>
                         }
-                        href={`${paths.dashboard.objects.edit}${rentalObject.id}`}
+                        href={`${paths.landlordportal.dashboard.objects.edit}${rentalObject.id}`}
                       >
                         Edit
                       </Button>
@@ -359,7 +362,12 @@ const Page: PageType = () => {
               handleCanceledRepairRequest={handleCanceledRepairRequest}
             />
           ) : (
-            <RenterDrawer container={rootRef.current} onClose={dialog.handleClose} open={dialog.open} renter={currentRenter} />
+            <RenterDrawer
+              container={rootRef.current}
+              onClose={dialog.handleClose}
+              open={dialog.open}
+              renter={currentRenter}
+            />
           )}
         </Box>
       </Box>
