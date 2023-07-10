@@ -1,121 +1,101 @@
 "use client";
 
+import { ChangeEvent, useMemo, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
+import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
+import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
+import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import {
+  Avatar,
   Box,
+  Button,
+  Chip,
   Container,
+  Divider,
+  Link,
   Stack,
+  SvgIcon,
+  Tab,
+  Tabs,
   Typography,
   Unstable_Grid2 as Grid,
-  Button,
-  SvgIcon,
-  CircularProgress,
 } from "@mui/material";
+import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
-import { useSettings } from "src/hooks/use-settings";
-import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-repair-request";
-import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
-import type { Page as PageType } from "src/types/page";
-import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
-import { useCallback, useState, ChangeEvent, MouseEvent, useMemo, useEffect } from "react";
-import { useSelection } from "src/hooks/use-selection";
 import { paths } from "src/paths";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import { ObjectListTable } from "../../../components/objects-list-table";
+import type { Page as PageType } from "src/types/page";
+import { getInitials } from "src/utils/get-initials";
+import { useSelection } from "src/hooks/use-selection";
+import { useDialog } from "src/hooks/use-dialog";
+import { ObjectSingleView } from "src/app/landlordportal/dashboard/objects/renter/object-single-view";
+import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
+import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
+import { RepairRequest } from "prisma/types/repairRequest";
+import { renterDefault } from "prisma/types/renter";
+import agent from "src/api/agent";
+import { SplashScreen } from "src/components/splash-screen";
 import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import agent from "src/api/agent";
-import { RentalObject } from "prisma/types/objects";
-import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
-import { renterAtom } from "src/state/atoms/renterAtom";
-import { renterDefault } from "prisma/types/renter";
+import { ObjectBasicDetails } from "src/app/landlordportal/dashboard/objects/object-basic-details";
+import { ObjectRentInfoChart } from "src/app/landlordportal/dashboard/objects/object-rentInfo-chart";
+import { ObjectRepairRequestList } from "src/app/landlordportal/dashboard/objects/repairRequests/objects-repairRequests-list";
+import { ObjectRepairRequestDrawer } from "src/app/landlordportal/dashboard/objects/repairRequests/object-repairRequest-drawer";
+import { useSetRecoilState } from "recoil";
+import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
+import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
 
-interface Filters {
-  query?: string;
-}
+const tabs = [
+  { label: "Details", value: "details" },
+  { label: "Wartung/Reperatur", value: "repairRequests" },
+];
 
-interface ObjectsSearchState {
-  filters: Filters;
-  page: number;
-  rowsPerPage: number;
-  sortBy: string;
-  sortDir: "asc" | "desc";
-}
+const useCurrentRepairRequest = (
+  repairRequests?: RepairRequest[],
+  repairRequestId?: string
+): RepairRequest | undefined => {
+  return useMemo((): RepairRequest | undefined => {
+    if (!repairRequestId) {
+      return undefined;
+    }
 
-const useObjectsSearch = () => {
-  const [state, setState] = useState<ObjectsSearchState>({
-    filters: {
-      query: undefined,
-    },
-    page: 0,
-    rowsPerPage: 5,
-    sortBy: "updatedAt",
-    sortDir: "desc",
-  });
-
-  const handleFiltersChange = useCallback((filters: Filters): void => {
-    setState((prevState) => ({
-      ...prevState,
-      filters,
-    }));
-  }, []);
-
-  const handleSortChange = useCallback((sort: { sortBy: string; sortDir: "asc" | "desc" }): void => {
-    setState((prevState) => ({
-      ...prevState,
-      sortBy: sort.sortBy,
-      sortDir: sort.sortDir,
-    }));
-  }, []);
-
-  const handlePageChange = useCallback((event: MouseEvent<HTMLButtonElement> | null, page: number): void => {
-    setState((prevState) => ({
-      ...prevState,
-      page,
-    }));
-  }, []);
-
-  const handleRowsPerPageChange = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
-    setState((prevState) => ({
-      ...prevState,
-      rowsPerPage: parseInt(event.target.value, 10),
-    }));
-  }, []);
-
-  return {
-    handleFiltersChange,
-    handleSortChange,
-    handlePageChange,
-    handleRowsPerPageChange,
-    state,
-  };
-};
-
-const useObjectsIds = (objects: RentalObject[] = []) => {
-  return useMemo(() => {
-    return objects.length > 0 ? objects.map((object) => object.id) : [];
-  }, [objects]);
+    return repairRequests?.find((repairRequest) => repairRequest.id === repairRequestId);
+  }, [repairRequests, repairRequestId]);
 };
 
 const Page: PageType = () => {
-  usePageView();
-  const settings = useSettings();
-  const objectsSearch = useObjectsSearch();
+  const [currentTab, setCurrentTab] = useState<string>("details");
 
-  const rentalObjects = useRecoilValue(rentalObjectsAtom);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const dialog = useDialog<string>();
+
   const [renter, setRenter] = useState(renterDefault);
-  const objectsIds = useObjectsIds(rentalObjects);
-  const objectsSelection = useSelection<string>(objectsIds);
+  const rentalObject = renter.rentalObject;
+  const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
+
   const [isLoading, setIsLoading] = useState(false);
 
+  const repairRequestsSearch = useRepairRequestsSearch();
+  const repairRequestsIds = useRepairRequestsIds(renter.rentalObject?.repairRequests);
+  const repairRequestsSelection = useSelection<string>(repairRequestsIds);
+
+  const currentRepairRequest = useCurrentRepairRequest(
+    renter.rentalObject?.repairRequests as RepairRequest[],
+    dialog.data
+  );
+
   const { user } = useAuth<AuthContextType>();
+
+  usePageView();
 
   useEffect(() => {
     getRenter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setRentalObjectId();
+  }, [renter]);
 
   async function getRenter() {
     try {
@@ -132,100 +112,198 @@ const Page: PageType = () => {
     }
   }
 
+  async function setRentalObjectId() {
+    if (rentalObject && rentalObject.id) {
+      setSelectedRentalObjectId(rentalObject.id.toString() ?? "");
+    }
+  }
+
+  const handleDialog = useCallback(
+    (id: string): void => {
+      // Close drawer if is the same order
+
+      if (dialog.open && dialog.data === id) {
+        dialog.handleClose();
+        return;
+      }
+
+      dialog.handleOpen(id);
+    },
+    [dialog]
+  );
+
+  const handleTabsChange = useCallback((event: ChangeEvent<{}>, value: string): void => {
+    setCurrentTab(value);
+    dialog.handleClose();
+  }, []);
+
+  async function updateRepairRequest(repairRequest: RepairRequest) {
+    try {
+      if (repairRequest) {
+        await agent.objects.updateRepairRequest(repairRequest);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleAcceptRepairRequest = async () => {
+    if (currentRepairRequest) {
+      let newRepairRequest = { ...currentRepairRequest };
+      newRepairRequest.status = "INPROGRESS";
+      await updateRepairRequest(newRepairRequest);
+    }
+  };
+
+  const handleRejectRepairRequest = async () => {
+    if (currentRepairRequest) {
+      let newRepairRequest = { ...currentRepairRequest };
+      newRepairRequest.status = "REJECTED";
+      await updateRepairRequest(newRepairRequest);
+    }
+  };
+  const handleDoneRepairRequest = async () => {
+    if (currentRepairRequest) {
+      let newRepairRequest = { ...currentRepairRequest };
+      newRepairRequest.status = "DONE";
+      await updateRepairRequest(newRepairRequest);
+    }
+  };
+  const handleCanceledRepairRequest = async () => {
+    if (currentRepairRequest) {
+      let newRepairRequest = { ...currentRepairRequest };
+      newRepairRequest.status = "CANCELED";
+      await updateRepairRequest(newRepairRequest);
+    }
+  };
+
+  if (rentalObject === null) return <SplashScreen />;
+
+  if (isLoading && !renter.id && !rentalObject.id) {
+    return <SplashScreen />;
+  }
+
   return (
     <>
-      <Seo title="Dashboard: Übersicht" />
-      <RoleBasedGuard permission="/renterportal/dashboard/objects">
+      <Seo title="Objekt Details" />
+      <Box
+        component="main"
+        ref={rootRef}
+        sx={{
+          display: "flex",
+          flex: "1 1 auto",
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
         <Box
-          component="main"
+          ref={rootRef}
           sx={{
-            flexGrow: 1,
-            py: 8,
+            bottom: 0,
+            display: "flex",
+            left: 0,
+            position: "absolute",
+            right: 0,
+            top: 0,
           }}
         >
-          <Container maxWidth={settings.stretch ? false : "xl"}>
-            <Grid
-              container
-              disableEqualOverflow
-              spacing={{
-                xs: 3,
-                lg: 4,
-              }}
-            >
-              <Grid xs={12}>
-                <Stack direction="row" justifyContent="space-between" spacing={4}>
-                  <div>
-                    <Typography variant="h4">Objekt</Typography>
-                  </div>
-                  <RoleBasedGuard permission="/landlordportal/dashboard/objects">
-                    <Stack direction="row" spacing={4}>
-                      <Button
-                        startIcon={
-                          <SvgIcon>
-                            <PlusIcon />
-                          </SvgIcon>
-                        }
-                        variant="contained"
-                        href={paths.landlordportal.dashboard.objects.create}
-                      >
-                        Hinzufügen
-                      </Button>
-                    </Stack>
-                  </RoleBasedGuard>
-                </Stack>
-              </Grid>
-
-              <RoleBasedGuard permission="/landlordportal/dashboard/objects">
-                <Grid xs={12} md={4}>
-                  <OverviewRepairRequest showActions={false} />
-                </Grid>
-                <Grid xs={12} md={4}>
-                  <OverviewStatusObjects showActions={false} />
-                </Grid>
-              </RoleBasedGuard>
-              <Grid xs={12} md={12}>
-                {/* <ObjectsListTable />
-                 */}
-                {/* <CustomerListSearch
-                onFiltersChange={customersSearch.handleFiltersChange}
-                onSortChange={customersSearch.handleSortChange}
-                sortBy={customersSearch.state.sortBy}
-                sortDir={customersSearch.state.sortDir} 
-              /> */}
-                {isLoading ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      mt: 3,
+          <ObjectSingleView open={dialog.open}>
+            <Container maxWidth="xl">
+              <Stack spacing={4}>
+                <Stack spacing={4}>
+                  <Stack
+                    alignItems="flex-start"
+                    direction={{
+                      xs: "column",
+                      md: "row",
                     }}
+                    justifyContent="space-between"
+                    spacing={4}
                   >
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  <ObjectListTable
-                    count={rentalObjects.length}
-                    items={
-                      Array.isArray(renter.rentalObject)
-                        ? renter.rentalObject
-                        : ([renter.rentalObject] as RentalObject[])
-                    }
-                    onDeselectAll={objectsSelection.handleDeselectAll}
-                    onDeselectOne={objectsSelection.handleDeselectOne}
-                    onPageChange={objectsSearch.handlePageChange}
-                    onRowsPerPageChange={objectsSearch.handleRowsPerPageChange}
-                    onSelectAll={objectsSelection.handleSelectAll}
-                    onSelectOne={objectsSelection.handleSelectOne}
-                    page={objectsSearch.state.page}
-                    rowsPerPage={objectsSearch.state.rowsPerPage}
-                    selected={objectsSelection.selected}
+                    <Stack alignItems="center" direction="row" spacing={2}>
+                      <Avatar
+                        src={rentalObject.image}
+                        sx={{
+                          height: 64,
+                          width: 64,
+                        }}
+                      >
+                        {getInitials(rentalObject.name)}
+                      </Avatar>
+                      <Stack spacing={1}>
+                        <Typography variant="h4">{rentalObject.name}</Typography>
+                        <Stack alignItems="center" direction="row" spacing={1}>
+                          <Typography variant="subtitle2">user_id:</Typography>
+                          <Chip label={rentalObject.id} size="small" />
+                        </Stack>
+                      </Stack>
+                    </Stack>
+                  </Stack>
+                  <div>
+                    <Tabs
+                      indicatorColor="primary"
+                      onChange={handleTabsChange}
+                      scrollButtons="auto"
+                      sx={{ mt: 3 }}
+                      textColor="primary"
+                      value={currentTab}
+                      variant="scrollable"
+                    >
+                      {tabs.map((tab) => (
+                        <Tab key={tab.value} label={tab.label} value={tab.value} />
+                      ))}
+                    </Tabs>
+                    <Divider />
+                  </div>
+                </Stack>
+                {currentTab === "details" && rentalObject && (
+                  <div>
+                    <Grid container spacing={4}>
+                      <Grid xs={12} lg={4}>
+                        <ObjectBasicDetails />
+                      </Grid>
+                      <Grid xs={12} lg={8}>
+                        <ObjectRentInfoChart />
+                      </Grid>
+                    </Grid>
+                  </div>
+                )}
+                {currentTab === "repairRequests" && (
+                  <ObjectRepairRequestList
+                    count={rentalObject.repairRequests?.length}
+                    items={rentalObject.repairRequests as RepairRequest[]}
+                    onDeselectAll={repairRequestsSelection.handleDeselectAll}
+                    onDeselectOne={repairRequestsSelection.handleDeselectOne}
+                    onPageChange={repairRequestsSearch.handlePageChange}
+                    onRowsPerPageChange={repairRequestsSearch.handleRowsPerPageChange}
+                    onSelectAll={repairRequestsSelection.handleSelectAll}
+                    onSelectOne={repairRequestsSelection.handleSelectOne}
+                    page={repairRequestsSearch.state.page}
+                    rowsPerPage={repairRequestsSearch.state.rowsPerPage}
+                    selected={repairRequestsSelection.selected}
+                    onSelect={handleDialog}
                   />
                 )}
-              </Grid>
-            </Grid>
-          </Container>
+              </Stack>
+            </Container>
+          </ObjectSingleView>
+          {currentTab === "repairRequests" ? (
+            <ObjectRepairRequestDrawer
+              container={rootRef.current}
+              onClose={dialog.handleClose}
+              open={dialog.open}
+              repairRequest={currentRepairRequest}
+              handleAcceptRepairRequest={handleAcceptRepairRequest}
+              handleRejectRepairRequest={handleRejectRepairRequest}
+              handleDoneRepairRequest={handleDoneRepairRequest}
+              handleCanceledRepairRequest={handleCanceledRepairRequest}
+            />
+          ) : (
+            /**RenterDrawer here not used but needs to be added because it changes the design. I not know why but it is working :D */
+            <RenterDrawer container={rootRef.current} onClose={dialog.handleClose} open={dialog.open} renter={renter} />
+          )}
         </Box>
-      </RoleBasedGuard>
+      </Box>
     </>
   );
 };

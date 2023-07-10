@@ -59,15 +59,6 @@ export const useSections = () => {
           },
 
           {
-            title: t(tokens.nav.dashboard),
-            path: paths.renterportal.dashboard.index,
-            icon: (
-              <SvgIcon fontSize="small">
-                <LineChartUp01 />
-              </SvgIcon>
-            ),
-          },
-          {
             title: t(tokens.nav.objects),
             path: paths.renterportal.dashboard.objects.index,
             icon: (
