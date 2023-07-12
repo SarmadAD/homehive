@@ -5,7 +5,7 @@ import { Theme } from "@mui/material";
 import { Button, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
+// import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 import { Renter } from "prisma/types/renter";
 
 interface RenterDetailsProps {
@@ -21,7 +21,7 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
 
   const align = lgUp ? "horizontal" : "vertical";
 
-  const statusPill = useRentPaidStatusPill(renter.status);
+  // const statusPill = useRentPaidStatusPill(renter.status);
   return (
     <Stack spacing={6}>
       <Stack spacing={3}>
@@ -50,7 +50,7 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
             </Typography>
           </PropertyListItem>{" "}
           <PropertyListItem align={align} disableGutters divider label="Status">
-            {statusPill}
+            {/* {statusPill} */}
           </PropertyListItem>
         </PropertyList>
         <Stack alignItems="center" direction="row" flexWrap="wrap" justifyContent="flex-end" spacing={2}>

@@ -2,7 +2,9 @@ import { Prisma, RentalObjectStatus } from "@prisma/client";
 
 // 1: Define a type that includes the relation to `Post`
 const renter = Prisma.validator<Prisma.RenterArgs>()({
-  include: { rentalObject: { include: { renter: true, repairRequests: true, rentalObjectInfo: true, landlord: true } } },
+  include: {
+    rentalObject: { include: { renter: true, repairRequests: true, rentalObjectInfo: true, landlord: true } },
+  },
 });
 
 // // 2: Define a type that only contains a subset of the scalar fields
@@ -35,7 +37,14 @@ export const renterDefault: Renter = {
     areaSize: 0,
     renter: [],
     repairRequests: [],
-    rentalObjectInfo: { id: "", baseRent: 0, electricityCosts: 0, heatingCosts: 0, waterCosts: 0, dueDateOfRent: "ENDMONTH" },
+    rentalObjectInfo: {
+      id: "",
+      baseRent: 0,
+      electricityCosts: 0,
+      heatingCosts: 0,
+      waterCosts: 0,
+      dueDateOfRent: "ENDMONTH",
+    },
     rentalObjectInfoId: "",
     landlord: {
       id: "",
@@ -43,6 +52,5 @@ export const renterDefault: Renter = {
     },
     landlordId: "",
   },
-  status: "NOTPAID",
   rentalObjectId: "",
 };

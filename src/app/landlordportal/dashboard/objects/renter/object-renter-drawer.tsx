@@ -58,6 +58,7 @@ export const RenterDrawer: FC<RenterDrawerProps> = (props) => {
           }}
         >
           <RenterDetails onEdit={handleEditOpen} renter={renter} />
+
           {/* {!isEditing ? (
             <OrderDetails onApprove={onClose} onEdit={handleEditOpen} onReject={onClose} order={order} />
           ) : (

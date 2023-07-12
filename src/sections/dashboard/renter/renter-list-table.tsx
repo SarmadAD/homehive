@@ -24,7 +24,7 @@ import { Scrollbar } from "src/components/scrollbar";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
-import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
+// import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 import { getRenterName } from "src/utils/get-renter-name";
 import { Renter } from "prisma/types/renter";
 
@@ -119,7 +119,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                 />
               </TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Status</TableCell>
+              {/* <TableCell>Status</TableCell> */}
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -128,7 +128,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
               ? items.map((renter) => {
                   const isSelected = selected.includes(renter.id);
                   // eslint-disable-next-line react-hooks/rules-of-hooks
-                  const statusPill = useRentPaidStatusPill(renter.status);
+                  // const statusPill = useRentPaidStatusPill(renter.status);
 
                   return (
                     <TableRow hover key={renter.id} selected={isSelected} onClick={() => onSelect?.(renter.id)}>
@@ -171,7 +171,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                           </div>
                         </Stack>
                       </TableCell>
-                      <TableCell>{statusPill}</TableCell>
+                      {/* <TableCell>{statusPill}</TableCell> */}
                       <TableCell align="right">
                         <IconButton component={RouterLink} href={paths.landlordportal.dashboard.renters.edit}>
                           <SvgIcon>

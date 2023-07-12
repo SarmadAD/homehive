@@ -34,7 +34,6 @@ async function main() {
       createdAt: new Date("2023-06-01T12:00:00Z"),
       firstname: "John",
       surname: "Doe",
-      status: "PAID",
       email: "john.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
       landlords: {
@@ -50,7 +49,6 @@ async function main() {
       createdAt: new Date("2023-06-01T12:00:00Z"),
       firstname: "Sarmad",
       surname: "Doe",
-      status: "PAID",
       email: "sarmad.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
       landlords: {
@@ -66,7 +64,6 @@ async function main() {
       createdAt: new Date("2023-06-01T12:00:00Z"),
       firstname: "Hamza",
       surname: "Doe",
-      status: "PAID",
       email: "hamza.doe@exampleeee.com",
       image: "https://example.com/john-doe.jpg",
       landlords: {
