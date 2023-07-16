@@ -115,19 +115,20 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           type="number"
         />
       </Stack>
-      {showDueDateAndRenter && (
-        <Stack spacing={3} direction="column">
-          <div>
-            <Typography variant="h6">Füge Mieter zu dem Objekt hinzu</Typography>
-          </div>
-          <Autocomplete
-            multiple={true}
-            onChange={handleRenterChange}
-            getOptionLabel={(option: OptionRenter) => getRenterName(option.firstname, option.surname)}
-            options={renters}
-            renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
-          />
-          {/* <Autocomplete
+      {/* {showDueDateAndRenter && ( */}
+      <Stack spacing={3} direction="column">
+        <div>
+          <Typography variant="h6">Füge Mieter zu dem Objekt hinzu</Typography>
+        </div>
+        <Autocomplete
+          multiple={true}
+          onChange={handleRenterChange}
+          getOptionLabel={(option: OptionRenter) => getRenterName(option.firstname, option.surname)}
+          options={renters}
+          value={newObject.renter}
+          renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
+        />
+        {/* <Autocomplete
             onChange={handleDueDateChange}
             getOptionLabel={(option: OptionDueDate) => option.label}
             options={dueDateOfRentList}
@@ -136,8 +137,8 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
               <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />
             )}
           /> */}
-        </Stack>
-      )}
+      </Stack>
+      {/* )} */}
 
       <Stack alignItems="center" direction="row" spacing={2}>
         <Button
