@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import {
@@ -17,9 +17,13 @@ import {
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
+import { useAuth } from "src/hooks/use-auth";
+import { AuthContextType } from "src/contexts/auth/firebase";
+import agent from "src/api/agent";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 
 interface OverviewStatusObjects {
   showActions: boolean;
@@ -111,16 +115,16 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
         }}
       >
         <Box sx={{ flexGrow: 1 }}>
-          {objectStatusData[0] !== 0 && objectStatusData[1] !== 0 ? (
+          {objectStatusData[0] === 0 && objectStatusData[1] === 0 ? (
+            <Typography color="text.primary" variant="body2">
+              Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zusehen
+            </Typography>
+          ) : (
             <Container maxWidth="sm">
               <CardContent>
                 <Chart height={500} width={300} options={chartOptions} series={objectStatusData} type="donut" />
               </CardContent>
             </Container>
-          ) : (
-            <Typography color="text.primary" variant="body2">
-              Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zusehen
-            </Typography>
           )}
         </Box>
       </Stack>
