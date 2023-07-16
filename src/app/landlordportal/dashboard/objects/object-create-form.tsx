@@ -108,7 +108,12 @@ export const ObjectCreateForm: FC = () => {
 
   useEffect(() => {
     if (isComplete && newObject) {
-      setNewObject({ ...newObject, landlord: landlord, createdAt: new Date() });
+      setNewObject({
+        ...newObject,
+        landlord: landlord,
+        createdAt: new Date(),
+        status: newObject.renter.length > 0 ? "INHABITED" : "UNINHABITED",
+      });
     }
   }, [isComplete]);
 
