@@ -26,27 +26,31 @@ model RentalObject {
   rentalObjectInfoId     String             @unique
   landlord               Landlord           @relation(fields: [landlordId], references: [id])
   landlordId             String
-  RentPayment            RentPayment[]
+  rentPayment            RentPayment[]
+  rentalAgreement        RentalAgreement[]
 
   @@index([rentalObjectInfoId])
   @@index([landlordId])
 }
 
 model Renter {
-  id             String          @id @default(uuid())
-  firebaseUserId String
-  createdAt      DateTime        @default(now())
-  surname        String
-  firstname      String
-  email          String          @unique
-  image          String
-  rentalObjectId String?
-  rentalObject   RentalObject?   @relation(fields: [rentalObjectId], references: [id])
-  repairRequest  RepairRequest[]
-  landlords      Landlord[]
-  RentPayment    RentPayment[]
+  id                String           @id @default(uuid())
+  firebaseUserId    String
+  createdAt         DateTime         @default(now())
+  surname           String
+  firstname         String
+  email             String           @unique
+  image             String
+  rentalObjectId    String?
+  rentalObject      RentalObject?    @relation(fields: [rentalObjectId], references: [id])
+  repairRequest     RepairRequest[]
+  landlords         Landlord[]
+  rentPayment       RentPayment[]
+  rentalAgreement   RentalAgreement? @relation(fields: [rentalAgreementId], references: [id])
+  rentalAgreementId String?          @unique
 
   @@index([rentalObjectId])
+  @@index([rentalAgreementId])
 }
 
 model Landlord {
@@ -62,7 +66,6 @@ model RentalObjectInfo {
   heatingCosts     Int
   waterCosts       Int
   electricityCosts Int
-  dueDateOfRent    DueDateOfRent
   rentalObject     RentalObject?
 }
 
@@ -107,6 +110,16 @@ model RentPayment {
   rentalObjectId String
 
   @@index([renterId])
+  @@index([rentalObjectId])
+}
+
+model RentalAgreement {
+  id             String       @id @default(uuid())
+  dueDate        DateTime
+  renter         Renter?
+  rentalObject   RentalObject @relation(fields: [rentalObjectId], references: [id])
+  rentalObjectId String
+
   @@index([rentalObjectId])
 }
 

@@ -102,7 +102,7 @@ export const RenterCreateForm: FC = () => {
       setNewRenter({ ...newRenter, createdAt: new Date() });
       createRenter();
       setIsComplete(false);
-      router.push("/dashboard/renters");
+      router.push("/landlordportal/dashboard/renters");
     }
   }, [isComplete]);
 
