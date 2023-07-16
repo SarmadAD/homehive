@@ -40,7 +40,6 @@ export async function PUT(request: Request, { params }: { params: { objectId: st
               electricityCosts: rentalObject.rentalObjectInfo.electricityCosts,
               heatingCosts: rentalObject.rentalObjectInfo.heatingCosts,
               waterCosts: rentalObject.rentalObjectInfo.waterCosts,
-              dueDateOfRent: rentalObject.rentalObjectInfo.dueDateOfRent,
             },
           },
         },
