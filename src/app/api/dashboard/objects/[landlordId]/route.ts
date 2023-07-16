@@ -45,7 +45,6 @@ export async function POST(request: Request, { params }: { params: { landlordId:
               electricityCosts: rentalObject.rentalObjectInfo.electricityCosts,
               heatingCosts: rentalObject.rentalObjectInfo.heatingCosts,
               waterCosts: rentalObject.rentalObjectInfo.waterCosts,
-              dueDateOfRent: rentalObject.rentalObjectInfo.dueDateOfRent,
             },
           },
           landlord: {

@@ -67,16 +67,26 @@ export const ObjectEditForm: FC = () => {
     return [
       {
         label: "Basisinformationen",
-        content: <ObjectBasicInfosStep onBack={handleBack} onNext={handleNext} newObject={object} setNewObject={setObject} />,
+        content: (
+          <ObjectBasicInfosStep onBack={handleBack} onNext={handleNext} newObject={object} setNewObject={setObject} />
+        ),
       },
       {
         label: "Objektinformationen",
-        content: <ObjectInfosStep onBack={handleBack} onNext={handleNext} newObject={object} setNewObject={setObject} />,
+        content: (
+          <ObjectInfosStep onBack={handleBack} onNext={handleNext} newObject={object} setNewObject={setObject} />
+        ),
       },
       {
         label: "Mietinformationen",
         content: (
-          <ObjectRentInfosStep onBack={handleBack} onNext={handleComplete} newObject={object} setNewObject={setObject} showDueDateAndRenter={false} />
+          <ObjectRentInfosStep
+            onBack={handleBack}
+            onNext={handleComplete}
+            newObject={object}
+            setNewObject={setObject}
+            showDueDateAndRenter={false}
+          />
         ),
       },
     ];
@@ -96,7 +106,7 @@ export const ObjectEditForm: FC = () => {
     if (isComplete) {
       updateRentalObject();
       setIsComplete(false);
-      router.push("/dashboard/objects");
+      router.push("/landlordportal/dashboard/objects");
     }
   }, [isComplete]);
 

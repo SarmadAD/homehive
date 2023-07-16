@@ -64,11 +64,25 @@ export const RenterCreateForm: FC = () => {
     return [
       {
         label: "Basisinformationen",
-        content: <RenterBasicInfosStep onBack={handleBack} onNext={handleNext} newRenter={newRenter} setNewRenter={setNewRenter} />,
+        content: (
+          <RenterBasicInfosStep
+            onBack={handleBack}
+            onNext={handleNext}
+            newRenter={newRenter}
+            setNewRenter={setNewRenter}
+          />
+        ),
       },
       {
         label: "Einladung versenden",
-        content: <RenterSendInviteStep onBack={handleBack} handleComplete={handleComplete} newRenter={newRenter} setNewRenter={setNewRenter} />,
+        content: (
+          <RenterSendInviteStep
+            onBack={handleBack}
+            handleComplete={handleComplete}
+            newRenter={newRenter}
+            setNewRenter={setNewRenter}
+          />
+        ),
       },
     ];
   }, [handleBack, handleNext, handleComplete, newRenter]);
@@ -85,10 +99,10 @@ export const RenterCreateForm: FC = () => {
 
   useEffect(() => {
     if (isComplete) {
-      setNewRenter({ ...newRenter, createdAt: new Date(), status: "NOTPAID" });
+      setNewRenter({ ...newRenter, createdAt: new Date() });
       createRenter();
       setIsComplete(false);
-      router.push("/dashboard/renters");
+      router.push("/landlordportal/dashboard/renters");
     }
   }, [isComplete]);
 

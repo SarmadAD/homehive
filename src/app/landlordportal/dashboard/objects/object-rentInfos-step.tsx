@@ -5,7 +5,7 @@ import { Autocomplete, Button, Stack, SvgIcon, TextField, Typography } from "@mu
 import { useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { RentalObject } from "prisma/types/objects";
-import { DueDateOfRent } from "@prisma/client";
+// import { DueDateOfRent } from "@prisma/client";
 import { getRenterName } from "src/utils/get-renter-name";
 import { Renter } from "prisma/types/renter";
 
@@ -22,25 +22,26 @@ type OptionRenter = {
   firstname: string;
 };
 
-type OptionDueDate = {
-  label: string;
-  value: DueDateOfRent;
-};
+// type OptionDueDate = {
+//   label: string;
+//   value: DueDateOfRent;
+// };
 
-const dueDateOfRentList: OptionDueDate[] = [
-  {
-    label: "Zum 1 des Monats",
-    value: DueDateOfRent.FIRSTMONTH,
-  },
-  {
-    label: "Zum 15 des Monats",
-    value: DueDateOfRent.MIDDLEMONTH,
-  },
-  {
-    label: "Zum 27 des Monats",
-    value: DueDateOfRent.ENDMONTH,
-  },
-];
+// const dueDateOfRentList: OptionDueDate[] = [
+//   {
+//     label: "Zum 1 des Monats",
+//     value: DueDateOfRent.FIRSTMONTH,
+//   },
+//   {
+//     label: "Zum 15 des Monats",
+//     value: DueDateOfRent.MIDDLEMONTH,
+//   },
+//   {
+//     label: "Zum 27 des Monats",
+//     value: DueDateOfRent.ENDMONTH,
+//   },
+// ];
+
 export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
   const { onBack, onNext, newObject, setNewObject, showDueDateAndRenter, ...other } = props;
 
@@ -58,28 +59,34 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
     });
   }
 
-  function handleRenterChange(event: React.SyntheticEvent, renter: Renter | null) {
+  function handleRenterChange(event: React.SyntheticEvent, renter: Renter[] | null) {
     if (renter) {
-      setNewObject({ ...newObject, renter: [renter] });
+      setNewObject({ ...newObject, renter: renter });
     }
   }
 
-  function handleDueDateChange(event: React.SyntheticEvent, dueDate: OptionDueDate | null) {
-    if (dueDate) {
-      setNewObject({
-        ...newObject,
-        rentalObjectInfo: {
-          ...newObject?.rentalObjectInfo,
-          dueDateOfRent: dueDate.value,
-        },
-      });
-    }
-  }
+  // function handleDueDateChange(event: React.SyntheticEvent, dueDate: OptionDueDate | null) {
+  //   if (dueDate) {
+  //     setNewObject({
+  //       ...newObject,
+  //       rentalObjectInfo: {
+  //         ...newObject?.rentalObjectInfo,
+  //       },
+  //     });
+  //   }
+  // }
 
   return (
     <Stack spacing={3} {...other}>
       <Stack spacing={3} direction="row">
-        <TextField fullWidth label="Kaltmiete" name="baseRent" value={newObject?.rentalObjectInfo?.baseRent} onChange={handleChange} type="number" />
+        <TextField
+          fullWidth
+          label="Kaltmiete"
+          name="baseRent"
+          value={newObject?.rentalObjectInfo?.baseRent}
+          onChange={handleChange}
+          type="number"
+        />
         <TextField
           fullWidth
           label="Heizkosten"
@@ -111,21 +118,24 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
       {showDueDateAndRenter && (
         <Stack spacing={3} direction="column">
           <div>
-            <Typography variant="h6">Füge ein Mieter zu dem Objekt hinzu</Typography>
+            <Typography variant="h6">Füge Mieter zu dem Objekt hinzu</Typography>
           </div>
           <Autocomplete
+            multiple={true}
             onChange={handleRenterChange}
             getOptionLabel={(option: OptionRenter) => getRenterName(option.firstname, option.surname)}
             options={renters}
             renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
           />
-          <Autocomplete
+          {/* <Autocomplete
             onChange={handleDueDateChange}
             getOptionLabel={(option: OptionDueDate) => option.label}
             options={dueDateOfRentList}
             value={dueDateOfRentList.find((x) => x.value === newObject.rentalObjectInfo.dueDateOfRent)}
-            renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />}
-          />
+            renderInput={(params): JSX.Element => (
+              <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />
+            )}
+          /> */}
         </Stack>
       )}
 

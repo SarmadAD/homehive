@@ -26,26 +26,31 @@ model RentalObject {
   rentalObjectInfoId     String             @unique
   landlord               Landlord           @relation(fields: [landlordId], references: [id])
   landlordId             String
+  rentPayment            RentPayment[]
+  rentalAgreement        RentalAgreement[]
 
   @@index([rentalObjectInfoId])
   @@index([landlordId])
 }
 
 model Renter {
-  id             String           @id @default(uuid())
-  firebaseUserId String
-  createdAt      DateTime         @default(now())
-  surname        String
-  firstname      String
-  status         RenterPaidStatus
-  email          String           @unique
-  image          String
-  rentalObjectId String?
-  rentalObject   RentalObject?    @relation(fields: [rentalObjectId], references: [id])
-  repairRequest  RepairRequest[]
-  landlords      Landlord[]
+  id                String           @id @default(uuid())
+  firebaseUserId    String
+  createdAt         DateTime         @default(now())
+  surname           String
+  firstname         String
+  email             String           @unique
+  image             String
+  rentalObjectId    String?
+  rentalObject      RentalObject?    @relation(fields: [rentalObjectId], references: [id])
+  repairRequest     RepairRequest[]
+  landlords         Landlord[]
+  rentPayment       RentPayment[]
+  rentalAgreement   RentalAgreement? @relation(fields: [rentalAgreementId], references: [id])
+  rentalAgreementId String?          @unique
 
   @@index([rentalObjectId])
+  @@index([rentalAgreementId])
 }
 
 model Landlord {
@@ -61,7 +66,6 @@ model RentalObjectInfo {
   heatingCosts     Int
   waterCosts       Int
   electricityCosts Int
-  dueDateOfRent    DueDateOfRent
   rentalObject     RentalObject?
 }
 
@@ -85,12 +89,38 @@ model UserRole {
   firebaseUserId String
   role           Role   @relation(fields: [roleId], references: [id])
   roleId         String
+
+  @@index([roleId])
 }
 
 model Role {
   id       String     @id @default(uuid())
   role     String
   UserRole UserRole[]
+}
+
+model RentPayment {
+  id             String            @id @default(uuid())
+  renter         Renter            @relation(fields: [renterId], references: [id])
+  rentalObject   RentalObject      @relation(fields: [rentalObjectId], references: [id])
+  status         RentPaymentStatus
+  paymentAmount  Float
+  paymentDate    DateTime
+  renterId       String
+  rentalObjectId String
+
+  @@index([renterId])
+  @@index([rentalObjectId])
+}
+
+model RentalAgreement {
+  id             String       @id @default(uuid())
+  dueDate        DateTime
+  renter         Renter?
+  rentalObject   RentalObject @relation(fields: [rentalObjectId], references: [id])
+  rentalObjectId String
+
+  @@index([rentalObjectId])
 }
 
 enum RentalObjectStatus {
@@ -104,7 +134,7 @@ enum DueDateOfRent {
   ENDMONTH
 }
 
-enum RenterPaidStatus {
+enum RentPaymentStatus {
   PAID
   NOTPAID
   INARREARS

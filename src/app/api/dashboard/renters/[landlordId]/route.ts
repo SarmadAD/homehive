@@ -31,7 +31,6 @@ export async function POST(request: Request, { params }: { params: { landlordId:
           surname: renter.surname,
           email: renter.email,
           image: "",
-          status: renter.status,
           createdAt: renter.createdAt,
           landlords: { connect: [{ id: landlordId }] },
         },
