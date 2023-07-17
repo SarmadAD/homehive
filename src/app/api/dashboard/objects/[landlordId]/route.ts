@@ -39,6 +39,13 @@ export async function POST(request: Request, { params }: { params: { landlordId:
           postalCode: rentalObject.postalCode,
           areaSize: rentalObject.areaSize,
           renter: { connect: rentersId },
+          rentalAgreement: {
+            create: rentalObject.rentalAgreement.map((agreement) => ({
+              dueDate: agreement.dueDate,
+              dueDateState: agreement.dueDateState,
+              renter: { connect: { id: agreement.renter?.id } },
+            })),
+          },
           rentalObjectInfo: {
             create: {
               baseRent: rentalObject.rentalObjectInfo.baseRent,
@@ -70,5 +77,6 @@ export async function POST(request: Request, { params }: { params: { landlordId:
     } else if (e instanceof Prisma.PrismaClientValidationError) {
       return NextResponse.json({ error: e.message });
     }
+    throw e;
   }
 }

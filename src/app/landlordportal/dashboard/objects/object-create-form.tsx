@@ -14,6 +14,9 @@ import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
+import { RentalAgreement } from "prisma/types/rentalAgreement";
+import { DueDateOfRent } from "@prisma/client";
+import { Renter } from "prisma/types/renter";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -99,7 +102,10 @@ export const ObjectCreateForm: FC = () => {
   async function createRentalObject() {
     try {
       if (newObject) {
-        await agent.objects.create(newObject);
+        const response = await agent.objects.create(newObject);
+        if ("error" in response) {
+          throw new Error(String(response.error));
+        }
       }
     } catch (error) {
       console.error(error);
@@ -108,11 +114,24 @@ export const ObjectCreateForm: FC = () => {
 
   useEffect(() => {
     if (isComplete && newObject) {
+      const rentalAgreements: RentalAgreement[] = newObject.renter.map((renter) => {
+        const newRentalAgreement: RentalAgreement = {
+          id: "",
+          dueDate: new Date(),
+          dueDateState: "FIRSTMONTH",
+          renter: renter,
+          // rentalObjectId: newObject.id,
+          // rentalObject: newObject,
+        };
+        return newRentalAgreement;
+      });
+
       setNewObject({
         ...newObject,
         landlord: landlord,
         createdAt: new Date(),
         status: newObject.renter.length > 0 ? "INHABITED" : "UNINHABITED",
+        rentalAgreement: rentalAgreements,
       });
     }
   }, [isComplete]);

@@ -114,10 +114,11 @@ model RentPayment {
 }
 
 model RentalAgreement {
-  id             String       @id @default(uuid())
+  id             String        @id @default(uuid())
+  dueDateState   DueDateOfRent
   dueDate        DateTime
   renter         Renter?
-  rentalObject   RentalObject @relation(fields: [rentalObjectId], references: [id])
+  rentalObject   RentalObject  @relation(fields: [rentalObjectId], references: [id])
   rentalObjectId String
 
   @@index([rentalObjectId])

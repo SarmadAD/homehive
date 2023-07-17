@@ -37,6 +37,7 @@ export const renterDefault: Renter = {
     id: "",
     dueDate: new Date(),
     rentalObjectId: "",
+    dueDateState: "FIRSTMONTH",
   },
   rentalObject: {
     id: "",
