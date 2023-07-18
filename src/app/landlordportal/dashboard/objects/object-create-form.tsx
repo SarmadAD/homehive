@@ -120,8 +120,8 @@ export const ObjectCreateForm: FC = () => {
           dueDate: new Date(),
           dueDateState: "FIRSTMONTH",
           renter: renter,
-          // rentalObjectId: newObject.id,
-          // rentalObject: newObject,
+          rentalObjectId: newObject.id,
+          rentalObject: newObject,
         };
         return newRentalAgreement;
       });
