@@ -9,7 +9,7 @@ export async function GET(request: Request, { params }: { params: { objectId: st
     const rentalObject = await prisma.rentalObject.findFirst({
       where: { id: objectId },
       include: {
-        renter: { include: { rentalAgreement: true } },
+        renter: { include: { rentalAgreement: true, rentPayment: true } },
         rentalAgreement: true,
         rentalObjectInfo: true,
         repairRequests: { include: { renter: true } },

@@ -8,6 +8,7 @@ import { PropertyListItem } from "src/components/property-list-item";
 // import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 import { DueDateOfRent } from "@prisma/client";
 import { Renter } from "prisma/types/renter";
+import { RentPaymentList } from "./rent-payment-list";
 
 interface RenterDetailsProps {
   onEdit?: () => void;
@@ -94,6 +95,15 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
                 <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />
               )}
             />{" "}
+          </PropertyListItem>
+          <PropertyListItem disableGutters divider label="">
+            {renter.rentPayment && renter.rentPayment.length > 0 ? (
+              <RentPaymentList renter={renter} />
+            ) : (
+              <Typography color="text.secondary" variant="body2">
+                Es wurden noch keine Mietzahlungen getätigt.
+              </Typography>
+            )}
           </PropertyListItem>
         </PropertyList>
         <Stack alignItems="center" direction="row" flexWrap="wrap" justifyContent="flex-end" spacing={2}>

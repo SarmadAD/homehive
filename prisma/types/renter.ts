@@ -13,6 +13,7 @@ const renter = Prisma.validator<Prisma.RenterArgs>()({
       },
     },
     rentalAgreement: true,
+    rentPayment: true,
   },
 });
 
@@ -33,6 +34,7 @@ export const renterDefault: Renter = {
   email: "",
   firebaseUserId: "",
   rentalAgreementId: "",
+  rentPayment: [],
   rentalAgreement: {
     id: "",
     dueDate: new Date(),

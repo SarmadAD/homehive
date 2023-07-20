@@ -33,6 +33,7 @@ export const rentalObjectDefault: RentalObject = {
   postalCode: "",
   areaSize: 0,
   renter: [],
+  rentPayment: [],
   repairRequests: [],
   rentalAgreement: [],
   rentalObjectInfo: {
