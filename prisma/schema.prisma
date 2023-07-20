@@ -105,7 +105,7 @@ model RentPayment {
   rentalObject   RentalObject      @relation(fields: [rentalObjectId], references: [id])
   status         RentPaymentStatus
   paymentAmount  Float
-  paymentDate    DateTime
+  paymentDate    DateTime?
   renterId       String
   rentalObjectId String
 

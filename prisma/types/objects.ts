@@ -8,6 +8,7 @@ const rentalObject = Prisma.validator<Prisma.RentalObjectArgs>()({
     landlord: true,
     rentalObjectInfo: true,
     repairRequests: true,
+    rentPayment: { include: { renter: true, rentalObject: true } },
   },
 });
 

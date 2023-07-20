@@ -8,15 +8,13 @@ import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } fr
 import { ObjectBasicInfosStep } from "./object-basicinfos-step";
 import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
-import { v4 as uuidv4 } from "uuid";
 import { RentalObject, rentalObjectDefault } from "prisma/types/objects";
 import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
-import { DueDateOfRent } from "@prisma/client";
-import { Renter } from "prisma/types/renter";
+import { RentPayment } from "prisma/types/rentPayment";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -112,26 +110,53 @@ export const ObjectCreateForm: FC = () => {
     }
   }
 
+  function createRentalAgreement() {
+    const rentalAgreements: RentalAgreement[] = newObject.renter.map((renter) => {
+      const newRentalAgreement: RentalAgreement = {
+        id: "",
+        dueDate: new Date(),
+        dueDateState: "FIRSTMONTH",
+        renter: renter,
+        rentalObjectId: newObject.id,
+        rentalObject: newObject,
+      };
+      return newRentalAgreement;
+    });
+    return rentalAgreements;
+  }
+
+  function createRentPayment() {
+    const rentPayments: RentPayment[] = newObject.renter.map((renter) => {
+      const newRentPayment: RentPayment = {
+        id: "",
+        status: "NOTPAID",
+        renter: renter,
+        renterId: renter.id,
+        rentalObjectId: newObject.id,
+        rentalObject: newObject,
+        paymentDate: null,
+        paymentAmount:
+          newObject.rentalObjectInfo.baseRent +
+          newObject.rentalObjectInfo.electricityCosts +
+          newObject.rentalObjectInfo.waterCosts +
+          newObject.rentalObjectInfo.heatingCosts,
+      };
+      return newRentPayment;
+    });
+    return rentPayments;
+  }
+
   useEffect(() => {
     if (isComplete && newObject) {
-      const rentalAgreements: RentalAgreement[] = newObject.renter.map((renter) => {
-        const newRentalAgreement: RentalAgreement = {
-          id: "",
-          dueDate: new Date(),
-          dueDateState: "FIRSTMONTH",
-          renter: renter,
-          rentalObjectId: newObject.id,
-          rentalObject: newObject,
-        };
-        return newRentalAgreement;
-      });
-
+      const rentalAgreements = createRentalAgreement();
+      const rentPayments = createRentPayment();
       setNewObject({
         ...newObject,
         landlord: landlord,
         createdAt: new Date(),
         status: newObject.renter.length > 0 ? "INHABITED" : "UNINHABITED",
         rentalAgreement: rentalAgreements,
+        rentPayment: rentPayments,
       });
     }
   }, [isComplete]);
