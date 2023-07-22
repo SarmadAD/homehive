@@ -1,4 +1,4 @@
-import { Landlord, RentalObjectInfo } from "@prisma/client";
+import { Landlord, RentPayment, RentalObjectInfo } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
 import { RentalObject } from "prisma/types/objects";
 import { Renter } from "prisma/types/renter";
@@ -47,12 +47,17 @@ const userRoles = {
   details: (firebaseUserId: string) => requests.get<UserRole>(`/api/role/${firebaseUserId}`),
 };
 
+const rentPayments = {
+  update: (rentPayment: RentPayment) => requests.put<void>(`/api/rentPayments/${rentPayment.id}`, rentPayment),
+};
+
 const agent = {
   objects,
   landlord,
   renter,
   renters,
   userRoles,
+  rentPayments,
 };
 
 export default agent;

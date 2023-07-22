@@ -105,6 +105,9 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
               <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />
             )}
           /> */}
+        <Typography color="text.secondary" variant="body2">
+          Die Fälligkeit der Zahlung pro Mieter kann in der Objekteübersicht unter dem Tab Mieter geändert werden.
+        </Typography>
       </Stack>
       {/* )} */}
 

@@ -100,11 +100,6 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
             )}
           </PropertyListItem>
         </PropertyList>
-        <Stack alignItems="center" direction="row" flexWrap="wrap" justifyContent="flex-end" spacing={2}>
-          <Button onClick={onPaid} size="small" variant="contained">
-            Bezahlt
-          </Button>
-        </Stack>
       </Stack>
     </Stack>
   );

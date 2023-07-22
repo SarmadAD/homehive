@@ -23,47 +23,70 @@ import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
 import { Renter } from "prisma/types/renter";
 import { useRentPaidStatusPill, useRepairRequestStatusPill } from "src/hooks/use-status-pill";
+import { RentPayment } from "@prisma/client";
+import agent from "src/api/agent";
 
 interface Props {
   renter: Renter;
 }
 
-export const RentPaymentList = ({ renter }: Props) => (
-  <Box>
-    <Card>
-      <CardHeader title="Mietzahlungen" />
-      <Divider />
-      <Scrollbar>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Fälligkeit</TableCell>
-              <TableCell>Mietzahlung</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renter.rentPayment
-              .filter((payment) => payment.rentalObjectId === renter.rentalObjectId)
-              .map((rentPayment) => {
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                const statusPill = useRentPaidStatusPill(rentPayment.status);
-                return (
-                  <TableRow hover key={rentPayment.id}>
-                    <TableCell>
-                      <Typography variant="subtitle2">{new Date(rentPayment.dueDate).toLocaleDateString()}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="subtitle2">{rentPayment.paymentAmount}</Typography>
-                    </TableCell>
+export function RentPaymentList({ renter }: Props) {
+  async function onPaid(payment: RentPayment) {
+    try {
+      if (payment && (payment.status === "NOTPAID" || payment.status === "INARREARS")) {
+        const newPayment: RentPayment = { ...payment, status: "PAID" };
+        await agent.rentPayments.update(newPayment);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  return (
+    <Box>
+      <Card>
+        <CardHeader title="Mietzahlungen" />
+        <Divider />
+        <Scrollbar>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Fälligkeit</TableCell>
+                <TableCell>Mietzahlung</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell align="right">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {renter.rentPayment
+                .filter((payment) => payment.rentalObjectId === renter.rentalObjectId)
+                .map((rentPayment) => {
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  const statusPill = useRentPaidStatusPill(rentPayment.status);
+                  return (
+                    <TableRow hover key={rentPayment.id}>
+                      <TableCell>
+                        <Typography variant="subtitle2">
+                          {new Date(rentPayment.dueDate).toLocaleDateString()}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2">{rentPayment.paymentAmount}</Typography>
+                      </TableCell>
 
-                    <TableCell>{statusPill}</TableCell>
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </Scrollbar>
-    </Card>
-  </Box>
-);
+                      <TableCell>{statusPill}</TableCell>
+
+                      <TableCell align="right">
+                        <Button onClick={() => onPaid(rentPayment)} size="small" variant="contained">
+                          Bezahlt
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </Scrollbar>
+      </Card>
+    </Box>
+  );
+}

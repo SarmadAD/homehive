@@ -109,10 +109,6 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
           sm: "row",
         }}
         spacing={3}
-        sx={{
-          px: 4,
-          py: 3,
-        }}
       >
         <Box sx={{ flexGrow: 1 }}>
           {objectStatusData[0] === 0 && objectStatusData[1] === 0 ? (
