@@ -106,6 +106,7 @@ model RentPayment {
   status         RentPaymentStatus
   paymentAmount  Float
   paymentDate    DateTime?
+  dueDate        DateTime
   renterId       String
   rentalObjectId String
 
@@ -116,7 +117,6 @@ model RentPayment {
 model RentalAgreement {
   id             String        @id @default(uuid())
   dueDateState   DueDateOfRent
-  dueDate        DateTime
   renter         Renter?
   rentalObject   RentalObject  @relation(fields: [rentalObjectId], references: [id])
   rentalObjectId String

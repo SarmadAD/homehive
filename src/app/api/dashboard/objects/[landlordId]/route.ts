@@ -41,7 +41,6 @@ export async function POST(request: Request, { params }: { params: { landlordId:
           renter: { connect: rentersId },
           rentalAgreement: {
             create: rentalObject.rentalAgreement.map((agreement) => ({
-              dueDate: agreement.dueDate,
               dueDateState: agreement.dueDateState,
               renter: { connect: { id: agreement.renter?.id } },
             })),
@@ -49,6 +48,7 @@ export async function POST(request: Request, { params }: { params: { landlordId:
           rentPayment: {
             create: rentalObject.rentPayment.map((rentPayment) => ({
               paymentAmount: rentPayment.paymentAmount,
+              dueDate: rentPayment.dueDate,
               paymentDate: rentPayment.paymentDate,
               renter: { connect: { id: rentPayment.renter?.id } },
               status: rentPayment.status,

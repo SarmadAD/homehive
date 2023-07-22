@@ -76,16 +76,10 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
         <PropertyList>
           <PropertyListItem align={align} disableGutters divider label="Kontaktdaten">
             <Typography color="text.secondary" variant="body2">
-              00123123123
-            </Typography>
-            <Typography color="text.secondary" variant="body2">
               {renter.email}
             </Typography>
           </PropertyListItem>{" "}
-          <PropertyListItem align={align} disableGutters divider label="Status">
-            {/* {statusPill} */}
-          </PropertyListItem>
-          <PropertyListItem disableGutters divider label="Mietvereinbarung">
+          <PropertyListItem disableGutters divider label="">
             <Autocomplete
               onChange={handleDueDateChange}
               getOptionLabel={(option: OptionDueDate) => option.label}

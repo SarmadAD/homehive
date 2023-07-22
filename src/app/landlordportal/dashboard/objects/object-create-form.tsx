@@ -15,6 +15,7 @@ import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
 import { RentPayment } from "prisma/types/rentPayment";
+import { getDueDateOfRent } from "src/utils/getDueDate";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -114,7 +115,6 @@ export const ObjectCreateForm: FC = () => {
     const rentalAgreements: RentalAgreement[] = newObject.renter.map((renter) => {
       const newRentalAgreement: RentalAgreement = {
         id: "",
-        dueDate: new Date(),
         dueDateState: "FIRSTMONTH",
         renter: renter,
         rentalObjectId: newObject.id,
@@ -135,6 +135,7 @@ export const ObjectCreateForm: FC = () => {
         rentalObjectId: newObject.id,
         rentalObject: newObject,
         paymentDate: null,
+        dueDate: getDueDateOfRent(renter.rentalAgreement ? renter.rentalAgreement.dueDateState : "FIRSTMONTH"),
         paymentAmount:
           newObject.rentalObjectInfo.baseRent +
           newObject.rentalObjectInfo.electricityCosts +

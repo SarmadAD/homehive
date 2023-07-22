@@ -13,7 +13,7 @@ const renter = Prisma.validator<Prisma.RenterArgs>()({
       },
     },
     rentalAgreement: true,
-    rentPayment: true,
+    rentPayment: { include: { rentalObject: true } },
   },
 });
 
@@ -37,7 +37,6 @@ export const renterDefault: Renter = {
   rentPayment: [],
   rentalAgreement: {
     id: "",
-    dueDate: new Date(),
     rentalObjectId: "",
     dueDateState: "FIRSTMONTH",
   },

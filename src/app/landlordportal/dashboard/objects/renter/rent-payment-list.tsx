@@ -37,24 +37,30 @@ export const RentPaymentList = ({ renter }: Props) => (
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>Fälligkeit</TableCell>
               <TableCell>Mietzahlung</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {renter.rentPayment.map((rentPayment) => {
-              // eslint-disable-next-line react-hooks/rules-of-hooks
-              const statusPill = useRentPaidStatusPill(rentPayment.status);
-              return (
-                <TableRow hover key={rentPayment.id}>
-                  <TableCell>
-                    <Typography variant="subtitle2">{rentPayment.paymentAmount}</Typography>
-                  </TableCell>
+            {renter.rentPayment
+              .filter((payment) => payment.rentalObjectId === renter.rentalObjectId)
+              .map((rentPayment) => {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const statusPill = useRentPaidStatusPill(rentPayment.status);
+                return (
+                  <TableRow hover key={rentPayment.id}>
+                    <TableCell>
+                      <Typography variant="subtitle2">{new Date(rentPayment.dueDate).toLocaleDateString()}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2">{rentPayment.paymentAmount}</Typography>
+                    </TableCell>
 
-                  <TableCell>{statusPill}</TableCell>
-                </TableRow>
-              );
-            })}
+                    <TableCell>{statusPill}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </Scrollbar>
