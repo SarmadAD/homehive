@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Renter } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { RentalObject } from "prisma/types/objects";
 import { prisma } from "src/app/db/db";
@@ -8,7 +8,12 @@ export async function GET(request: Request, { params }: { params: { objectId: st
   if (objectId) {
     const rentalObject = await prisma.rentalObject.findFirst({
       where: { id: objectId },
-      include: { renter: true, rentalObjectInfo: true, repairRequests: { include: { renter: true } } },
+      include: {
+        renter: { include: { rentalAgreement: true, rentPayment: true } },
+        rentalAgreement: true,
+        rentalObjectInfo: true,
+        repairRequests: { include: { renter: true } },
+      },
     });
     if (rentalObject) {
       return NextResponse.json(rentalObject);
@@ -22,6 +27,9 @@ export async function PUT(request: Request, { params }: { params: { objectId: st
     const { objectId } = params;
     const rentalObject: RentalObject = await request.json();
     if (objectId) {
+      const rentersId: Prisma.RenterWhereUniqueInput[] = rentalObject.renter.map((renter: Renter) => ({
+        id: renter.id,
+      }));
       const updatedRentalObject = await prisma.rentalObject.update({
         where: { id: objectId },
         data: {
@@ -33,7 +41,23 @@ export async function PUT(request: Request, { params }: { params: { objectId: st
           additionalHouseDetails: rentalObject.additionalHouseDetails,
           city: rentalObject.city,
           postalCode: rentalObject.postalCode,
+          renter: { connect: rentersId },
           areaSize: rentalObject.areaSize,
+          // rentalAgreement: {
+          //   upsert: rentalObject.rentalAgreement.map((agreement) => ({
+          //     where: { id: agreement.id },
+          //     update: {
+          //       dueDate: agreement.dueDate,
+          //       dueDateState: agreement.dueDateState,
+          //       renter: { connect: { id: agreement.renter?.id } },
+          //     },
+          //     create: {
+          //       dueDate: agreement.dueDate,
+          //       dueDateState: agreement.dueDateState,
+          //       renter: { connect: { id: agreement.renter?.id } },
+          //     },
+          //   })),
+          // },
           rentalObjectInfo: {
             update: {
               baseRent: rentalObject.rentalObjectInfo.baseRent,

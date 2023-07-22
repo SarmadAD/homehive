@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Renter } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { RentalObject } from "prisma/types/objects";
 import { prisma } from "src/app/db/db";
@@ -22,6 +22,10 @@ export async function POST(request: Request, { params }: { params: { landlordId:
     const { landlordId } = params;
     const rentalObject: RentalObject = await request.json();
     if (landlordId) {
+      const rentersId: Prisma.RenterWhereUniqueInput[] = rentalObject.renter.map((renter: Renter) => ({
+        id: renter.id,
+      }));
+
       const createdRentalObject = await prisma.rentalObject.create({
         data: {
           name: rentalObject.name,
@@ -34,10 +38,21 @@ export async function POST(request: Request, { params }: { params: { landlordId:
           city: rentalObject.city,
           postalCode: rentalObject.postalCode,
           areaSize: rentalObject.areaSize,
-          renter: {
-            connect: {
-              id: rentalObject.renter[0].id,
-            },
+          renter: { connect: rentersId },
+          rentalAgreement: {
+            create: rentalObject.rentalAgreement.map((agreement) => ({
+              dueDateState: agreement.dueDateState,
+              renter: { connect: { id: agreement.renter?.id } },
+            })),
+          },
+          rentPayment: {
+            create: rentalObject.rentPayment.map((rentPayment) => ({
+              paymentAmount: rentPayment.paymentAmount,
+              dueDate: rentPayment.dueDate,
+              paymentDate: rentPayment.paymentDate,
+              renter: { connect: { id: rentPayment.renter?.id } },
+              status: rentPayment.status,
+            })),
           },
           rentalObjectInfo: {
             create: {
@@ -70,5 +85,6 @@ export async function POST(request: Request, { params }: { params: { landlordId:
     } else if (e instanceof Prisma.PrismaClientValidationError) {
       return NextResponse.json({ error: e.message });
     }
+    throw e;
   }
 }

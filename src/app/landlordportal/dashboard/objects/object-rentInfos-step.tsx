@@ -5,7 +5,6 @@ import { Autocomplete, Button, Stack, SvgIcon, TextField, Typography } from "@mu
 import { useRecoilValue } from "recoil";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { RentalObject } from "prisma/types/objects";
-// import { DueDateOfRent } from "@prisma/client";
 import { getRenterName } from "src/utils/get-renter-name";
 import { Renter } from "prisma/types/renter";
 
@@ -21,26 +20,6 @@ type OptionRenter = {
   surname: string;
   firstname: string;
 };
-
-// type OptionDueDate = {
-//   label: string;
-//   value: DueDateOfRent;
-// };
-
-// const dueDateOfRentList: OptionDueDate[] = [
-//   {
-//     label: "Zum 1 des Monats",
-//     value: DueDateOfRent.FIRSTMONTH,
-//   },
-//   {
-//     label: "Zum 15 des Monats",
-//     value: DueDateOfRent.MIDDLEMONTH,
-//   },
-//   {
-//     label: "Zum 27 des Monats",
-//     value: DueDateOfRent.ENDMONTH,
-//   },
-// ];
 
 export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
   const { onBack, onNext, newObject, setNewObject, showDueDateAndRenter, ...other } = props;
@@ -64,17 +43,6 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
       setNewObject({ ...newObject, renter: renter });
     }
   }
-
-  // function handleDueDateChange(event: React.SyntheticEvent, dueDate: OptionDueDate | null) {
-  //   if (dueDate) {
-  //     setNewObject({
-  //       ...newObject,
-  //       rentalObjectInfo: {
-  //         ...newObject?.rentalObjectInfo,
-  //       },
-  //     });
-  //   }
-  // }
 
   return (
     <Stack spacing={3} {...other}>
@@ -115,19 +83,20 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           type="number"
         />
       </Stack>
-      {showDueDateAndRenter && (
-        <Stack spacing={3} direction="column">
-          <div>
-            <Typography variant="h6">Füge Mieter zu dem Objekt hinzu</Typography>
-          </div>
-          <Autocomplete
-            multiple={true}
-            onChange={handleRenterChange}
-            getOptionLabel={(option: OptionRenter) => getRenterName(option.firstname, option.surname)}
-            options={renters}
-            renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
-          />
-          {/* <Autocomplete
+      {/* {showDueDateAndRenter && ( */}
+      <Stack spacing={3} direction="column">
+        <div>
+          <Typography variant="h6">Füge Mieter zu dem Objekt hinzu</Typography>
+        </div>
+        <Autocomplete
+          multiple={true}
+          onChange={handleRenterChange}
+          getOptionLabel={(option: OptionRenter) => getRenterName(option.firstname, option.surname)}
+          options={renters}
+          value={newObject.renter}
+          renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
+        />
+        {/* <Autocomplete
             onChange={handleDueDateChange}
             getOptionLabel={(option: OptionDueDate) => option.label}
             options={dueDateOfRentList}
@@ -136,8 +105,11 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
               <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />
             )}
           /> */}
-        </Stack>
-      )}
+        <Typography color="text.secondary" variant="body2">
+          Die Fälligkeit der Zahlung pro Mieter kann in der Objekteübersicht unter dem Tab Mieter geändert werden.
+        </Typography>
+      </Stack>
+      {/* )} */}
 
       <Stack alignItems="center" direction="row" spacing={2}>
         <Button

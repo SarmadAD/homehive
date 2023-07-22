@@ -21,7 +21,10 @@ const useChartOptions = (): ApexOptions => {
         show: false,
       },
     },
-    colors: [theme.palette.primary.main, theme.palette.mode === "dark" ? theme.palette.primary.darkest : theme.palette.primary.light],
+    colors: [
+      theme.palette.primary.main,
+      theme.palette.mode === "dark" ? theme.palette.primary.darkest : theme.palette.primary.light,
+    ],
     dataLabels: {
       enabled: false,
     },

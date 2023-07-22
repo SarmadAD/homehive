@@ -4,20 +4,21 @@ import { landlords, rentalObjectInfos, repairRequests, role, userRole } from "./
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.repairRequest.deleteMany(); //first delete the refernces
+  // await prisma.repairRequest.deleteMany(); //first delete the refernces
 
-  await prisma.rentalObject.deleteMany(); //then the object
+  // await prisma.rentalObject.deleteMany(); //then the object
 
-  await prisma.landlord.deleteMany();
-  await prisma.renter.deleteMany();
-  await prisma.rentalObjectInfo.deleteMany();
+  // // await prisma.landlord.deleteMany();
+  // await prisma.renter.deleteMany();
 
-  await prisma.userRole.deleteMany();
-  await prisma.role.deleteMany();
+  // await prisma.rentalObjectInfo.deleteMany();
 
-  await prisma.role.createMany({
-    data: role,
-  });
+  // await prisma.userRole.deleteMany();
+  // await prisma.role.deleteMany();
+
+  // await prisma.role.createMany({
+  //   data: role,
+  // });
   // await prisma.landlord.createMany({
   //   data: landlords,
   // });
@@ -33,50 +34,50 @@ async function main() {
   //   data: userRole,
   // });
 
-  // await prisma.renter.create({
-  //   data: {
-  //     id: "0fc15dda-0ae3-11ee-be56-0242ac120002",
-  //     firebaseUserId: "BeispielfirebaseId1",
-  //     createdAt: new Date("2023-06-01T12:00:00Z"),
-  //     firstname: "John",
-  //     surname: "Doe",
-  //     email: "john.doe@exampleeee.com",
-  //     image: "https://example.com/john-doe.jpg",
-  //     landlords: {
-  //       connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-  //     },
-  //   },
-  // });
+  await prisma.renter.create({
+    data: {
+      id: "0fc15dda-0ae3-11ee-be56-0242ac120002",
+      firebaseUserId: "BeispielfirebaseId1",
+      createdAt: new Date("2023-06-01T12:00:00Z"),
+      firstname: "John",
+      surname: "Doe",
+      email: "john.doe@exampleeee.com",
+      image: "https://example.com/john-doe.jpg",
+      landlords: {
+        connect: [{ id: "c2ba0be5-30c5-432c-9f64-f2a989ff70bc" }],
+      },
+    },
+  });
 
-  // await prisma.renter.create({
-  //   data: {
-  //     id: "0fc15dda-0ae3-11ee-be56-0242ac130008",
-  //     firebaseUserId: "BeispielfirebaseId2",
-  //     createdAt: new Date("2023-06-01T12:00:00Z"),
-  //     firstname: "Sarmad",
-  //     surname: "Doe",
-  //     email: "sarmad.doe@exampleeee.com",
-  //     image: "https://example.com/john-doe.jpg",
-  //     landlords: {
-  //       connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-  //     },
-  //   },
-  // });
+  await prisma.renter.create({
+    data: {
+      id: "0fc15dda-0ae3-11ee-be56-0242ac130008",
+      firebaseUserId: "BeispielfirebaseId2",
+      createdAt: new Date("2023-06-01T12:00:00Z"),
+      firstname: "Sarmad",
+      surname: "Doe",
+      email: "sarmad.doe@exampleeee.com",
+      image: "https://example.com/john-doe.jpg",
+      landlords: {
+        connect: [{ id: "c2ba0be5-30c5-432c-9f64-f2a989ff70bc" }],
+      },
+    },
+  });
 
-  // await prisma.renter.create({
-  //   data: {
-  //     id: "0fc15dda-0ae3-11ee-be56-0242ac130015",
-  //     firebaseUserId: "BeispielfirebaseId3",
-  //     createdAt: new Date("2023-06-01T12:00:00Z"),
-  //     firstname: "Hamza",
-  //     surname: "Doe",
-  //     email: "hamza.doe@exampleeee.com",
-  //     image: "https://example.com/john-doe.jpg",
-  //     landlords: {
-  //       connect: [{ id: "876e8c7c-3488-4919-9920-d49f3b5bd3db" }],
-  //     },
-  //   },
-  // });
+  await prisma.renter.create({
+    data: {
+      id: "0fc15dda-0ae3-11ee-be56-0242ac130015",
+      firebaseUserId: "BeispielfirebaseId3",
+      createdAt: new Date("2023-06-01T12:00:00Z"),
+      firstname: "Hamza",
+      surname: "Doe",
+      email: "hamza.doe@exampleeee.com",
+      image: "https://example.com/john-doe.jpg",
+      landlords: {
+        connect: [{ id: "c2ba0be5-30c5-432c-9f64-f2a989ff70bc" }],
+      },
+    },
+  });
 
   // await prisma.rentalObject.create({
   //   data: {

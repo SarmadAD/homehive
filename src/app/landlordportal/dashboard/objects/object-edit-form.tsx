@@ -13,6 +13,7 @@ import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
 import { useRouter } from "src/hooks/use-router";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
+import { RentalAgreement } from "prisma/types/rentalAgreement";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -103,7 +104,12 @@ export const ObjectEditForm: FC = () => {
   }
 
   useEffect(() => {
-    if (isComplete) {
+    if (isComplete && object) {
+      setObject({
+        ...object,
+        status: object.renter.length > 0 ? "INHABITED" : "UNINHABITED",
+      });
+
       updateRentalObject();
       setIsComplete(false);
       router.push("/landlordportal/dashboard/objects");
