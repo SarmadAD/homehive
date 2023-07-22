@@ -1,28 +1,17 @@
-import type { FC } from "react";
-import { format, subDays, subHours, subMinutes, subSeconds } from "date-fns";
-import numeral from "numeral";
-import DotsHorizontalIcon from "@untitled-ui/icons-react/build/esm/DotsHorizontal";
-import ChevronRightIcon from "@untitled-ui/icons-react/build/esm/ChevronRight";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import SvgIcon from "@mui/material/SvgIcon";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-
 import { Scrollbar } from "src/components/scrollbar";
-import { SeverityPill } from "src/components/severity-pill";
 import { Renter } from "prisma/types/renter";
-import { useRentPaidStatusPill, useRepairRequestStatusPill } from "src/hooks/use-status-pill";
+import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 import { RentPayment } from "@prisma/client";
 import agent from "src/api/agent";
 
@@ -53,7 +42,9 @@ export function RentPaymentList({ renter }: Props) {
                 <TableCell>Fälligkeit</TableCell>
                 <TableCell>Mietzahlung</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell align="right">Action</TableCell>
+                {renter.rentPayment.find(
+                  (rentPayment) => rentPayment.status === "INARREARS" || rentPayment.status === "NOTPAID"
+                ) && <TableCell align="right">Action</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -75,11 +66,14 @@ export function RentPaymentList({ renter }: Props) {
 
                       <TableCell>{statusPill}</TableCell>
 
-                      <TableCell align="right">
-                        <Button onClick={() => onPaid(rentPayment)} size="small" variant="contained">
-                          Bezahlt
-                        </Button>
-                      </TableCell>
+                      {rentPayment.status === "INARREARS" ||
+                        (rentPayment.status === "NOTPAID" && (
+                          <TableCell align="right">
+                            <Button onClick={() => onPaid(rentPayment)} size="small" variant="contained">
+                              Bezahlt
+                            </Button>
+                          </TableCell>
+                        ))}
                     </TableRow>
                   );
                 })}
