@@ -5,6 +5,9 @@ import { Box, Card, CardHeader, Tab, Tabs } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { RentPayment } from "@prisma/client";
+import { useRecoilValue } from "recoil";
+import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import { RentalObject } from "prisma/types/objects";
 
 type ChartSeries = {
   name: string;
@@ -92,18 +95,33 @@ interface OverviewRentalIncome {
   chartSeries: ChartSeries;
 }
 
-interface GroupedRentPayments {
-  paymentDate: Date;
-  paymentAmount: number;
-}
-
 export const OverviewRentalIncome: FC<OverviewRentalIncome> = (props) => {
-  const groupRentPaymentsByMonth = (rentPayments: GroupedRentPayments[]) => {
+  const rentalObjects = useRecoilValue(rentalObjectsAtom);
+
+  const getAllRentPayments = () => {
+    const allRentPayments: RentPayment[] = [];
+    rentalObjects.forEach((rentalObject) => {
+      if (rentalObject.rentPayment && rentalObject.rentPayment.length > 0) {
+        const filterNullPaymentDateRentPayments = rentalObject.rentPayment.filter(
+          (rentPayment) => rentPayment.paymentDate !== null
+        );
+        const filterNotPaidPaymentRentPayments = filterNullPaymentDateRentPayments.filter(
+          (rentPayment) => rentPayment.status === "PAID"
+        );
+        allRentPayments.push(...filterNotPaidPaymentRentPayments);
+      }
+    });
+    return allRentPayments;
+  };
+
+  const rentPayments = getAllRentPayments();
+
+  const groupRentPaymentsByMonth = (rentPayments: RentPayment[]) => {
     const groupedRentPayments: any = {};
 
     for (const rentPayment of rentPayments) {
-      const month = rentPayment.paymentDate.getMonth();
-      const year = rentPayment.paymentDate.getFullYear();
+      const month = rentPayment.paymentDate && new Date(rentPayment.paymentDate).getMonth();
+      const year = rentPayment.paymentDate && new Date(rentPayment.paymentDate).getFullYear();
       const monthKey = `${year}-${month}`;
 
       if (!groupedRentPayments[monthKey]) {
@@ -119,21 +137,24 @@ export const OverviewRentalIncome: FC<OverviewRentalIncome> = (props) => {
 
     return Object.values(groupedRentPayments);
   };
-  const rentPayments: GroupedRentPayments[] = [
-    { paymentDate: new Date("2023-07-01"), paymentAmount: 40 },
-    { paymentDate: new Date("2023-07-03"), paymentAmount: 40 },
-    { paymentDate: new Date("2023-01-06"), paymentAmount: 40 },
-    { paymentDate: new Date("2023-07-06"), paymentAmount: 40 },
-    { paymentDate: new Date("2023-02-06"), paymentAmount: 40 },
-    { paymentDate: new Date("2023-07-15"), paymentAmount: 37 },
-    { paymentDate: new Date("2023-08-01"), paymentAmount: 41 },
-    { paymentDate: new Date("2023-12-12"), paymentAmount: 41 },
-    { paymentDate: new Date("2023-12-12"), paymentAmount: 101 },
-    { paymentDate: new Date("2023-03-12"), paymentAmount: 101 },
-    { paymentDate: new Date("2023-11-12"), paymentAmount: 101 },
-  ];
+  //   { paymentDate: new Date("2023-07-03"), paymentAmount: 40 },
+  //   { paymentDate: new Date("2023-01-06"), paymentAmount: 40 },
+  //   { paymentDate: new Date("2023-07-06"), paymentAmount: 40 },
+  //   { paymentDate: new Date("2023-02-06"), paymentAmount: 40 },
+  //   { paymentDate: new Date("2023-07-15"), paymentAmount: 37 },
+  //   { paymentDate: new Date("2023-08-01"), paymentAmount: 41 },
+  //   { paymentDate: new Date("2023-12-12"), paymentAmount: 41 },
+  //   { paymentDate: new Date("2023-12-12"), paymentAmount: 101 },
+  //   { paymentDate: new Date("2023-03-12"), paymentAmount: 101 },
+  //   { paymentDate: new Date("2023-11-12"), paymentAmount: 101 },
+  // ];
 
-  rentPayments.sort((a, b) => a.paymentDate.getTime() - b.paymentDate.getTime());
+  rentPayments.sort(
+    (a, b) =>
+      (a.paymentDate ? new Date(a.paymentDate).getTime() : new Date().getTime()) -
+      (b.paymentDate ? new Date(b.paymentDate).getTime() : new Date().getTime())
+  );
+
   const groupedRentPayments: any = groupRentPaymentsByMonth(rentPayments);
   const totalPaymentAmounts = groupedRentPayments.map(
     (groupedRentPayment: any) => groupedRentPayment.totalPaymentAmount

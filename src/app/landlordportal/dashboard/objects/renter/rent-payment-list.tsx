@@ -23,7 +23,7 @@ export function RentPaymentList({ renter }: Props) {
   async function onPaid(payment: RentPayment) {
     try {
       if (payment && (payment.status === "NOTPAID" || payment.status === "INARREARS")) {
-        const newPayment: RentPayment = { ...payment, status: "PAID" };
+        const newPayment: RentPayment = { ...payment, status: "PAID", paymentDate: new Date() };
         await agent.rentPayments.update(newPayment);
       }
     } catch (error) {

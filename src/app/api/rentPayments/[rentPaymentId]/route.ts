@@ -9,7 +9,7 @@ export async function PUT(request: Request, { params }: { params: { rentPaymentI
     if (rentPaymentId) {
       const updatedRentPayment = await prisma.rentPayment.update({
         where: { id: rentPaymentId },
-        data: { status: rentPayment.status },
+        data: { status: rentPayment.status, paymentDate: rentPayment.paymentDate },
       });
       if (updatedRentPayment) {
         return NextResponse.json(updatedRentPayment);
