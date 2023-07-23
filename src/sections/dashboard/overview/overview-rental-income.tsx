@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import PropTypes from "prop-types";
 import type { ApexOptions } from "apexcharts";
 import { Box, Card, CardHeader, Tab, Tabs } from "@mui/material";
@@ -7,7 +6,6 @@ import { Chart } from "src/components/chart";
 import { RentPayment } from "@prisma/client";
 import { useRecoilValue } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import { RentalObject } from "prisma/types/objects";
 
 type ChartSeries = {
   name: string;
@@ -91,11 +89,7 @@ const useChartOptions = (months: string[]): ApexOptions => {
   };
 };
 
-interface OverviewRentalIncome {
-  chartSeries: ChartSeries;
-}
-
-export const OverviewRentalIncome: FC<OverviewRentalIncome> = (props) => {
+export function OverviewRentalIncome() {
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
 
   const getAllRentPayments = () => {
@@ -189,8 +183,4 @@ export const OverviewRentalIncome: FC<OverviewRentalIncome> = (props) => {
       </Box>
     </Card>
   );
-};
-
-OverviewRentalIncome.propTypes = {
-  chartSeries: PropTypes.array.isRequired,
-};
+}
