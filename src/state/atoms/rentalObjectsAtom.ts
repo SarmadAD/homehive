@@ -11,7 +11,8 @@ export const rentalObjectsAtom = atom<RentalObject[]>({
       const user = get(currentUserAtom);
       if (user.id) {
         const response = await agent.objects.list(user.id);
-        return response;
+        if (response.length > 0) return response;
+        else return [];
       }
       return [];
     },
