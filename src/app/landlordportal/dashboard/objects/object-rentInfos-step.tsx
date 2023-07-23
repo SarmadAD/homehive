@@ -83,7 +83,6 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           type="number"
         />
       </Stack>
-      {/* {showDueDateAndRenter && ( */}
       <Stack spacing={3} direction="column">
         <div>
           <Typography variant="h6">Füge Mieter zu dem Objekt hinzu</Typography>
@@ -91,25 +90,15 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
         <Autocomplete
           multiple={true}
           onChange={handleRenterChange}
-          getOptionLabel={(option: OptionRenter) => getRenterName(option.firstname, option.surname)}
+          getOptionLabel={(option: Renter) => getRenterName(option.firstname, option.surname)}
           options={renters}
-          value={newObject.renter}
+          value={newObject.renter as Renter[]}
           renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
         />
-        {/* <Autocomplete
-            onChange={handleDueDateChange}
-            getOptionLabel={(option: OptionDueDate) => option.label}
-            options={dueDateOfRentList}
-            value={dueDateOfRentList.find((x) => x.value === newObject.rentalObjectInfo.dueDateOfRent)}
-            renderInput={(params): JSX.Element => (
-              <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />
-            )}
-          /> */}
         <Typography color="text.secondary" variant="body2">
           Die Fälligkeit der Zahlung pro Mieter kann in der Objekteübersicht unter dem Tab Mieter geändert werden.
         </Typography>
       </Stack>
-      {/* )} */}
 
       <Stack alignItems="center" direction="row" spacing={2}>
         <Button
