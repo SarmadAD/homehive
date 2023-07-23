@@ -1,16 +1,18 @@
-import type { FC } from "react";
 import PropTypes from "prop-types";
 import type { ApexOptions } from "apexcharts";
 import { Box, Card, CardHeader, Tab, Tabs } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
+import { RentPayment } from "@prisma/client";
+import { useRecoilValue } from "recoil";
+import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 
 type ChartSeries = {
   name: string;
   data: number[];
 }[];
 
-const useChartOptions = (): ApexOptions => {
+const useChartOptions = (months: string[]): ApexOptions => {
   const theme = useTheme();
 
   return {
@@ -54,7 +56,7 @@ const useChartOptions = (): ApexOptions => {
     },
     tooltip: {
       y: {
-        formatter: (value: number): string => `${value}k events`,
+        formatter: (value: number): string => `${value} €`,
       },
     },
     xaxis: {
@@ -64,7 +66,7 @@ const useChartOptions = (): ApexOptions => {
       axisTicks: {
         show: false,
       },
-      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      categories: months,
       labels: {
         style: {
           colors: theme.palette.text.secondary,
@@ -87,14 +89,82 @@ const useChartOptions = (): ApexOptions => {
   };
 };
 
-interface OverviewRentalIncome {
-  chartSeries: ChartSeries;
-}
+export function OverviewRentalIncome() {
+  const rentalObjects = useRecoilValue(rentalObjectsAtom);
 
-export const OverviewRentalIncome: FC<OverviewRentalIncome> = (props) => {
-  const { chartSeries } = props;
-  const chartOptions = useChartOptions();
+  const getAllRentPayments = () => {
+    const allRentPayments: RentPayment[] = [];
+    rentalObjects.forEach((rentalObject) => {
+      if (rentalObject.rentPayment && rentalObject.rentPayment.length > 0) {
+        const filterNullPaymentDateRentPayments = rentalObject.rentPayment.filter(
+          (rentPayment) => rentPayment.paymentDate !== null
+        );
+        const filterNotPaidPaymentRentPayments = filterNullPaymentDateRentPayments.filter(
+          (rentPayment) => rentPayment.status === "PAID"
+        );
+        allRentPayments.push(...filterNotPaidPaymentRentPayments);
+      }
+    });
+    return allRentPayments;
+  };
 
+  const rentPayments = getAllRentPayments();
+
+  const groupRentPaymentsByMonth = (rentPayments: RentPayment[]) => {
+    const groupedRentPayments: any = {};
+
+    for (const rentPayment of rentPayments) {
+      const month = rentPayment.paymentDate && new Date(rentPayment.paymentDate).getMonth();
+      const year = rentPayment.paymentDate && new Date(rentPayment.paymentDate).getFullYear();
+      const monthKey = `${year}-${month}`;
+
+      if (!groupedRentPayments[monthKey]) {
+        groupedRentPayments[monthKey] = {
+          month: month,
+          year: year,
+          totalPaymentAmount: 0,
+        };
+      }
+
+      groupedRentPayments[monthKey].totalPaymentAmount += rentPayment.paymentAmount;
+    }
+
+    return Object.values(groupedRentPayments);
+  };
+  //   { paymentDate: new Date("2023-07-03"), paymentAmount: 40 },
+  //   { paymentDate: new Date("2023-01-06"), paymentAmount: 40 },
+  //   { paymentDate: new Date("2023-07-06"), paymentAmount: 40 },
+  //   { paymentDate: new Date("2023-02-06"), paymentAmount: 40 },
+  //   { paymentDate: new Date("2023-07-15"), paymentAmount: 37 },
+  //   { paymentDate: new Date("2023-08-01"), paymentAmount: 41 },
+  //   { paymentDate: new Date("2023-12-12"), paymentAmount: 41 },
+  //   { paymentDate: new Date("2023-12-12"), paymentAmount: 101 },
+  //   { paymentDate: new Date("2023-03-12"), paymentAmount: 101 },
+  //   { paymentDate: new Date("2023-11-12"), paymentAmount: 101 },
+  // ];
+
+  rentPayments.sort(
+    (a, b) =>
+      (a.paymentDate ? new Date(a.paymentDate).getTime() : new Date().getTime()) -
+      (b.paymentDate ? new Date(b.paymentDate).getTime() : new Date().getTime())
+  );
+
+  const groupedRentPayments: any = groupRentPaymentsByMonth(rentPayments);
+  const totalPaymentAmounts = groupedRentPayments.map(
+    (groupedRentPayment: any) => groupedRentPayment.totalPaymentAmount
+  );
+  const getMonthName = (monthNumber: number) => {
+    const monthNames = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+    return monthNames[monthNumber];
+  };
+  const months = groupedRentPayments.map((groupedRentPayment: any) => getMonthName(groupedRentPayment.month));
+  const chartOptions = useChartOptions(months);
+  const updatedChartSeries: ChartSeries = [
+    {
+      name: "Diesen Monat",
+      data: totalPaymentAmounts,
+    },
+  ];
   return (
     <Card>
       <CardHeader
@@ -109,12 +179,8 @@ export const OverviewRentalIncome: FC<OverviewRentalIncome> = (props) => {
         }
       />
       <Box sx={{ height: 336 }}>
-        <Chart height={300} options={chartOptions} series={chartSeries} type="bar" />
+        <Chart height={300} options={chartOptions} series={updatedChartSeries} type="bar" />
       </Box>
     </Card>
   );
-};
-
-OverviewRentalIncome.propTypes = {
-  chartSeries: PropTypes.array.isRequired,
-};
+}

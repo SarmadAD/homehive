@@ -76,14 +76,7 @@ const Page = () => {
                 <OverviewStatusObjects showActions={true} />
               </Grid>
               <Grid xs={12} md={12}>
-                <OverviewRentalIncome
-                  chartSeries={[
-                    {
-                      name: "This year",
-                      data: [40, 37, 41, 42, 45, 42, 36, 45, 40, 44, 38, 41],
-                    },
-                  ]}
-                />
+                <OverviewRentalIncome />
               </Grid>
             </Grid>
           </Container>

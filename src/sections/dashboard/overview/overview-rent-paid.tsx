@@ -4,8 +4,7 @@ import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
 import { paths } from "src/paths";
 import { useRecoilValue } from "recoil";
-import { rentersAtom } from "src/state/atoms/rentersAtom";
-// import { totalPaidRents } from "src/state/selectors/totalPaidRents";
+import { totalPaidRents } from "src/state/selectors/totalPaidRents";
 
 interface OverviewRentPaidProps {
   showActions: boolean;
@@ -13,8 +12,7 @@ interface OverviewRentPaidProps {
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
-  const renters = useRecoilValue(rentersAtom);
-  // const lengthPaidRents = useRecoilValue(totalPaidRents);
+  const lengthPaidRents = useRecoilValue(totalPaidRents);
 
   return (
     <Card>
@@ -37,15 +35,15 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
           <Typography color="text.secondary" variant="body2">
             Mieten bezahlt
           </Typography>
-          {/* {lengthPaidRents !== undefined ? (
+          {lengthPaidRents !== undefined ? (
             <Typography color="text.primary" variant="h4">
-              {lengthPaidRents} / {renters.length}
+              {lengthPaidRents}
             </Typography>
           ) : (
             <Typography color="text.primary" variant="body2">
               Legen Sie Mieter an um hier die Anzahl der bezahlten Mieten zusehen
             </Typography>
-          )} */}
+          )}
         </Box>
       </Stack>
 
