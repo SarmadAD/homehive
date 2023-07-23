@@ -112,9 +112,13 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
       >
         <Box sx={{ flexGrow: 1 }}>
           {objectStatusData[0] === 0 && objectStatusData[1] === 0 ? (
-            <Typography color="text.primary" variant="body2">
-              Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zusehen
-            </Typography>
+            <Container maxWidth="sm">
+              <CardContent>
+                <Typography color="text.primary" variant="body2">
+                  Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zusehen
+                </Typography>{" "}
+              </CardContent>
+            </Container>
           ) : (
             <Container maxWidth="sm">
               <CardContent>

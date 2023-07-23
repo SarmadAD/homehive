@@ -6,10 +6,13 @@ const prisma = new PrismaClient();
 async function main() {
   // await prisma.repairRequest.deleteMany(); //first delete the refernces
 
-  // await prisma.rentalObject.deleteMany(); //then the object
+  await prisma.rentalObject.deleteMany(); //then the object
 
   // // await prisma.landlord.deleteMany();
   // await prisma.renter.deleteMany();
+
+  await prisma.rentPayment.deleteMany();
+  await prisma.rentalAgreement.deleteMany();
 
   // await prisma.rentalObjectInfo.deleteMany();
 
