@@ -29,26 +29,6 @@ import { SettingsConsumer, SettingsProvider } from "src/contexts/settings/settin
 // Remove if locales are not used
 import "src/locales/i18n";
 
-// const SETTINGS_STORAGE_KEY = "app.settings";
-
-// const resetSettings = (): void => {
-//   try {
-//     Cookies.remove(SETTINGS_STORAGE_KEY);
-//     window.location.reload();
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
-// const updateSettings = (settings: Settings): void => {
-//   try {
-//     Cookies.set(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-//     window.location.reload();
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
 interface LayoutProps {
   children: ReactNode;
   settings?: Settings;
