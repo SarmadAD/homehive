@@ -173,11 +173,11 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                       </TableCell>
                       {/* <TableCell>{statusPill}</TableCell> */}
                       <TableCell align="right">
-                        <IconButton component={RouterLink} href={paths.landlordportal.dashboard.renters.edit}>
+                        {/* <IconButton component={RouterLink} href={paths.landlordportal.dashboard.renters.edit}>
                           <SvgIcon>
                             <Edit02Icon />
                           </SvgIcon>
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton
                           component={RouterLink}
                           href={`${paths.landlordportal.dashboard.renters.details}/${renter.id}`}
