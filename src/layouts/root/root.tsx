@@ -4,7 +4,6 @@ import type { FC, ReactNode } from "react";
 import Head from "next/head";
 import { Provider as ReduxProvider } from "react-redux";
 import { NextAppDirEmotionCacheProvider } from "tss-react/next/appDir";
-import Cookies from "js-cookie";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
