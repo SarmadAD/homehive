@@ -140,7 +140,7 @@ const Page: PageType = () => {
                     </Stack>
                   </Stack>
                   <Stack alignItems="center" direction="row" spacing={2}>
-                    <Button
+                    {/* <Button
                       color="inherit"
                       component={RouterLink}
                       endIcon={
@@ -151,7 +151,7 @@ const Page: PageType = () => {
                       href={paths.landlordportal.dashboard.objects.edit}
                     >
                       Edit
-                    </Button>
+                    </Button> */}
                     <Button
                       endIcon={
                         <SvgIcon>

@@ -4,7 +4,6 @@ import type { FC, ReactNode } from "react";
 import Head from "next/head";
 import { Provider as ReduxProvider } from "react-redux";
 import { NextAppDirEmotionCacheProvider } from "tss-react/next/appDir";
-import Cookies from "js-cookie";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -21,33 +20,13 @@ import { useNProgress } from "src/hooks/use-nprogress";
 import { store } from "src/store";
 import { createTheme } from "src/theme";
 import type { Settings } from "src/types/settings";
-
-// Remove if locales are not used
-import "src/locales/i18n";
-import { SettingsConsumer, SettingsProvider } from "src/contexts/settings";
 import { RecoilRoot } from "recoil";
 import { AuthConsumer } from "src/contexts/auth/firebase/auth-consumer";
 import { AuthProvider } from "src/contexts/auth/firebase/auth-provider";
+import { SettingsConsumer, SettingsProvider } from "src/contexts/settings/settings-context";
 
-const SETTINGS_STORAGE_KEY = "app.settings";
-
-const resetSettings = (): void => {
-  try {
-    Cookies.remove(SETTINGS_STORAGE_KEY);
-    window.location.reload();
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const updateSettings = (settings: Settings): void => {
-  try {
-    Cookies.set(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-    window.location.reload();
-  } catch (err) {
-    console.error(err);
-  }
-};
+// Remove if locales are not used
+import "src/locales/i18n";
 
 interface LayoutProps {
   children: ReactNode;
@@ -68,9 +47,13 @@ export const Layout: FC<LayoutProps> = (props: LayoutProps) => {
             <AuthProvider>
               <AuthConsumer>
                 {(auth) => (
-                  <SettingsProvider onReset={resetSettings} onUpdate={updateSettings} settings={settings}>
+                  <SettingsProvider>
                     <SettingsConsumer>
                       {(settings) => {
+                        // Prevent theme flicker when restoring custom settings from browser storage
+                        if (!settings.isInitialized) {
+                          // return null;
+                        }
                         const theme = createTheme({
                           colorPreset: settings.colorPreset,
                           contrast: settings.contrast,
