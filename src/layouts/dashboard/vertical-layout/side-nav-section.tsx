@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from "react";
+import { useMemo, type FC, type ReactNode } from "react";
 import PropTypes from "prop-types";
 import { Box, Stack } from "@mui/material";
 import { SideNavItem } from "./side-nav-item";
@@ -14,7 +14,15 @@ interface Item {
   title: string;
 }
 
-const renderItems = ({ depth = 0, items, pathname }: { depth?: number; items: Item[]; pathname?: string | null }): JSX.Element[] =>
+const renderItems = ({
+  depth = 0,
+  items,
+  pathname,
+}: {
+  depth?: number;
+  items: Item[];
+  pathname?: string | null;
+}): JSX.Element[] =>
   items.reduce(
     (acc: JSX.Element[], item) =>
       reduceChildRoutes({
@@ -102,6 +110,8 @@ interface SideNavSectionProps {
 export const SideNavSection: FC<SideNavSectionProps> = (props) => {
   const { items = [], pathname, subheader = "", ...other } = props;
 
+  const renderedItems = useMemo(() => renderItems({ items, pathname }), [items, pathname]);
+
   return (
     <Stack
       component="ul"
@@ -129,7 +139,7 @@ export const SideNavSection: FC<SideNavSectionProps> = (props) => {
           {subheader}
         </Box>
       )}
-      {renderItems({ items, pathname })}
+      {renderedItems}
     </Stack>
   );
 };
