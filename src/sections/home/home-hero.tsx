@@ -28,11 +28,14 @@ export const HomeHero: FC = () => {
       <Container maxWidth="lg">
         <Box maxWidth="sm">
           <Typography variant="h1" sx={{ mb: 2 }}>
-            Die einzige &nbsp;
+            Verwalte deine Immobilien &nbsp;
             <Typography component="span" color="primary.main" variant="inherit">
-              Immobilienverwaltung &nbsp;
+              mühelos &nbsp;
             </Typography>
-            die du brauchen wirst
+            und &nbsp;
+            <Typography component="span" color="primary.main" variant="inherit">
+              effizient
+            </Typography>
           </Typography>
           <Typography
             color="text.secondary"
@@ -41,10 +44,10 @@ export const HomeHero: FC = () => {
               fontWeight: 500,
             }}
           >
-            A professional kit that comes with ready-to-use MUI components developed with one common goal in mind, help
-            you build faster & beautiful applications.
+            Unsere benutzerfreundliche Software macht es einfach, deine Immobilien effizient zu verwalten. Behalte den
+            Überblick über Mietzahlungen, Reparaturen und mehr – alles auf einen Blick
           </Typography>
-          <Stack alignItems="center" direction="row" flexWrap="wrap" spacing={1} sx={{ my: 3 }}>
+          {/* <Stack alignItems="center" direction="row" flexWrap="wrap" spacing={1} sx={{ my: 3 }}>
             <Rating readOnly value={4.7} precision={0.1} max={5} />
             <Typography color="text.primary" variant="caption" sx={{ fontWeight: 700 }}>
               4.7/5
@@ -52,8 +55,8 @@ export const HomeHero: FC = () => {
             <Typography color="text.secondary" variant="caption">
               based on (70+ reviews)
             </Typography>
-          </Stack>
-          <Stack alignItems="center" direction="row" spacing={2}>
+          </Stack> */}
+          {/* <Stack alignItems="center" direction="row" spacing={2}>
             <Button
               component={RouterLink}
               href={paths.landlordportal.dashboard.index}
@@ -95,7 +98,7 @@ export const HomeHero: FC = () => {
             >
               Components
             </Button>
-          </Stack>
+          </Stack> */}
         </Box>
 
         {/* <Box
