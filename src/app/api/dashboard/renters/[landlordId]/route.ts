@@ -68,12 +68,16 @@ async function sendInvite(createdRenter: ClientRenter) {
     username: "api",
     key: process.env.NEXT_PUBLIC_API_KEY ?? "",
   });
+  const buildRegisterLink =
+    process.env.NODE_ENV === "production"
+      ? `https://immo-web.vercel.app/auth/firebase/register/invite/:renterId?renterId=${createdRenter.id}`
+      : `http://localhost:3000/auth/firebase/register/invite/:renterId?renterId=${createdRenter.id}`;
   mg.messages
     .create("sandbox586512d4d8d94bb3b7cede5505516700.mailgun.org", {
       from: "Mailgun Sandbox <postmaster@sandbox586512d4d8d94bb3b7cede5505516700.mailgun.org>",
       to: [createdRenter.email],
       subject: "Sie wurden von Ihren Mieter in das Mieterportal eingeladen!",
-      text: `Klicken Sie auf diesen Link, um sich in das Portal anzumelden: http://localhost:3000/auth/firebase/register/invite/:renterId?renterId=${createdRenter.id}`,
+      text: `Klicken Sie auf diesen Link, um sich in das Portal anzumelden: ${buildRegisterLink}`,
     })
     .then((msg) => console.log(msg))
     .catch((err) => console.log(err));

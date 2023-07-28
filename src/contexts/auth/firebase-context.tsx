@@ -123,7 +123,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const signInWithGoogle = useCallback(async (): Promise<void> => {
     const provider = new GoogleAuthProvider();
-
     await signInWithPopup(auth, provider);
   }, []);
 
