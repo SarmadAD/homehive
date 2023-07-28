@@ -27,8 +27,8 @@ export const AuthGuard: FC<AuthGuardProps> = (props) => {
     () => {
       if (!isAuthenticated) {
         const searchParams = new URLSearchParams({ returnTo: window.location.href }).toString();
-        const href = loginPaths[issuer] + `?${searchParams}`;
-        router.replace(href);
+        // const href = loginPaths[issuer] + `?${searchParams}`;
+        // router.replace(href);
       } else {
         setChecked(true);
       }

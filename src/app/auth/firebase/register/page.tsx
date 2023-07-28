@@ -26,7 +26,7 @@ import { useRouter } from "src/hooks/use-router";
 import { useSearchParams } from "src/hooks/use-search-params";
 import { paths } from "src/paths";
 import { AuthIssuer } from "src/sections/auth/auth-issuer";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 
@@ -160,7 +160,7 @@ const Page = () => {
                     mt: 2,
                   }}
                 >
-                  <Box sx={{ flexGrow: 1 }}>
+                  {/* <Box sx={{ flexGrow: 1 }}>
                     <Divider orientation="horizontal" />
                   </Box>
                   <Typography color="text.secondary" sx={{ m: 2 }} variant="body1">
@@ -168,10 +168,10 @@ const Page = () => {
                   </Typography>
                   <Box sx={{ flexGrow: 1 }}>
                     <Divider orientation="horizontal" />
-                  </Box>
+                  </Box> */}
                 </Box>
               </Box>
-              <Stack spacing={3}>
+              {/* <Stack spacing={3}>
                 <TextField
                   error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
@@ -223,13 +223,10 @@ const Page = () => {
                 <Button disabled={formik.isSubmitting} fullWidth size="large" type="submit" variant="contained">
                   Register
                 </Button>
-              </Box>
+              </Box> */}
             </form>
           </CardContent>
         </Card>
-        <Box sx={{ mt: 3 }}>
-          <AuthIssuer issuer={issuer} />
-        </Box>
       </div>
     </>
   );

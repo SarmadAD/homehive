@@ -141,7 +141,7 @@ const Page: PageType = () => {
                     mt: 2,
                   }}
                 >
-                  <Box sx={{ flexGrow: 1 }}>
+                  {/* <Box sx={{ flexGrow: 1 }}>
                     <Divider orientation="horizontal" />
                   </Box>
                   <Typography color="text.secondary" sx={{ m: 2 }} variant="body1">
@@ -149,10 +149,10 @@ const Page: PageType = () => {
                   </Typography>
                   <Box sx={{ flexGrow: 1 }}>
                     <Divider orientation="horizontal" />
-                  </Box>
+                  </Box> */}
                 </Box>
               </Box>
-              <Stack spacing={3}>
+              {/* <Stack spacing={3}>
                 <TextField
                   error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
@@ -185,13 +185,10 @@ const Page: PageType = () => {
                 <Button disabled={formik.isSubmitting} fullWidth size="large" type="submit" variant="contained">
                   Log In
                 </Button>
-              </Box>
+              </Box> */}
             </form>
           </CardContent>
         </Card>
-        <Stack spacing={3} sx={{ mt: 3 }}>
-          <AuthIssuer issuer={issuer} />
-        </Stack>
       </div>
     </>
   );
