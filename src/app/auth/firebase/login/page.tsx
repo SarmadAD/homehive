@@ -189,9 +189,6 @@ const Page: PageType = () => {
             </form>
           </CardContent>
         </Card>
-        <Stack spacing={3} sx={{ mt: 3 }}>
-          <AuthIssuer issuer={issuer} />
-        </Stack>
       </div>
     </>
   );

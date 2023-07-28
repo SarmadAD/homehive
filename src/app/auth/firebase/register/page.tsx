@@ -26,7 +26,7 @@ import { useRouter } from "src/hooks/use-router";
 import { useSearchParams } from "src/hooks/use-search-params";
 import { paths } from "src/paths";
 import { AuthIssuer } from "src/sections/auth/auth-issuer";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 
@@ -227,9 +227,6 @@ const Page = () => {
             </form>
           </CardContent>
         </Card>
-        <Box sx={{ mt: 3 }}>
-          <AuthIssuer issuer={issuer} />
-        </Box>
       </div>
     </>
   );
