@@ -7,7 +7,7 @@ export async function GET(request: Request, { params }: { params: { landlordId: 
   const { landlordId } = params;
   if (landlordId) {
     const rentalObjects = await prisma.rentalObject.findMany({
-      where: { landlordId: landlordId },
+      where: { landlordId: landlordId, state: 1 },
       include: { renter: true, rentalObjectInfo: true, repairRequests: true, rentPayment: true },
     });
     if (rentalObjects.length > 0) {

@@ -19,10 +19,10 @@ const objects = {
   details: (objectId: string) => requests.get<RentalObject>(`/api/dashboard/objects/object/${objectId}`),
   create: (object: RentalObject) => requests.post<RentalObject>(`/api/dashboard/objects/${object.landlord.id}`, object),
   update: (object: RentalObject) => requests.put<void>(`/api/dashboard/objects/object/${object.id}`, object),
+  delete: (id: string) => requests.del<void>(`/api/dashboard/objects/object/${id}`),
   rentalObjectInfo: (id: string) => requests.get<RentalObjectInfo>(`/rentalObjectInfo/${id}`),
   updateRepairRequest: (repairRequest: RepairRequest) =>
     requests.put<void>(`/api/dashboard/objects/object/repairRequest/${repairRequest.id}`, repairRequest),
-  //   delete: (id: string) => requests.del<void>(`/activities/${id}`),
   //   attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
 };
 

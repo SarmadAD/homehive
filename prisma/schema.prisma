@@ -28,6 +28,7 @@ model RentalObject {
   landlordId             String
   rentPayment            RentPayment[]
   rentalAgreement        RentalAgreement[]
+  state                  Int                @default(1)
 
   @@index([rentalObjectInfoId])
   @@index([landlordId])

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useMemo, useRef } from "react";
+import { ChangeEvent, MouseEvent, MouseEventHandler, useMemo, useRef } from "react";
 import { useCallback, useEffect, useState } from "react";
 import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
@@ -20,6 +20,8 @@ import {
   Typography,
   Unstable_Grid2 as Grid,
   CircularProgress,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -48,6 +50,8 @@ import { RepairRequest } from "prisma/types/repairRequest";
 import { Renter } from "prisma/types/renter";
 import agent from "src/api/agent";
 import { SplashScreen } from "src/components/splash-screen";
+import { DeleteOutline } from "@mui/icons-material";
+import { useRouter } from "src/hooks/use-router";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -82,6 +86,7 @@ const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
   const searchParams = useSearchParams();
   const objectId = searchParams.get("objectId");
+  const router = useRouter();
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
@@ -100,6 +105,29 @@ const Page: PageType = () => {
 
   const currentRenter = useCurrentRenter(rentalObject?.renter as Renter[], dialog.data);
   const currentRepairRequest = useCurrentRepairRequest(rentalObject?.repairRequests as RepairRequest[], dialog.data);
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDeleteClick = async () => {
+    try {
+      if (rentalObject?.id) {
+        await agent.objects.delete(rentalObject.id);
+        router.push("/landlordportal/dashboard/objects");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setAnchorEl(null);
+    }
+  };
 
   usePageView();
 
@@ -263,7 +291,7 @@ const Page: PageType = () => {
                         }
                         href={`${paths.landlordportal.dashboard.objects.edit}${rentalObject.id}`}
                       >
-                        Edit
+                        Ändern
                       </Button>
                       <Button
                         endIcon={
@@ -272,9 +300,27 @@ const Page: PageType = () => {
                           </SvgIcon>
                         }
                         variant="contained"
+                        onClick={handleMenuOpen}
                       >
-                        Actions
+                        Aktionen
                       </Button>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                        PaperProps={{
+                          style: {
+                            maxHeight: 48 * 4.5,
+                          },
+                        }}
+                      >
+                        <MenuItem onClick={handleDeleteClick}>
+                          <SvgIcon>
+                            <DeleteOutline />
+                          </SvgIcon>
+                          Löschen
+                        </MenuItem>
+                      </Menu>
                     </Stack>
                   </Stack>
                   <div>
