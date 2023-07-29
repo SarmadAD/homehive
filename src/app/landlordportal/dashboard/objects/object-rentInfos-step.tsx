@@ -16,11 +16,6 @@ interface ObjectRentInfosStep {
   showDueDateAndRenter: boolean;
 }
 
-type OptionRenter = {
-  surname: string;
-  firstname: string;
-};
-
 export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
   const { onBack, onNext, newObject, setNewObject, showDueDateAndRenter, ...other } = props;
 

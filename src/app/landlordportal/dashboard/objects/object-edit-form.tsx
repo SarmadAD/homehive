@@ -93,7 +93,7 @@ export const ObjectEditForm: FC = () => {
     ];
   }, [handleBack, handleNext, handleComplete, object]);
 
-  async function updateRentalObject() {
+  async function updateRentalObject(object: RentalObject) {
     try {
       if (object) {
         await agent.objects.update(object);
@@ -105,12 +105,13 @@ export const ObjectEditForm: FC = () => {
 
   useEffect(() => {
     if (isComplete && object) {
+      const newObject: RentalObject = { ...object, status: object.renter.length > 0 ? "INHABITED" : "UNINHABITED" };
       setObject({
         ...object,
         status: object.renter.length > 0 ? "INHABITED" : "UNINHABITED",
       });
 
-      updateRentalObject();
+      updateRentalObject(newObject);
       setIsComplete(false);
       router.push("/landlordportal/dashboard/objects");
     }

@@ -9,15 +9,22 @@ import { useSearchParams } from "next/navigation";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { ObjectEditForm } from "../../object-edit-form";
+import { SplashScreen } from "src/components/splash-screen";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import { AuthContextType } from "src/contexts/auth/firebase";
+import { useAuth } from "src/hooks/use-auth";
+import agent from "src/api/agent";
 
 const Page: PageType = () => {
   usePageView();
 
   const rentalObject = useRecoilValue(rentalObjectAtom);
   const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
-
   const searchParams = useSearchParams();
   const objectId = searchParams.get("objectId");
+
+  const setLandlord = useSetRecoilState(currentUserAtom);
+  const { user } = useAuth<AuthContextType>();
 
   async function setRentalObjectId() {
     if (objectId) {
@@ -27,24 +34,27 @@ const Page: PageType = () => {
 
   useEffect(
     () => {
+      getLandlord();
       setRentalObjectId();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  if (!rentalObject) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mt: 3,
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+  async function getLandlord() {
+    try {
+      const firebaseUserId = user?.id;
+      if (firebaseUserId) {
+        const landlord = await agent.landlord.details(firebaseUserId);
+        setLandlord(landlord);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (!rentalObject.id) {
+    return <SplashScreen />;
   }
 
   return (
