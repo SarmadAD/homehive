@@ -1,7 +1,8 @@
-import type { FC, ReactNode } from 'react';
-import PropTypes from 'prop-types';
-import { Stack } from '@mui/material';
-import { TopNavItem } from './top-nav-item';
+import type { FC, ReactNode } from "react";
+import PropTypes from "prop-types";
+import { Stack } from "@mui/material";
+import { TopNavItem } from "./top-nav-item";
+import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 interface Item {
   disabled?: boolean;
@@ -28,9 +29,9 @@ export const TopNavSection: FC<TopNavSectionProps> = (props) => {
       direction="row"
       spacing={1}
       sx={{
-        listStyle: 'none',
+        listStyle: "none",
         m: 0,
-        p: 0
+        p: 0,
       }}
     >
       {items.map((item) => {
@@ -57,16 +58,20 @@ export const TopNavSection: FC<TopNavSectionProps> = (props) => {
         // Leaf
 
         return (
-          <TopNavItem
-            active={exactMatch}
-            disabled={item.disabled}
-            external={item.external}
-            icon={item.icon}
-            key={item.title}
-            label={item.label}
-            path={item.path}
-            title={item.title}
-          />
+          <>
+            <RoleBasedGuard permission={item.path ?? ""}>
+              <TopNavItem
+                active={exactMatch}
+                disabled={item.disabled}
+                external={item.external}
+                icon={item.icon}
+                key={item.title}
+                label={item.label}
+                path={item.path}
+                title={item.title}
+              />
+            </RoleBasedGuard>
+          </>
         );
       })}
     </Stack>
@@ -76,5 +81,5 @@ export const TopNavSection: FC<TopNavSectionProps> = (props) => {
 TopNavSection.propTypes = {
   items: PropTypes.array,
   pathname: PropTypes.string,
-  subheader: PropTypes.string
+  subheader: PropTypes.string,
 };

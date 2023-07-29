@@ -1,4 +1,4 @@
-import { useMemo, type FC, type ReactNode } from "react";
+import { useMemo, type FC, type ReactNode, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Box, Stack } from "@mui/material";
 import { SideNavItem } from "./side-nav-item";
@@ -109,8 +109,24 @@ interface SideNavSectionProps {
 
 export const SideNavSection: FC<SideNavSectionProps> = (props) => {
   const { items = [], pathname, subheader = "", ...other } = props;
+  const [isLoading, setIsLoading] = useState(false);
 
-  const renderedItems = useMemo(() => renderItems({ items, pathname }), [items, pathname]);
+  function createRenterItems() {
+    try {
+      if (items.length > 0) {
+        setIsLoading(true);
+        const renderedItems = renderItems({ items, pathname });
+        setIsLoading(false);
+        return renderedItems;
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      return []; // Return an empty array if there's an error to avoid rendering anything
+    }
+  }
+
+  const renderedItems = useMemo(() => createRenterItems(), [items, pathname]);
 
   return (
     <Stack
@@ -139,11 +155,10 @@ export const SideNavSection: FC<SideNavSectionProps> = (props) => {
           {subheader}
         </Box>
       )}
-      {renderedItems}
+      {isLoading ? <div></div> : renderedItems}
     </Stack>
   );
 };
-
 SideNavSection.propTypes = {
   items: PropTypes.array,
   pathname: PropTypes.string,
