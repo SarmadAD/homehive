@@ -49,6 +49,7 @@ model Renter {
   rentPayment       RentPayment[]
   rentalAgreement   RentalAgreement? @relation(fields: [rentalAgreementId], references: [id])
   rentalAgreementId String?          @unique
+  state             Int              @default(1)
 
   @@index([rentalObjectId])
   @@index([rentalAgreementId])

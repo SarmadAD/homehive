@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "src/app/db/db";
 
@@ -34,5 +35,34 @@ export async function PUT(request: Request, { params }: { params: { renterId: st
       return NextResponse.json(renter);
     }
     return NextResponse.json({ error: "renter not found" });
+  }
+}
+
+export async function DELETE(request: Request, { params }: { params: { renterId: string } }) {
+  try {
+    const { renterId } = params;
+    if (renterId) {
+      const deletedRenter = await prisma.renter.update({
+        where: { id: renterId },
+        data: {
+          state: 0,
+        },
+      });
+      if (deletedRenter) {
+        return NextResponse.json(deletedRenter);
+      }
+    }
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientUnknownRequestError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientRustPanicError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientInitializationError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientValidationError) {
+      return NextResponse.json({ error: e.message });
+    }
   }
 }

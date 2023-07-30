@@ -39,6 +39,7 @@ const renters = {
   list: (landlordId: string) => requests.get<Renter[]>(`/api/dashboard/renters/${landlordId}`),
   details: (renterId: string) => requests.get<Renter>(`/api/dashboard/renters/renter/${renterId}`),
   create: (renter: Renter, landlordId: string) => requests.post<void>(`/api/dashboard/renters/${landlordId}`, renter),
+  delete: (id: string) => requests.del<void>(`/api/dashboard/renters/renter/${id}`),
   updateFirebaseUserId: (renterId: string, firebaseUserId: string) =>
     requests.put<void>(`/api/dashboard/renters/renter/${renterId}`, firebaseUserId),
 };

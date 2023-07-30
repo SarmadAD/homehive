@@ -13,7 +13,8 @@ export async function GET(request: Request, { params }: { params: { landlordId: 
       include: { renters: true },
     });
     if (landlords && landlords.renters.length > 0) {
-      return NextResponse.json(landlords.renters);
+      const filterRenterWithStateZero = landlords.renters.filter((renter) => renter.state !== 0);
+      return NextResponse.json(filterRenterWithStateZero);
     }
     return NextResponse.json({ error: "error" });
   }

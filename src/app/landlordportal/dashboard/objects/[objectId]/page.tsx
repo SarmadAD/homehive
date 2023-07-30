@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, MouseEvent, MouseEventHandler, useMemo, useRef } from "react";
+import { ChangeEvent, MouseEvent, useMemo, useRef } from "react";
 import { useCallback, useEffect, useState } from "react";
 import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
@@ -354,8 +354,8 @@ const Page: PageType = () => {
                 )}
                 {currentTab === "renter" && (
                   <RenterListTable
-                    count={rentalObject.renter.length}
-                    items={rentalObject.renter as Renter[]}
+                    count={rentalObject.renter.filter((renter) => renter.state !== 0).length}
+                    items={rentalObject.renter.filter((renter) => renter.state !== 0) as Renter[]}
                     onDeselectAll={rentersSelection.handleDeselectAll}
                     onDeselectOne={rentersSelection.handleDeselectOne}
                     onPageChange={rentersSearch.handlePageChange}

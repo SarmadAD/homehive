@@ -176,22 +176,24 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                       <TableCell>
                         <Stack alignItems="center" direction="row" spacing={1}>
                           <AvatarGroup max={3}>
-                            {object.renter?.map((renter) => (
-                              <Tooltip
-                                key={getRenterName(renter.firstname, renter.surname)}
-                                title={getRenterName(renter.firstname, renter.surname)}
-                              >
-                                <Avatar
-                                  src={object.image}
-                                  sx={{
-                                    height: 42,
-                                    width: 42,
-                                  }}
+                            {object.renter
+                              ?.filter((renter) => renter.state !== 0)
+                              .map((renter) => (
+                                <Tooltip
+                                  key={getRenterName(renter.firstname, renter.surname)}
+                                  title={getRenterName(renter.firstname, renter.surname)}
                                 >
-                                  {getInitials(getRenterName(renter.firstname, renter.surname))}
-                                </Avatar>
-                              </Tooltip>
-                            ))}
+                                  <Avatar
+                                    src={object.image}
+                                    sx={{
+                                      height: 42,
+                                      width: 42,
+                                    }}
+                                  >
+                                    {getInitials(getRenterName(renter.firstname, renter.surname))}
+                                  </Avatar>
+                                </Tooltip>
+                              ))}
                           </AvatarGroup>
                         </Stack>
                       </TableCell>
