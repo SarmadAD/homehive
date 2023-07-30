@@ -96,9 +96,6 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
           <Button color="inherit" size="small">
             Delete
           </Button>
-          <Button color="inherit" size="small">
-            Edit
-          </Button>
         </Stack>
       )}
       <Scrollbar>

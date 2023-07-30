@@ -65,7 +65,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
 
   return (
     <Box sx={{ position: "relative" }}>
-      {enableBulkActions && (
+      {/* {enableBulkActions && (
         <Stack
           direction="row"
           spacing={2}
@@ -100,12 +100,12 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
             Edit
           </Button>
         </Stack>
-      )}
+      )} */}
       <Scrollbar>
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox">
+              {/* <TableCell padding="checkbox">
                 <Checkbox
                   checked={selectedAll}
                   indeterminate={selectedSome}
@@ -117,7 +117,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                     }
                   }}
                 />
-              </TableCell>
+              </TableCell> */}
               <TableCell>Name</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Mieter</TableCell>
@@ -133,7 +133,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
 
                   return (
                     <TableRow hover key={object.id} selected={isSelected}>
-                      <TableCell padding="checkbox">
+                      {/* <TableCell padding="checkbox">
                         <Checkbox
                           checked={isSelected}
                           onChange={(event: ChangeEvent<HTMLInputElement>): void => {
@@ -145,7 +145,7 @@ export const ObjectListTable: FC<ObjectListTableProps> = (props) => {
                           }}
                           value={isSelected}
                         />
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell>
                         <Stack alignItems="center" direction="row" spacing={1}>
                           <Avatar
