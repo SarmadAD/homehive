@@ -28,6 +28,7 @@ export type Renter = Prisma.RenterGetPayload<typeof renter>;
 export const renterDefault: Renter = {
   id: "",
   createdAt: new Date(),
+  state: 1,
   firstname: "",
   surname: "",
   image: "",
@@ -43,6 +44,7 @@ export const renterDefault: Renter = {
   rentalObject: {
     id: "",
     createdAt: new Date(),
+    state: 1,
     name: "",
     image: "",
     status: RentalObjectStatus.UNINHABITED,

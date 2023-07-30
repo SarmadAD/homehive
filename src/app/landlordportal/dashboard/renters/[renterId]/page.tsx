@@ -1,10 +1,9 @@
 "use client";
 
 import { ChangeEvent } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, MouseEvent } from "react";
 import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
-import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import {
   Avatar,
   Box,
@@ -19,7 +18,8 @@ import {
   Tabs,
   Typography,
   Unstable_Grid2 as Grid,
-  CircularProgress,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -35,12 +35,16 @@ import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
 import { renterAtom } from "src/state/atoms/renterAtom";
 import { getRenterName } from "src/utils/get-renter-name";
 import { SplashScreen } from "src/components/splash-screen";
+import { DeleteOutline } from "@mui/icons-material";
+import agent from "src/api/agent";
+import { useRouter } from "src/hooks/use-router";
 
 const tabs = [{ label: "Details", value: "details" }];
 
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
 
+  const router = useRouter();
   const renter = useRecoilValue(renterAtom);
   usePageView();
 
@@ -54,6 +58,29 @@ const Page: PageType = () => {
       setSelectedRenterIdAtom(renterId.toString() ?? "");
     }
   }
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDeleteClick = async () => {
+    try {
+      if (renter?.id) {
+        await agent.renters.delete(renter.id);
+        router.push("/landlordportal/dashboard/renters");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setAnchorEl(null);
+    }
+  };
 
   useEffect(
     () => {
@@ -159,9 +186,27 @@ const Page: PageType = () => {
                         </SvgIcon>
                       }
                       variant="contained"
+                      onClick={handleMenuOpen}
                     >
-                      Actions
+                      Aktionen
                     </Button>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleMenuClose}
+                      PaperProps={{
+                        style: {
+                          maxHeight: 48 * 4.5,
+                        },
+                      }}
+                    >
+                      <MenuItem onClick={handleDeleteClick}>
+                        <SvgIcon>
+                          <DeleteOutline />
+                        </SvgIcon>
+                        Löschen
+                      </MenuItem>
+                    </Menu>
                   </Stack>
                 </Stack>
                 <div>

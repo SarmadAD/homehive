@@ -23,6 +23,7 @@ export type RentalObject = Prisma.RentalObjectGetPayload<typeof rentalObject>;
 export const rentalObjectDefault: RentalObject = {
   id: "",
   createdAt: new Date(),
+  state: 1,
   name: "",
   image: "",
   status: RentalObjectStatus.UNINHABITED,

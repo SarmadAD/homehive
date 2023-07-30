@@ -22,6 +22,35 @@ export async function GET(request: Request, { params }: { params: { objectId: st
   }
 }
 
+export async function DELETE(request: Request, { params }: { params: { objectId: string } }) {
+  try {
+    const { objectId } = params;
+    if (objectId) {
+      const deletedRentalObject = await prisma.rentalObject.update({
+        where: { id: objectId },
+        data: {
+          state: 0,
+        },
+      });
+      if (deletedRentalObject) {
+        return NextResponse.json(deletedRentalObject);
+      }
+    }
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientUnknownRequestError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientRustPanicError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientInitializationError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientValidationError) {
+      return NextResponse.json({ error: e.message });
+    }
+  }
+}
+
 export async function PUT(request: Request, { params }: { params: { objectId: string } }) {
   try {
     const { objectId } = params;
