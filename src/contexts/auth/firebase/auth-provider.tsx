@@ -20,6 +20,7 @@ import type { State } from "./auth-context";
 import { AuthContext, initialState } from "./auth-context";
 import { useRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import { useRouter } from "src/hooks/use-router";
 
 const auth = getAuth(firebaseApp);
 
