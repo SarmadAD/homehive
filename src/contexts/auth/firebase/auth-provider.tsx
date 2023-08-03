@@ -100,12 +100,13 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     await signInWithEmailAndPassword(auth, email, password);
   }, []);
 
-  const signInWithGoogle = useCallback(async (): Promise<void> => {
+  const signInWithGoogle = useCallback(async (): Promise<FirebaseUser | null> => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
     if (auth.currentUser) {
       setUser({ ...user, firebaseUserId: auth.currentUser?.uid });
     }
+    return auth.currentUser;
   }, []);
 
   const _createUserWithEmailAndPassword = useCallback(async (email: string, password: string): Promise<void> => {

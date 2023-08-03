@@ -3,20 +3,7 @@
 import { useCallback } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  FormHelperText,
-  Link,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Link, Typography } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
 import type { AuthContextType } from "src/contexts/auth/firebase-context";
@@ -28,9 +15,9 @@ import { usePageView } from "src/hooks/use-page-view";
 import { useSearchParams } from "src/hooks/use-search-params";
 import { Layout as AuthLayout } from "src/layouts/auth/classic-layout";
 import { paths } from "src/paths";
-import { AuthIssuer } from "src/sections/auth/auth-issuer";
 import type { Page as PageType } from "src/types/page";
 import { Issuer } from "src/utils/auth";
+import agent from "src/api/agent";
 
 interface Values {
   email: string;
@@ -53,7 +40,7 @@ const Page: PageType = () => {
   const isMounted = useMounted();
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo");
-  const { issuer, signInWithEmailAndPassword, signInWithGoogle } = useAuth<AuthContextType>();
+  const { issuer, signInWithEmailAndPassword, signInWithGoogle, signOut } = useAuth<AuthContextType>();
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -79,16 +66,53 @@ const Page: PageType = () => {
 
   const handleGoogleClick = useCallback(async (): Promise<void> => {
     try {
-      await signInWithGoogle();
-
+      let path = "";
+      const user = await signInWithGoogle();
+      if (await checkIfUserIsLandlord(user)) {
+        path = returnTo || paths.landlordportal.dashboard.index;
+      } else if (await checkIfUserIsRenter(user)) {
+        path = returnTo || paths.renterportal.dashboard.objects.index;
+      } else {
+        path = returnTo || paths.notAuthorized;
+        await signOut();
+      }
       if (isMounted()) {
-        // returnTo could be an absolute path
-        window.location.href = returnTo || paths.landlordportal.dashboard.index;
+        window.location.href = path;
       }
     } catch (err) {
       console.error(err);
     }
   }, [signInWithGoogle, isMounted, returnTo]);
+
+  async function checkIfUserIsLandlord(user: any) {
+    let result = false;
+    try {
+      const landlord = await agent.landlord.details(user.uid);
+      if ("error" in landlord) {
+        throw new Error(String(landlord.error));
+      } else {
+        result = true;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
+  }
+
+  async function checkIfUserIsRenter(user: any) {
+    let result = false;
+    try {
+      const renter = await agent.renter.details(user.uid);
+      if ("error" in renter) {
+        throw new Error(String(renter.error));
+      } else {
+        result = true;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
+  }
 
   usePageView();
 
