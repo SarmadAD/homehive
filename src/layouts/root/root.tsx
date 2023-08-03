@@ -1,6 +1,6 @@
 "use client";
 
-import type { FC, ReactNode } from "react";
+import { type FC, type ReactNode } from "react";
 import Head from "next/head";
 import { NextAppDirEmotionCacheProvider } from "tss-react/next/appDir";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -36,7 +36,6 @@ export const Layout: FC<LayoutProps> = (props: LayoutProps) => {
 
   useAnalytics(gtmConfig);
   useNProgress();
-
   return (
     <NextAppDirEmotionCacheProvider options={{ key: "css" }}>
       <RecoilRoot>

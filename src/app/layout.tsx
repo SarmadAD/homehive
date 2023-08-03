@@ -7,7 +7,7 @@ import "simplebar-react/dist/simplebar.min.css";
 // Remove if mapbox is not used
 import "mapbox-gl/dist/mapbox-gl.css";
 
-import type { FC, ReactNode } from "react";
+import { type FC, type ReactNode } from "react";
 import { cookies } from "next/headers";
 
 import { Layout as RootLayout } from "src/layouts/root";
@@ -79,7 +79,6 @@ interface LayoutProps {
 
 const Layout = (props: LayoutProps) => {
   const { children } = props;
-
   const settings = restoreSettings();
 
   return (
