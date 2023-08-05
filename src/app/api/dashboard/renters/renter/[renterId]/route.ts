@@ -16,25 +16,39 @@ export async function GET(request: Request, { params }: { params: { renterId: st
 }
 
 export async function PUT(request: Request, { params }: { params: { renterId: string } }) {
-  const { renterId } = params;
-  const firebaseUserId: string = await request.text();
-  if (renterId) {
-    const renter = await prisma.renter.update({
-      where: { id: renterId },
-      data: {
-        firebaseUserId: firebaseUserId,
-      },
-    });
-    await prisma.userRole.create({
-      data: {
-        firebaseUserId: firebaseUserId,
-        role: { connect: { id: "20f9fbe2-0855-11ee-be56-0242ac120052" } },
-      },
-    });
-    if (renter) {
-      return NextResponse.json(renter);
+  try {
+    const { renterId } = params;
+    const firebaseUserId: string = await request.text();
+    if (renterId) {
+      const renter = await prisma.renter.update({
+        where: { id: renterId },
+        data: {
+          firebaseUserId: firebaseUserId,
+        },
+      });
+      await prisma.userRole.create({
+        data: {
+          firebaseUserId: firebaseUserId,
+          role: { connect: { id: "20f9fbe2-0855-11ee-be56-0242ac120052" } },
+        },
+      });
+      if (renter) {
+        return NextResponse.json(renter);
+      }
+      return NextResponse.json({ error: "renter not found" });
     }
-    return NextResponse.json({ error: "renter not found" });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientUnknownRequestError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientRustPanicError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientInitializationError) {
+      return NextResponse.json({ error: e.message });
+    } else if (e instanceof Prisma.PrismaClientValidationError) {
+      return NextResponse.json({ error: e.message });
+    }
   }
 }
 
