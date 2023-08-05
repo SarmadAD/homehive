@@ -1,9 +1,15 @@
-import type { FC, ReactNode } from 'react';
-import propTypes from 'prop-types';
-import CheckIcon from '@untitled-ui/icons-react/build/esm/Check';
-import type { SxProps } from '@mui/system';
-import type { Theme } from '@mui/material';
-import { Box, Button, Card, Divider, Stack, SvgIcon, Typography } from '@mui/material';
+import type { FC, ReactNode } from "react";
+import propTypes from "prop-types";
+import CheckIcon from "@untitled-ui/icons-react/build/esm/Check";
+import type { SxProps } from "@mui/system/styleFunctionSx";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
+import SvgIcon from "@mui/material/SvgIcon";
+import Typography from "@mui/material/Typography";
+import type { Theme } from "@mui/material/styles/createTheme";
 
 interface PricingPlanProps {
   cta: string;
@@ -18,25 +24,14 @@ interface PricingPlanProps {
 }
 
 export const PricingPlan: FC<PricingPlanProps> = (props) => {
-  const {
-    cta,
-    currency,
-    description,
-    features,
-    icon,
-    name,
-    popular,
-    price,
-    sx,
-    ...other
-  } = props;
+  const { cta, currency, description, features, icon, name, popular, price, sx, ...other } = props;
 
   return (
     <Card
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        ...sx
+        display: "flex",
+        flexDirection: "column",
+        ...sx,
       }}
       {...other}
     >
@@ -44,12 +39,12 @@ export const PricingPlan: FC<PricingPlanProps> = (props) => {
         <Box
           sx={{
             height: 52,
-            width: 52
+            width: 52,
           }}
         >
           {icon}
         </Box>
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: "flex" }}>
           <Typography variant="h4">
             {currency}
             {price}
@@ -57,41 +52,31 @@ export const PricingPlan: FC<PricingPlanProps> = (props) => {
           <Typography
             color="text.secondary"
             sx={{
-              alignSelf: 'flex-end',
-              ml: 1
+              alignSelf: "flex-end",
+              ml: 1,
             }}
             variant="subtitle2"
           >
             /mo
           </Typography>
         </Box>
-        <Typography
-          sx={{ mt: 2 }}
-          variant="h6"
-        >
+        <Typography sx={{ mt: 2 }} variant="h6">
           {name}
         </Typography>
-        <Typography
-          color="text.secondary"
-          sx={{ mt: 2 }}
-          variant="body2"
-        >
+        <Typography color="text.secondary" sx={{ mt: 2 }} variant="body2">
           {description}
         </Typography>
       </Box>
       <Divider />
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           flexGrow: 1,
-          p: 3
+          p: 3,
         }}
       >
-        <Stack
-          spacing={2}
-          sx={{ flexGrow: 1 }}
-        >
+        <Stack spacing={2} sx={{ flexGrow: 1 }}>
           {features.map((feature) => (
             <Stack
               alignItems="center"
@@ -99,17 +84,14 @@ export const PricingPlan: FC<PricingPlanProps> = (props) => {
               spacing={1}
               key={feature}
               sx={{
-                alignItems: 'center',
-                display: 'flex'
+                alignItems: "center",
+                display: "flex",
               }}
             >
               <SvgIcon color="success">
                 <CheckIcon />
               </SvgIcon>
-              <Typography
-                sx={{ fontWeight: 500 }}
-                variant="body2"
-              >
+              <Typography sx={{ fontWeight: 500 }} variant="body2">
                 {feature}
               </Typography>
             </Stack>
@@ -117,15 +99,12 @@ export const PricingPlan: FC<PricingPlanProps> = (props) => {
         </Stack>
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            mt: 6
+            display: "flex",
+            justifyContent: "center",
+            mt: 6,
           }}
         >
-          <Button
-            fullWidth
-            variant={popular ? 'contained' : 'outlined'}
-          >
+          <Button fullWidth variant={popular ? "contained" : "outlined"}>
             {cta}
           </Button>
         </Box>
@@ -143,5 +122,5 @@ PricingPlan.propTypes = {
   name: propTypes.string.isRequired,
   popular: propTypes.bool,
   price: propTypes.string.isRequired,
-  sx: propTypes.object
+  sx: propTypes.object,
 };

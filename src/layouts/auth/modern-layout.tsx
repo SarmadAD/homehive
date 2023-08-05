@@ -55,7 +55,7 @@ export const Layout: FC<LayoutProps> = (props) => {
             sx={{ mb: 1 }}
             variant="h4"
           >
-            Welcome to Devias Kit PRO
+            Welcome to Immo Web
           </Typography>
           <Typography
             color="text.secondary"
@@ -146,7 +146,7 @@ export const Layout: FC<LayoutProps> = (props) => {
                   }
                 }}
               >
-                Devias Kit <span>PRO</span>
+                Immo <span>Web</span>
               </Box>
             </Stack>
           </Box>

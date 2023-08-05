@@ -51,8 +51,7 @@ const Page = () => {
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo");
 
-  const landlord = useRecoilValue(currentUserAtom);
-  const { issuer, createUserWithEmailAndPassword, signInWithGoogle } = useAuth<AuthContextType>();
+  const { issuer, createUserWithEmailAndPassword, signInWithGoogle, signOut } = useAuth<AuthContextType>();
 
   const formik = useFormik({
     initialValues,
@@ -76,29 +75,75 @@ const Page = () => {
     },
   });
 
-  useEffect(() => {
-    const setLandLord = async () => {
-      if (landlord.firebaseUserId) {
-        await createLandlord();
-      }
-    };
-    setLandLord();
-  }, [landlord]);
+  // useEffect(() => {
+  //   const setUser = async () => {
+  //     if (user.firebaseUserId) {
+  //       await createLandlord();
+  //     }
+  //   };
+  //   setUser();
+  // }, [user]);
 
   const handleGoogleClick = useCallback(async (): Promise<void> => {
     try {
-      await signInWithGoogle();
+      //Later here the logic for desciding if user is landlord or renter
+      let path = "";
+      const user = await signInWithGoogle();
+      if (await checkIfLandlordExists(user)) {
+        //If Landlord exists, redirect to login page
+        await signOut();
+        path = returnTo || paths.auth.firebase.login;
+      } else {
+        await createLandlord(user);
+        path = returnTo || paths.landlordportal.dashboard.index;
+      }
+
+      // if (await checkIfRenterExists(user)) {
+      //   path = returnTo || paths.renterportal.dashboard.objects.index;
+      // } else {
+      //   path = returnTo || paths.notAuthorized;
+      // }
       if (isMounted()) {
-        router.push(returnTo || paths.landlordportal.dashboard.index);
+        window.location.href = path;
       }
     } catch (err) {
       console.error(err);
     }
   }, [router, signInWithGoogle, isMounted, returnTo]);
 
-  async function createLandlord() {
+  async function checkIfLandlordExists(user: any) {
+    let result = false;
     try {
-      const firebaseUserId = landlord.firebaseUserId;
+      const landlord = await agent.landlord.details(user.uid);
+      if ("error" in landlord) {
+        throw new Error(String(landlord.error));
+      } else {
+        result = true;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
+  }
+
+  // async function checkIfRenterExists(user: any) {
+  //   let result = false;
+  //   try {
+  //     const renter = await agent.renter.details(user.uid);
+  //     if ("error" in renter) {
+  //       throw new Error(String(renter.error));
+  //     } else {
+  //       result = true;
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  //   return result;
+  // }
+
+  async function createLandlord(user: any) {
+    try {
+      const firebaseUserId = user.uid;
       await agent.landlord.create(firebaseUserId);
     } catch (error) {
       console.error(error);
