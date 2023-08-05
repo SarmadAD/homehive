@@ -134,11 +134,10 @@ export const TopNav: FC<TopNavProps> = (props) => {
                     },
                   }}
                 >
-                  Devias Kit <span>PRO</span>
+                  Immo <span>Web</span>
                 </Box>
               )}
             </Stack>
-            <Chip label="v6.4.0" size="small" />
           </Stack>
           {mdUp && (
             <Stack alignItems="center" direction="row" spacing={2}>
