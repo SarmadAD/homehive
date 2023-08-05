@@ -32,13 +32,12 @@ interface Item {
 
 const items: Item[] = [
   {
-    title: "TopNavItem1",
-    path: paths.components.index,
+    title: "Startseite",
+    path: paths.index,
   },
   {
-    title: "TopNavItem2",
-    path: paths.docs,
-    external: true,
+    title: "Preis",
+    path: paths.pricing,
   },
 ];
 
