@@ -131,17 +131,6 @@ export function OverviewRentalIncome() {
 
     return Object.values(groupedRentPayments);
   };
-  //   { paymentDate: new Date("2023-07-03"), paymentAmount: 40 },
-  //   { paymentDate: new Date("2023-01-06"), paymentAmount: 40 },
-  //   { paymentDate: new Date("2023-07-06"), paymentAmount: 40 },
-  //   { paymentDate: new Date("2023-02-06"), paymentAmount: 40 },
-  //   { paymentDate: new Date("2023-07-15"), paymentAmount: 37 },
-  //   { paymentDate: new Date("2023-08-01"), paymentAmount: 41 },
-  //   { paymentDate: new Date("2023-12-12"), paymentAmount: 41 },
-  //   { paymentDate: new Date("2023-12-12"), paymentAmount: 101 },
-  //   { paymentDate: new Date("2023-03-12"), paymentAmount: 101 },
-  //   { paymentDate: new Date("2023-11-12"), paymentAmount: 101 },
-  // ];
 
   rentPayments.sort(
     (a, b) =>
@@ -168,18 +157,18 @@ export function OverviewRentalIncome() {
   return (
     <Card>
       <CardHeader
-        subheader="Basierend auf dem ausgewählten Zeitraum"
+        subheader="Basierend auf das aktuelle Jahr"
         title="Mieteinnahmen"
-        action={
-          <Tabs value="year">
-            <Tab label="Year" value="year" />
-            <Tab label="Month" value="month" />
-            <Tab label="Week" value="week" />
-          </Tabs>
-        }
+        // action={
+        //   <Tabs value="year">
+        //     <Tab label="Year" value="year" />
+        //     <Tab label="Month" value="month" />
+        //     <Tab label="Week" value="week" />
+        //   </Tabs>
+        // }
       />
-      <Box sx={{ height: 336 }}>
-        <Chart height={300} options={chartOptions} series={updatedChartSeries} type="bar" />
+      <Box sx={{ height: 250 }}>
+        <Chart height={250} options={chartOptions} series={updatedChartSeries} type="bar" />
       </Box>
     </Card>
   );
