@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { useMemo } from "react";
 import PropTypes from "prop-types";
 import Menu01Icon from "@untitled-ui/icons-react/build/esm/Menu01";
-import type { Theme } from "@mui/material";
+import type { Theme } from '@mui/material/styles/createTheme';
 import { Box, IconButton, Stack, SvgIcon, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Logo } from "src/components/logo";
@@ -61,7 +61,7 @@ const useCssVars = (color: NavColor): Record<string, string> => {
           };
         }
 
-      case "discreet":
+      case "discrete":
         if (theme.palette.mode === "dark") {
           return {
             "--nav-bg": theme.palette.neutral[900],
@@ -251,7 +251,7 @@ export const TopNav: FC<TopNavProps> = (props) => {
 };
 
 TopNav.propTypes = {
-  color: PropTypes.oneOf<NavColor>(["blend-in", "discreet", "evident"]),
+  color: PropTypes.oneOf<NavColor>(["blend-in", "discrete", "evident"]),
   onMobileNav: PropTypes.func,
   sections: PropTypes.array,
 };

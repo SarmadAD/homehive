@@ -144,6 +144,7 @@ const Page: PageType = () => {
           sx={{
             flexGrow: 1,
             py: 8,
+            backgroundColor: "background.paper",
           }}
         >
           <Container maxWidth={settings.stretch ? false : "xl"}>

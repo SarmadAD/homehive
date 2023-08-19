@@ -90,7 +90,7 @@ const Layout = (props: LayoutProps) => {
         <Fonts />
         <Vendors />
       </head>
-      <body suppressHydrationWarning={true}>
+      <body>
         <RootLayout settings={settings}>{children}</RootLayout>
       </body>
     </html>
