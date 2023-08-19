@@ -74,7 +74,7 @@ export const Layout: FC<LayoutProps> = (props) => {
                   },
                 }}
               >
-                Immo <span>Web</span>
+                Home<span>Hive</span>
               </Box>
             </Stack>
           </Stack>
