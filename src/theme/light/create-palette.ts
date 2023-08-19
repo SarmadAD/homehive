@@ -1,8 +1,9 @@
-import type { PaletteOptions } from '@mui/material';
+import { alpha } from '@mui/system/colorManipulator';
 import { common } from '@mui/material/colors';
-import { alpha } from '@mui/material/styles';
+import type { PaletteOptions } from '@mui/material/styles/createPalette';
+
+import type { ColorPreset, Contrast } from '..';
 import { error, info, neutral, success, warning } from '../colors';
-import type { ColorPreset, Contrast } from '../index';
 import { getPrimary } from '../utils';
 
 interface Config {

@@ -1,14 +1,12 @@
-import type { PaletteColor, PaletteOptions } from '@mui/material';
-import {
-  backdropClasses,
-  filledInputClasses,
-  outlinedInputClasses,
-  paperClasses,
-  tableCellClasses
-} from '@mui/material';
+import { alpha } from '@mui/system/colorManipulator';
+import { backdropClasses } from '@mui/material/Backdrop';
+import { filledInputClasses } from '@mui/material/FilledInput';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+import { paperClasses } from '@mui/material/Paper';
+import { tableCellClasses } from '@mui/material/TableCell';
 import { common } from '@mui/material/colors';
-import { alpha } from '@mui/material/styles';
 import type { Components } from '@mui/material/styles/components';
+import type { PaletteColor, PaletteOptions } from '@mui/material/styles/createPalette';
 
 interface Config {
   palette: PaletteOptions;

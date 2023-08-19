@@ -84,7 +84,7 @@ const Layout = (props: LayoutProps) => {
   return (
     <html>
       <head>
-        <title>ImmoWeb</title>
+        <title>HomeHive</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <Favicon />
         <Fonts />

@@ -1,9 +1,9 @@
 import type { FC } from "react";
 import PropTypes from "prop-types";
 import Menu01Icon from "@untitled-ui/icons-react/build/esm/Menu01";
-import type { Theme } from "@mui/material";
+import type { Theme } from "@mui/material/styles/createTheme";
 import { Box, IconButton, Stack, SvgIcon, useMediaQuery } from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import { alpha } from "@mui/system/colorManipulator";
 import { AccountButton } from "../account-button";
 import { SearchButton } from "../search-button";
 

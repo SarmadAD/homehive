@@ -1,4 +1,6 @@
-import type { Direction, ThemeOptions } from '@mui/material';
+import type { ThemeOptions } from '@mui/material/styles/createTheme';
+
+import type { Direction } from '..';
 import { createTypography } from './create-typography';
 import { createComponents } from './create-components';
 

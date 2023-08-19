@@ -18,7 +18,7 @@ export const TenantSwitch: FC<TenantSwitchProps> = (props) => {
         <Box sx={{ flexGrow: 1 }}>
           <RoleBasedGuard permission="showRenterPortalName">
             <Typography color="inherit" variant="h6">
-              Immo Web
+              HomeHive
             </Typography>
             <Typography color="neutral.400" variant="body2">
               Mieterportal
@@ -26,7 +26,7 @@ export const TenantSwitch: FC<TenantSwitchProps> = (props) => {
           </RoleBasedGuard>
           <RoleBasedGuard permission="showLandlordPortalName">
             <Typography color="inherit" variant="h6">
-              Immo Web
+              HomeHive
             </Typography>
             <Typography color="neutral.400" variant="body2">
               Vermieterportal

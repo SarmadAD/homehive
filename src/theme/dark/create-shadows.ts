@@ -1,4 +1,4 @@
-import type { Shadows } from '@mui/material';
+import type { Shadows } from '@mui/material/styles/shadows';
 
 export const createShadows = (): Shadows => {
   return [

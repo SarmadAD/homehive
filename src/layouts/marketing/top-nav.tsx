@@ -133,7 +133,7 @@ export const TopNav: FC<TopNavProps> = (props) => {
                     },
                   }}
                 >
-                  Immo <span>Web</span>
+                  Home<span>Hive</span>
                 </Box>
               )}
             </Stack>
