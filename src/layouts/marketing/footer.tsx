@@ -127,11 +127,11 @@ export const Footer: FC = (props) => (
                   },
                 }}
               >
-                Immo <span>Web</span>
+                Home<span>Hive</span>
               </Box>
             </Stack>
             <Typography color="text.secondary" variant="caption">
-              © 2023 Immo Web
+              © 2023 HomeHive
             </Typography>
           </Stack>
         </Grid>

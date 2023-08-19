@@ -84,14 +84,7 @@ const Page: PageType = () => {
           }}
         >
           <Container maxWidth={settings.stretch ? false : "xl"}>
-            <Grid
-              container
-              disableEqualOverflow
-              spacing={{
-                xs: 3,
-                lg: 4,
-              }}
-            >
+            <Grid container disableEqualOverflow spacing={{}}>
               <Grid xs={12}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
                   <div>

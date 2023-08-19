@@ -55,7 +55,7 @@ export const Layout: FC<LayoutProps> = (props) => {
             sx={{ mb: 1 }}
             variant="h4"
           >
-            Welcome to Immo Web
+            Welcome to HomeHive
           </Typography>
           <Typography
             color="text.secondary"
@@ -146,7 +146,7 @@ export const Layout: FC<LayoutProps> = (props) => {
                   }
                 }}
               >
-                Immo <span>Web</span>
+                Home<span>Hive</span>
               </Box>
             </Stack>
           </Box>

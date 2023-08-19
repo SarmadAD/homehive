@@ -36,7 +36,9 @@ export const HorizontalLayout: FC<HorizontalLayoutProps> = (props) => {
   return (
     <>
       <TopNav color={navColor} onMobileNav={mobileNav.handleOpen} sections={sections} />
-      {!lgUp && <MobileNav color={navColor} onClose={mobileNav.handleClose} open={mobileNav.open} sections={sections} />}
+      {!lgUp && (
+        <MobileNav color={navColor} onClose={mobileNav.handleClose} open={mobileNav.open} sections={sections} />
+      )}
       <HorizontalLayoutRoot>
         <HorizontalLayoutContainer>{children}</HorizontalLayoutContainer>
       </HorizontalLayoutRoot>

@@ -1,6 +1,5 @@
-import type { PaletteColor } from '@mui/material';
-import type { NeutralColors } from '@mui/material/styles';
-import { alpha } from '@mui/material/styles';
+import { alpha } from '@mui/system/colorManipulator';
+import type { ColorRange, PaletteColor } from '@mui/material/styles/createPalette';
 
 const withAlphas = (color: PaletteColor): PaletteColor => {
   return {
@@ -13,7 +12,7 @@ const withAlphas = (color: PaletteColor): PaletteColor => {
   };
 };
 
-export const neutral: NeutralColors = {
+export const neutral: ColorRange = {
   50: '#F8F9FA',
   100: '#F3F4F6',
   200: '#E5E7EB',

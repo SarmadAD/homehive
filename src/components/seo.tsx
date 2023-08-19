@@ -9,7 +9,7 @@ interface SeoProps {
 export const Seo: FC<SeoProps> = (props) => {
   const { title } = props;
 
-  const fullTitle = title ? title + " | ImmoWeb" : "ImmoWeb";
+  const fullTitle = title ? title + " | HomeHive" : "HomeHive";
 
   return (
     <Head>

@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from "react";
 import PropTypes from "prop-types";
-import type { Theme } from "@mui/material";
+import type { Theme } from "@mui/material/styles/createTheme";
 import { useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { NavColor } from "src/types/settings";
@@ -43,7 +43,9 @@ export const VerticalLayout: FC<VerticalLayoutProps> = (props) => {
     <>
       <TopNav onMobileNavOpen={mobileNav.handleOpen} />
       {lgUp && <SideNav color={navColor} sections={sections} />}
-      {!lgUp && <MobileNav color={navColor} onClose={mobileNav.handleClose} open={mobileNav.open} sections={sections} />}
+      {!lgUp && (
+        <MobileNav color={navColor} onClose={mobileNav.handleClose} open={mobileNav.open} sections={sections} />
+      )}
       <VerticalLayoutRoot>
         <VerticalLayoutContainer>{children}</VerticalLayoutContainer>
       </VerticalLayoutRoot>
