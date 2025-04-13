@@ -102,7 +102,6 @@ const Page: PageType = () => {
   usePageView();
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
-
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
   const setLandlord = useSetRecoilState(currentUserAtom);
   const objectsIds = useObjectsIds(rentalObjects);

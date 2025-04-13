@@ -88,7 +88,13 @@ export const Layout: FC<LayoutProps> = (props) => {
                     }
 
                     return (
-                      <Link color="text.primary" component={RouterLink} href={item.href} key={index} variant="subtitle2">
+                      <Link
+                        color="text.primary"
+                        component={RouterLink}
+                        href={new URL(item.href ?? "")}
+                        key={index}
+                        variant="subtitle2"
+                      >
                         {item.title}
                       </Link>
                     );

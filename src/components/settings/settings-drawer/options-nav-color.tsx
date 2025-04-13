@@ -18,7 +18,7 @@ const options: Option[] = [
   },
   {
     label: "Discrete",
-    value: "discreet",
+    value: "discrete",
   },
   {
     label: "Evident",

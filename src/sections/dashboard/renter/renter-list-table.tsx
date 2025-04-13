@@ -64,7 +64,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
   const enableBulkActions = selected.length > 0;
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: "relative", mt: 2 }}>
       {enableBulkActions && (
         <Stack
           direction="row"
@@ -128,7 +128,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                   // const statusPill = useRentPaidStatusPill(renter.status);
 
                   return (
-                    <TableRow hover key={renter.id} selected={isSelected} onClick={() => onSelect?.(renter.id)}>
+                    <TableRow hover key={renter.id} selected={isSelected}>
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isSelected}
@@ -142,7 +142,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                           value={isSelected}
                         />
                       </TableCell>
-                      <TableCell>
+                      <TableCell onClick={() => onSelect?.(renter.id)}>
                         <Stack alignItems="center" direction="row" spacing={1}>
                           <Avatar
                             src={renter.image}
@@ -169,16 +169,13 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
                         </Stack>
                       </TableCell>
                       {/* <TableCell>{statusPill}</TableCell> */}
-                      <TableCell align="right">
+                      <TableCell align="right" onClick={() => onSelect?.(renter.id)}>
                         {/* <IconButton component={RouterLink} href={paths.landlordportal.dashboard.renters.edit}>
                           <SvgIcon>
                             <Edit02Icon />
                           </SvgIcon>
                         </IconButton> */}
-                        <IconButton
-                          component={RouterLink}
-                          href={`${paths.landlordportal.dashboard.renters.details}/${renter.id}`}
-                        >
+                        <IconButton component={RouterLink} href="">
                           <SvgIcon>
                             <ArrowRightIcon />
                           </SvgIcon>
