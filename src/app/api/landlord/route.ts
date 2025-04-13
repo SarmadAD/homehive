@@ -12,15 +12,23 @@ export async function POST(request: Request) {
 
 const createLandlord = async (firebaseUserId: string) => {
   try {
-    //create landlord
+    // Get Landlord
+    const landlordRole = await prisma.role.findUnique({
+      where: { id: "debd4f38-ec0f-4ee5-98e5-6c9d42372a9e" },
+    });
+
+    if (!landlordRole) {
+      throw new Error("Role 'Landlord' not found in the database.");
+    }
+    //Create LandLord
     await prisma.landlord.create({
       data: { firebaseUserId: firebaseUserId },
     });
-    //assign user-Role Landlord
+    //Assign User-Role Landlord
     await prisma.userRole.create({
       data: {
         firebaseUserId: firebaseUserId,
-        role: { connect: { id: "20f9fbe2-0855-11ee-be56-0242ac130052" } },
+        role: { connect: { id: landlordRole.id } },
       },
     });
   } catch (error) {

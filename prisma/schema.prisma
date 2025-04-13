@@ -3,13 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model RentalObject {
-  id                     String             @id @default(uuid())
+  id                     String             @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   createdAt              DateTime           @default(now())
   name                   String
   image                  String
@@ -18,14 +18,14 @@ model RentalObject {
   houseNr                Int
   additionalHouseDetails String?            @default("")
   city                   String
-  postalCode             String
+  postalCode             Int
   areaSize               Int
   renter                 Renter[]
   repairRequests         RepairRequest[]
   rentalObjectInfo       RentalObjectInfo   @relation(fields: [rentalObjectInfoId], references: [id])
-  rentalObjectInfoId     String             @unique
+  rentalObjectInfoId     String             @unique @db.Uuid
   landlord               Landlord           @relation(fields: [landlordId], references: [id])
-  landlordId             String
+  landlordId             String             @db.Uuid 
   rentPayment            RentPayment[]
   rentalAgreement        RentalAgreement[]
   state                  Int                @default(1)
@@ -35,12 +35,12 @@ model RentalObject {
 }
 
 model Renter {
-  id                String           @id @default(uuid())
+  id                String           @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   firebaseUserId    String
   createdAt         DateTime         @default(now())
   surname           String
   firstname         String
-  email             String           @unique
+  email             String           
   image             String
   rentalObjectId    String?
   rentalObject      RentalObject?    @relation(fields: [rentalObjectId], references: [id])
@@ -48,7 +48,7 @@ model Renter {
   landlords         Landlord[]
   rentPayment       RentPayment[]
   rentalAgreement   RentalAgreement? @relation(fields: [rentalAgreementId], references: [id])
-  rentalAgreementId String?          @unique
+  rentalAgreementId String?          @unique @db.Uuid 
   state             Int              @default(1)
 
   @@index([rentalObjectId])
@@ -56,14 +56,14 @@ model Renter {
 }
 
 model Landlord {
-  id             String         @id @default(uuid())
+  id             String         @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   firebaseUserId String         @unique
   rentalObjects  RentalObject[]
   renters        Renter[]
 }
 
 model RentalObjectInfo {
-  id               String        @id @default(uuid())
+  id               String        @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   baseRent         Int
   heatingCosts     Int
   waterCosts       Int
@@ -72,13 +72,13 @@ model RentalObjectInfo {
 }
 
 model RepairRequest {
-  id             String              @id @default(uuid())
+  id             String              @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   createdAt      DateTime            @default(now())
   name           String
   status         RepairRequestStatus
   comment        String?             @default("")
   renterId       String
-  rentalObjectId String
+  rentalObjectId String              @db.Uuid  
   renter         Renter              @relation(fields: [renterId], references: [id])
   RentalObject   RentalObject        @relation(fields: [rentalObjectId], references: [id])
 
@@ -87,41 +87,41 @@ model RepairRequest {
 }
 
 model UserRole {
-  id             String @id @default(uuid())
+  id             String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   firebaseUserId String
   role           Role   @relation(fields: [roleId], references: [id])
-  roleId         String
+  roleId         String @db.Uuid 
 
   @@index([roleId])
 }
 
 model Role {
-  id       String     @id @default(uuid())
+  id       String     @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   role     String
   UserRole UserRole[]
 }
 
 model RentPayment {
-  id             String            @id @default(uuid())
+  id             String            @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   renter         Renter            @relation(fields: [renterId], references: [id])
   rentalObject   RentalObject      @relation(fields: [rentalObjectId], references: [id])
   status         RentPaymentStatus
   paymentAmount  Float
   paymentDate    DateTime?
   dueDate        DateTime
-  renterId       String
-  rentalObjectId String
+  renterId       String            @db.Uuid 
+  rentalObjectId String            @db.Uuid 
 
   @@index([renterId])
   @@index([rentalObjectId])
 }
 
 model RentalAgreement {
-  id             String        @id @default(uuid())
+  id             String        @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   dueDateState   DueDateOfRent
   renter         Renter?
   rentalObject   RentalObject  @relation(fields: [rentalObjectId], references: [id])
-  rentalObjectId String
+  rentalObjectId String        @db.Uuid 
 
   @@index([rentalObjectId])
 }

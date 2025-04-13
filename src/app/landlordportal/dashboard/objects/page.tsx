@@ -102,7 +102,6 @@ const Page: PageType = () => {
   usePageView();
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
-
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
   const setLandlord = useSetRecoilState(currentUserAtom);
   const objectsIds = useObjectsIds(rentalObjects);
@@ -144,6 +143,7 @@ const Page: PageType = () => {
           sx={{
             flexGrow: 1,
             py: 8,
+            backgroundColor: "background.paper",
           }}
         >
           <Container maxWidth={settings.stretch ? false : "xl"}>

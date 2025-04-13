@@ -15,7 +15,7 @@ export const SplashScreen: FC = () => (
       p: 3,
       position: "relative",
       top: 0,
-      width: "100vw",
+      // width: "100vw",
       zIndex: 1400,
     }}
   >

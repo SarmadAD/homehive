@@ -5,7 +5,6 @@ import type { Theme } from "@mui/material/styles/createTheme";
 import { Box, IconButton, Stack, SvgIcon, useMediaQuery } from "@mui/material";
 import { alpha } from "@mui/system/colorManipulator";
 import { AccountButton } from "../account-button";
-import { SearchButton } from "../search-button";
 
 const TOP_NAV_HEIGHT: number = 64;
 const SIDE_NAV_WIDTH: number = 280;

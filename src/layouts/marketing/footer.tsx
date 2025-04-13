@@ -67,6 +67,9 @@ const sections: Section[] = [
   },
 ];
 
+const date = new Date();
+const year = date.getFullYear();
+
 export const Footer: FC = (props) => (
   <Box
     sx={{
@@ -131,7 +134,7 @@ export const Footer: FC = (props) => (
               </Box>
             </Stack>
             <Typography color="text.secondary" variant="caption">
-              © 2023 HomeHive
+              © {year} HomeHive
             </Typography>
           </Stack>
         </Grid>

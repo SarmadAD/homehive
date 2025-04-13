@@ -1,9 +1,8 @@
-import type { Direction, PaletteMode } from '@mui/material';
-import type { ColorPreset, Contrast } from 'src/theme';
+import type { ColorPreset, Contrast, Direction, PaletteMode } from "src/theme";
 
-export type Layout = 'horizontal' | 'vertical';
+export type Layout = "horizontal" | "vertical";
 
-export type NavColor = 'blend-in' | 'discreet' | 'evident';
+export type NavColor = "blend-in" | "discrete" | "evident";
 
 export interface Settings {
   colorPreset?: ColorPreset;

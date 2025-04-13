@@ -71,7 +71,7 @@ const Page: PageType = () => {
             }}
           >
             <Stack maxWidth="sm" spacing={3}>
-              <Typography variant="h4">Erstelle ein Mieter</Typography>
+              <Typography variant="h4">Lade einen Mieter</Typography>
               <RenterCreateForm />
             </Stack>
           </Grid>

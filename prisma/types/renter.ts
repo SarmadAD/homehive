@@ -52,7 +52,7 @@ export const renterDefault: Renter = {
     houseNr: 0,
     additionalHouseDetails: "",
     city: "",
-    postalCode: "",
+    postalCode: 0,
     areaSize: 0,
     renter: [],
     repairRequests: [],

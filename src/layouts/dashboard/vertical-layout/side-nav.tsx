@@ -60,7 +60,7 @@ const useCssVars = (color: NavColor): Record<string, string> => {
           };
         }
 
-      case "discreet":
+      case "discrete":
         if (theme.palette.mode === "dark") {
           return {
             "--nav-bg": theme.palette.neutral[900],
@@ -221,6 +221,6 @@ export const SideNav: FC<SideNavProps> = (props) => {
 };
 
 SideNav.propTypes = {
-  color: PropTypes.oneOf<NavColor>(["blend-in", "discreet", "evident"]),
+  color: PropTypes.oneOf<NavColor>(["blend-in", "discrete", "evident"]),
   sections: PropTypes.array,
 };

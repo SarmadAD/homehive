@@ -21,10 +21,10 @@ const useCssVars = (color: NavColor): Record<string, string> => {
 
   return useMemo((): Record<string, string> => {
     switch (color) {
-      // Blend-in and discreet have no difference on mobile because
+      // Blend-in and discrete have no difference on mobile because
       // there's a backdrop and differences are not visible
       case "blend-in":
-      case "discreet":
+      case "discrete":
         if (theme.palette.mode === "dark") {
           return {
             "--nav-bg": theme.palette.background.default,
@@ -181,7 +181,7 @@ export const MobileNav: FC<MobileNavProps> = (props) => {
 };
 
 MobileNav.propTypes = {
-  color: PropTypes.oneOf<NavColor>(["blend-in", "discreet", "evident"]),
+  color: PropTypes.oneOf<NavColor>(["blend-in", "discrete", "evident"]),
   onClose: PropTypes.func,
   open: PropTypes.bool,
   sections: PropTypes.array,

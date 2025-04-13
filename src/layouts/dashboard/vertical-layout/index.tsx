@@ -55,6 +55,6 @@ export const VerticalLayout: FC<VerticalLayoutProps> = (props) => {
 
 VerticalLayout.propTypes = {
   children: PropTypes.node,
-  navColor: PropTypes.oneOf<NavColor>(["blend-in", "discreet", "evident"]),
+  navColor: PropTypes.oneOf<NavColor>(["blend-in", "discrete", "evident"]),
   sections: PropTypes.array,
 };
