@@ -1,6 +1,5 @@
 import type { FC, ReactNode } from "react";
 import { createContext, useCallback, useEffect, useReducer } from "react";
-import PropTypes from "prop-types";
 import type { User as FirebaseUser } from "@firebase/auth";
 import {
   createUserWithEmailAndPassword,
@@ -148,10 +147,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export const AuthConsumer = AuthContext.Consumer;

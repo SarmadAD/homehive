@@ -1,6 +1,5 @@
 import type { FC, ReactNode } from "react";
 import { useCallback, useState } from "react";
-import PropTypes from "prop-types";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
 import ChevronRightIcon from "@untitled-ui/icons-react/build/esm/ChevronRight";
 import { Box, ButtonBase, Collapse, SvgIcon } from "@mui/material";
@@ -232,16 +231,4 @@ export const MobileNavItem: FC<MobileNavItemProps> = (props) => {
       </ButtonBase>
     </li>
   );
-};
-
-MobileNavItem.propTypes = {
-  active: PropTypes.bool,
-  children: PropTypes.node,
-  depth: PropTypes.number,
-  disabled: PropTypes.bool,
-  external: PropTypes.bool,
-  icon: PropTypes.node,
-  open: PropTypes.bool,
-  path: PropTypes.string,
-  title: PropTypes.string.isRequired,
 };

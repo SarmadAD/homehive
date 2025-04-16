@@ -18,7 +18,8 @@ export const RenterSendInviteStep: FC<ObjectDetailsStepProps> = (props) => {
     <Stack spacing={3} {...other}>
       <div>
         <Typography color="text.secondary" sx={{ mt: 1 }} variant="body2">
-          Nachdem Sie auf &quot;Einladung versenden&quot; drücken, wird eine E-Mail an den Vermieter gesendet und somit der Mieter eingeladet
+          Nachdem Sie auf &quot;Einladung versenden&quot; klicken, wird eine E-Mail an dem Vermieter gesendet und somit
+          der Mieter eingeladen zu seinem seperaten Mieterportal.
         </Typography>
       </div>
       <Stack alignItems="center" direction="row" spacing={2}>
@@ -36,9 +37,4 @@ export const RenterSendInviteStep: FC<ObjectDetailsStepProps> = (props) => {
       </Stack>
     </Stack>
   );
-};
-
-RenterSendInviteStep.propTypes = {
-  onBack: PropTypes.func,
-  handleComplete: PropTypes.func,
 };

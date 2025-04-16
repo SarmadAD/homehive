@@ -5,16 +5,16 @@ import { prisma } from "src/app/db/db";
 
 export async function POST(request: Request) {
   const firebaseUserId: string = await request.text();
-  if (!firebaseUserId) return NextResponse.json({ error: "firebaseUserId not there!" });
+  if (!firebaseUserId) return NextResponse.json({ error: "firebaseUserId not there!" }, { status: 400 });
   await createLandlord(firebaseUserId);
-  return NextResponse.json({ status: "Ok" });
+  return NextResponse.json({ status: "Ok" }, { status: 200 });
 }
 
 const createLandlord = async (firebaseUserId: string) => {
   try {
     // Get Landlord
     const landlordRole = await prisma.role.findUnique({
-      where: { id: "debd4f38-ec0f-4ee5-98e5-6c9d42372a9e" },
+      where: { id: "20f9fbe2-0855-11ee-be56-0242ac120055" },
     });
 
     if (!landlordRole) {

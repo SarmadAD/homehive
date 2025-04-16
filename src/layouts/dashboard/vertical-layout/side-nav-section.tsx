@@ -159,8 +159,3 @@ export const SideNavSection: FC<SideNavSectionProps> = (props) => {
     </Stack>
   );
 };
-SideNavSection.propTypes = {
-  items: PropTypes.array,
-  pathname: PropTypes.string,
-  subheader: PropTypes.string,
-};

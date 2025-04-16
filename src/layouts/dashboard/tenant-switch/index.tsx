@@ -2,7 +2,6 @@ import type { FC } from "react";
 import PropTypes from "prop-types";
 import { SxProps } from "@mui/system";
 import { Box, Stack, Typography } from "@mui/material";
-import { usePopover } from "src/hooks/use-popover";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 interface TenantSwitchProps {
@@ -10,8 +9,6 @@ interface TenantSwitchProps {
 }
 
 export const TenantSwitch: FC<TenantSwitchProps> = (props) => {
-  const popover = usePopover<HTMLButtonElement>();
-
   return (
     <>
       <Stack alignItems="center" direction="row" spacing={2} {...props}>

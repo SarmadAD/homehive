@@ -1,14 +1,13 @@
-import type { FC, ReactNode } from 'react';
-import { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
-import ChevronDownIcon from '@untitled-ui/icons-react/build/esm/ChevronDown';
-import ChevronRightIcon from '@untitled-ui/icons-react/build/esm/ChevronRight';
-import Box from '@mui/material/Box';
-import ButtonBase from '@mui/material/ButtonBase';
-import Collapse from '@mui/material/Collapse';
-import SvgIcon from '@mui/material/SvgIcon';
+import type { FC, ReactNode } from "react";
+import { useCallback, useState } from "react";
+import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
+import ChevronRightIcon from "@untitled-ui/icons-react/build/esm/ChevronRight";
+import Box from "@mui/material/Box";
+import ButtonBase from "@mui/material/ButtonBase";
+import Collapse from "@mui/material/Collapse";
+import SvgIcon from "@mui/material/SvgIcon";
 
-import { RouterLink } from 'src/components/router-link';
+import { RouterLink } from "src/components/router-link";
 
 interface SideNavItemProps {
   active?: boolean;
@@ -25,12 +24,9 @@ export const SideNavItem: FC<SideNavItemProps> = (props) => {
   const { active, children, disabled, external, open: openProp, path, title } = props;
   const [open, setOpen] = useState<boolean>(!!openProp);
 
-  const handleToggle = useCallback(
-    (): void => {
-      setOpen((prevOpen) => !prevOpen);
-    },
-    []
-  );
+  const handleToggle = useCallback((): void => {
+    setOpen((prevOpen) => !prevOpen);
+  }, []);
 
   // Branch
 
@@ -41,20 +37,20 @@ export const SideNavItem: FC<SideNavItemProps> = (props) => {
           disabled={disabled}
           onClick={handleToggle}
           sx={{
-            alignItems: 'center',
+            alignItems: "center",
             borderRadius: 1,
-            display: 'flex',
-            justifyContent: 'flex-start',
-            px: '12px',
-            py: '6px',
-            textAlign: 'left',
-            width: '100%',
+            display: "flex",
+            justifyContent: "flex-start",
+            px: "12px",
+            py: "6px",
+            textAlign: "left",
+            width: "100%",
             ...(active && {
-              backgroundColor: 'action.hover'
+              backgroundColor: "action.hover",
             }),
-            '&:hover': {
-              backgroundColor: 'action.hover'
-            }
+            "&:hover": {
+              backgroundColor: "action.hover",
+            },
           }}
         >
           <Box
@@ -64,29 +60,26 @@ export const SideNavItem: FC<SideNavItemProps> = (props) => {
               fontFamily: (theme) => theme.typography.fontFamily,
               fontSize: 14,
               fontWeight: 500,
-              lineHeight: '24px',
-              whiteSpace: 'nowrap',
+              lineHeight: "24px",
+              whiteSpace: "nowrap",
               ...(active && {
-                color: 'primary.main'
-              })
+                color: "primary.main",
+              }),
             }}
           >
             {title}
           </Box>
           <SvgIcon
             sx={{
-              color: 'action.active',
+              color: "action.active",
               fontSize: 16,
-              ml: 2
+              ml: 2,
             }}
           >
             {open ? <ChevronDownIcon /> : <ChevronRightIcon />}
           </SvgIcon>
         </ButtonBase>
-        <Collapse
-          in={open}
-          sx={{ mt: 0.5 }}
-        >
+        <Collapse in={open} sx={{ mt: 0.5 }}>
           {children}
         </Collapse>
       </li>
@@ -98,34 +91,34 @@ export const SideNavItem: FC<SideNavItemProps> = (props) => {
   const linkProps = path
     ? external
       ? {
-        component: 'a',
-        href: path,
-        target: '_blank'
-      }
+          component: "a",
+          href: path,
+          target: "_blank",
+        }
       : {
-        component: RouterLink,
-        href: path
-      }
+          component: RouterLink,
+          href: path,
+        }
     : {};
 
   return (
     <li>
       <ButtonBase
         sx={{
-          alignItems: 'center',
+          alignItems: "center",
           borderRadius: 1,
-          display: 'flex',
-          justifyContent: 'flex-start',
-          px: '12px',
-          py: '6px',
-          textAlign: 'left',
-          width: '100%',
+          display: "flex",
+          justifyContent: "flex-start",
+          px: "12px",
+          py: "6px",
+          textAlign: "left",
+          width: "100%",
           ...(active && {
-            backgroundColor: 'action.hover'
+            backgroundColor: "action.hover",
           }),
-          '&:hover': {
-            backgroundColor: 'action.hover'
-          }
+          "&:hover": {
+            backgroundColor: "action.hover",
+          },
         }}
         {...linkProps}
       >
@@ -136,11 +129,11 @@ export const SideNavItem: FC<SideNavItemProps> = (props) => {
             fontFamily: (theme) => theme.typography.fontFamily,
             fontSize: 14,
             fontWeight: 500,
-            lineHeight: '24px',
-            whiteSpace: 'nowrap',
+            lineHeight: "24px",
+            whiteSpace: "nowrap",
             ...(active && {
-              color: 'primary.main'
-            })
+              color: "primary.main",
+            }),
           }}
         >
           {title}
@@ -148,15 +141,4 @@ export const SideNavItem: FC<SideNavItemProps> = (props) => {
       </ButtonBase>
     </li>
   );
-};
-
-SideNavItem.propTypes = {
-  active: PropTypes.bool,
-  children: PropTypes.any,
-  depth: PropTypes.number,
-  disabled: PropTypes.bool,
-  external: PropTypes.bool,
-  open: PropTypes.bool,
-  path: PropTypes.string,
-  title: PropTypes.string.isRequired
 };

@@ -1,6 +1,5 @@
 import type { FC, ReactNode } from "react";
 import { createContext, useCallback, useEffect, useMemo, useState } from "react";
-import PropTypes from "prop-types";
 // @ts-ignore
 import isEqual from "lodash.isequal";
 import type { Settings } from "src/types/settings";
@@ -170,10 +169,6 @@ export const SettingsProvider: FC<SettingsProviderProps> = (props) => {
       {children}
     </SettingsContext.Provider>
   );
-};
-
-SettingsProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export const SettingsConsumer = SettingsContext.Consumer;

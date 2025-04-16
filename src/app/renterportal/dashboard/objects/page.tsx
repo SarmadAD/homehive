@@ -44,6 +44,7 @@ import { ObjectRepairRequestDrawer } from "src/app/landlordportal/dashboard/obje
 import { useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
+import { toast } from "src/components/toaster";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -65,6 +66,7 @@ const useCurrentRepairRequest = (
 
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
+  const hasShownToast = useRef(false);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
@@ -75,9 +77,9 @@ const Page: PageType = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const repairRequestsSearch = useRepairRequestsSearch();
-  const repairRequestsIds = useRepairRequestsIds(renter.rentalObject?.repairRequests);
-  const repairRequestsSelection = useSelection<string>(repairRequestsIds);
+  // const repairRequestsSearch = useRepairRequestsSearch();
+  // const repairRequestsIds = useRepairRequestsIds(renter.rentalObject?.repairRequests);
+  // const repairRequestsSelection = useSelection<string>(repairRequestsIds);
 
   const currentRepairRequest = useCurrentRepairRequest(
     renter.rentalObject?.repairRequests as RepairRequest[],
@@ -169,6 +171,7 @@ const Page: PageType = () => {
       await updateRepairRequest(newRepairRequest);
     }
   };
+
   const handleCanceledRepairRequest = async () => {
     if (currentRepairRequest) {
       let newRepairRequest = { ...currentRepairRequest };
@@ -177,7 +180,16 @@ const Page: PageType = () => {
     }
   };
 
-  if (rentalObject === null) return <SplashScreen />;
+  if (rentalObject === null) {
+    if (!hasShownToast.current) {
+      toast.info("Ihnen wurde noch kein Objekt zugewiesen. Bitte wenden Sie sich an Ihren Vermieter.", {
+        duration: 8000,
+        closeButton: true,
+      });
+      hasShownToast.current = true;
+    }
+    return <></>;
+  }
 
   if (isLoading && !renter.id && !rentalObject.id) {
     return <SplashScreen />;
@@ -268,22 +280,22 @@ const Page: PageType = () => {
                     </Grid>
                   </div>
                 )}
-                {currentTab === "repairRequests" && (
-                  <ObjectRepairRequestList
-                    count={rentalObject.repairRequests?.length}
-                    items={rentalObject.repairRequests as RepairRequest[]}
-                    onDeselectAll={repairRequestsSelection.handleDeselectAll}
-                    onDeselectOne={repairRequestsSelection.handleDeselectOne}
-                    onPageChange={repairRequestsSearch.handlePageChange}
-                    onRowsPerPageChange={repairRequestsSearch.handleRowsPerPageChange}
-                    onSelectAll={repairRequestsSelection.handleSelectAll}
-                    onSelectOne={repairRequestsSelection.handleSelectOne}
-                    page={repairRequestsSearch.state.page}
-                    rowsPerPage={repairRequestsSearch.state.rowsPerPage}
-                    selected={repairRequestsSelection.selected}
-                    onSelect={handleDialog}
-                  />
-                )}
+                {/* {currentTab === "repairRequests" && (
+                  // <ObjectRepairRequestList
+                  //   count={rentalObject.repairRequests?.length}
+                  //   items={rentalObject.repairRequests as RepairRequest[]}
+                  //   onDeselectAll={repairRequestsSelection.handleDeselectAll}
+                  //   onDeselectOne={repairRequestsSelection.handleDeselectOne}
+                  //   onPageChange={repairRequestsSearch.handlePageChange}
+                  //   onRowsPerPageChange={repairRequestsSearch.handleRowsPerPageChange}
+                  //   onSelectAll={repairRequestsSelection.handleSelectAll}
+                  //   onSelectOne={repairRequestsSelection.handleSelectOne}
+                  //   page={repairRequestsSearch.state.page}
+                  //   rowsPerPage={repairRequestsSearch.state.rowsPerPage}
+                  //   selected={repairRequestsSelection.selected}
+                  //   onSelect={handleDialog}
+                  // />
+                )} */}
               </Stack>
             </Container>
           </ObjectSingleView>

@@ -1,6 +1,5 @@
 import type { FC, ReactNode } from "react";
-import { useCallback, useEffect, useReducer, useState } from "react";
-import PropTypes from "prop-types";
+import { useCallback, useEffect, useReducer } from "react";
 import type { User as FirebaseUser } from "@firebase/auth";
 import {
   createUserWithEmailAndPassword,
@@ -11,16 +10,13 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-
 import { firebaseApp } from "src/libs/firebase";
 import type { User } from "src/types/user";
 import { Issuer } from "src/utils/auth";
-
 import type { State } from "./auth-context";
 import { AuthContext, initialState } from "./auth-context";
 import { useRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import { useRouter } from "src/hooks/use-router";
 
 const auth = getAuth(firebaseApp);
 
@@ -131,8 +127,4 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };

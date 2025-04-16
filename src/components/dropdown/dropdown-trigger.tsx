@@ -1,7 +1,6 @@
-import type { FC, ReactElement } from 'react';
-import { cloneElement, MouseEvent, useContext } from 'react';
-import PropTypes from 'prop-types';
-import { DropdownContext } from './dropdown-context';
+import type { FC, ReactElement } from "react";
+import { cloneElement, MouseEvent, useContext } from "react";
+import { DropdownContext } from "./dropdown-context";
 
 interface DropdownButtonProps {
   children: ReactElement;
@@ -19,10 +18,6 @@ export const DropdownTrigger: FC<DropdownButtonProps> = (props) => {
     onMouseLeave: (event: MouseEvent<HTMLElement>) => {
       children.props.onMouseLeave?.(event);
       onTriggerLeave(event);
-    }
+    },
   });
-};
-
-DropdownTrigger.propTypes = {
-  children: PropTypes.element.isRequired
 };

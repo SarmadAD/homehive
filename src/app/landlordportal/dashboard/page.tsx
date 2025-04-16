@@ -8,18 +8,20 @@ import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-
 import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-repair-request";
 import { OverviewRentalIncome } from "src/sections/dashboard/overview/overview-rental-income";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import agent from "src/api/agent";
 import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
 import { useSetRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { RoleBasedGuard } from "../../auth/role/RoleBasedGuard";
+import { SplashScreen } from "src/components/splash-screen";
 
 const Page = () => {
   usePageView();
   const settings = useSettings();
   const setLandlord = useSetRecoilState(currentUserAtom);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { user } = useAuth<AuthContextType>();
 
@@ -30,6 +32,7 @@ const Page = () => {
 
   async function getLandlord() {
     try {
+      setIsLoading(true);
       const firebaseUserId = user?.id;
       if (firebaseUserId) {
         const landlord = await agent.landlord.details(firebaseUserId);
@@ -37,8 +40,15 @@ const Page = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
+
   return (
     <>
       <Seo title="Dashboard: Übersicht" />
