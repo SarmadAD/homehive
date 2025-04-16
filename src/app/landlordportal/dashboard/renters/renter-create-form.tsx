@@ -12,6 +12,8 @@ import { useRouter } from "src/hooks/use-router";
 import { RenterBasicInfosStep } from "./renter-basicinfos-step";
 import { Renter, renterDefault } from "prisma/types/renter";
 import { RenterSendInviteStep } from "./renter-send-invite-step";
+import InviteEmail from "./InviteEmail";
+import { Resend } from "resend";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -42,6 +44,8 @@ const StepIcon: FC<StepIconProps> = (props) => {
 };
 
 export const RenterCreateForm: FC = () => {
+  const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newRenter, setNewRenter] = useState<Renter>(renterDefault);

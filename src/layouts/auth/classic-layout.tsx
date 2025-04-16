@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from "react";
-import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
@@ -102,8 +101,4 @@ export const Layout: FC<LayoutProps> = (props) => {
       </Box>
     </LayoutRoot>
   );
-};
-
-Layout.propTypes = {
-  children: PropTypes.node,
 };

@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from "react";
-import PropTypes from "prop-types";
 
 import { withAuthGuard } from "src/hocs/with-auth-guard";
 import { useSettings } from "src/hooks/use-settings";
@@ -22,7 +21,3 @@ export const Layout: FC<LayoutProps> = withAuthGuard((props) => {
 
   return <VerticalLayout sections={sections} navColor={settings.navColor} {...props} />;
 });
-
-Layout.propTypes = {
-  children: PropTypes.node,
-};

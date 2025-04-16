@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from "react";
-import PropTypes from "prop-types";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import type { Theme } from "@mui/material/styles/createTheme";
 import { styled } from "@mui/material/styles";
@@ -32,8 +31,4 @@ export const Layout: FC<LayoutProps> = (props) => {
       </LayoutRoot>
     </>
   );
-};
-
-Layout.propTypes = {
-  children: PropTypes.node,
 };

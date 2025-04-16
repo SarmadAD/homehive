@@ -1,9 +1,10 @@
 import { Prisma, Renter as ClientRenter } from "@prisma/client";
+import { InviteEmail } from "../../../../landlordportal/dashboard/renters/InviteEmail";
 import { NextResponse } from "next/server";
 import { Renter } from "prisma/types/renter";
 import { prisma } from "src/app/db/db";
-import formData from "form-data";
-import Mailgun from "mailgun.js";
+import { Resend } from "resend";
+import { json } from "stream/consumers";
 
 export async function GET(request: Request, { params }: { params: { landlordId: string } }) {
   const { landlordId } = params;
@@ -37,15 +38,14 @@ export async function POST(request: Request, { params }: { params: { landlordId:
         },
       });
       if (createdRenter) {
-        sendInvite(createdRenter)
-          .then((status) => {
-            console.log(status);
-            return NextResponse.json(status);
-          })
-          .catch((error) => {
-            console.log("Fehler beim Senden der Einladung:", error);
-            return NextResponse.json("Fehler beim Senden der Einladung:", error);
-          });
+        const resend = new Resend("re_L94tobgR_A4GqBSz6sfiv9JN85W6za5jC");
+        const data = await resend.emails.send({
+          from: "homehive@sarmadahmad.de",
+          to: createdRenter.email,
+          subject: "Einladung zum Mieter-Portal",
+          react: InviteEmail({ renter: createdRenter }),
+        });
+        return NextResponse.json({ data }, { status: 200 });
       }
     }
   } catch (e) {
@@ -61,25 +61,4 @@ export async function POST(request: Request, { params }: { params: { landlordId:
       return NextResponse.json({ error: e.message });
     }
   }
-}
-
-async function sendInvite(createdRenter: ClientRenter) {
-  const mailgun = new Mailgun(formData);
-  const mg = mailgun.client({
-    username: "api",
-    key: process.env.NEXT_PUBLIC_API_KEY ?? "",
-  });
-  const buildRegisterLink =
-    process.env.NODE_ENV === "production"
-      ? `https://immo-web.vercel.app/auth/firebase/register/invite/:renterId?renterId=${createdRenter.id}`
-      : `http://localhost:3000/auth/firebase/register/invite/:renterId?renterId=${createdRenter.id}`;
-  mg.messages
-    .create("sandbox586512d4d8d94bb3b7cede5505516700.mailgun.org", {
-      from: "Mailgun Sandbox <postmaster@sandbox586512d4d8d94bb3b7cede5505516700.mailgun.org>",
-      to: [createdRenter.email],
-      subject: "Sie wurden von Ihren Mieter in das Mieterportal eingeladen!",
-      text: `Klicken Sie auf diesen Link, um sich in das Portal anzumelden: ${buildRegisterLink}`,
-    })
-    .then((msg) => console.log(msg))
-    .catch((err) => console.log(err));
 }

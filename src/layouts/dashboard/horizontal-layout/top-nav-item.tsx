@@ -1,10 +1,9 @@
-import type { FC, ReactNode } from 'react';
-import PropTypes from 'prop-types';
-import ChevronDownIcon from '@untitled-ui/icons-react/build/esm/ChevronDown';
-import ChevronRightIcon from '@untitled-ui/icons-react/build/esm/ChevronRight';
-import { Box, ButtonBase, ListItemButton, ListItemText, SvgIcon } from '@mui/material';
-import { Dropdown, DropdownMenu, DropdownTrigger } from 'src/components/dropdown';
-import { RouterLink } from 'src/components/router-link';
+import type { FC, ReactNode } from "react";
+import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
+import ChevronRightIcon from "@untitled-ui/icons-react/build/esm/ChevronRight";
+import { Box, ButtonBase, ListItemButton, ListItemText, SvgIcon } from "@mui/material";
+import { Dropdown, DropdownMenu, DropdownTrigger } from "src/components/dropdown";
+import { RouterLink } from "src/components/router-link";
 
 interface Item {
   disabled?: boolean;
@@ -27,7 +26,7 @@ interface TopNavItemProps {
   title: string;
 }
 
-const renderChildItems = ({ items, depth = 0 }: { items: Item[]; depth?: number; }) => {
+const renderChildItems = ({ items, depth = 0 }: { items: Item[]; depth?: number }) => {
   return items.map((item) => {
     // Branch
     if (item.items) {
@@ -39,45 +38,42 @@ const renderChildItems = ({ items, depth = 0 }: { items: Item[]; depth?: number;
               sx={{
                 borderRadius: 1,
                 px: 1.5,
-                py: 0.5
+                py: 0.5,
               }}
             >
               <ListItemText
                 primary={item.title}
                 primaryTypographyProps={{
                   sx: {
-                    color: 'text.secondary',
+                    color: "text.secondary",
                     fontSize: 14,
-                    fontWeight: 500
-                  }
+                    fontWeight: 500,
+                  },
                 }}
               />
-              <SvgIcon
-                fontSize="small"
-                sx={{ color: 'neutral.400' }}
-              >
+              <SvgIcon fontSize="small" sx={{ color: "neutral.400" }}>
                 <ChevronRightIcon />
               </SvgIcon>
             </ListItemButton>
           </DropdownTrigger>
           <DropdownMenu
             anchorOrigin={{
-              horizontal: 'right',
-              vertical: 'top'
+              horizontal: "right",
+              vertical: "top",
             }}
             disableScrollLock
             PaperProps={{
               elevation: 8,
               sx: {
-                maxWidth: '100%',
+                maxWidth: "100%",
                 ml: 1,
                 p: 1,
-                width: 200
-              }
+                width: 200,
+              },
             }}
             transformOrigin={{
-              horizontal: 'left',
-              vertical: 'top'
+              horizontal: "left",
+              vertical: "top",
             }}
           >
             {renderChildItems({ items: item.items, depth: depth + 1 })}
@@ -89,14 +85,14 @@ const renderChildItems = ({ items, depth = 0 }: { items: Item[]; depth?: number;
     const linkProps = item.path
       ? item.external
         ? {
-          component: 'a',
-          href: item.path,
-          target: '_blank'
-        }
+            component: "a",
+            href: item.path,
+            target: "_blank",
+          }
         : {
-          component: RouterLink,
-          href: item.path
-        }
+            component: RouterLink,
+            href: item.path,
+          }
       : {};
 
     // Leaf
@@ -107,7 +103,7 @@ const renderChildItems = ({ items, depth = 0 }: { items: Item[]; depth?: number;
         sx={{
           borderRadius: 1,
           px: 1.5,
-          py: 0.5
+          py: 0.5,
         }}
         {...linkProps}
       >
@@ -115,10 +111,10 @@ const renderChildItems = ({ items, depth = 0 }: { items: Item[]; depth?: number;
           primary={item.title}
           primaryTypographyProps={{
             sx: {
-              color: 'text.secondary',
+              color: "text.secondary",
               fontSize: 14,
-              fontWeight: 500
-            }
+              fontWeight: 500,
+            },
           }}
         />
       </ListItemButton>
@@ -139,33 +135,33 @@ export const TopNavItem: FC<TopNavItemProps> = (props) => {
             <ButtonBase
               disabled={disabled}
               sx={{
-                alignItems: 'center',
+                alignItems: "center",
                 borderRadius: 1,
-                display: 'flex',
-                justifyContent: 'flex-start',
-                px: '16px',
-                py: '6px',
-                textAlign: 'left',
-                width: '100%',
+                display: "flex",
+                justifyContent: "flex-start",
+                px: "16px",
+                py: "6px",
+                textAlign: "left",
+                width: "100%",
                 ...(active && {
-                  backgroundColor: 'var(--nav-item-active-bg)'
+                  backgroundColor: "var(--nav-item-active-bg)",
                 }),
-                '&:hover': {
-                  backgroundColor: 'var(--nav-item-hover-bg)'
-                }
+                "&:hover": {
+                  backgroundColor: "var(--nav-item-hover-bg)",
+                },
               }}
             >
               <Box
                 component="span"
                 sx={{
-                  alignItems: 'center',
-                  color: 'var(--nav-item-icon-color)',
-                  display: 'inline-flex',
-                  justifyContent: 'center',
+                  alignItems: "center",
+                  color: "var(--nav-item-icon-color)",
+                  display: "inline-flex",
+                  justifyContent: "center",
                   mr: 2,
                   ...(active && {
-                    color: 'var(--nav-item-icon-active-color)'
-                  })
+                    color: "var(--nav-item-icon-active-color)",
+                  }),
                 }}
               >
                 {icon}
@@ -173,28 +169,28 @@ export const TopNavItem: FC<TopNavItemProps> = (props) => {
               <Box
                 component="span"
                 sx={{
-                  color: 'var(--nav-item-color)',
+                  color: "var(--nav-item-color)",
                   flexGrow: 1,
                   fontFamily: (theme) => theme.typography.fontFamily,
                   fontSize: 14,
                   fontWeight: 600,
-                  lineHeight: '24px',
-                  whiteSpace: 'nowrap',
+                  lineHeight: "24px",
+                  whiteSpace: "nowrap",
                   ...(active && {
-                    color: 'var(--nav-item-active-color)'
+                    color: "var(--nav-item-active-color)",
                   }),
                   ...(disabled && {
-                    color: 'var(--nav-item-disabled-color)'
-                  })
+                    color: "var(--nav-item-disabled-color)",
+                  }),
                 }}
               >
                 {title}
               </Box>
               <SvgIcon
                 sx={{
-                  color: 'var(--nav-item-chevron-color)',
+                  color: "var(--nav-item-chevron-color)",
                   fontSize: 16,
-                  ml: 1
+                  ml: 1,
                 }}
               >
                 <ChevronDownIcon />
@@ -207,10 +203,10 @@ export const TopNavItem: FC<TopNavItemProps> = (props) => {
           PaperProps={{
             elevation: 8,
             sx: {
-              maxWidth: '100%',
+              maxWidth: "100%",
               p: 1,
-              width: 200
-            }
+              width: 200,
+            },
           }}
         >
           {renderChildItems({ items, depth: 0 })}
@@ -224,14 +220,14 @@ export const TopNavItem: FC<TopNavItemProps> = (props) => {
   const linkProps = path
     ? external
       ? {
-        component: 'a',
-        href: path,
-        target: '_blank'
-      }
+          component: "a",
+          href: path,
+          target: "_blank",
+        }
       : {
-        component: RouterLink,
-        href: path
-      }
+          component: RouterLink,
+          href: path,
+        }
     : {};
 
   return (
@@ -239,20 +235,20 @@ export const TopNavItem: FC<TopNavItemProps> = (props) => {
       <ButtonBase
         disabled={disabled}
         sx={{
-          alignItems: 'center',
+          alignItems: "center",
           borderRadius: 1,
-          display: 'flex',
-          justifyContent: 'flex-start',
-          px: '16px',
-          py: '6px',
-          textAlign: 'left',
-          width: '100%',
+          display: "flex",
+          justifyContent: "flex-start",
+          px: "16px",
+          py: "6px",
+          textAlign: "left",
+          width: "100%",
           ...(active && {
-            backgroundColor: 'var(--nav-item-active-bg)'
+            backgroundColor: "var(--nav-item-active-bg)",
           }),
-          '&:hover': {
-            backgroundColor: 'var(--nav-item-hover-bg)'
-          }
+          "&:hover": {
+            backgroundColor: "var(--nav-item-hover-bg)",
+          },
         }}
         {...linkProps}
       >
@@ -260,14 +256,14 @@ export const TopNavItem: FC<TopNavItemProps> = (props) => {
           <Box
             component="span"
             sx={{
-              alignItems: 'center',
-              color: 'var(--nav-item-icon-color)',
-              display: 'inline-flex',
-              justifyContent: 'center',
+              alignItems: "center",
+              color: "var(--nav-item-icon-color)",
+              display: "inline-flex",
+              justifyContent: "center",
               mr: 2,
               ...(active && {
-                color: 'var(--nav-item-icon-active-color)'
-              })
+                color: "var(--nav-item-icon-active-color)",
+              }),
             }}
           >
             {icon}
@@ -276,42 +272,29 @@ export const TopNavItem: FC<TopNavItemProps> = (props) => {
         <Box
           component="span"
           sx={{
-            color: 'var(--nav-item-color)',
+            color: "var(--nav-item-color)",
             flexGrow: 1,
             fontFamily: (theme) => theme.typography.fontFamily,
             fontSize: 14,
             fontWeight: 600,
-            lineHeight: '24px',
-            whiteSpace: 'nowrap',
+            lineHeight: "24px",
+            whiteSpace: "nowrap",
             ...(active && {
-              color: 'var(--nav-item-active-color)'
+              color: "var(--nav-item-active-color)",
             }),
             ...(disabled && {
-              color: 'var(--nav-item-disabled-color)'
-            })
+              color: "var(--nav-item-disabled-color)",
+            }),
           }}
         >
           {title}
         </Box>
         {label && (
-          <Box
-            component="span"
-            sx={{ ml: 1 }}
-          >
+          <Box component="span" sx={{ ml: 1 }}>
             {label}
           </Box>
         )}
       </ButtonBase>
     </li>
   );
-};
-
-TopNavItem.propTypes = {
-  active: PropTypes.bool,
-  external: PropTypes.bool,
-  icon: PropTypes.node,
-  items: PropTypes.array,
-  label: PropTypes.node,
-  path: PropTypes.string,
-  title: PropTypes.string.isRequired
 };

@@ -115,12 +115,8 @@ const getRepairRequests = (renter: Renter, rentalObject: RentalObject): Prisma.R
 ];
 
 const getRoles = (): Prisma.RoleCreateInput[] => [
-  {
-    role: "Renter",
-  },
-  {
-    role: "Landlord",
-  },
+  { id: "20f9fbe2-0855-11ee-be56-0242ac120044", role: "Renter" },
+  { id: "20f9fbe2-0855-11ee-be56-0242ac120055", role: "Landlord" },
 ];
 
 const getUserRole = (roles: Role[]): Prisma.UserRoleCreateInput[] => [

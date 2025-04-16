@@ -184,7 +184,7 @@ export const TopNav: FC<TopNavProps> = (props) => {
               href={auth.isAuthenticated ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
               variant="contained"
             >
-              Login
+              Dashboard
             </Button>
             {!mdUp && (
               <IconButton onClick={onMobileNavOpen}>

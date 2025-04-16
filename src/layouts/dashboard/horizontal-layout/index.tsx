@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from "react";
-import PropTypes from "prop-types";
 import type { Theme } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -44,10 +43,4 @@ export const HorizontalLayout: FC<HorizontalLayoutProps> = (props) => {
       </HorizontalLayoutRoot>
     </>
   );
-};
-
-HorizontalLayout.propTypes = {
-  children: PropTypes.node,
-  navColor: PropTypes.oneOf<NavColor>(["blend-in", "discrete", "evident"]),
-  sections: PropTypes.array,
 };

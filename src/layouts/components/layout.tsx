@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from "react";
-import PropTypes from "prop-types";
 import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import Box from "@mui/material/Box";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -109,10 +108,4 @@ export const Layout: FC<LayoutProps> = (props) => {
       <LayoutContainer>{children}</LayoutContainer>
     </LayoutRoot>
   );
-};
-
-Layout.propTypes = {
-  breadcrumbs: PropTypes.array,
-  children: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
 };
