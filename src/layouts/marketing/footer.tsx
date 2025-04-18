@@ -55,6 +55,7 @@ export function Footer(): React.JSX.Element {
       component="footer"
       sx={{
         bottom: 0,
+        position: "fixed",
         width: "100%",
         bgcolor: "var(--mui-palette-background-default)",
         borderTop: "1px solid var(--mui-palette-divider)",

@@ -124,6 +124,9 @@ const Page = () => {
       switch (providerId) {
         case "google":
           provider = new GoogleAuthProvider();
+          provider.setCustomParameters({
+            prompt: "select_account",
+          });
           break;
         default:
           throw new Error(`Unknown provider: ${providerId}`);

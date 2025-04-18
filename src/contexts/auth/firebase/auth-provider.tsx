@@ -98,6 +98,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const signInWithGoogle = useCallback(async (): Promise<FirebaseUser | null> => {
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: "select_account",
+    });
     await signInWithPopup(auth, provider);
     if (auth.currentUser) {
       setUser({ ...user, firebaseUserId: auth.currentUser?.uid });
