@@ -117,13 +117,19 @@ export const SettingsDrawer: FC<SettingsDrawerProps> = (props) => {
           </Stack>
         </Stack>
         <Stack spacing={5} sx={{ p: 3 }}>
-          <OptionsColorPreset onChange={(value) => handleFieldUpdate("colorPreset", value)} value={values.colorPreset} />
-          <OptionsColorScheme onChange={(value) => handleFieldUpdate("paletteMode", value)} value={values.paletteMode} />
+          <OptionsColorPreset
+            onChange={(value) => handleFieldUpdate("colorPreset", value)}
+            value={values.colorPreset}
+          />
+          <OptionsColorScheme
+            onChange={(value) => handleFieldUpdate("paletteMode", value)}
+            value={values.paletteMode}
+          />
           <OptionsNavColor onChange={(value) => handleFieldUpdate("navColor", value)} value={values.navColor} />
           <OptionsLayout onChange={(value) => handleFieldUpdate("layout", value)} value={values.layout} />
           <OptionsStretch onChange={(value) => handleFieldUpdate("stretch", value)} value={values.stretch} />
           <OptionsContrast onChange={(value) => handleFieldUpdate("contrast", value)} value={values.contrast} />
-          <OptionsDirection onChange={(value) => handleFieldUpdate("direction", value)} value={values.direction} />
+          {/* <OptionsDirection onChange={(value) => handleFieldUpdate("direction", value)} value={values.direction} /> */}
         </Stack>
       </Scrollbar>
     </Drawer>

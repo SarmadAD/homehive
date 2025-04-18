@@ -6,6 +6,14 @@ import { Chart } from "src/components/chart";
 import { RentPayment } from "@prisma/client";
 import { useRecoilValue } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import { Chart1 } from "src/components/widgets/charts/chart-1";
+import { Chart2 } from "src/components/widgets/charts/chart-2";
+import { Chart3 } from "src/components/widgets/charts/chart-3";
+import { Chart4 } from "src/components/widgets/charts/chart-4";
+import { Chart5 } from "src/components/widgets/charts/chart-5";
+import { Chart6 } from "src/components/widgets/charts/chart-6";
+import { Chart7 } from "src/components/widgets/charts/chart-7";
+import { Chart8 } from "src/components/widgets/charts/chart-8";
 
 type ChartSeries = {
   name: string;
@@ -167,7 +175,7 @@ export function OverviewRentalIncome() {
         //   </Tabs>
         // }
       />
-      <Box sx={{ height: 250 }}>
+      <Box>
         <Chart height={250} options={chartOptions} series={updatedChartSeries} type="bar" />
       </Box>
     </Card>
