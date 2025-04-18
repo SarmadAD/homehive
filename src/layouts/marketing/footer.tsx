@@ -20,11 +20,11 @@ interface GroupConfig {
 
 const groups = [
   // {
-  //   key: "menu",
-  //   title: "Menu",
+  //   key: "Portale",
+  //   title: "Portale",
   //   items: [
-  //     { key: "dashboard", title: "Dashboard", href: paths.landlordportal.dashboard.index },
-  //     { key: "documentation", title: "Documentation", external: true, href: paths.docs },
+  //     { key: "vermieterportal", title: "Vermieterportal", href: paths.landlordportal.dashboard.index },
+  //     { key: "mieterportal", title: "Mieterportal", href: paths.renterportal.dashboard.objects.index },
   //   ],
   // },
   // {
@@ -54,15 +54,18 @@ export function Footer(): React.JSX.Element {
     <Box
       component="footer"
       sx={{
+        bottom: 0,
+        width: "100%",
         bgcolor: "var(--mui-palette-background-default)",
         borderTop: "1px solid var(--mui-palette-divider)",
-        pb: 6,
-        pt: { md: 15, xs: 6 },
+        pb: 3,
+        zIndex: 10,
+        pt: { md: 30, xs: 6 },
       }}
     >
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
-          <Grid md={3} sm={4} sx={{ order: { xs: 4, md: 1 } }} xs={12}>
+        <Grid container spacing={2}>
+          <Grid xs={12} md={3} sm={4} sx={{ order: { xs: 4, md: 1 } }}>
             <Stack spacing={1}>
               <Stack
                 alignItems="center"
@@ -103,7 +106,7 @@ export function Footer(): React.JSX.Element {
               </Typography>
             </Stack>
           </Grid>
-          {groups.map((section, index) => (
+          {/* {groups.map((section, index) => (
             <Grid key={section.key} md={3} sm={4} sx={{ order: { md: index + 2, xs: index + 1 } }} xs={12}>
               <Typography color="text.secondary" variant="overline">
                 {section.title}
@@ -114,9 +117,9 @@ export function Footer(): React.JSX.Element {
                 ))}
               </Stack>
             </Grid>
-          ))}
+          ))} */}
         </Grid>
-        <Divider sx={{ my: 6 }} />
+        <Divider sx={{ my: 2 }} />
         <Typography color="text.secondary" variant="caption">
           All Rights Reserved.
         </Typography>

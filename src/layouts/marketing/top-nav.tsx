@@ -35,10 +35,10 @@ const items: Item[] = [
     title: "Startseite",
     path: paths.index,
   },
-  {
-    title: "Preis",
-    path: paths.pricing,
-  },
+  // {
+  //   title: "Preis",
+  //   path: paths.pricing,
+  // },
 ];
 
 const TOP_NAV_HEIGHT = 64;
