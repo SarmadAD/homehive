@@ -3,9 +3,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
-
 export const HomeHero: FC = () => {
-
   return (
     <Box
       sx={{

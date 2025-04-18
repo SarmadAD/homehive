@@ -19,6 +19,7 @@ export const RenterDrawer: FC<RenterDrawerProps> = (props) => {
   const { container, onClose, open, renter } = props;
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm")); // Prüft, ob es sich um ein mobiles Gerät handelt
 
   const handleEditOpen = useCallback(() => {
     setIsEditing(true);
@@ -77,7 +78,7 @@ export const RenterDrawer: FC<RenterDrawerProps> = (props) => {
         PaperProps={{
           sx: {
             position: "relative",
-            width: 500,
+            width: "35vw",
           },
         }}
         SlideProps={{ container }}
@@ -104,7 +105,7 @@ export const RenterDrawer: FC<RenterDrawerProps> = (props) => {
       PaperProps={{
         sx: {
           maxWidth: "100%",
-          width: 400,
+          width: isMobile ? "100%" : "100vw",
           pointerEvents: "auto",
           position: "absolute",
         },
