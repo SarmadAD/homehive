@@ -40,7 +40,7 @@ export async function POST(request: Request, { params }: { params: { landlordId:
       if (createdRenter) {
         const resend = new Resend("re_L94tobgR_A4GqBSz6sfiv9JN85W6za5jC");
         const data = await resend.emails.send({
-          from: "homehive@sarmadahmad.de",
+          from: "invite@homehive.me",
           to: createdRenter.email,
           subject: "Einladung zum Mieter-Portal",
           react: InviteEmail({ renter: createdRenter }),

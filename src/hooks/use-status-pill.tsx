@@ -2,7 +2,7 @@ import { RentPaymentStatus, RentalObjectStatus, RepairRequestStatus } from "@pri
 import { RentalObject } from "prisma/types/objects";
 import { SeverityPill, SeverityPillColor } from "src/components/severity-pill";
 
-export const useRentPaidStatusPill = (rentPaidStatus: RentPaymentStatus): JSX.Element => {
+export function getRentPaidStatusPill(rentPaidStatus: RentPaymentStatus): JSX.Element {
   const map: Record<RentPaymentStatus, { color: SeverityPillColor; text: string }> = {
     PAID: {
       color: "success",
@@ -21,7 +21,7 @@ export const useRentPaidStatusPill = (rentPaidStatus: RentPaymentStatus): JSX.El
   const { text, color } = map[rentPaidStatus];
 
   return <SeverityPill color={color}>{text}</SeverityPill>;
-};
+}
 
 export const useRepairRequestStatusPill = (orderStatus: RepairRequestStatus): JSX.Element => {
   const map: Record<RepairRequestStatus, { color: SeverityPillColor; text: string }> = {

@@ -1,6 +1,5 @@
-import PropTypes from "prop-types";
 import type { ApexOptions } from "apexcharts";
-import { Box, Card, CardHeader, Tab, Tabs } from "@mui/material";
+import { Box, Card, CardHeader } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { RentPayment } from "@prisma/client";
@@ -167,7 +166,7 @@ export function OverviewRentalIncome() {
         //   </Tabs>
         // }
       />
-      <Box sx={{ height: 250 }}>
+      <Box>
         <Chart height={250} options={chartOptions} series={updatedChartSeries} type="bar" />
       </Box>
     </Card>

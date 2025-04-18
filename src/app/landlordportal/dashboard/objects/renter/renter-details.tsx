@@ -58,7 +58,7 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
   return (
     <Stack spacing={6}>
       <Stack spacing={3}>
-        <Stack alignItems="center" direction="row" justifyContent="space-between" spacing={3}>
+        {/* <Stack alignItems="center" direction="row" justifyContent="space-between" spacing={3}>
           <Typography variant="h6">Details</Typography>
           <Button
             color="inherit"
@@ -72,13 +72,13 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
           >
             Edit
           </Button>
-        </Stack>
+        </Stack> */}
         <PropertyList>
           <PropertyListItem align={align} disableGutters divider label="Kontaktdaten">
             <Typography color="text.secondary" variant="body2">
               {renter.email}
             </Typography>
-          </PropertyListItem>{" "}
+          </PropertyListItem>
           <PropertyListItem disableGutters divider label="">
             <Autocomplete
               // onChange={handleDueDateChange}
@@ -88,7 +88,7 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
               renderInput={(params): JSX.Element => (
                 <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />
               )}
-            />{" "}
+            />
           </PropertyListItem>
           <PropertyListItem disableGutters divider label="">
             {renter.rentPayment && renter.rentPayment.length > 0 ? (
