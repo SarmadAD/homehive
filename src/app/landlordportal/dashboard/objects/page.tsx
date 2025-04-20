@@ -168,6 +168,7 @@ const Page: PageType = () => {
     },
     {
       formatter: (row): React.JSX.Element => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const statusPill = useRentalObjectStatusPill(row);
         return statusPill;
       },

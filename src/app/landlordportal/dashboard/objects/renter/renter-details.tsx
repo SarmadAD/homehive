@@ -23,16 +23,16 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
 
   const align = lgUp ? "horizontal" : "vertical";
 
-  function handleDueDateChange(event: React.SyntheticEvent, dueDate: OptionDueDate | null) {
-    if (dueDate) {
-      setNewObject({
-        ...newObject,
-        rentalObjectInfo: {
-          ...newObject?.rentalObjectInfo,
-        },
-      });
-    }
-  }
+  // function handleDueDateChange(event: React.SyntheticEvent, dueDate: OptionDueDate | null) {
+  //   if (dueDate) {
+  //     setNewObject({
+  //       ...newObject,
+  //       rentalObjectInfo: {
+  //         ...newObject?.rentalObjectInfo,
+  //       },
+  //     });
+  //   }
+  // }
 
   type OptionDueDate = {
     label: string;
@@ -81,7 +81,7 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
           </PropertyListItem>
           <PropertyListItem disableGutters divider label="">
             <Autocomplete
-              onChange={handleDueDateChange}
+              // onChange={handleDueDateChange}
               getOptionLabel={(option: OptionDueDate) => option.label}
               options={dueDateOfRentList}
               value={dueDateOfRentList.find((x) => x.value === renter.rentalAgreement?.dueDateState)}
