@@ -9,7 +9,6 @@ import {
   Avatar,
   Box,
   Button,
-  Chip,
   Container,
   Divider,
   Link,
@@ -19,9 +18,10 @@ import {
   Tabs,
   Typography,
   Unstable_Grid2 as Grid,
-  CircularProgress,
   Menu,
   MenuItem,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -29,9 +29,7 @@ import { usePageView } from "src/hooks/use-page-view";
 import { paths } from "src/paths";
 import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
-import { RenterListTable } from "src/sections/dashboard/renter/renter-list-table";
 import { useRentersSearch } from "src/hooks/use-renter-search";
-import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useDialog } from "src/hooks/use-dialog";
 import { ObjectSingleView } from "src/app/landlordportal/dashboard/objects/renter/object-single-view";
@@ -44,7 +42,6 @@ import { useSearchParams } from "next/navigation";
 import { ObjectBasicDetails } from "../object-basic-details";
 import { ObjectRentInfoChart } from "../object-rentInfo-chart";
 import { ObjectRepairRequestDrawer } from "../repairRequests/object-repairRequest-drawer";
-import { ObjectRepairRequestList } from "../repairRequests/objects-repairRequests-list";
 import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
 import { RepairRequest } from "prisma/types/repairRequest";
 import { Renter } from "prisma/types/renter";
@@ -61,6 +58,9 @@ import { useAuth } from "src/hooks/use-auth";
 import { RentalObject } from "prisma/types/objects";
 import { toast } from "src/components/toaster";
 import React from "react";
+import { ColumnDef, DataTable } from "src/components/data-table";
+import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
+import { PlusCircle } from "@untitled-ui/icons-react";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -91,6 +91,10 @@ const useCurrentRepairRequest = (
   }, [repairRequests, repairRequestId]);
 };
 
+interface RenterTable {
+  name: string;
+}
+
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
   const searchParams = useSearchParams();
@@ -108,14 +112,14 @@ const Page: PageType = () => {
   const repairRequestsSearch = useRepairRequestsSearch();
 
   // const rentersIds = useRentersIds(rentalObject?.renter);
-  const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject.renter]);
-  const rentersSelection = useSelection<string>(rentersIds);
+  const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject]);
+  const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
 
   const setLandlord = useSetRecoilState(currentUserAtom);
   const renters = useRecoilValue(rentersAtom);
 
   const repairRequestsIds = useRepairRequestsIds(rentalObject?.repairRequests);
-  const repairRequestsSelection = useSelection<string>(repairRequestsIds);
+  // const repairRequestsSelection = useSelection<string>(repairRequestsIds);
 
   const currentRenter = useCurrentRenter(rentalObject?.renter as Renter[], dialog.data);
   const currentRepairRequest = useCurrentRepairRequest(rentalObject?.repairRequests as RepairRequest[], dialog.data);
@@ -239,10 +243,8 @@ const Page: PageType = () => {
 
   const handleDelete = async () => {
     try {
-      const updatedRenters = (rentalObject.renter as Renter[]).filter(
-        (renter: Renter) => !rentersSelection.selected.includes(renter.id)
-      );
-      await agent.renter.removeRentalObjectFromRenter(rentersSelection.selected, rentalObject.id);
+      const updatedRenters = (rentalObject.renter as Renter[]).filter((renter: Renter) => !selected.has(renter.id));
+      await agent.renter.removeRentalObjectFromRenter(Array.from(selected), rentalObject.id);
 
       const updatedRentalObject = {
         ...rentalObject,
@@ -288,6 +290,43 @@ const Page: PageType = () => {
     return <SplashScreen />;
   }
 
+  const columns = [
+    {
+      formatter: (row): React.JSX.Element => (
+        <div>
+          <Link
+            color="text.primary"
+            sx={{ whiteSpace: "nowrap" }}
+            variant="subtitle2"
+            href={`${paths.landlordportal.dashboard.renters.details}${row.id}`}
+          >
+            {row.firstname} {row.surname}
+          </Link>
+        </div>
+      ),
+      name: "Name",
+      width: "650px",
+    },
+    {
+      formatter: (row): React.JSX.Element => (
+        <IconButton component={RouterLink} onClick={() => handleDialog(row.id)} href={""}>
+          <SvgIcon>
+            <ArrowRightIcon />
+          </SvgIcon>
+        </IconButton>
+      ),
+      name: "",
+      nameJSX: (
+        <Tooltip title="Mieter hinzufügen">
+          <IconButton onClick={() => handleAddRenter()}>
+            <PlusCircle />
+          </IconButton>
+        </Tooltip>
+      ),
+      align: "right",
+    },
+  ] satisfies ColumnDef<Renter>[];
+
   return (
     <>
       <Seo title="Objekt Details" />
@@ -316,23 +355,21 @@ const Page: PageType = () => {
             <Container maxWidth="xl">
               <Stack spacing={4}>
                 <Stack spacing={4}>
-                  <div>
-                    <Link
-                      color="text.primary"
-                      component={RouterLink}
-                      href={paths.landlordportal.dashboard.objects.index}
-                      sx={{
-                        alignItems: "center",
-                        display: "inline-flex",
-                      }}
-                      underline="hover"
-                    >
-                      <SvgIcon sx={{ mr: 1 }}>
-                        <ArrowLeftIcon />
-                      </SvgIcon>
-                      <Typography variant="subtitle2">Objekte</Typography>
-                    </Link>
-                  </div>
+                  <Link
+                    color="text.primary"
+                    component={RouterLink}
+                    href={paths.landlordportal.dashboard.objects.index}
+                    sx={{
+                      alignItems: "center",
+                      display: "inline-flex",
+                    }}
+                    underline="hover"
+                  >
+                    <SvgIcon sx={{ mr: 1 }}>
+                      <ArrowLeftIcon />
+                    </SvgIcon>
+                    <Typography variant="subtitle2">Objekte</Typography>
+                  </Link>
                   <Stack
                     alignItems="flex-start"
                     direction={{
@@ -433,39 +470,38 @@ const Page: PageType = () => {
                   </div>
                 )}
                 {currentTab === "renter" && (
-                  <RenterListTable
-                    count={rentalObject.renter.filter((renter) => renter.state !== 0).length}
-                    items={rentalObject.renter.filter((renter) => renter.state !== 0) as Renter[]}
-                    onDeselectAll={rentersSelection.handleDeselectAll}
-                    onDeselectOne={rentersSelection.handleDeselectOne}
-                    onPageChange={rentersSearch.handlePageChange}
-                    onRowsPerPageChange={rentersSearch.handleRowsPerPageChange}
-                    onSelectAll={rentersSelection.handleSelectAll}
-                    onSelectOne={rentersSelection.handleSelectOne}
-                    page={rentersSearch.state.page}
-                    rowsPerPage={rentersSearch.state.rowsPerPage}
-                    selected={rentersSelection.selected}
+                  <DataTable<Renter>
+                    columns={columns}
+                    rows={(rentalObject.renter as Renter[]) || []}
+                    onDeselectAll={deselectAll}
+                    onDeselectOne={(_, row) => {
+                      deselectOne(row.id);
+                    }}
+                    onSelectAll={selectAll}
+                    onSelectOne={(_, row) => {
+                      selectOne(row.id);
+                    }}
+                    selected={selected}
                     setOpenDeleteModal={setOpenDeleteModal}
-                    onSelect={handleDialog}
-                    handleAddRenter={handleAddRenter}
+                    selectable
                   />
                 )}
-                {currentTab === "repairRequests" && (
-                  <ObjectRepairRequestList
-                    count={rentalObject.repairRequests?.length}
-                    items={rentalObject.repairRequests as RepairRequest[]}
-                    onDeselectAll={repairRequestsSelection.handleDeselectAll}
-                    onDeselectOne={repairRequestsSelection.handleDeselectOne}
-                    onPageChange={repairRequestsSearch.handlePageChange}
-                    onRowsPerPageChange={repairRequestsSearch.handleRowsPerPageChange}
-                    onSelectAll={repairRequestsSelection.handleSelectAll}
-                    onSelectOne={repairRequestsSelection.handleSelectOne}
-                    page={repairRequestsSearch.state.page}
-                    rowsPerPage={repairRequestsSearch.state.rowsPerPage}
-                    selected={repairRequestsSelection.selected}
-                    onSelect={handleDialog}
-                  />
-                )}
+                {/* {currentTab === "repairRequests" && (
+                  // <ObjectRepairRequestList
+                  //   count={rentalObject.repairRequests?.length}
+                  //   items={rentalObject.repairRequests as RepairRequest[]}
+                  //   onDeselectAll={repairRequestsSelection.handleDeselectAll}
+                  //   onDeselectOne={repairRequestsSelection.handleDeselectOne}
+                  //   onPageChange={repairRequestsSearch.handlePageChange}
+                  //   onRowsPerPageChange={repairRequestsSearch.handleRowsPerPageChange}
+                  //   onSelectAll={repairRequestsSelection.handleSelectAll}
+                  //   onSelectOne={repairRequestsSelection.handleSelectOne}
+                  //   page={repairRequestsSearch.state.page}
+                  //   rowsPerPage={repairRequestsSearch.state.rowsPerPage}
+                  //   selected={repairRequestsSelection.selected}
+                  //   onSelect={handleDialog}
+                  // />
+                )} */}
               </Stack>
             </Container>
           </ObjectSingleView>

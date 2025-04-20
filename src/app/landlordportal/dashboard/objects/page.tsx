@@ -9,6 +9,10 @@ import {
   Button,
   SvgIcon,
   CircularProgress,
+  Link,
+  Avatar,
+  AvatarGroup,
+  Tooltip,
 } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
@@ -22,7 +26,6 @@ import { useSelection } from "src/hooks/use-selection";
 import { paths } from "src/paths";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import { ObjectListTable } from "../../../components/objects-list-table";
 import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
@@ -30,6 +33,11 @@ import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import { SplashScreen } from "src/components/splash-screen";
+import { ColumnDef, DataTable } from "src/components/data-table";
+import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
+import { getInitials } from "src/utils/get-initials";
+import { getRenterName } from "src/utils/get-renter-name";
+import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 
 interface Filters {
   query?: string;
@@ -105,8 +113,13 @@ const Page: PageType = () => {
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
   const setLandlord = useSetRecoilState(currentUserAtom);
   const objectsIds = useObjectsIds(rentalObjects);
-  const objectsSelection = useSelection<string>(objectsIds);
+  // const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject]);
+
+  // const objectsSelection = useSelection<string>(objectsIds);
+  const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(objectsIds);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const { user } = useAuth<AuthContextType>();
 
@@ -133,6 +146,64 @@ const Page: PageType = () => {
   if (isLoading) {
     return <SplashScreen />;
   }
+
+  function handleDelete() {}
+
+  const columns = [
+    {
+      formatter: (row): React.JSX.Element => (
+        <div>
+          <Link
+            color="text.primary"
+            sx={{ whiteSpace: "nowrap" }}
+            variant="subtitle2"
+            href={`${paths.landlordportal.dashboard.objects.details}${encodeURIComponent(row.id)}`}
+          >
+            {row.name}
+          </Link>
+        </div>
+      ),
+      name: "Name",
+      width: "250px",
+    },
+    {
+      formatter: (row): React.JSX.Element => {
+        const statusPill = useRentalObjectStatusPill(row);
+        return statusPill;
+      },
+
+      name: "Status",
+      width: "100px",
+    },
+    {
+      formatter: (row): React.JSX.Element => (
+        <Stack alignItems="center" direction="row" spacing={1}>
+          <AvatarGroup max={3}>
+            {row.renter
+              ?.filter((renter) => renter.state !== 0)
+              .map((renter) => (
+                <Tooltip
+                  key={getRenterName(renter.firstname, renter.surname)}
+                  title={getRenterName(renter.firstname, renter.surname)}
+                >
+                  <Avatar
+                    src={row.image}
+                    sx={{
+                      height: 42,
+                      width: 42,
+                    }}
+                  >
+                    {getInitials(getRenterName(renter.firstname, renter.surname))}
+                  </Avatar>
+                </Tooltip>
+              ))}
+          </AvatarGroup>
+        </Stack>
+      ),
+      name: "Mieter",
+      width: "250px",
+    },
+  ] satisfies ColumnDef<RentalObject>[];
 
   return (
     <>
@@ -201,24 +272,31 @@ const Page: PageType = () => {
                     <CircularProgress />
                   </Box>
                 ) : (
-                  <ObjectListTable
-                    count={rentalObjects.length}
-                    items={rentalObjects}
-                    onDeselectAll={objectsSelection.handleDeselectAll}
-                    onDeselectOne={objectsSelection.handleDeselectOne}
-                    onPageChange={objectsSearch.handlePageChange}
-                    onRowsPerPageChange={objectsSearch.handleRowsPerPageChange}
-                    onSelectAll={objectsSelection.handleSelectAll}
-                    onSelectOne={objectsSelection.handleSelectOne}
-                    page={objectsSearch.state.page}
-                    rowsPerPage={objectsSearch.state.rowsPerPage}
-                    selected={objectsSelection.selected}
+                  <DataTable<RentalObject>
+                    columns={columns}
+                    rows={rentalObjects}
+                    onDeselectAll={deselectAll}
+                    onDeselectOne={(_, row) => {
+                      deselectOne(row.id);
+                    }}
+                    onSelectAll={selectAll}
+                    onSelectOne={(_, row) => {
+                      selectOne(row.id);
+                    }}
+                    selected={selected}
+                    setOpenDeleteModal={setOpenDeleteModal}
+                    selectable
                   />
                 )}
               </Grid>
             </Grid>
           </Container>
-        </Box>
+        </Box>{" "}
+        <DeleteModal
+          setOpenDeleteModal={setOpenDeleteModal}
+          onDelete={handleDelete}
+          openDeleteModal={openDeleteModal}
+        />
       </RoleBasedGuard>
     </>
   );

@@ -33,13 +33,26 @@ export async function PATCH(request: NextRequest) {
       data: { rentalObjectId: null },
     });
 
+    // Check if there are any renters left for the rentalObject
+    const remainingRenters = await prisma.renter.count({
+      where: { rentalObjectId: rentalObjectId },
+    });
+
+    // If no renters are left, update the rentalObject status to UNINHIBITED
+    if (remainingRenters === 0) {
+      await prisma.rentalObject.update({
+        where: { id: rentalObjectId },
+        data: { status: "UNINHABITED" },
+      });
+    }
+
     return NextResponse.json({
-      message: "Rental objects set to null for specified renters",
+      message: "Rental objects updated successfully",
       count: updatedRenters.count,
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to update renters" });
+    return NextResponse.json({ error: "Failed to update" });
   } finally {
     await prisma.$disconnect();
   }

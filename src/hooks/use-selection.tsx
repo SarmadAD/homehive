@@ -1,44 +1,57 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import * as React from "react";
 
-export interface Selection<T> {
-  handleDeselectAll: () => void;
-  handleDeselectOne: (item: T) => void;
-  handleSelectAll: () => void;
-  handleSelectOne: (item: T) => void;
-  selected: T[];
+export interface Selection<T = string> {
+  deselectAll: () => void;
+  deselectOne: (key: T) => void;
+  selectAll: () => void;
+  selectOne: (key: T) => void;
+  selected: Set<T>;
+  selectedAny: boolean;
+  selectedAll: boolean;
 }
 
-export const useSelection = <T,>(items: T[] = []): Selection<T> => {
-  const memoizedItems = useMemo(() => items, [items]);
-  const [selected, setSelected] = useState<T[]>([]);
+// IMPORTANT: To prevent infinite loop, `keys` argument must be memoized with React.useMemo hook.
+export function useSelection<T = string>(keys: T[] = []): Selection<T> {
+  const [selected, setSelected] = React.useState<Set<T>>(new Set());
 
-  useEffect(() => {
-    setSelected([]);
-  }, [memoizedItems]);
+  React.useEffect(() => {
+    setSelected(new Set());
+  }, [keys]);
 
-  const handleSelectAll = useCallback((): void => {
-    setSelected([...memoizedItems]);
-  }, [memoizedItems]);
-
-  const handleSelectOne = useCallback((item: T): void => {
-    setSelected((prevState) => [...prevState, item]);
+  const handleDeselectAll = React.useCallback(() => {
+    setSelected(new Set());
   }, []);
 
-  const handleDeselectAll = useCallback(() => {
-    setSelected([]);
-  }, []);
-
-  const handleDeselectOne = useCallback((item: T): void => {
-    setSelected((prevState) => {
-      return prevState.filter((_item) => _item !== item);
+  const handleDeselectOne = React.useCallback((key: T) => {
+    setSelected((prev) => {
+      const copy = new Set(prev);
+      copy.delete(key);
+      return copy;
     });
   }, []);
 
+  const handleSelectAll = React.useCallback(() => {
+    setSelected(new Set(keys));
+  }, [keys]);
+
+  const handleSelectOne = React.useCallback((key: T) => {
+    setSelected((prev) => {
+      const copy = new Set(prev);
+      copy.add(key);
+      return copy;
+    });
+  }, []);
+
+  const selectedAny = selected.size > 0;
+  const selectedAll = selected.size === keys.length;
+
   return {
-    handleDeselectAll,
-    handleDeselectOne,
-    handleSelectAll,
-    handleSelectOne,
+    deselectAll: handleDeselectAll,
+    deselectOne: handleDeselectOne,
+    selectAll: handleSelectAll,
+    selectOne: handleSelectOne,
     selected,
+    selectedAny,
+    selectedAll,
   };
-};
+}
