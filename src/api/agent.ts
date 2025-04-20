@@ -11,6 +11,7 @@ const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
   post: <T>(url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
   put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
+  patch: <T>(url: string, body: {}) => axios.patch<T>(url, body).then(responseBody),
   del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
@@ -18,7 +19,7 @@ const objects = {
   list: (landlordId: string) => requests.get<RentalObject[]>(`/api/dashboard/objects/${landlordId}`),
   details: (objectId: string) => requests.get<RentalObject>(`/api/dashboard/objects/object/${objectId}`),
   create: (object: RentalObject) => requests.post<RentalObject>(`/api/dashboard/objects/${object.landlord.id}`, object),
-  update: (object: RentalObject) => requests.put<void>(`/api/dashboard/objects/object/${object.id}`, object),
+  update: (object: RentalObject) => requests.put<RentalObject>(`/api/dashboard/objects/object/${object.id}`, object),
   delete: (id: string) => requests.del<void>(`/api/dashboard/objects/object/${id}`),
   rentalObjectInfo: (id: string) => requests.get<RentalObjectInfo>(`/rentalObjectInfo/${id}`),
   updateRepairRequest: (repairRequest: RepairRequest) =>
@@ -33,6 +34,8 @@ const landlord = {
 
 const renter = {
   details: (firebaseUserId: string) => requests.get<Renter>(`/api/renter?fbId=${firebaseUserId}`),
+  removeRentalObjectFromRenter: (renters: string[], rentalObjectId: string) =>
+    requests.patch<Renter>(`/api/renter`, { renters, rentalObjectId }),
 };
 
 const renters = {

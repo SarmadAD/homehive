@@ -87,10 +87,11 @@ export const ObjectCreateForm: FC = () => {
         label: "Mietinformationen",
         content: (
           <ObjectRentInfosStep
+            operation="create"
             onBack={handleBack}
             onNext={handleComplete}
-            newObject={newObject}
-            setNewObject={setNewObject}
+            currentObject={newObject}
+            setCurrentObject={setNewObject}
             showDueDateAndRenter={true}
           />
         ),

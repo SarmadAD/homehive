@@ -11,23 +11,24 @@ import { Renter } from "prisma/types/renter";
 interface ObjectRentInfosStep {
   onNext?: () => void;
   onBack?: () => void;
-  newObject: RentalObject;
-  setNewObject: Dispatch<RentalObject>;
+  currentObject: RentalObject;
+  setCurrentObject: Dispatch<RentalObject>;
   showDueDateAndRenter: boolean;
+  operation: "create" | "edit";
 }
 
 export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
-  const { onBack, onNext, newObject, setNewObject, showDueDateAndRenter, ...other } = props;
+  const { onBack, onNext, currentObject, setCurrentObject, showDueDateAndRenter, operation, ...other } = props;
 
   const renters = useRecoilValue(rentersAtom);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { value } = e.target;
     const parseValue = parseInt(value) ? parseInt(value) : value;
-    setNewObject({
-      ...newObject,
+    setCurrentObject({
+      ...currentObject,
       rentalObjectInfo: {
-        ...newObject?.rentalObjectInfo,
+        ...currentObject?.rentalObjectInfo,
         [e.target.name]: parseValue,
       },
     });
@@ -35,7 +36,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
 
   function handleRenterChange(event: React.SyntheticEvent, renter: Renter[] | null) {
     if (renter) {
-      setNewObject({ ...newObject, renter: renter });
+      setCurrentObject({ ...currentObject, renter: renter });
     }
   }
 
@@ -46,7 +47,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           fullWidth
           label="Kaltmiete"
           name="baseRent"
-          value={newObject?.rentalObjectInfo?.baseRent}
+          value={currentObject?.rentalObjectInfo?.baseRent}
           onChange={handleChange}
           type="number"
         />
@@ -54,7 +55,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           fullWidth
           label="Heizkosten"
           name="heatingCosts"
-          value={newObject.rentalObjectInfo.heatingCosts}
+          value={currentObject.rentalObjectInfo.heatingCosts}
           onChange={handleChange}
           type="number"
         />
@@ -65,7 +66,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           fullWidth
           label="Wasserkosten"
           name="waterCosts"
-          value={newObject.rentalObjectInfo.waterCosts}
+          value={currentObject.rentalObjectInfo.waterCosts}
           onChange={handleChange}
           type="number"
         />
@@ -73,27 +74,29 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           fullWidth
           label="Stromkosten"
           name="electricityCosts"
-          value={newObject.rentalObjectInfo.electricityCosts}
+          value={currentObject.rentalObjectInfo.electricityCosts}
           onChange={handleChange}
           type="number"
         />
       </Stack>
-      <Stack spacing={3} direction="column">
-        <div>
-          <Typography variant="h6">Füge Mieter zu dem Objekt hinzu</Typography>
-        </div>
-        <Autocomplete
-          multiple={true}
-          onChange={handleRenterChange}
-          getOptionLabel={(option: Renter) => getRenterName(option.firstname, option.surname)}
-          options={renters}
-          value={newObject.renter as Renter[]}
-          renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
-        />
-        <Typography color="text.secondary" variant="body2">
-          Die Fälligkeit der Zahlung pro Mieter kann in der Objekteübersicht unter dem Tab Mieter geändert werden.
-        </Typography>
-      </Stack>
+      {operation === "create" && (
+        <Stack spacing={3} direction="column">
+          <div>
+            <Typography variant="h6">Füge Mieter zu dem Objekt hinzu</Typography>
+          </div>
+          <Autocomplete
+            multiple={true}
+            onChange={handleRenterChange}
+            getOptionLabel={(option: Renter) => getRenterName(option.firstname, option.surname)}
+            options={renters}
+            value={currentObject.renter as Renter[]}
+            renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Mieter" name="renter" />}
+          />
+          <Typography color="text.secondary" variant="body2">
+            Die Fälligkeit der Zahlung pro Mieter kann in der Objekteübersicht unter dem Tab Mieter geändert werden.
+          </Typography>
+        </Stack>
+      )}
 
       <Stack alignItems="center" direction="row" spacing={2}>
         <Button

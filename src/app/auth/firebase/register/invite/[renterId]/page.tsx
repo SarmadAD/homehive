@@ -74,12 +74,21 @@ const Page = () => {
       setIsPending(true);
 
       try {
-        await createUserWithEmailAndPassword(firebaseAuth, values.email, values.password);
-        // UserProvider will handle Router refresh
-        // After refresh, GuestGuard will handle the redirect
+        let path = "";
+        const user = await createUserWithEmailAndPassword(firebaseAuth, values.email, values.password);
+        const renterExistsWithFirebaseUserId = await checkIfRenterExistsWithFirebaseUserId(user);
+        if (renterExistsWithFirebaseUserId) {
+          path = returnTo || paths.renterportal.dashboard.objects.index;
+        } else if ((await checkIfRenterExists()) && !renterExistsWithFirebaseUserId) {
+          await updateRenterFirebaseId(user);
+          path = returnTo || paths.renterportal.dashboard.objects.index;
+        }
+        if (isMounted()) {
+          window.location.href = path;
+        }
       } catch (err) {
-        setError("root", { type: "server", message: (err as { message: string }).message });
         setIsPending(false);
+        toast.error((err as { message: string }).message);
       }
     },
     [firebaseAuth, setError]

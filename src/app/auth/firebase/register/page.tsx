@@ -187,9 +187,18 @@ const Page = () => {
       setIsPending(true);
 
       try {
-        await createUserWithEmailAndPassword(firebaseAuth, values.email, values.password);
-        // UserProvider will handle Router refresh
-        // After refresh, GuestGuard will handle the redirect
+        // Only Landlords can register. It makes no sense that Renter can register
+        let path = "";
+        const user = await createUserWithEmailAndPassword(firebaseAuth, values.email, values.password);
+        if (await checkIfLandlordExists(user)) {
+          path = returnTo || paths.landlordportal.dashboard.index;
+        } else {
+          await createLandlord(user);
+          path = returnTo || paths.landlordportal.dashboard.index;
+        }
+        if (isMounted()) {
+          window.location.href = path;
+        }
       } catch (err) {
         setError("root", { type: "server", message: (err as { message: string }).message });
         setIsPending(false);

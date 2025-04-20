@@ -97,6 +97,10 @@ export async function PUT(request: Request, { params }: { params: { objectId: st
             },
           },
         },
+        include: {
+          renter: true,
+          rentalObjectInfo: true,
+        },
       });
       if (updatedRentalObject) {
         return NextResponse.json(updatedRentalObject);

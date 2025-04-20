@@ -26,7 +26,14 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
 
   return (
     <Stack spacing={3} {...other}>
-      <TextField fullWidth label="Fläche" name="areaSize" placeholder="101" value={newObject?.areaSize} onChange={handleChange} />
+      <TextField
+        fullWidth
+        label="Fläche"
+        name="areaSize"
+        placeholder="101"
+        value={newObject?.areaSize}
+        onChange={handleChange}
+      />
       <Stack alignItems="center" direction="row" spacing={2}>
         <Button
           endIcon={

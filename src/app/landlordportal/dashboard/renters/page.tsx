@@ -9,6 +9,8 @@ import {
   CircularProgress,
   Button,
   SvgIcon,
+  Link,
+  IconButton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -24,26 +26,32 @@ import { useSettings } from "src/hooks/use-settings";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
-import { RenterListTable } from "src/sections/dashboard/renter/renter-list-table";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import { SplashScreen } from "src/components/splash-screen";
+import React from "react";
+import { ColumnDef, DataTable } from "src/components/data-table";
+import { Renter } from "prisma/types/renter";
+import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
+import { RouterLink } from "src/components/router-link";
 
 const Page: PageType = () => {
   usePageView();
-
   const settings = useSettings();
 
+  const setLandlord = useSetRecoilState(currentUserAtom);
   const rentersSearch = useRentersSearch();
   const renters = useRecoilValue(rentersAtom);
   const rentersIds = useRentersIds(renters);
-  const rentersSelection = useSelection<string>(rentersIds);
-  const [isLoading, setIsLoading] = useState(false);
+  // const rentersIds = React.useMemo(() => renters.map((renter) => renter.id), [renters]);
+  const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
 
-  const setLandlord = useSetRecoilState(currentUserAtom);
+  // const rentersSelection = useSelection<string>(rentersIds);
+  const [isLoading, setIsLoading] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const { user } = useAuth<AuthContextType>();
 
@@ -66,10 +74,42 @@ const Page: PageType = () => {
       setIsLoading(false);
     }
   }
+  const handleAddRenter = () => {
+    // setOpenAddRenterModal(true);
+  };
 
   if (isLoading) {
     return <SplashScreen />;
   }
+  const columns = [
+    {
+      formatter: (row): React.JSX.Element => (
+        <div>
+          <Link
+            color="text.primary"
+            sx={{ whiteSpace: "nowrap" }}
+            variant="subtitle2"
+            href={`${paths.landlordportal.dashboard.renters.details}${row.id}`}
+          >
+            {row.firstname} {row.surname}
+          </Link>
+        </div>
+      ),
+      name: "Name",
+      width: "650px",
+    },
+    {
+      formatter: (row): React.JSX.Element => (
+        <IconButton component={RouterLink} href={""}>
+          <SvgIcon>
+            <ArrowRightIcon />
+          </SvgIcon>
+        </IconButton>
+      ),
+      name: "",
+      align: "right",
+    },
+  ] satisfies ColumnDef<Renter>[];
 
   return (
     <>
@@ -121,18 +161,20 @@ const Page: PageType = () => {
                     <CircularProgress />
                   </Box>
                 ) : (
-                  <RenterListTable
-                    count={renters.length}
-                    items={renters}
-                    onDeselectAll={rentersSelection.handleDeselectAll}
-                    onDeselectOne={rentersSelection.handleDeselectOne}
-                    onPageChange={rentersSearch.handlePageChange}
-                    onRowsPerPageChange={rentersSearch.handleRowsPerPageChange}
-                    onSelectAll={rentersSelection.handleSelectAll}
-                    onSelectOne={rentersSelection.handleSelectOne}
-                    page={rentersSearch.state.page}
-                    rowsPerPage={rentersSearch.state.rowsPerPage}
-                    selected={rentersSelection.selected}
+                  <DataTable<Renter>
+                    columns={columns}
+                    rows={(renters as Renter[]) || []}
+                    onDeselectAll={deselectAll}
+                    onDeselectOne={(_, row) => {
+                      deselectOne(row.id);
+                    }}
+                    onSelectAll={selectAll}
+                    onSelectOne={(_, row) => {
+                      selectOne(row.id);
+                    }}
+                    selected={selected}
+                    setOpenDeleteModal={setOpenDeleteModal}
+                    selectable
                   />
                 )}
               </Grid>
