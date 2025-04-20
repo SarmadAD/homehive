@@ -48,7 +48,7 @@ export const ObjectEditForm: FC = () => {
   const [isComplete, setIsComplete] = useState<boolean>(false);
 
   const rentalObject = useRecoilValue(rentalObjectAtom);
-  const [object, setObject] = useState<RentalObject>(rentalObject);
+  const [currentObject, setCurrentObject] = useState<RentalObject>(rentalObject);
 
   const router = useRouter();
 
@@ -69,29 +69,40 @@ export const ObjectEditForm: FC = () => {
       {
         label: "Basisinformationen",
         content: (
-          <ObjectBasicInfosStep onBack={handleBack} onNext={handleNext} newObject={object} setNewObject={setObject} />
+          <ObjectBasicInfosStep
+            onBack={handleBack}
+            onNext={handleNext}
+            newObject={currentObject}
+            setNewObject={setCurrentObject}
+          />
         ),
       },
       {
         label: "Objektinformationen",
         content: (
-          <ObjectInfosStep onBack={handleBack} onNext={handleNext} newObject={object} setNewObject={setObject} />
+          <ObjectInfosStep
+            onBack={handleBack}
+            onNext={handleNext}
+            newObject={currentObject}
+            setNewObject={setCurrentObject}
+          />
         ),
       },
       {
         label: "Mietinformationen",
         content: (
           <ObjectRentInfosStep
+            operation="edit"
             onBack={handleBack}
             onNext={handleComplete}
-            newObject={object}
-            setNewObject={setObject}
+            currentObject={currentObject}
+            setCurrentObject={setCurrentObject}
             showDueDateAndRenter={false}
           />
         ),
       },
     ];
-  }, [handleBack, handleNext, handleComplete, object]);
+  }, [handleBack, handleNext, handleComplete, currentObject]);
 
   async function updateRentalObject(object: RentalObject) {
     try {
@@ -104,14 +115,17 @@ export const ObjectEditForm: FC = () => {
   }
 
   useEffect(() => {
-    if (isComplete && object) {
-      const newObject: RentalObject = { ...object, status: object.renter.length > 0 ? "INHABITED" : "UNINHABITED" };
-      setObject({
-        ...object,
-        status: object.renter.length > 0 ? "INHABITED" : "UNINHABITED",
+    if (isComplete && currentObject) {
+      const object: RentalObject = {
+        ...currentObject,
+        status: currentObject.renter.length > 0 ? "INHABITED" : "UNINHABITED",
+      };
+      setCurrentObject({
+        ...currentObject,
+        status: currentObject.renter.length > 0 ? "INHABITED" : "UNINHABITED",
       });
 
-      updateRentalObject(newObject);
+      updateRentalObject(object);
       setIsComplete(false);
       router.push("/landlordportal/dashboard/objects");
     }

@@ -131,7 +131,12 @@ export const ObjectRepairRequestList: FC<ObjectRepairRequestListProps> = (props)
               const statusPill = useRepairRequestStatusPill(repairRequest.status);
 
               return (
-                <TableRow hover key={repairRequest.id} selected={isSelected} onClick={() => onSelect?.(repairRequest.id)}>
+                <TableRow
+                  hover
+                  key={repairRequest.id}
+                  selected={isSelected}
+                  onClick={() => onSelect?.(repairRequest.id)}
+                >
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isSelected}

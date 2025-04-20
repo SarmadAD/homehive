@@ -244,10 +244,10 @@ const Page: PageType = () => {
                       </Avatar>
                       <Stack spacing={1}>
                         <Typography variant="h4">{rentalObject.name}</Typography>
-                        <Stack alignItems="center" direction="row" spacing={1}>
+                        {/* <Stack alignItems="center" direction="row" spacing={1}>
                           <Typography variant="subtitle2">user_id:</Typography>
                           <Chip label={rentalObject.id} size="small" />
-                        </Stack>
+                        </Stack> */}
                       </Stack>
                     </Stack>
                   </Stack>

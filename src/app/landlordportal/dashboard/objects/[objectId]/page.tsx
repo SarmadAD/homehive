@@ -52,6 +52,15 @@ import agent from "src/api/agent";
 import { SplashScreen } from "src/components/splash-screen";
 import { DeleteOutline } from "@mui/icons-material";
 import { useRouter } from "src/hooks/use-router";
+import { DeleteModal } from "src/components/widgets/modals/delete-modal";
+import { AddRenterModal } from "src/components/widgets/modals/add-renter-modal";
+import { rentersAtom } from "src/state/atoms/rentersAtom";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import { AuthContextType } from "src/contexts/auth/firebase";
+import { useAuth } from "src/hooks/use-auth";
+import { RentalObject } from "prisma/types/objects";
+import { toast } from "src/components/toaster";
+import React from "react";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -91,14 +100,19 @@ const Page: PageType = () => {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
 
-  const rentalObject = useRecoilValue(rentalObjectAtom);
   const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
+  const setRentalObject = useSetRecoilState(rentalObjectAtom);
+  const rentalObject = useRecoilValue(rentalObjectAtom);
 
   const rentersSearch = useRentersSearch();
   const repairRequestsSearch = useRepairRequestsSearch();
 
-  const rentersIds = useRentersIds(rentalObject?.renter);
+  // const rentersIds = useRentersIds(rentalObject?.renter);
+  const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject.renter]);
   const rentersSelection = useSelection<string>(rentersIds);
+
+  const setLandlord = useSetRecoilState(currentUserAtom);
+  const renters = useRecoilValue(rentersAtom);
 
   const repairRequestsIds = useRepairRequestsIds(rentalObject?.repairRequests);
   const repairRequestsSelection = useSelection<string>(repairRequestsIds);
@@ -107,16 +121,20 @@ const Page: PageType = () => {
   const currentRepairRequest = useCurrentRepairRequest(rentalObject?.repairRequests as RepairRequest[], dialog.data);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openAddRenterModal, setOpenAddRenterModal] = useState(false);
 
-  const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleMainActionMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const { user } = useAuth<AuthContextType>();
 
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
-  const handleDeleteClick = async () => {
+  const handleObjectDelete = async () => {
     try {
       if (rentalObject?.id) {
         await agent.objects.delete(rentalObject.id);
@@ -145,10 +163,25 @@ const Page: PageType = () => {
     []
   );
 
+  useEffect(() => {
+    getLandlord();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function getLandlord() {
+    try {
+      const firebaseUserId = user?.id;
+      if (firebaseUserId) {
+        const landlord = await agent.landlord.details(firebaseUserId);
+        setLandlord(landlord);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const handleDialog = useCallback(
     (id: string): void => {
-      // Close drawer if is the same order
-
       if (dialog.open && dialog.data === id) {
         dialog.handleClose();
         return;
@@ -201,6 +234,53 @@ const Page: PageType = () => {
       let newRepairRequest = { ...currentRepairRequest };
       newRepairRequest.status = "CANCELED";
       await updateRepairRequest(newRepairRequest);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const updatedRenters = (rentalObject.renter as Renter[]).filter(
+        (renter: Renter) => !rentersSelection.selected.includes(renter.id)
+      );
+      await agent.renter.removeRentalObjectFromRenter(rentersSelection.selected, rentalObject.id);
+
+      const updatedRentalObject = {
+        ...rentalObject,
+        renter: updatedRenters,
+        status: updatedRenters.length === 0 ? "UNINHABITED" : rentalObject.status,
+      };
+      setRentalObject(updatedRentalObject);
+      toast.success("Mieter erfolgreich gelöscht");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOpenDeleteModal(false);
+    }
+  };
+
+  const handleAddRenter = () => {
+    setOpenAddRenterModal(true);
+  };
+
+  const onAddRenter = async (selectedRenterId: string) => {
+    try {
+      const selectedRenter = renters.find((renter) => renter.id === selectedRenterId);
+
+      if (selectedRenter) {
+        const updatedRenters = rentalObject.renter ? [...rentalObject.renter, selectedRenter] : [selectedRenter];
+        const updatedRentalObject = {
+          ...rentalObject,
+          renter: updatedRenters,
+          status: updatedRenters.length > 0 ? "INHABITED" : rentalObject.status,
+        };
+        const updatedRentalObjectFromResponse: RentalObject = await agent.objects.update(updatedRentalObject);
+        setRentalObject(updatedRentalObjectFromResponse);
+        toast.success("Mieter erfolgreich hinzugefügt");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOpenAddRenterModal(false);
     }
   };
 
@@ -274,10 +354,10 @@ const Page: PageType = () => {
                       </Avatar>
                       <Stack spacing={1}>
                         <Typography variant="h4">{rentalObject.name}</Typography>
-                        <Stack alignItems="center" direction="row" spacing={1}>
+                        {/* <Stack alignItems="center" direction="row" spacing={1}>
                           <Typography variant="subtitle2">user_id:</Typography>
                           <Chip label={rentalObject.id} size="small" />
-                        </Stack>
+                        </Stack> */}
                       </Stack>
                     </Stack>
                     <Stack alignItems="center" direction="row" spacing={2}>
@@ -300,7 +380,7 @@ const Page: PageType = () => {
                           </SvgIcon>
                         }
                         variant="contained"
-                        onClick={handleMenuOpen}
+                        onClick={handleMainActionMenuOpen}
                       >
                         Aktionen
                       </Button>
@@ -314,11 +394,11 @@ const Page: PageType = () => {
                           },
                         }}
                       >
-                        <MenuItem onClick={handleDeleteClick}>
+                        <MenuItem onClick={() => handleObjectDelete()}>
                           <SvgIcon>
                             <DeleteOutline />
                           </SvgIcon>
-                          Löschen
+                          Objekt löschen
                         </MenuItem>
                       </Menu>
                     </Stack>
@@ -365,7 +445,9 @@ const Page: PageType = () => {
                     page={rentersSearch.state.page}
                     rowsPerPage={rentersSearch.state.rowsPerPage}
                     selected={rentersSelection.selected}
+                    setOpenDeleteModal={setOpenDeleteModal}
                     onSelect={handleDialog}
+                    handleAddRenter={handleAddRenter}
                   />
                 )}
                 {currentTab === "repairRequests" && (
@@ -408,6 +490,14 @@ const Page: PageType = () => {
           )}
         </Box>
       </Box>
+      <DeleteModal setOpenDeleteModal={setOpenDeleteModal} onDelete={handleDelete} openDeleteModal={openDeleteModal} />
+      <AddRenterModal
+        setOpenAddRenterModal={setOpenAddRenterModal}
+        onAddRenter={onAddRenter}
+        openAddRenterModal={openAddRenterModal}
+        renters={renters}
+        rentalObject={rentalObject}
+      />
     </>
   );
 };

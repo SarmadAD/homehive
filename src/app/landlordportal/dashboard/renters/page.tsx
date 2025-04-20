@@ -42,6 +42,7 @@ const Page: PageType = () => {
   const rentersIds = useRentersIds(renters);
   const rentersSelection = useSelection<string>(rentersIds);
   const [isLoading, setIsLoading] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const setLandlord = useSetRecoilState(currentUserAtom);
 
@@ -66,6 +67,9 @@ const Page: PageType = () => {
       setIsLoading(false);
     }
   }
+  const handleAddRenter = () => {
+    // setOpenAddRenterModal(true);
+  };
 
   if (isLoading) {
     return <SplashScreen />;
@@ -133,6 +137,8 @@ const Page: PageType = () => {
                     page={rentersSearch.state.page}
                     rowsPerPage={rentersSearch.state.rowsPerPage}
                     selected={rentersSelection.selected}
+                    setOpenDeleteModal={setOpenDeleteModal}
+                    handleAddRenter={handleAddRenter}
                   />
                 )}
               </Grid>

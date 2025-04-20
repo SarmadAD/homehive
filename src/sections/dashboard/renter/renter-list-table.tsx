@@ -1,4 +1,4 @@
-import type { FC, ChangeEvent, MouseEvent } from "react";
+import { type FC, type ChangeEvent, type MouseEvent, useState } from "react";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import PropTypes from "prop-types";
@@ -10,6 +10,8 @@ import {
   Checkbox,
   IconButton,
   Link,
+  Menu,
+  MenuItem,
   Stack,
   SvgIcon,
   Table,
@@ -18,6 +20,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
@@ -27,6 +30,8 @@ import { getInitials } from "src/utils/get-initials";
 // import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
 import { getRenterName } from "src/utils/get-renter-name";
 import { Renter } from "prisma/types/renter";
+import { DotsThree as DotsThreeIcon } from "@phosphor-icons/react/dist/ssr/DotsThree";
+import { Plus, PlusCircle } from "@untitled-ui/icons-react";
 
 interface RenterListTableProps {
   count?: number;
@@ -41,6 +46,8 @@ interface RenterListTableProps {
   rowsPerPage?: number;
   selected?: string[];
   onSelect?: (renterId: string) => void;
+  setOpenDeleteModal: (open: boolean) => void;
+  handleAddRenter: () => void;
 }
 
 export const RenterListTable: FC<RenterListTableProps> = (props) => {
@@ -57,6 +64,8 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
     page = 0,
     rowsPerPage = 0,
     selected = [],
+    setOpenDeleteModal,
+    handleAddRenter,
   } = props;
 
   const selectedSome = selected.length > 0 && selected.length < items.length;
@@ -93,7 +102,7 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
               }
             }}
           />
-          <Button color="inherit" size="small">
+          <Button color="inherit" size="small" onClick={() => setOpenDeleteModal(true)}>
             Delete
           </Button>
         </Stack>
@@ -117,7 +126,13 @@ export const RenterListTable: FC<RenterListTableProps> = (props) => {
               </TableCell>
               <TableCell>Name</TableCell>
               {/* <TableCell>Status</TableCell> */}
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align="right">
+                <Tooltip title="Mieter hinzufügen">
+                  <IconButton onClick={() => handleAddRenter()}>
+                    <PlusCircle />
+                  </IconButton>
+                </Tooltip>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
