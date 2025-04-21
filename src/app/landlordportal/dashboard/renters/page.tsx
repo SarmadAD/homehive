@@ -124,8 +124,8 @@ const Page: PageType = () => {
           }}
         >
           <Container maxWidth={settings.stretch ? false : "xl"}>
-            <Grid container disableEqualOverflow spacing={{}}>
-              <Grid xs={12}>
+            <Grid container disableEqualOverflow>
+              <Grid xs={12} pb={3}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
                   <div>
                     <Typography variant="h4">Mieter</Typography>
@@ -149,7 +149,7 @@ const Page: PageType = () => {
                 <OverviewRentPaid showActions={false} />
               </Grid>
 
-              <Grid xs={12} md={12}>
+              <Grid xs={12} md={12} sx={{ overflowX: "auto" }}>
                 {isLoading ? (
                   <Box
                     sx={{
