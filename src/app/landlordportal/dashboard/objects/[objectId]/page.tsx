@@ -470,21 +470,23 @@ const Page: PageType = () => {
                   </div>
                 )}
                 {currentTab === "renter" && (
-                  <DataTable<Renter>
-                    columns={columns}
-                    rows={(rentalObject.renter as Renter[]) || []}
-                    onDeselectAll={deselectAll}
-                    onDeselectOne={(_, row) => {
-                      deselectOne(row.id);
-                    }}
-                    onSelectAll={selectAll}
-                    onSelectOne={(_, row) => {
-                      selectOne(row.id);
-                    }}
-                    selected={selected}
-                    setOpenDeleteModal={setOpenDeleteModal}
-                    selectable
-                  />
+                  <Box sx={{ overflowX: "auto" }}>
+                    <DataTable<Renter>
+                      columns={columns}
+                      rows={(rentalObject.renter as Renter[]) || []}
+                      onDeselectAll={deselectAll}
+                      onDeselectOne={(_, row) => {
+                        deselectOne(row.id);
+                      }}
+                      onSelectAll={selectAll}
+                      onSelectOne={(_, row) => {
+                        selectOne(row.id);
+                      }}
+                      selected={selected}
+                      setOpenDeleteModal={setOpenDeleteModal}
+                      selectable
+                    />
+                  </Box>
                 )}
                 {/* {currentTab === "repairRequests" && (
                   // <ObjectRepairRequestList

@@ -253,7 +253,7 @@ const Page: PageType = () => {
               <Grid xs={12} md={4}>
                 <OverviewStatusObjects showActions={false} />
               </Grid>
-              <Grid xs={12} md={12}>
+              <Grid xs={12} md={12} sx={{ overflowX: "auto" }}>
                 {/* <ObjectsListTable />
                  */}
                 {/* <CustomerListSearch
@@ -292,7 +292,7 @@ const Page: PageType = () => {
               </Grid>
             </Grid>
           </Container>
-        </Box>{" "}
+        </Box>
         <DeleteModal
           setOpenDeleteModal={setOpenDeleteModal}
           onDelete={handleDelete}
