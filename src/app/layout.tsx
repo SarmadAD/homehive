@@ -12,6 +12,7 @@ import { cookies } from "next/headers";
 
 import { Layout as RootLayout } from "src/layouts/root";
 import type { Settings } from "src/types/settings";
+import { Analytics } from "@vercel/analytics/next";
 
 // Force-Dynamic is required otherwise all pages are marked as client-side
 // due to the usage of the "cookies" function.
@@ -91,7 +92,7 @@ const Layout = (props: LayoutProps) => {
         <Vendors />
       </head>
       <body>
-        <RootLayout settings={settings}>{children}</RootLayout>
+        <RootLayout settings={settings}>{children}</RootLayout> <Analytics />
       </body>
     </html>
   );
