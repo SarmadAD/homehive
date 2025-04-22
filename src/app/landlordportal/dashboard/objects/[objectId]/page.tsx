@@ -22,6 +22,7 @@ import {
   MenuItem,
   IconButton,
   Tooltip,
+  Skeleton,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -127,6 +128,7 @@ const Page: PageType = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddRenterModal, setOpenAddRenterModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleMainActionMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -174,6 +176,7 @@ const Page: PageType = () => {
 
   async function getLandlord() {
     try {
+      setIsLoading(true);
       const firebaseUserId = user?.id;
       if (firebaseUserId) {
         const landlord = await agent.landlord.details(firebaseUserId);
@@ -181,6 +184,8 @@ const Page: PageType = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -286,10 +291,6 @@ const Page: PageType = () => {
     }
   };
 
-  if (!rentalObject.id) {
-    return <SplashScreen />;
-  }
-
   const columns = [
     {
       formatter: (row): React.JSX.Element => (
@@ -380,21 +381,25 @@ const Page: PageType = () => {
                     spacing={4}
                   >
                     <Stack alignItems="center" direction="row" spacing={2}>
-                      <Avatar
-                        src={rentalObject.image}
-                        sx={{
-                          height: 64,
-                          width: 64,
-                        }}
-                      >
-                        {getInitials(rentalObject.name)}
-                      </Avatar>
+                      {rentalObject?.image || rentalObject?.name ? (
+                        <Avatar
+                          src={rentalObject.image}
+                          sx={{
+                            height: 64,
+                            width: 64,
+                          }}
+                        >
+                          {getInitials(rentalObject.name)}
+                        </Avatar>
+                      ) : (
+                        <Skeleton variant="circular" width={64} height={64} />
+                      )}
                       <Stack spacing={1}>
-                        <Typography variant="h4">{rentalObject.name}</Typography>
-                        {/* <Stack alignItems="center" direction="row" spacing={1}>
-                          <Typography variant="subtitle2">user_id:</Typography>
-                          <Chip label={rentalObject.id} size="small" />
-                        </Stack> */}
+                        {rentalObject?.name ? (
+                          <Typography variant="h4">{rentalObject.name}</Typography>
+                        ) : (
+                          <Skeleton width={150} height={32} />
+                        )}
                       </Stack>
                     </Stack>
                     <Stack alignItems="center" direction="row" spacing={2}>
@@ -484,6 +489,7 @@ const Page: PageType = () => {
                       }}
                       selected={selected}
                       setOpenDeleteModal={setOpenDeleteModal}
+                      isLoading={isLoading}
                       selectable
                     />
                   </Box>

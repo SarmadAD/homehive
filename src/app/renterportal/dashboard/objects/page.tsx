@@ -19,6 +19,7 @@ import {
   Tabs,
   Typography,
   Unstable_Grid2 as Grid,
+  Skeleton,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -41,7 +42,7 @@ import { ObjectBasicDetails } from "src/app/landlordportal/dashboard/objects/obj
 import { ObjectRentInfoChart } from "src/app/landlordportal/dashboard/objects/object-rentInfo-chart";
 import { ObjectRepairRequestList } from "src/app/landlordportal/dashboard/objects/repairRequests/objects-repairRequests-list";
 import { ObjectRepairRequestDrawer } from "src/app/landlordportal/dashboard/objects/repairRequests/object-repairRequest-drawer";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
 import { toast } from "src/components/toaster";
@@ -182,12 +183,7 @@ const Page: PageType = () => {
     }
   };
 
-  if (isLoading || (!renter.id && !rentalObject.id)) {
-    return <SplashScreen />;
-  }
-
-  // Wenn rentalObjekt immer noch default ist, dann zeige den Toast an
-  if (!rentalObject.id && !isLoading) {
+  if (rentalObject.id === "" && !isLoading && renter.id !== "") {
     if (!hasShownToast.current) {
       toast.info("Ihnen wurde noch kein Objekt zugewiesen. Bitte wenden Sie sich an Ihren Vermieter.", {
         duration: 8000,
@@ -236,21 +232,25 @@ const Page: PageType = () => {
                     spacing={4}
                   >
                     <Stack alignItems="center" direction="row" spacing={2}>
-                      <Avatar
-                        src={rentalObject.image}
-                        sx={{
-                          height: 64,
-                          width: 64,
-                        }}
-                      >
-                        {getInitials(rentalObject.name)}
-                      </Avatar>
+                      {rentalObject?.image || rentalObject?.name ? (
+                        <Avatar
+                          src={rentalObject.image}
+                          sx={{
+                            height: 64,
+                            width: 64,
+                          }}
+                        >
+                          {getInitials(rentalObject.name)}
+                        </Avatar>
+                      ) : (
+                        <Skeleton variant="circular" width={64} height={64} />
+                      )}
                       <Stack spacing={1}>
-                        <Typography variant="h4">{rentalObject.name}</Typography>
-                        {/* <Stack alignItems="center" direction="row" spacing={1}>
-                          <Typography variant="subtitle2">user_id:</Typography>
-                          <Chip label={rentalObject.id} size="small" />
-                        </Stack> */}
+                        {rentalObject?.name ? (
+                          <Typography variant="h4">{rentalObject.name}</Typography>
+                        ) : (
+                          <Skeleton width={150} height={32} />
+                        )}
                       </Stack>
                     </Stack>
                   </Stack>

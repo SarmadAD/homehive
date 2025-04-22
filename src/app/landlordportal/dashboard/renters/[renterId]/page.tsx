@@ -20,6 +20,7 @@ import {
   Unstable_Grid2 as Grid,
   Menu,
   MenuItem,
+  Skeleton,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -117,9 +118,6 @@ const Page: PageType = () => {
     setCurrentTab(value);
   }, []);
 
-  if (!renter.id) {
-    return <SplashScreen />;
-  }
   return (
     <>
       <Seo title="Objekt Details" />
@@ -172,21 +170,26 @@ const Page: PageType = () => {
                   spacing={4}
                 >
                   <Stack alignItems="center" direction="row" spacing={2}>
-                    <Avatar
-                      src={renter.image}
-                      sx={{
-                        height: 64,
-                        width: 64,
-                      }}
-                    >
-                      {getInitials(getRenterName(renter.firstname, renter.surname))}
-                    </Avatar>
+                    {renter?.image || renter?.surname || renter?.firstname ? (
+                      <Avatar
+                        src={renter.image}
+                        sx={{
+                          height: 64,
+                          width: 64,
+                        }}
+                      >
+                        {getInitials(getRenterName(renter.firstname, renter.surname))}
+                      </Avatar>
+                    ) : (
+                      <Skeleton variant="circular" width={64} height={64} />
+                    )}
+
                     <Stack spacing={1}>
-                      <Typography variant="h4">{getRenterName(renter.firstname, renter.surname)}</Typography>
-                      {/* <Stack alignItems="center" direction="row" spacing={1}>
-                        <Typography variant="subtitle2">user_id:</Typography>
-                        <Chip label={renter.id} size="small" />
-                      </Stack> */}
+                      {renter?.firstname || renter.surname ? (
+                        <Typography variant="h4">{getRenterName(renter.firstname, renter.surname)}</Typography>
+                      ) : (
+                        <Skeleton width={150} height={32} />
+                      )}
                     </Stack>
                   </Stack>
                   <Stack alignItems="center" direction="row" spacing={2}>
@@ -253,7 +256,7 @@ const Page: PageType = () => {
                 <div>
                   <Grid container spacing={4}>
                     <Grid xs={12} lg={4}>
-                      <RenterBasicDetails renter={renter} />
+                      <RenterBasicDetails />
                     </Grid>
                   </Grid>
                 </div>

@@ -1,36 +1,48 @@
 import { FC } from "react";
-import PropTypes from "prop-types";
-import { Card, CardHeader, Theme, useMediaQuery } from "@mui/material";
+import { Card, CardHeader, Skeleton, Theme, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-// import { useRentPaidStatusPill } from "src/hooks/use-status-pill";
-import { Renter } from "@prisma/client";
 import { getRenterName } from "src/utils/get-renter-name";
+import { useRecoilValueLoadable } from "recoil";
+import { renterAtom } from "src/state/atoms/renterAtom";
 
-interface Props {
-  renter: Renter;
-}
+export const RenterBasicDetails: FC = () => {
+  const renterLoadable = useRecoilValueLoadable(renterAtom);
+  if (
+    renterLoadable.state === "loading" ||
+    (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "")
+  ) {
+    return (
+      <Card>
+        <CardHeader title="Basisinformationen" />
+        <PropertyList>
+          <PropertyListItem divider label="Kontaktdaten" valueJSX={<Skeleton width="60%" />} />
+          <PropertyListItem divider label="Name" valueJSX={<Skeleton width="40%" />} />
+        </PropertyList>
+      </Card>
+    );
+  }
 
-export const RenterBasicDetails: FC<Props> = ({ renter: { email, firstname, surname } }: Props) => {
-  // const statusPill = useRentPaidStatusPill(status);
-  const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
+  if (renterLoadable.state === "hasError") {
+    return (
+      <Card>
+        <CardHeader title="Basisinformationen" />
+        <PropertyList>
+          <PropertyListItem divider label="Fehler" value="Fehler beim Laden der Daten." />
+        </PropertyList>
+      </Card>
+    );
+  }
 
-  const align = lgUp ? "horizontal" : "vertical";
+  const renter = renterLoadable.contents;
 
   return (
     <Card>
       <CardHeader title="Basisinformationen" />
       <PropertyList>
-        <PropertyListItem divider label="Kontaktdaten" value={email} />
-        <PropertyListItem divider label="Name" value={getRenterName(firstname, surname)} />
-        {/* <PropertyListItem divider align={align} label="Miet Status">
-          {statusPill}
-        </PropertyListItem> */}
+        <PropertyListItem divider label="Kontaktdaten" value={renter.email} />
+        <PropertyListItem divider label="Name" value={getRenterName(renter.firstname, renter.surname)} />
       </PropertyList>
     </Card>
   );
-};
-
-RenterBasicDetails.propTypes = {
-  // renter: PropTypes.object.isRequired,
 };

@@ -143,9 +143,9 @@ const Page: PageType = () => {
     }
   }
 
-  if (isLoading) {
-    return <SplashScreen />;
-  }
+  // if (isLoading) {
+  //   return <SplashScreen />;
+  // }
 
   function handleDelete() {}
 
@@ -253,42 +253,23 @@ const Page: PageType = () => {
               <Grid xs={12} md={4}>
                 <OverviewStatusObjects showActions={false} />
               </Grid>
-              <Grid xs={12} md={12} sx={{ overflowX: "auto" }}>
-                {/* <ObjectsListTable />
-                 */}
-                {/* <CustomerListSearch
-                onFiltersChange={customersSearch.handleFiltersChange}
-                onSortChange={customersSearch.handleSortChange}
-                sortBy={customersSearch.state.sortBy}
-                sortDir={customersSearch.state.sortDir} 
-              /> */}
-                {isLoading ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      mt: 3,
-                    }}
-                  >
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  <DataTable<RentalObject>
-                    columns={columns}
-                    rows={rentalObjects}
-                    onDeselectAll={deselectAll}
-                    onDeselectOne={(_, row) => {
-                      deselectOne(row.id);
-                    }}
-                    onSelectAll={selectAll}
-                    onSelectOne={(_, row) => {
-                      selectOne(row.id);
-                    }}
-                    selected={selected}
-                    setOpenDeleteModal={setOpenDeleteModal}
-                    selectable
-                  />
-                )}
+              <Grid xs={12} sx={{ overflowX: "auto" }}>
+                <DataTable<RentalObject>
+                  columns={columns}
+                  rows={rentalObjects}
+                  onDeselectAll={deselectAll}
+                  onDeselectOne={(_, row) => {
+                    deselectOne(row.id);
+                  }}
+                  onSelectAll={selectAll}
+                  onSelectOne={(_, row) => {
+                    selectOne(row.id);
+                  }}
+                  selected={selected}
+                  setOpenDeleteModal={setOpenDeleteModal}
+                  isLoading={isLoading}
+                  selectable
+                />
               </Grid>
             </Grid>
           </Container>

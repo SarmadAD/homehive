@@ -1,12 +1,11 @@
 import type { FC } from "react";
 import type { ApexOptions } from "apexcharts";
 import numeral from "numeral";
-import { Box, Button, Card, CardActions, CardContent, CardHeader, Divider, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
-import { useRecoilValue } from "recoil";
+import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
-import { Landlord } from "@prisma/client";
 
 const labels: string[] = ["Kaltmiete", "Heißkosten", "Stromkosten", "Wasserkosten"];
 
@@ -18,7 +17,12 @@ const useChartOptions = (): ApexOptions => {
     chart: {
       background: "transparent",
     },
-    colors: [theme.palette.primary.main, theme.palette.warning.main, theme.palette.primary.darkest, theme.palette.info.main],
+    colors: [
+      theme.palette.primary.main,
+      theme.palette.warning.main,
+      theme.palette.primary.darkest,
+      theme.palette.info.main,
+    ],
     dataLabels: {
       enabled: false,
     },
@@ -38,26 +42,6 @@ const useChartOptions = (): ApexOptions => {
       pie: {
         expandOnClick: false,
       },
-      radialBar: {
-        dataLabels: {
-          show: false,
-        },
-        hollow: {
-          size: "100%",
-        },
-      },
-    },
-    states: {
-      active: {
-        filter: {
-          type: "none",
-        },
-      },
-      hover: {
-        filter: {
-          type: "none",
-        },
-      },
     },
     stroke: {
       width: 0,
@@ -73,12 +57,78 @@ const useChartOptions = (): ApexOptions => {
 
 export const ObjectRentInfoChart: FC = () => {
   const chartOptions = useChartOptions();
-  const rentalObject = useRecoilValue(rentalObjectAtom);
+  const rentalObjectLoadable = useRecoilValueLoadable(rentalObjectAtom);
+
+  if (
+    rentalObjectLoadable.state === "loading" ||
+    (rentalObjectLoadable.state === "hasValue" && rentalObjectLoadable.contents.id === "")
+  ) {
+    return (
+      <Box>
+        <Card>
+          <CardHeader title="Mietinfos" subheader="Mietkosten des Objekts" />
+          <CardContent>
+            <Stack alignItems="center" direction="row" flexWrap="wrap" spacing={3}>
+              <Skeleton variant="circular" width={200} height={200} />
+              <Stack spacing={4} sx={{ flexGrow: 1 }}>
+                <Stack spacing={1}>
+                  <Typography color="text.secondary" variant="overline">
+                    Gesamtmiete
+                  </Typography>
+                  <Skeleton width={100} height={32} />
+                </Stack>
+                <Stack spacing={1}>
+                  <Typography color="text.secondary" variant="overline">
+                    Kosten
+                  </Typography>
+                  <Stack
+                    component="ul"
+                    spacing={1}
+                    sx={{
+                      listStyle: "none",
+                      m: 0,
+                      p: 0,
+                    }}
+                  >
+                    {labels.map((label, index) => (
+                      <Stack alignItems="center" component="li" direction="row" key={index} spacing={2}>
+                        <Skeleton variant="rectangular" width={16} height={16} />
+                        <Skeleton width={100} height={24} />
+                        <Skeleton width={50} height={24} />
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Stack>
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  }
+
+  if (rentalObjectLoadable.state === "hasError") {
+    return (
+      <Box>
+        <Card>
+          <CardHeader title="Mietinfos" subheader="Mietkosten des Objekts" />
+          <CardContent>
+            <Typography color="error" variant="body2">
+              Fehler beim Laden der Daten.
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  }
+
+  const rentalObject = rentalObjectLoadable.contents;
   const { baseRent, electricityCosts, heatingCosts, waterCosts } = rentalObject.rentalObjectInfo;
 
   const chartSeries: ChartSeries = [baseRent, electricityCosts, heatingCosts, waterCosts];
   const totalAmount = chartSeries.reduce((acc, item) => (acc += item), 0);
   const formattedTotalAmount = numeral(totalAmount).format("$0,0.00");
+
   return (
     <Box>
       <Card>

@@ -8,7 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Skeleton, Stack } from "@mui/material";
 
 export interface ColumnDef<TRowModel> {
   align?: "left" | "right" | "center";
@@ -36,6 +36,7 @@ export interface DataTableProps<TRowModel> extends Omit<TableProps, "onClick"> {
   selected?: Set<RowId>;
   uniqueRowId?: (row: TRowModel) => RowId;
   setOpenDeleteModal: (open: boolean) => void;
+  isLoading: boolean;
 }
 
 export function DataTable<TRowModel extends object & { id?: RowId | null }>({
@@ -52,6 +53,7 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
   selected,
   uniqueRowId,
   setOpenDeleteModal,
+  isLoading,
   ...props
 }: DataTableProps<TRowModel>): React.JSX.Element {
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
@@ -129,57 +131,72 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, index): React.JSX.Element => {
-            const rowId = row.id ? row.id : uniqueRowId?.(row);
-            const rowSelected = rowId ? selected?.has(rowId) : false;
-
-            return (
-              <TableRow
-                hover={hover}
-                key={rowId ?? index}
-                selected={rowSelected}
-                {...(onClick && {
-                  onClick: (event: React.MouseEvent) => {
-                    onClick(event, row);
-                  },
-                })}
-                sx={{ ...(onClick && { cursor: "pointer" }) }}
-              >
-                {selectable ? (
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={rowId ? rowSelected : false}
-                      onChange={(event: React.ChangeEvent) => {
-                        if (rowSelected) {
-                          onDeselectOne?.(event, row);
-                        } else {
-                          onSelectOne?.(event, row);
-                        }
-                      }}
-                      onClick={(event: React.MouseEvent) => {
-                        if (onClick) {
-                          event.stopPropagation();
-                        }
-                      }}
-                    />
-                  </TableCell>
-                ) : null}
-                {columns.map(
-                  (column): React.JSX.Element => (
-                    <TableCell key={column.name} sx={{ ...(column.align && { textAlign: column.align }) }}>
-                      {
-                        (column.formatter
-                          ? column.formatter(row, index)
-                          : column.field
-                            ? row[column.field]
-                            : null) as React.ReactNode
-                      }
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <TableRow key={`skeleton-${index}`}>
+                  {selectable && (
+                    <TableCell padding="checkbox">
+                      <Skeleton variant="rounded" width={24} height={24} />
                     </TableCell>
-                  )
-                )}
-              </TableRow>
-            );
-          })}
+                  )}
+                  {columns.map((column, colIndex) => (
+                    <TableCell key={`skeleton-cell-${index}-${colIndex}`}>
+                      <Skeleton variant="text" width="80%" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            : rows.map((row, index): React.JSX.Element => {
+                const rowId = row.id ? row.id : uniqueRowId?.(row);
+                const rowSelected = rowId ? selected?.has(rowId) : false;
+
+                return (
+                  <TableRow
+                    hover={hover}
+                    key={rowId ?? index}
+                    selected={rowSelected}
+                    {...(onClick && {
+                      onClick: (event: React.MouseEvent) => {
+                        onClick(event, row);
+                      },
+                    })}
+                    sx={{ ...(onClick && { cursor: "pointer" }) }}
+                  >
+                    {selectable ? (
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={rowId ? rowSelected : false}
+                          onChange={(event: React.ChangeEvent) => {
+                            if (rowSelected) {
+                              onDeselectOne?.(event, row);
+                            } else {
+                              onSelectOne?.(event, row);
+                            }
+                          }}
+                          onClick={(event: React.MouseEvent) => {
+                            if (onClick) {
+                              event.stopPropagation();
+                            }
+                          }}
+                        />
+                      </TableCell>
+                    ) : null}
+                    {columns.map(
+                      (column): React.JSX.Element => (
+                        <TableCell key={column.name} sx={{ ...(column.align && { textAlign: column.align }) }}>
+                          {
+                            (column.formatter
+                              ? column.formatter(row, index)
+                              : column.field
+                                ? row[column.field]
+                                : null) as React.ReactNode
+                          }
+                        </TableCell>
+                      )
+                    )}
+                  </TableRow>
+                );
+              })}
         </TableBody>
       </Table>
     </Box>

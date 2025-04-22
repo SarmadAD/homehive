@@ -1,9 +1,9 @@
 import type { ApexOptions } from "apexcharts";
-import { Box, Card, CardHeader } from "@mui/material";
+import { Box, Card, CardHeader, Skeleton, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { RentPayment } from "@prisma/client";
-import { useRecoilValue } from "recoil";
+import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 
 type ChartSeries = {
@@ -89,7 +89,33 @@ const useChartOptions = (months: string[]): ApexOptions => {
 };
 
 export function OverviewRentalIncome() {
-  const rentalObjects = useRecoilValue(rentalObjectsAtom);
+  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
+
+  if (rentalObjectsLoadable.state === "loading") {
+    return (
+      <Card>
+        <CardHeader subheader="Basierend auf das aktuelle Jahr" title="Mieteinnahmen" />
+        <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: 250 }}>
+          <Skeleton variant="rounded" width="90%" height={225} />
+        </Box>
+      </Card>
+    );
+  }
+
+  if (rentalObjectsLoadable.state === "hasError") {
+    return (
+      <Card>
+        <CardHeader subheader="Basierend auf das aktuelle Jahr" title="Mieteinnahmen" />
+        <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: 250 }}>
+          <Typography color="error" variant="body2">
+            Fehler beim Laden der Daten.
+          </Typography>
+        </Box>
+      </Card>
+    );
+  }
+
+  const rentalObjects = rentalObjectsLoadable.contents;
 
   const getAllRentPayments = () => {
     const allRentPayments: RentPayment[] = [];
@@ -155,17 +181,7 @@ export function OverviewRentalIncome() {
   ];
   return (
     <Card>
-      <CardHeader
-        subheader="Basierend auf das aktuelle Jahr"
-        title="Mieteinnahmen"
-        // action={
-        //   <Tabs value="year">
-        //     <Tab label="Year" value="year" />
-        //     <Tab label="Month" value="month" />
-        //     <Tab label="Week" value="week" />
-        //   </Tabs>
-        // }
-      />
+      <CardHeader subheader="Basierend auf das aktuelle Jahr" title="Mieteinnahmen" />
       <Box>
         <Chart height={250} options={chartOptions} series={updatedChartSeries} type="bar" />
       </Box>
