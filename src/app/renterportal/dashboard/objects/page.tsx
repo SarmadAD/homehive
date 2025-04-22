@@ -41,10 +41,14 @@ import { ObjectBasicDetails } from "src/app/landlordportal/dashboard/objects/obj
 import { ObjectRentInfoChart } from "src/app/landlordportal/dashboard/objects/object-rentInfo-chart";
 import { ObjectRepairRequestList } from "src/app/landlordportal/dashboard/objects/repairRequests/objects-repairRequests-list";
 import { ObjectRepairRequestDrawer } from "src/app/landlordportal/dashboard/objects/repairRequests/object-repairRequest-drawer";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
 import { toast } from "src/components/toaster";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import { renterAtom } from "src/state/atoms/renterAtom";
+import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
+import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -66,16 +70,18 @@ const useCurrentRepairRequest = (
 
 const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
-  const hasShownToast = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const hasShownToast = useRef(false);
+  const renter = useRecoilValue(renterAtom);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
 
-  const [renter, setRenter] = useState(renterDefault);
-  const rentalObject = renter.rentalObject;
+  const rentalObject = useRecoilValue(rentalObjectAtom);
+  const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
   const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const setRenter = useSetRecoilState(currentUserAtom);
 
   // const repairRequestsSearch = useRepairRequestsSearch();
   // const repairRequestsIds = useRepairRequestsIds(renter.rentalObject?.repairRequests);
@@ -95,9 +101,9 @@ const Page: PageType = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    setRentalObjectId();
-  }, [renter]);
+  // useEffect(() => {
+  //   setRentalObjectId();
+  // }, [renter]);
 
   async function getRenter() {
     try {
@@ -106,6 +112,8 @@ const Page: PageType = () => {
         setIsLoading(true);
         const renter = await agent.renter.details(firebaseUserId);
         setRenter(renter);
+        setSelectedRenterIdAtom(renter.id);
+        setSelectedRentalObjectId(renter.rentalObjectId ?? "");
       }
     } catch (error) {
       console.error(error);
@@ -114,25 +122,19 @@ const Page: PageType = () => {
     }
   }
 
-  async function setRentalObjectId() {
-    if (rentalObject && rentalObject.id) {
-      setSelectedRentalObjectId(rentalObject.id.toString() ?? "");
-    }
-  }
+  // const handleDialog = useCallback(
+  //   (id: string): void => {
+  //     // Close drawer if is the same order
 
-  const handleDialog = useCallback(
-    (id: string): void => {
-      // Close drawer if is the same order
+  //     if (dialog.open && dialog.data === id) {
+  //       dialog.handleClose();
+  //       return;
+  //     }
 
-      if (dialog.open && dialog.data === id) {
-        dialog.handleClose();
-        return;
-      }
-
-      dialog.handleOpen(id);
-    },
-    [dialog]
-  );
+  //     dialog.handleOpen(id);
+  //   },
+  //   [dialog]
+  // );
 
   const handleTabsChange = useCallback((event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -180,7 +182,12 @@ const Page: PageType = () => {
     }
   };
 
-  if (rentalObject === null) {
+  if (isLoading || (!renter.id && !rentalObject.id)) {
+    return <SplashScreen />;
+  }
+
+  // Wenn rentalObjekt immer noch default ist, dann zeige den Toast an
+  if (!rentalObject.id && !isLoading) {
     if (!hasShownToast.current) {
       toast.info("Ihnen wurde noch kein Objekt zugewiesen. Bitte wenden Sie sich an Ihren Vermieter.", {
         duration: 8000,
@@ -189,10 +196,6 @@ const Page: PageType = () => {
       hasShownToast.current = true;
     }
     return <></>;
-  }
-
-  if (isLoading && !renter.id && !rentalObject.id) {
-    return <SplashScreen />;
   }
 
   return (
