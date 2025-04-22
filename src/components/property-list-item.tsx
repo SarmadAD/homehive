@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 import PropTypes from "prop-types";
 import type { ListItemProps } from "@mui/material";
 import { Box, ListItem, ListItemText, Typography } from "@mui/material";
@@ -8,11 +8,12 @@ type Direction = "horizontal" | "vertical";
 interface PropertyListItemProps extends ListItemProps {
   align?: Direction;
   label: string;
+  valueJSX?: ReactNode;
   value?: string;
 }
 
 export const PropertyListItem: FC<PropertyListItemProps> = (props) => {
-  const { align, children, disableGutters, value, label, ...other } = props;
+  const { align, children, disableGutters, value, valueJSX, label, ...other } = props;
 
   return (
     <ListItem
@@ -38,7 +39,7 @@ export const PropertyListItem: FC<PropertyListItemProps> = (props) => {
           >
             {children || (
               <Typography color="text.secondary" variant="body2">
-                {value}
+                {valueJSX ? valueJSX : value}
               </Typography>
             )}
           </Box>

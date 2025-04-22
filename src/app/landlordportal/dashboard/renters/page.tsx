@@ -78,9 +78,6 @@ const Page: PageType = () => {
     // setOpenAddRenterModal(true);
   };
 
-  if (isLoading) {
-    return <SplashScreen />;
-  }
   const columns = [
     {
       formatter: (row): React.JSX.Element => (
@@ -121,6 +118,7 @@ const Page: PageType = () => {
           sx={{
             flexGrow: 1,
             py: 8,
+            backgroundColor: "background.paper",
           }}
         >
           <Container maxWidth={settings.stretch ? false : "xl"}>
@@ -149,34 +147,23 @@ const Page: PageType = () => {
                 <OverviewRentPaid showActions={false} />
               </Grid>
 
-              <Grid xs={12} md={12} sx={{ overflowX: "auto" }}>
-                {isLoading ? (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      mt: 3,
-                    }}
-                  >
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  <DataTable<Renter>
-                    columns={columns}
-                    rows={(renters as Renter[]) || []}
-                    onDeselectAll={deselectAll}
-                    onDeselectOne={(_, row) => {
-                      deselectOne(row.id);
-                    }}
-                    onSelectAll={selectAll}
-                    onSelectOne={(_, row) => {
-                      selectOne(row.id);
-                    }}
-                    selected={selected}
-                    setOpenDeleteModal={setOpenDeleteModal}
-                    selectable
-                  />
-                )}
+              <Grid xs={12} sx={{ overflowX: "auto", pt: 3 }}>
+                <DataTable<Renter>
+                  columns={columns}
+                  rows={(renters as Renter[]) || []}
+                  onDeselectAll={deselectAll}
+                  onDeselectOne={(_, row) => {
+                    deselectOne(row.id);
+                  }}
+                  onSelectAll={selectAll}
+                  onSelectOne={(_, row) => {
+                    selectOne(row.id);
+                  }}
+                  selected={selected}
+                  setOpenDeleteModal={setOpenDeleteModal}
+                  isLoading={isLoading}
+                  selectable
+                />
               </Grid>
             </Grid>
           </Container>

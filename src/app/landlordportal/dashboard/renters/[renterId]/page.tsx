@@ -20,6 +20,7 @@ import {
   Unstable_Grid2 as Grid,
   Menu,
   MenuItem,
+  Skeleton,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -38,6 +39,9 @@ import { SplashScreen } from "src/components/splash-screen";
 import { DeleteOutline } from "@mui/icons-material";
 import agent from "src/api/agent";
 import { useRouter } from "src/hooks/use-router";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import { useAuth } from "src/hooks/use-auth";
+import { AuthContextType } from "src/contexts/auth/firebase";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -45,13 +49,33 @@ const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
 
   const router = useRouter();
-  const renter = useRecoilValue(renterAtom);
-  usePageView();
+  const { user } = useAuth<AuthContextType>();
 
+  const renter = useRecoilValue(renterAtom);
+  const setLandlord = useSetRecoilState(currentUserAtom);
   const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
 
   const searchParams = useSearchParams();
   const renterId = searchParams?.get("renterId");
+
+  usePageView();
+
+  useEffect(() => {
+    getLandlord();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function getLandlord() {
+    try {
+      const firebaseUserId = user?.id;
+      if (firebaseUserId) {
+        const landlord = await agent.landlord.details(firebaseUserId);
+        setLandlord(landlord);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function setRenterId() {
     if (renterId) {
@@ -94,9 +118,6 @@ const Page: PageType = () => {
     setCurrentTab(value);
   }, []);
 
-  if (!renter.id) {
-    return <SplashScreen />;
-  }
   return (
     <>
       <Seo title="Objekt Details" />
@@ -149,21 +170,26 @@ const Page: PageType = () => {
                   spacing={4}
                 >
                   <Stack alignItems="center" direction="row" spacing={2}>
-                    <Avatar
-                      src={renter.image}
-                      sx={{
-                        height: 64,
-                        width: 64,
-                      }}
-                    >
-                      {getInitials(getRenterName(renter.firstname, renter.surname))}
-                    </Avatar>
+                    {renter?.image || renter?.surname || renter?.firstname ? (
+                      <Avatar
+                        src={renter.image}
+                        sx={{
+                          height: 64,
+                          width: 64,
+                        }}
+                      >
+                        {getInitials(getRenterName(renter.firstname, renter.surname))}
+                      </Avatar>
+                    ) : (
+                      <Skeleton variant="circular" width={64} height={64} />
+                    )}
+
                     <Stack spacing={1}>
-                      <Typography variant="h4">{getRenterName(renter.firstname, renter.surname)}</Typography>
-                      {/* <Stack alignItems="center" direction="row" spacing={1}>
-                        <Typography variant="subtitle2">user_id:</Typography>
-                        <Chip label={renter.id} size="small" />
-                      </Stack> */}
+                      {renter?.firstname || renter.surname ? (
+                        <Typography variant="h4">{getRenterName(renter.firstname, renter.surname)}</Typography>
+                      ) : (
+                        <Skeleton width={150} height={32} />
+                      )}
                     </Stack>
                   </Stack>
                   <Stack alignItems="center" direction="row" spacing={2}>
@@ -230,7 +256,7 @@ const Page: PageType = () => {
                 <div>
                   <Grid container spacing={4}>
                     <Grid xs={12} lg={4}>
-                      <RenterBasicDetails renter={renter} />
+                      <RenterBasicDetails />
                     </Grid>
                   </Grid>
                 </div>

@@ -1,8 +1,8 @@
 import { FC } from "react";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, Divider, Skeleton, Stack, SvgIcon, Typography } from "@mui/material";
 import { paths } from "src/paths";
-import { useRecoilValue } from "recoil";
+import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 
 interface OverviewRepairRequest {
@@ -11,9 +11,34 @@ interface OverviewRepairRequest {
 
 export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
   const { showActions } = props;
-  const rentalObjects = useRecoilValue(rentalObjectsAtom);
-  const totalRepairRequests =
-    rentalObjects.length > 0 ? rentalObjects.reduce((accumulator, rentalObject) => accumulator + rentalObject.repairRequests.length, 0) : 0;
+  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
+
+  let content;
+  if (rentalObjectsLoadable.state === "loading") {
+    content = (
+      <Typography color="text.primary" variant="h4">
+        <Skeleton />
+      </Typography>
+    );
+  } else if (rentalObjectsLoadable.state === "hasValue") {
+    const rentalObjects = rentalObjectsLoadable.contents;
+    const totalRepairRequests =
+      rentalObjects.length > 0
+        ? rentalObjects.reduce((accumulator, rentalObject) => accumulator + rentalObject.repairRequests.length, 0)
+        : 0;
+    content = (
+      <Typography color="text.primary" variant="h4">
+        {totalRepairRequests}
+      </Typography>
+    );
+  } else {
+    content = (
+      <Typography color="error" variant="body2">
+        Fehler beim Laden der Daten.
+      </Typography>
+    );
+  }
+
   return (
     <Card>
       <Stack
@@ -31,13 +56,11 @@ export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
         <div>
           <img src="/assets/iconly/iconly-glass-info.svg" width={48} />
         </div>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
           <Typography color="text.secondary" variant="body2">
             Reperatur Anfragen
           </Typography>
-          <Typography color="text.primary" variant="h4">
-            {totalRepairRequests}
-          </Typography>
+          {content}
         </Box>
       </Stack>
       <Divider />
@@ -60,5 +83,3 @@ export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
     </Card>
   );
 };
-
-OverviewRepairRequest.propTypes = {};

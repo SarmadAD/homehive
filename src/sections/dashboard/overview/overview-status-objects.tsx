@@ -17,13 +17,14 @@ import {
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
 import { useAuth } from "src/hooks/use-auth";
 import { AuthContextType } from "src/contexts/auth/firebase";
 import agent from "src/api/agent";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import OverViewStatusObjectsSkeleton from "src/skeleton/dashboard-skeletons";
 
 interface OverviewStatusObjects {
   showActions: boolean;
@@ -91,13 +92,41 @@ const useChartOptions = (): ApexOptions => {
     },
   };
 };
+
 export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) => {
   const chartOptions = useChartOptions();
-  const [allRentalObjects, setAllRentalObjects] = useRecoilState(rentalObjectsAtom);
-  const objectStatusData = useRecoilValue(objectStatusSeriesData);
+  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
+  const objectStatusData = useRecoilValueLoadable(objectStatusSeriesData);
 
-  if (allRentalObjects === undefined) {
-    return <></>;
+  let content;
+  if (rentalObjectsLoadable.state === "loading" || objectStatusData.state === "loading") {
+    content = <OverViewStatusObjectsSkeleton />;
+  } else if (rentalObjectsLoadable.state === "hasValue" && objectStatusData.state === "hasValue") {
+    const rentalObjects = rentalObjectsLoadable.contents;
+    const statusData = objectStatusData.contents;
+
+    content =
+      statusData[0] === 0 && statusData[1] === 0 ? (
+        <Container maxWidth="sm">
+          <CardContent>
+            <Typography color="text.primary" variant="body2">
+              Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zu sehen
+            </Typography>
+          </CardContent>
+        </Container>
+      ) : (
+        <Container maxWidth="sm">
+          <CardContent>
+            <Chart height={500} width={300} options={chartOptions} series={statusData} type="donut" />
+          </CardContent>
+        </Container>
+      );
+  } else {
+    content = (
+      <Typography color="error" variant="body2">
+        Fehler beim Laden der Daten.
+      </Typography>
+    );
   }
 
   return (
@@ -110,23 +139,7 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
         }}
         spacing={3}
       >
-        <Box sx={{ flexGrow: 1 }}>
-          {objectStatusData[0] === 0 && objectStatusData[1] === 0 ? (
-            <Container maxWidth="sm">
-              <CardContent>
-                <Typography color="text.primary" variant="body2">
-                  Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zusehen
-                </Typography>{" "}
-              </CardContent>
-            </Container>
-          ) : (
-            <Container maxWidth="sm">
-              <CardContent>
-                <Chart height={500} width={300} options={chartOptions} series={objectStatusData} type="donut" />
-              </CardContent>
-            </Container>
-          )}
-        </Box>
+        <Box sx={{ flexGrow: 1 }}>{content}</Box>
       </Stack>
       <Divider />
       {showActions && (
@@ -141,14 +154,10 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
             }
             size="small"
           >
-            Objete ansehen
+            Objekte ansehen
           </Button>
         </CardActions>
       )}
     </Card>
   );
-};
-
-OverviewStatusObjects.propTypes = {
-  showActions: PropTypes.bool.isRequired,
 };

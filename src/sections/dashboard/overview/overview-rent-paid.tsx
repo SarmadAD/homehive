@@ -1,9 +1,9 @@
 import { FC } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Box, Button, Card, CardActions, Divider, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, Divider, Skeleton, Stack, SvgIcon, Typography } from "@mui/material";
 import { paths } from "src/paths";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { totalPaidRents } from "src/state/selectors/totalPaidRents";
 
 interface OverviewRentPaidProps {
@@ -12,7 +12,29 @@ interface OverviewRentPaidProps {
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
-  const lengthPaidRents = useRecoilValue(totalPaidRents);
+  const lengthPaidRentsLoadable = useRecoilValueLoadable(totalPaidRents);
+
+  let content;
+  if (lengthPaidRentsLoadable.state === "loading") {
+    content = (
+      <Typography color="text.primary" variant="h4">
+        <Skeleton />
+      </Typography>
+    );
+  } else if (lengthPaidRentsLoadable.state === "hasValue") {
+    const lengthPaidRents = lengthPaidRentsLoadable.contents;
+    content = (
+      <Typography color="text.primary" variant="h4">
+        {lengthPaidRents !== undefined ? lengthPaidRents : "Keine Daten verfügbar"}
+      </Typography>
+    );
+  } else {
+    content = (
+      <Typography color="error" variant="body2">
+        Fehler beim Laden der Daten.
+      </Typography>
+    );
+  }
 
   return (
     <Card>
@@ -31,19 +53,11 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
         <div>
           <img src="/assets/iconly/iconly-glass-tick.svg" width={48} />
         </div>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
           <Typography color="text.secondary" variant="body2">
             Mieten bezahlt
           </Typography>
-          {lengthPaidRents !== undefined ? (
-            <Typography color="text.primary" variant="h4">
-              {lengthPaidRents}
-            </Typography>
-          ) : (
-            <Typography color="text.primary" variant="body2">
-              Legen Sie Mieter an um hier die Anzahl der bezahlten Mieten zusehen
-            </Typography>
-          )}
+          {content}
         </Box>
       </Stack>
 
@@ -70,8 +84,4 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
       )}
     </Card>
   );
-};
-
-OverviewRentPaid.propTypes = {
-  showActions: PropTypes.bool.isRequired,
 };

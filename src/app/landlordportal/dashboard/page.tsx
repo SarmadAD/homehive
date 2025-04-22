@@ -45,9 +45,9 @@ const Page = () => {
     }
   }
 
-  if (isLoading) {
-    return <SplashScreen />;
-  }
+  // if (isLoading) {
+  //   return <SplashScreen />;
+  // }
 
   return (
     <>
