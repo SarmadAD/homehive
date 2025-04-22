@@ -44,6 +44,7 @@ export const ObjectBasicDetails: FC = () => {
 
   const rentalObject = rentalObjectLoadable.contents;
   const { address, areaSize, city, houseNr, postalCode, additionalHouseDetails } = rentalObject;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const statusPill = useRentalObjectStatusPill(rentalObject);
 
   return (

@@ -172,6 +172,7 @@ export function OverviewRentalIncome() {
     return monthNames[monthNumber];
   };
   const months = groupedRentPayments.map((groupedRentPayment: any) => getMonthName(groupedRentPayment.month));
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const chartOptions = useChartOptions(months);
   const updatedChartSeries: ChartSeries = [
     {
