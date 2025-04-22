@@ -25,13 +25,27 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
 
   return (
     <Stack spacing={3} {...other}>
-      <TextField fullWidth label="Name des Objekts" name="name" placeholder="Haus am See" value={newObject.name} onChange={handleChange} />
+      <TextField
+        fullWidth
+        label="Name des Objekts"
+        name="name"
+        placeholder="Haus am See"
+        value={newObject.name}
+        onChange={handleChange}
+      />
       <div>
         <Typography variant="h6">Wo befindet sich das Objekt?</Typography>
       </div>
-      <Stack spacing={3} direction="row">
+      <Stack direction={{ xs: "column", lg: "row" }} spacing={3}>
         <TextField fullWidth label="Straße" name="address" value={newObject.address} onChange={handleChange} />
-        <TextField fullWidth label="Hausnummer" name="houseNr" type="number" value={newObject.houseNr} onChange={handleChange} />
+        <TextField
+          fullWidth
+          label="Hausnummer"
+          name="houseNr"
+          type="number"
+          value={newObject.houseNr}
+          onChange={handleChange}
+        />
         <TextField
           fullWidth
           label="Zusatz"
@@ -41,7 +55,7 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
           onChange={handleChange}
         />
       </Stack>
-      <Stack spacing={3} direction={"row"}>
+      <Stack spacing={3} direction={{ xs: "column", lg: "row" }}>
         <TextField fullWidth label="Ort" name="city" value={newObject.city} onChange={handleChange} />
         <TextField fullWidth label="PLZ" name="postalCode" value={newObject.postalCode} onChange={handleChange} />
       </Stack>
@@ -60,9 +74,4 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
       </Stack>
     </Stack>
   );
-};
-
-ObjectBasicInfosStep.propTypes = {
-  onBack: PropTypes.func,
-  onNext: PropTypes.func,
 };

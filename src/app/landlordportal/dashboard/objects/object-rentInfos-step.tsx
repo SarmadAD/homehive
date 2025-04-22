@@ -42,7 +42,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
 
   return (
     <Stack spacing={3} {...other}>
-      <Stack spacing={3} direction="row">
+      <Stack direction={{ xs: "column", lg: "row" }} spacing={3}>
         <TextField
           fullWidth
           label="Kaltmiete"
@@ -61,7 +61,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
         />
       </Stack>
 
-      <Stack spacing={3} direction="row">
+      <Stack direction={{ xs: "column", lg: "row" }} spacing={3}>
         <TextField
           fullWidth
           label="Wasserkosten"

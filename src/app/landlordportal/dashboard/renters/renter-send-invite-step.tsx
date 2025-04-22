@@ -34,6 +34,9 @@ export const RenterSendInviteStep: FC<ObjectDetailsStepProps> = (props) => {
         >
           Einladung versenden
         </Button>
+        <Button color="inherit" onClick={onBack}>
+          Zurück
+        </Button>
       </Stack>
     </Stack>
   );
