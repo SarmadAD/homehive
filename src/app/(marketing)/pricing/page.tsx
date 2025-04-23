@@ -52,18 +52,18 @@ const Page = () => {
             <Grid container spacing={10} justifyContent={"center"}>
               <Grid xs={12} md={4}>
                 <PricingPlan
-                  cta="Start Free Trial"
+                  cta="Starter"
                   currency="€"
                   description="Lerne unsere Software kennen"
                   features={[
                     "Vermieter-Portal",
                     "Mieter-Portal",
                     "Mieteinnahmen einsehen",
-                    "Objekte erstellen",
+                    "Ein Objekte erstellen",
                     "Mieter einladen",
                   ]}
                   icon={<PricingPlanIcon name="startup" />}
-                  name="Startup"
+                  name="Starter"
                   price="0"
                   sx={{
                     height: "100%",
@@ -74,7 +74,7 @@ const Page = () => {
               </Grid>
               <Grid xs={12} md={4}>
                 <PricingPlan
-                  cta="Start"
+                  cta="Standard"
                   currency="€"
                   description="Alles was wir haben"
                   features={[
@@ -87,7 +87,7 @@ const Page = () => {
                   icon={<PricingPlanIcon name="standard" />}
                   name="Standard"
                   popular
-                  price="11.99"
+                  price="2,99"
                   sx={{
                     height: "100%",
                     maxWidth: 460,
