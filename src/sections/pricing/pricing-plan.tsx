@@ -57,7 +57,7 @@ export const PricingPlan: FC<PricingPlanProps> = (props) => {
             }}
             variant="subtitle2"
           >
-            /mo
+            /Monat
           </Typography>
         </Box>
         <Typography sx={{ mt: 2 }} variant="h6">
