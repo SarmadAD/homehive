@@ -26,8 +26,6 @@ import { useSelection } from "src/hooks/use-selection";
 import { paths } from "src/paths";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import { useAuth } from "src/hooks/use-auth";
-import { AuthContextType } from "src/contexts/auth/firebase";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
@@ -38,6 +36,8 @@ import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
 import { getInitials } from "src/utils/get-initials";
 import { getRenterName } from "src/utils/get-renter-name";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
+import { useUser } from "src/hooks/use-user";
+import { RouterLink } from "src/components/router-link";
 
 interface Filters {
   query?: string;
@@ -121,7 +121,7 @@ const Page: PageType = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
-  const { user } = useAuth<AuthContextType>();
+  const { user, error } = useUser();
 
   useEffect(() => {
     getLandlord();
@@ -154,6 +154,7 @@ const Page: PageType = () => {
       formatter: (row): React.JSX.Element => (
         <div>
           <Link
+            component={RouterLink}
             color="text.primary"
             sx={{ whiteSpace: "nowrap" }}
             variant="subtitle2"
@@ -218,7 +219,7 @@ const Page: PageType = () => {
             backgroundColor: "background.paper",
           }}
         >
-          <Container maxWidth={settings.stretch ? false : "xl"}>
+          <Container maxWidth={settings.settings.stretch ? false : "xl"}>
             <Grid
               container
               disableEqualOverflow
@@ -234,6 +235,7 @@ const Page: PageType = () => {
                   </div>
                   <Stack direction="row" spacing={4}>
                     <Button
+                      component={RouterLink}
                       startIcon={
                         <SvgIcon>
                           <PlusIcon />

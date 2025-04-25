@@ -7,6 +7,7 @@ import { tokens } from "src/locales/tokens";
 import { paths } from "src/paths";
 import { Person } from "@mui/icons-material";
 import { LineChartUp01 } from "@untitled-ui/icons-react";
+import { NavItemConfig } from "src/types/nav";
 
 export interface Item {
   disabled?: boolean;
@@ -19,11 +20,15 @@ export interface Item {
 }
 
 export interface Section {
-  items: Item[];
+  items: NavItemConfig[];
   subheader?: string;
 }
 
-export const useSections = () => {
+export interface LayoutConfig {
+  navItems: NavItemConfig[];
+}
+
+export const useSections = (): { items: NavItemConfig[] }[] => {
   const { t } = useTranslation();
 
   return useMemo(() => {
@@ -32,42 +37,30 @@ export const useSections = () => {
         items: [
           {
             title: t(tokens.nav.dashboard),
-            path: paths.landlordportal.dashboard.index,
-            icon: (
-              <SvgIcon fontSize="small">
-                <LineChartUp01 />
-              </SvgIcon>
-            ),
+            key: "dashboard",
+            href: paths.landlordportal.dashboard.index,
+            icon: "chart-line-up",
           },
           {
             title: t(tokens.nav.objects),
-            path: paths.landlordportal.dashboard.objects.index,
-            icon: (
-              <SvgIcon fontSize="small">
-                <HomeSmileIcon />
-              </SvgIcon>
-            ),
+            key: "landlordPortalObjects",
+            href: paths.landlordportal.dashboard.objects.index,
+            icon: "house",
           },
           {
             title: t(tokens.nav.renter),
-            path: paths.landlordportal.dashboard.renters.index,
-            icon: (
-              <SvgIcon fontSize="small">
-                <Person />
-              </SvgIcon>
-            ),
+            key: "renter",
+            href: paths.landlordportal.dashboard.renters.index,
+            icon: "person",
           },
 
           {
             title: t(tokens.nav.objects),
-            path: paths.renterportal.dashboard.objects.index,
-            icon: (
-              <SvgIcon fontSize="small">
-                <HomeSmileIcon />
-              </SvgIcon>
-            ),
+            key: "renterPortalObjects",
+            href: paths.renterportal.dashboard.objects.index,
+            icon: "house",
           },
-        ],
+        ] as NavItemConfig[],
       },
     ];
   }, [t]);

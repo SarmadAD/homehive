@@ -1,0 +1,41 @@
+import { paths } from "src/paths";
+import { NavItemConfig } from "src/types/nav";
+
+export interface LayoutConfig {
+  navItems: NavItemConfig[];
+}
+
+export const layoutConfig = {
+  navItems: [
+    {
+      key: "",
+      title: "",
+      items: [
+        {
+          key: "dashboard",
+          title: "Dashboard",
+          href: paths.landlordportal.dashboard.index,
+          icon: "chart-line-up",
+        },
+        {
+          key: "landlordPortalObjects",
+          title: "Objekte",
+          href: paths.landlordportal.dashboard.objects.index,
+          icon: "house",
+        },
+        {
+          key: "renter",
+          title: "Mieter",
+          href: paths.landlordportal.dashboard.renters.index,
+          icon: "person",
+        },
+        {
+          key: "renterPortalObjects",
+          title: "Objekte",
+          href: paths.renterportal.dashboard.objects.index,
+          icon: "house",
+        },
+      ],
+    },
+  ],
+} satisfies LayoutConfig;

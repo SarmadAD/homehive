@@ -18,6 +18,7 @@ import agent from "src/api/agent";
 import { z as zod } from "zod";
 import { toast } from "src/components/toaster";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SplitLayout } from "src/components/split-layout";
 import React from "react";
 import {
   Auth,
@@ -29,6 +30,7 @@ import {
 import { getFirebaseAuth } from "src/lib/auth/firebase/client";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, FormControl, FormControlLabel, InputLabel, OutlinedInput } from "@mui/material";
+import { GuestGuard } from "src/app/auth/guest-guard";
 
 interface OAuthProvider {
   id: "google";
@@ -174,112 +176,116 @@ const Page = () => {
   }
 
   return (
-    <Stack spacing={4}>
-      <div>
-        <Box component={RouterLink} href={paths.index} sx={{ display: "inline-block", fontSize: 0 }}>
-          {/* <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} /> */}
-        </Box>
-      </div>
-      <Stack spacing={1}>
-        <Typography variant="h5">Sign up</Typography>
-        <Typography color="text.secondary" variant="body2">
-          Already have an account?{" "}
-          <Link component={RouterLink} href={paths.auth.firebase.login} variant="subtitle2">
-            Sign in
-          </Link>
-        </Typography>
-      </Stack>
-      <Stack spacing={3}>
-        <Stack spacing={2}>
-          {oAuthProviders.map(
-            (provider): React.JSX.Element => (
-              <Button
-                color="secondary"
-                disabled={isPending}
-                endIcon={<Box alt="" component="img" height={24} src={provider.logo} width={24} />}
-                key={provider.id}
-                onClick={(): void => {
-                  onAuth(provider.id).catch(() => {});
-                }}
-                variant="outlined"
-              >
-                Continue with {provider.name}
-              </Button>
-            )
-          )}
-        </Stack>
-        <Divider>or</Divider>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={2}>
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ field }) => (
-                <FormControl error={Boolean(errors.firstName)}>
-                  <InputLabel>First name</InputLabel>
-                  <OutlinedInput {...field} />
-                  {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ field }) => (
-                <FormControl error={Boolean(errors.lastName)}>
-                  <InputLabel>Last name</InputLabel>
-                  <OutlinedInput {...field} />
-                  {errors.lastName ? <FormHelperText>{errors.lastName.message}</FormHelperText> : null}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <FormControl error={Boolean(errors.email)}>
-                  <InputLabel>Email address</InputLabel>
-                  <OutlinedInput {...field} type="email" />
-                  {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="password"
-              render={({ field }) => (
-                <FormControl error={Boolean(errors.password)}>
-                  <InputLabel>Password</InputLabel>
-                  <OutlinedInput {...field} type="password" />
-                  {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="terms"
-              render={({ field }) => (
-                <div>
-                  <FormControlLabel
-                    control={<Checkbox {...field} />}
-                    label={
-                      <React.Fragment>
-                        I have read the <Link>terms and conditions</Link>
-                      </React.Fragment>
-                    }
-                  />
-                  {errors.terms ? <FormHelperText error>{errors.terms.message}</FormHelperText> : null}
-                </div>
-              )}
-            />
-            {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
-            <Button disabled={isPending} type="submit" variant="contained">
-              Create account
-            </Button>
+    <GuestGuard>
+      <SplitLayout>
+        <Stack spacing={4}>
+          <div>
+            <Box component={RouterLink} href={paths.index} sx={{ display: "inline-block", fontSize: 0 }}>
+              {/* <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} /> */}
+            </Box>
+          </div>
+          <Stack spacing={1}>
+            <Typography variant="h5">Sign up</Typography>
+            <Typography color="text.secondary" variant="body2">
+              Already have an account?{" "}
+              <Link component={RouterLink} href={paths.auth.firebase.login} variant="subtitle2">
+                Sign in
+              </Link>
+            </Typography>
           </Stack>
-        </form>
-      </Stack>
-    </Stack>
+          <Stack spacing={3}>
+            <Stack spacing={2}>
+              {oAuthProviders.map(
+                (provider): React.JSX.Element => (
+                  <Button
+                    color="secondary"
+                    disabled={isPending}
+                    endIcon={<Box alt="" component="img" height={24} src={provider.logo} width={24} />}
+                    key={provider.id}
+                    onClick={(): void => {
+                      onAuth(provider.id).catch(() => {});
+                    }}
+                    variant="outlined"
+                  >
+                    Continue with {provider.name}
+                  </Button>
+                )
+              )}
+            </Stack>
+            <Divider>or</Divider>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Stack spacing={2}>
+                <Controller
+                  control={control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormControl error={Boolean(errors.firstName)}>
+                      <InputLabel>First name</InputLabel>
+                      <OutlinedInput {...field} />
+                      {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormControl error={Boolean(errors.lastName)}>
+                      <InputLabel>Last name</InputLabel>
+                      <OutlinedInput {...field} />
+                      {errors.lastName ? <FormHelperText>{errors.lastName.message}</FormHelperText> : null}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormControl error={Boolean(errors.email)}>
+                      <InputLabel>Email address</InputLabel>
+                      <OutlinedInput {...field} type="email" />
+                      {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormControl error={Boolean(errors.password)}>
+                      <InputLabel>Password</InputLabel>
+                      <OutlinedInput {...field} type="password" />
+                      {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="terms"
+                  render={({ field }) => (
+                    <div>
+                      <FormControlLabel
+                        control={<Checkbox {...field} />}
+                        label={
+                          <React.Fragment>
+                            I have read the <Link>terms and conditions</Link>
+                          </React.Fragment>
+                        }
+                      />
+                      {errors.terms ? <FormHelperText error>{errors.terms.message}</FormHelperText> : null}
+                    </div>
+                  )}
+                />
+                {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
+                <Button disabled={isPending} type="submit" variant="contained">
+                  Create account
+                </Button>
+              </Stack>
+            </form>
+          </Stack>
+        </Stack>
+      </SplitLayout>
+    </GuestGuard>
   );
 };
 

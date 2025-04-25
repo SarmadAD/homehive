@@ -1,26 +1,16 @@
 "use client";
 
-import type { ReactNode } from "react";
+import * as React from "react";
+import { StrategyGuard } from "../strategy-guard";
+import { AuthStrategy } from "src/lib/auth/strategy";
 
-import { GuestGuard } from "src/guards/guest-guard";
-import { IssuerGuard } from "src/guards/issuer-guard";
-import { Layout as AuthLayout } from "src/layouts/auth/classic-layout";
-import { Issuer } from "src/utils/auth";
+// We are not adding the auth check because there might be individual pages that require the user to be authenticated.
+// Another reason is that layouts get cached and loaded only once for all children.
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-const Layout = (props: LayoutProps) => {
-  const { children } = props;
-
-  return (
-    <IssuerGuard issuer={Issuer.Firebase}>
-      <GuestGuard>
-        <AuthLayout>{children}</AuthLayout>
-      </GuestGuard>
-    </IssuerGuard>
-  );
-};
-
-export default Layout;
+export default function Layout({ children }: LayoutProps): React.JSX.Element {
+  return <StrategyGuard expected={AuthStrategy.FIREBASE}>{children}</StrategyGuard>;
+}

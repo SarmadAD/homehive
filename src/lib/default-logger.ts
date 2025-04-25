@@ -1,3 +1,4 @@
-// import { createLogger } from "./logger";
+import { createLogger } from "./logger";
+import { logLevel } from "../config";
 
-// export const logger = createLogger({ level: config.logLevel });
+export const logger = createLogger({ level: logLevel });

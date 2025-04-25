@@ -12,17 +12,13 @@ const labels: string[] = ["Kaltmiete", "Heißkosten", "Stromkosten", "Wasserkost
 type ChartSeries = number[];
 const useChartOptions = (): ApexOptions => {
   const theme = useTheme();
+  const mainColor = "var(--mui-palette-primary-main)";
 
   return {
     chart: {
       background: "transparent",
     },
-    colors: [
-      theme.palette.primary.main,
-      theme.palette.warning.main,
-      theme.palette.primary.darkest,
-      theme.palette.info.main,
-    ],
+    colors: [mainColor, "rgba(247,144,9,1)", "rgba(49,46,129,1)", "rgba(6,174,212,1)"],
     dataLabels: {
       enabled: false,
     },

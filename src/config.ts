@@ -1,15 +1,47 @@
+import { AuthStrategy } from "./lib/auth/strategy";
+import { getSiteURL } from "./lib/get-site-url";
+import { LogLevel } from "./lib/logger";
+import { ColorScheme, PrimaryColor } from "./styles/theme/types";
+
+export interface Site {
+  name: string;
+  description: string;
+  colorScheme: ColorScheme;
+  primaryColor: PrimaryColor;
+  themeColor: string;
+  url: string;
+  version: string;
+  // logLevel: keyof typeof LogLevel;
+  // auth: { strategy: keyof typeof AuthStrategy };
+  // cognito: { identityPoolId?: string; userPoolClientId?: string; userPoolId?: string };
+  // firebase: {
+  //   apiKey?: string;
+  //   appId?: string;
+  //   authDomain?: string;
+  //   messagingSenderId?: string;
+  //   projectId?: string;
+  //   storageBucket?: string;
+  // };
+  // supabase: { url?: string; anonKey?: string };
+  // mapbox: { apiKey?: string };
+  // gtm?: { id?: string };
+}
+export const auth = {
+  strategy: (process.env.NEXT_PUBLIC_AUTH_STRATEGY as keyof typeof AuthStrategy) || AuthStrategy.CUSTOM,
+};
+
 export const amplifyConfig = {
   aws_project_region: process.env.NEXT_PUBLIC_AWS_PROJECT_REGION,
   aws_cognito_identity_pool_id: process.env.NEXT_PUBLIC_AWS_COGNITO_IDENTITY_POOL_ID,
   aws_cognito_region: process.env.NEXT_PUBLIC_AWS_COGNITO_REGION,
   aws_user_pools_id: process.env.NEXT_PUBLIC_AWS_USER_POOLS_ID,
-  aws_user_pools_web_client_id: process.env.NEXT_PUBLIC_AWS_USER_POOLS_WEB_CLIENT_ID
+  aws_user_pools_web_client_id: process.env.NEXT_PUBLIC_AWS_USER_POOLS_WEB_CLIENT_ID,
 };
 
 export const auth0Config = {
   base_url: process.env.NEXT_PUBLIC_AUTH0_BASE_URL,
   client_id: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID,
-  issuer_base_url: process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL
+  issuer_base_url: process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL,
 };
 
 export const firebaseConfig = {
@@ -18,13 +50,25 @@ export const firebaseConfig = {
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
 };
 
 export const gtmConfig = {
-  containerId: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID
+  containerId: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID,
 };
 
 export const mapboxConfig = {
-  apiKey: process.env.NEXT_PUBLIC_MAPBOX_API_KEY
+  apiKey: process.env.NEXT_PUBLIC_MAPBOX_API_KEY,
 };
+
+export const site = {
+  name: "HomeHive",
+  description: "",
+  colorScheme: "light",
+  themeColor: "#e9ad0e",
+  primaryColor: "beenYellow",
+  url: getSiteURL(),
+  version: process.env.NEXT_PUBLIC_SITE_VERSION || "0.0.0",
+} satisfies Site;
+
+export const logLevel = (process.env.NEXT_PUBLIC_LOG_LEVEL as keyof typeof LogLevel) || LogLevel.ALL;

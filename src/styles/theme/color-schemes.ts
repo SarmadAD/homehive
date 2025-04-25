@@ -3,6 +3,7 @@ import type { ColorSystemOptions, PaletteColorOptions } from "@mui/material/styl
 // import { logger } from '@/lib/default-logger';
 
 import {
+  beenYellow,
   california,
   chateauGreen,
   kepple,
@@ -99,6 +100,28 @@ const primarySchemes: Record<PrimaryColor, Record<ColorScheme, PaletteColorOptio
       light: tomatoOrange[400],
       main: tomatoOrange[500],
       dark: tomatoOrange[600],
+      contrastText: "var(--mui-palette-common-white)",
+      activated: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-activatedOpacity))",
+      hovered: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))",
+      selected: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-selectedOpacity))",
+    },
+  },
+  beenYellow: {
+    dark: {
+      ...beenYellow,
+      light: beenYellow[300],
+      main: beenYellow[500],
+      dark: beenYellow[500],
+      contrastText: "var(--mui-palette-common-black)",
+      activated: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-activatedOpacity))",
+      hovered: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))",
+      selected: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-selectedOpacity))",
+    },
+    light: {
+      ...beenYellow,
+      light: beenYellow[400],
+      main: beenYellow[500],
+      dark: beenYellow[600],
       contrastText: "var(--mui-palette-common-white)",
       activated: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-activatedOpacity))",
       hovered: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))",

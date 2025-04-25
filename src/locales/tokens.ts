@@ -4,9 +4,9 @@ export const tokens = {
   },
   nav: {
     auth: "nav.auth",
-    dashboard: "nav.dashboard",
-    objects: "nav.objects",
-    renter: "nav.renter",
+    dashboard: "Dashboard",
+    objects: "Objekte",
+    renter: "Mieter",
     details: "nav.details",
     edit: "nav.edit",
     error: "nav.error",

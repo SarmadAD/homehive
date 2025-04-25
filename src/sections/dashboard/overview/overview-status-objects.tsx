@@ -20,17 +20,18 @@ import { paths } from "src/paths";
 import { useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
-import { useAuth } from "src/hooks/use-auth";
-import { AuthContextType } from "src/contexts/auth/firebase";
 import agent from "src/api/agent";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import OverViewStatusObjectsSkeleton from "src/skeleton/dashboard-skeletons";
+import { RouterLink } from "src/components/router-link";
 
 interface OverviewStatusObjects {
   showActions: boolean;
 }
 
 const labels: string[] = ["Bewohnt", "Unbewohnt"];
+const mainColor = "var(--mui-palette-primary-main)";
+const secondaryColor = "var(--mui-palette-text-secondary)";
 
 const useChartOptions = (): ApexOptions => {
   const theme = useTheme();
@@ -43,13 +44,7 @@ const useChartOptions = (): ApexOptions => {
         show: false,
       },
     },
-    colors: [
-      theme.palette.primary.light,
-      theme.palette.warning.light,
-      theme.palette.success.light,
-      theme.palette.info.light,
-      theme.palette.neutral[700],
-    ],
+    colors: [mainColor, secondaryColor],
     dataLabels: {
       enabled: false,
     },
@@ -145,6 +140,7 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
       {showActions && (
         <CardActions>
           <Button
+            component={RouterLink}
             color="inherit"
             href={paths.landlordportal.dashboard.objects.index}
             endIcon={

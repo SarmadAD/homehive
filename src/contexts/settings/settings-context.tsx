@@ -41,7 +41,6 @@ const storeSettings = (value: Record<string, any>): void => {
 };
 
 const initialSettings: Settings = {
-  colorPreset: "indigo",
   contrast: "normal",
   direction: "ltr",
   layout: "vertical",
@@ -49,6 +48,8 @@ const initialSettings: Settings = {
   paletteMode: "light",
   responsiveFontSizes: true,
   stretch: false,
+  colorScheme: "light",
+  primaryColor: "beenYellow",
 };
 
 interface State extends Settings {
@@ -110,7 +111,6 @@ export const SettingsProvider: FC<SettingsProviderProps> = (props) => {
   const handleUpdate = useCallback((settings: Settings): void => {
     setState((prevState) => {
       storeSettings({
-        colorPreset: prevState.colorPreset,
         contrast: prevState.contrast,
         direction: prevState.direction,
         layout: prevState.layout,
@@ -144,7 +144,7 @@ export const SettingsProvider: FC<SettingsProviderProps> = (props) => {
 
   const isCustom = useMemo(() => {
     return !isEqual(initialSettings, {
-      colorPreset: state.colorPreset,
+      // colorPreset: state.colorPreset,
       contrast: state.contrast,
       direction: state.direction,
       layout: state.layout,

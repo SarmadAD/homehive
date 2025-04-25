@@ -1,13 +1,17 @@
 import type { FC } from "react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
-import { Box, Button, Divider, Popover, Typography } from "@mui/material";
-import { useAuth } from "src/hooks/use-auth";
+import { Box, Button, Divider, List, ListItemIcon, MenuItem, Popover, Typography } from "@mui/material";
 import { useRouter } from "src/hooks/use-router";
 import { paths } from "src/paths";
 import { Issuer } from "src/utils/auth";
-import { AuthContextType } from "src/contexts/auth/firebase";
+import { User as UserIcon } from "@phosphor-icons/react/dist/ssr/User";
+import { getFirebaseAuth } from "src/lib/auth/firebase/client";
+import { Auth, signOut } from "firebase/auth";
+import { useUser } from "src/hooks/use-user";
+import { RouterLink } from "src/components/router-link";
+import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 interface AccountPopoverProps {
   anchorEl: null | Element;
@@ -18,68 +22,61 @@ interface AccountPopoverProps {
 export const AccountPopover: FC<AccountPopoverProps> = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const router = useRouter();
-  const auth = useAuth();
+  // const auth = useAuth();
+  const [firebaseAuth] = useState<Auth>(getFirebaseAuth());
+  const { user, error } = useUser();
 
   const handleLogout = useCallback(async (): Promise<void> => {
     try {
-      onClose?.();
-
-      switch (auth?.issuer) {
-        case Issuer.Firebase: {
-          await auth.signOut();
-          break;
-        }
-
-        default: {
-          console.warn("Using an unknown Auth Issuer, did not log out");
-        }
-      }
-
-      router.push(paths.index);
+      await signOut(firebaseAuth);
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong!");
     }
-  }, [auth, router, onClose]);
+  }, [firebaseAuth, router]);
 
   return (
     <Popover
       anchorEl={anchorEl}
-      anchorOrigin={{
-        horizontal: "center",
-        vertical: "bottom",
-      }}
-      disableScrollLock
+      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       onClose={onClose}
-      open={!!open}
-      PaperProps={{ sx: { width: 200 } }}
-      {...other}
+      open={Boolean(open)}
+      slotProps={{ paper: { sx: { width: "250px" } } }}
+      transformOrigin={{ horizontal: "right", vertical: "top" }}
     >
       <Box sx={{ p: 2 }}>
-        <Typography variant="body1">{auth.user?.name}</Typography>
+        <Typography variant="body1">{user?.name}</Typography>
         <Typography color="text.secondary" variant="body2">
-          {auth.user?.email}
+          {user?.email}
         </Typography>
       </Box>
       <Divider />
-      <Divider sx={{ my: "0 !important" }} />
-      <Box
-        sx={{
-          display: "flex",
-          p: 1,
-          justifyContent: "center",
-        }}
-      >
-        <Button color="inherit" onClick={handleLogout} size="small">
+      {/* <Divider sx={{ my: "0 !important" }} /> */}
+      <List sx={{ p: 1 }}>
+        <RoleBasedGuard permission="/landlordportal/dashboard">
+          <MenuItem component={RouterLink} href={paths.landlordportal.dashboard.settings.account} onClick={onClose}>
+            <ListItemIcon>
+              <UserIcon />
+            </ListItemIcon>
+            Account
+          </MenuItem>
+        </RoleBasedGuard>
+        <RoleBasedGuard permission="/renterportal/dashboard">
+          <MenuItem component={RouterLink} href={paths.renterportal.dashboard.settings.account} onClick={onClose}>
+            <ListItemIcon>
+              <UserIcon />
+            </ListItemIcon>
+            Account
+          </MenuItem>
+        </RoleBasedGuard>
+      </List>
+      <Divider />
+
+      <Box sx={{ p: 1 }}>
+        <MenuItem component="div" onClick={handleLogout} sx={{ justifyContent: "center" }}>
           Logout
-        </Button>
+        </MenuItem>
       </Box>
     </Popover>
   );
-};
-
-AccountPopover.propTypes = {
-  anchorEl: PropTypes.any,
-  onClose: PropTypes.func,
-  open: PropTypes.bool,
 };
