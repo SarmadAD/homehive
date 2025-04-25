@@ -20,7 +20,7 @@ import { useWindowScroll } from "src/hooks/use-window-scroll";
 import { paths } from "src/paths";
 
 import { TopNavItem } from "./top-nav-item";
-import { useAuth } from "src/hooks/use-auth";
+import { useUser } from "src/hooks/use-user";
 
 interface Item {
   disabled?: boolean;
@@ -52,7 +52,7 @@ export const TopNav: FC<TopNavProps> = (props) => {
   const pathname = usePathname();
   const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
   const [elevate, setElevate] = useState<boolean>(false);
-  const auth = useAuth();
+  const { user, error } = useUser();
   const offset = 64;
   const delay = 100;
 
@@ -181,7 +181,7 @@ export const TopNav: FC<TopNavProps> = (props) => {
             <Button
               component="a"
               size={mdUp ? "medium" : "small"}
-              href={auth.isAuthenticated ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
+              href={user ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
               variant="contained"
             >
               Dashboard

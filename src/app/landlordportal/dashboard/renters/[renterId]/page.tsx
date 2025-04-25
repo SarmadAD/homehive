@@ -40,8 +40,7 @@ import { DeleteOutline } from "@mui/icons-material";
 import agent from "src/api/agent";
 import { useRouter } from "src/hooks/use-router";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import { useAuth } from "src/hooks/use-auth";
-import { AuthContextType } from "src/contexts/auth/firebase";
+import { useUser } from "src/hooks/use-user";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -49,7 +48,7 @@ const Page: PageType = () => {
   const [currentTab, setCurrentTab] = useState<string>("details");
 
   const router = useRouter();
-  const { user } = useAuth<AuthContextType>();
+  const { user, error } = useUser();
 
   const renter = useRecoilValue(renterAtom);
   const setLandlord = useSetRecoilState(currentUserAtom);

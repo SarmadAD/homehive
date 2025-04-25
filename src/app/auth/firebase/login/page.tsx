@@ -1,15 +1,9 @@
 "use client";
 
-import { useCallback } from "react";
-import * as Yup from "yup";
-import { useFormik } from "formik";
 import {
   Alert,
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   Divider,
   FormControl,
   FormHelperText,
@@ -20,21 +14,13 @@ import {
   Typography,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
-import { Seo } from "src/components/seo";
-import type { AuthContextType } from "src/contexts/auth/firebase-context";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GuestGuard } from "src/guards/guest-guard";
-import { IssuerGuard } from "src/guards/issuer-guard";
-import { useAuth } from "src/hooks/use-auth";
 import { useMounted } from "src/hooks/use-mounted";
 import { usePageView } from "src/hooks/use-page-view";
 import { useSearchParams } from "src/hooks/use-search-params";
-import { Layout as AuthLayout } from "src/layouts/auth/classic-layout";
 import { EyeSlash as EyeSlashIcon } from "@phosphor-icons/react/dist/ssr/EyeSlash";
 import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
 import { paths } from "src/paths";
-import type { Page as PageType } from "src/types/page";
-import { Issuer } from "src/utils/auth";
 import agent from "src/api/agent";
 import { Controller, useForm } from "react-hook-form";
 import React from "react";
@@ -42,6 +28,10 @@ import { Auth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, 
 import { toast } from "src/components/toaster";
 import { getFirebaseAuth } from "src/lib/auth/firebase/client";
 import { z as zod } from "zod";
+import { GuestGuard } from "../../guest-guard";
+import { SplitLayout } from "src/components/split-layout";
+import { Logo } from "src/components/logo";
+import { useRouter } from "next/navigation";
 
 interface OAuthProvider {
   id: "google" | "github";
@@ -62,10 +52,8 @@ type Values = zod.infer<typeof schema>;
 
 const defaultValues = { email: "", password: "" } satisfies Values;
 
-const Page: PageType = () => {
-  const isMounted = useMounted();
-  const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo");
+export default function Page(): React.JSX.Element {
+  const router = useRouter();
   const [isPending, setIsPending] = React.useState<boolean>(false);
   const [firebaseAuth] = React.useState<Auth>(getFirebaseAuth());
   const [showPassword, setShowPassword] = React.useState<boolean>();
@@ -139,16 +127,13 @@ const Page: PageType = () => {
         const user = await signInWithPopup(firebaseAuth, provider);
 
         if (await checkIfUserIsLandlord(user)) {
-          path = returnTo || paths.landlordportal.dashboard.index;
+          router.push(paths.landlordportal.dashboard.index);
         } else if (await checkIfUserIsRenter(user)) {
-          path = returnTo || paths.renterportal.dashboard.objects.index;
+          router.push(paths.renterportal.dashboard.objects.index);
         } else {
           // If user is neither a landlord nor a renter, default should be LandLord
           await createLandlord(user);
-          path = returnTo || paths.landlordportal.dashboard.index;
-        }
-        if (isMounted()) {
-          window.location.href = path;
+          router.push(paths.landlordportal.dashboard.index);
         }
       } catch (err) {
         setIsPending(false);
@@ -166,12 +151,9 @@ const Page: PageType = () => {
         let path = "";
         const user = await signInWithEmailAndPassword(firebaseAuth, values.email, values.password);
         if (await checkIfUserIsLandlord(user)) {
-          path = returnTo || paths.landlordportal.dashboard.index;
+          router.push(paths.landlordportal.dashboard.index);
         } else if (await checkIfUserIsRenter(user)) {
-          path = returnTo || paths.renterportal.dashboard.objects.index;
-        }
-        if (isMounted()) {
-          window.location.href = path;
+          router.push(paths.renterportal.dashboard.objects.index);
         }
       } catch (err) {
         setError("root", { type: "server", message: (err as { message: string }).message });
@@ -184,112 +166,139 @@ const Page: PageType = () => {
   usePageView();
 
   return (
-    <Stack spacing={4}>
-      <div>
-        <Box component={RouterLink} href={paths.index} sx={{ display: "inline-block", fontSize: 0 }}>
-          {/* <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} /> */}
-        </Box>
-      </div>
-      <Stack spacing={1}>
-        <Typography variant="h5">Sign in</Typography>
-        <Typography color="text.secondary" variant="body2">
-          Don&apos;t have an account?{" "}
-          <Link component={RouterLink} href={paths.auth.firebase.register} variant="subtitle2">
-            Sign up
-          </Link>
-        </Typography>
-      </Stack>
-      <Stack spacing={3}>
-        <Stack spacing={2}>
-          {oAuthProviders.map(
-            (provider): React.JSX.Element => (
-              <Button
-                color="secondary"
-                disabled={isPending}
-                endIcon={<Box alt="" component="img" height={24} src={provider.logo} width={24} />}
-                key={provider.id}
-                onClick={(): void => {
-                  onAuth(provider.id).catch(() => {});
-                }}
-                variant="outlined"
-              >
-                Continue with {provider.name}
-              </Button>
-            )
-          )}
+    <GuestGuard>
+      <SplitLayout>
+        <Stack
+          alignItems="center"
+          component={RouterLink}
+          direction="row"
+          display="inline-flex"
+          href={paths.index}
+          sx={{ textDecoration: "none" }}
+        >
+          <Box
+            sx={{
+              display: "inline-flex",
+              height: 24,
+              width: 24,
+            }}
+          >
+            <Logo />
+          </Box>
+          <Box
+            sx={{
+              color: "text.primary",
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: 800,
+              letterSpacing: "0.3px",
+              lineHeight: 2.5,
+              "& span": {
+                color: "primary.main",
+              },
+            }}
+          >
+            Home<span>Hive</span>
+          </Box>
         </Stack>
-        <Divider>or</Divider>
-        <Stack spacing={2}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={4}>
+          <div>
+            <Box component={RouterLink} href={paths.index} sx={{ display: "inline-block", fontSize: 0 }}>
+              {/* <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} /> */}
+            </Box>
+          </div>
+          <Stack spacing={1}>
+            <Typography variant="h5">Sign in</Typography>
+            <Typography color="text.secondary" variant="body2">
+              Don&apos;t have an account?{" "}
+              <Link component={RouterLink} href={paths.auth.firebase.register} variant="subtitle2">
+                Sign up
+              </Link>
+            </Typography>
+          </Stack>
+          <Stack spacing={3}>
             <Stack spacing={2}>
-              <Controller
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <FormControl error={Boolean(errors.email)}>
-                    <InputLabel>Email address</InputLabel>
-                    <OutlinedInput {...field} type="email" />
-                    {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
-                  </FormControl>
-                )}
-              />
-              <Controller
-                control={control}
-                name="password"
-                render={({ field }) => (
-                  <FormControl error={Boolean(errors.password)}>
-                    <InputLabel>Password</InputLabel>
-                    <OutlinedInput
-                      {...field}
-                      endAdornment={
-                        showPassword ? (
-                          <EyeIcon
-                            cursor="pointer"
-                            fontSize="var(--icon-fontSize-md)"
-                            onClick={(): void => {
-                              setShowPassword(false);
-                            }}
-                          />
-                        ) : (
-                          <EyeSlashIcon
-                            cursor="pointer"
-                            fontSize="var(--icon-fontSize-md)"
-                            onClick={(): void => {
-                              setShowPassword(true);
-                            }}
-                          />
-                        )
-                      }
-                      label="Password"
-                      type={showPassword ? "text" : "password"}
-                    />
-                    {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
-                  </FormControl>
-                )}
-              />
-              {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
-              <Button disabled={isPending} type="submit" variant="contained">
-                Sign in
-              </Button>
+              {oAuthProviders.map(
+                (provider): React.JSX.Element => (
+                  <Button
+                    color="secondary"
+                    disabled={isPending}
+                    endIcon={<Box alt="" component="img" height={24} src={provider.logo} width={24} />}
+                    key={provider.id}
+                    onClick={(): void => {
+                      onAuth(provider.id).catch(() => {});
+                    }}
+                    variant="outlined"
+                  >
+                    Continue with {provider.name}
+                  </Button>
+                )
+              )}
             </Stack>
-          </form>
-          {/* <div>
+            <Divider>or</Divider>
+            <Stack spacing={2}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Stack spacing={2}>
+                  <Controller
+                    control={control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormControl error={Boolean(errors.email)}>
+                        <InputLabel>Email address</InputLabel>
+                        <OutlinedInput {...field} type="email" />
+                        {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+                      </FormControl>
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormControl error={Boolean(errors.password)}>
+                        <InputLabel>Password</InputLabel>
+                        <OutlinedInput
+                          {...field}
+                          endAdornment={
+                            showPassword ? (
+                              <EyeIcon
+                                cursor="pointer"
+                                fontSize="var(--icon-fontSize-md)"
+                                onClick={(): void => {
+                                  setShowPassword(false);
+                                }}
+                              />
+                            ) : (
+                              <EyeSlashIcon
+                                cursor="pointer"
+                                fontSize="var(--icon-fontSize-md)"
+                                onClick={(): void => {
+                                  setShowPassword(true);
+                                }}
+                              />
+                            )
+                          }
+                          label="Password"
+                          type={showPassword ? "text" : "password"}
+                        />
+                        {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
+                      </FormControl>
+                    )}
+                  />
+                  {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
+                  <Button disabled={isPending} type="submit" variant="contained">
+                    Sign in
+                  </Button>
+                </Stack>
+              </form>
+              {/* <div>
             <Link component={RouterLink} href={paths.auth.firebase.re} variant="subtitle2">
               Forgot password?
             </Link>
           </div> */}
+            </Stack>
+          </Stack>
         </Stack>
-      </Stack>
-    </Stack>
-  );
-};
-
-Page.getLayout = (page) => (
-  <IssuerGuard issuer={Issuer.Firebase}>
-    <GuestGuard>
-      <AuthLayout>{page}</AuthLayout>
+      </SplitLayout>
     </GuestGuard>
-  </IssuerGuard>
-);
-
-export default Page;
+  );
+}

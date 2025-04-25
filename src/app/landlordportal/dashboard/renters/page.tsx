@@ -16,8 +16,6 @@ import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
-import { AuthContextType } from "src/contexts/auth/firebase";
-import { useAuth } from "src/hooks/use-auth";
 import { usePageView } from "src/hooks/use-page-view";
 import { useRentersSearch } from "src/hooks/use-renter-search";
 import { useRentersIds } from "src/hooks/use-renters-ids";
@@ -37,6 +35,7 @@ import { ColumnDef, DataTable } from "src/components/data-table";
 import { Renter } from "prisma/types/renter";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { RouterLink } from "src/components/router-link";
+import { useUser } from "src/hooks/use-user";
 
 const Page: PageType = () => {
   usePageView();
@@ -53,7 +52,7 @@ const Page: PageType = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
-  const { user } = useAuth<AuthContextType>();
+  const { user, error } = useUser();
 
   useEffect(() => {
     getLandlord();
@@ -83,6 +82,7 @@ const Page: PageType = () => {
       formatter: (row): React.JSX.Element => (
         <div>
           <Link
+            component={RouterLink}
             color="text.primary"
             sx={{ whiteSpace: "nowrap" }}
             variant="subtitle2"
@@ -121,7 +121,7 @@ const Page: PageType = () => {
             backgroundColor: "background.paper",
           }}
         >
-          <Container maxWidth={settings.stretch ? false : "xl"}>
+          <Container maxWidth={settings.settings.stretch ? false : "xl"}>
             <Grid container disableEqualOverflow>
               <Grid xs={12} pb={3}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
@@ -130,6 +130,7 @@ const Page: PageType = () => {
                   </div>
                   <Stack direction="row" spacing={4}>
                     <Button
+                      component={RouterLink}
                       startIcon={
                         <SvgIcon>
                           <PlusIcon />

@@ -11,9 +11,8 @@ import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObject
 import { ObjectEditForm } from "../../object-edit-form";
 import { SplashScreen } from "src/components/splash-screen";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import { AuthContextType } from "src/contexts/auth/firebase";
-import { useAuth } from "src/hooks/use-auth";
 import agent from "src/api/agent";
+import { useUser } from "src/hooks/use-user";
 
 const Page: PageType = () => {
   usePageView();
@@ -24,7 +23,7 @@ const Page: PageType = () => {
   const objectId = searchParams.get("objectId");
 
   const setLandlord = useSetRecoilState(currentUserAtom);
-  const { user } = useAuth<AuthContextType>();
+  const { user, error } = useUser();
 
   async function setRentalObjectId() {
     if (objectId) {

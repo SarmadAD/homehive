@@ -1,0 +1,24 @@
+import * as React from "react";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import { AuthStrategy } from "src/lib/auth/strategy";
+import { auth } from "src/config";
+
+interface StrategyGuardProps {
+  children: React.ReactNode;
+  expected: keyof typeof AuthStrategy;
+}
+
+export function StrategyGuard({ children, expected }: StrategyGuardProps): React.JSX.Element {
+  if (auth.strategy !== expected) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert color="error">
+          To render this page, you need to configure the auth strategy to &quot;{expected}&quot;
+        </Alert>
+      </Box>
+    );
+  }
+
+  return <React.Fragment>{children}</React.Fragment>;
+}

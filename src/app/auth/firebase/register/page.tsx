@@ -13,8 +13,6 @@ import Typography from "@mui/material/Typography";
 
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
-import type { AuthContextType } from "src/contexts/auth/firebase";
-import { useAuth } from "src/hooks/use-auth";
 import { useMounted } from "src/hooks/use-mounted";
 import { usePageView } from "src/hooks/use-page-view";
 import { useRouter } from "src/hooks/use-router";
@@ -47,6 +45,9 @@ import {
 import { getFirebaseAuth } from "src/lib/auth/firebase/client";
 import { toast } from "src/components/toaster";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SplitLayout } from "src/components/split-layout";
+import { GuestGuard } from "../../guest-guard";
+import { Logo } from "src/components/logo";
 
 interface OAuthProvider {
   id: "google";
@@ -73,8 +74,7 @@ const defaultValues = { firstName: "", lastName: "", email: "", password: "", te
 const Page = () => {
   usePageView();
   const isMounted = useMounted();
-  const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo");
+  const router = useRouter();
   const [firebaseAuth] = React.useState<Auth>(getFirebaseAuth());
   const [isPending, setIsPending] = React.useState<boolean>(false);
 
@@ -191,13 +191,10 @@ const Page = () => {
         let path = "";
         const user = await createUserWithEmailAndPassword(firebaseAuth, values.email, values.password);
         if (await checkIfLandlordExists(user)) {
-          path = returnTo || paths.landlordportal.dashboard.index;
+          router.push(paths.landlordportal.dashboard.index);
         } else {
           await createLandlord(user);
-          path = returnTo || paths.landlordportal.dashboard.index;
-        }
-        if (isMounted()) {
-          window.location.href = path;
+          router.push(paths.landlordportal.dashboard.index);
         }
       } catch (err) {
         setError("root", { type: "server", message: (err as { message: string }).message });
@@ -231,10 +228,10 @@ const Page = () => {
         if (await checkIfLandlordExists(user)) {
           //If Landlord exists, redirect to login page
           // await signOut();
-          path = returnTo || paths.landlordportal.dashboard.index;
+          router.push(paths.landlordportal.dashboard.index);
         } else {
           await createLandlord(user);
-          path = returnTo || paths.landlordportal.dashboard.index;
+          router.push(paths.landlordportal.dashboard.index);
         }
 
         // if (await checkIfRenterExists(user)) {
@@ -242,9 +239,7 @@ const Page = () => {
         // } else {
         //   path = returnTo || paths.notAuthorized;
         // }
-        if (isMounted()) {
-          window.location.href = path;
-        }
+
         // UserProvider will handle Router refresh
         // After refresh, GuestGuard will handle the redirect
       } catch (err) {
@@ -256,112 +251,149 @@ const Page = () => {
   );
 
   return (
-    <Stack spacing={4}>
-      <div>
-        <Box component={RouterLink} href={paths.index} sx={{ display: "inline-block", fontSize: 0 }}>
-          {/* <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} /> */}
-        </Box>
-      </div>
-      <Stack spacing={1}>
-        <Typography variant="h5">Sign up</Typography>
-        <Typography color="text.secondary" variant="body2">
-          Already have an account?{" "}
-          <Link component={RouterLink} href={paths.auth.firebase.login} variant="subtitle2">
-            Sign in
-          </Link>
-        </Typography>
-      </Stack>
-      <Stack spacing={3}>
-        <Stack spacing={2}>
-          {oAuthProviders.map(
-            (provider): React.JSX.Element => (
-              <Button
-                color="secondary"
-                disabled={isPending}
-                endIcon={<Box alt="" component="img" height={24} src={provider.logo} width={24} />}
-                key={provider.id}
-                onClick={(): void => {
-                  onAuth(provider.id).catch(() => {});
-                }}
-                variant="outlined"
-              >
-                Continue with {provider.name}
-              </Button>
-            )
-          )}
+    <GuestGuard>
+      <SplitLayout>
+        <Stack
+          alignItems="center"
+          component={RouterLink}
+          direction="row"
+          display="inline-flex"
+          href={paths.index}
+          sx={{ textDecoration: "none" }}
+        >
+          <Box
+            sx={{
+              display: "inline-flex",
+              height: 24,
+              width: 24,
+            }}
+          >
+            <Logo />
+          </Box>
+          <Box
+            sx={{
+              color: "text.primary",
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: 14,
+              fontWeight: 800,
+              letterSpacing: "0.3px",
+              lineHeight: 2.5,
+              "& span": {
+                color: "primary.main",
+              },
+            }}
+          >
+            Home<span>Hive</span>
+          </Box>
         </Stack>
-        <Divider>or</Divider>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={2}>
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ field }) => (
-                <FormControl error={Boolean(errors.firstName)}>
-                  <InputLabel>First name</InputLabel>
-                  <OutlinedInput {...field} />
-                  {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ field }) => (
-                <FormControl error={Boolean(errors.lastName)}>
-                  <InputLabel>Last name</InputLabel>
-                  <OutlinedInput {...field} />
-                  {errors.lastName ? <FormHelperText>{errors.lastName.message}</FormHelperText> : null}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <FormControl error={Boolean(errors.email)}>
-                  <InputLabel>Email address</InputLabel>
-                  <OutlinedInput {...field} type="email" />
-                  {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="password"
-              render={({ field }) => (
-                <FormControl error={Boolean(errors.password)}>
-                  <InputLabel>Password</InputLabel>
-                  <OutlinedInput {...field} type="password" />
-                  {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="terms"
-              render={({ field }) => (
-                <div>
-                  <FormControlLabel
-                    control={<Checkbox {...field} />}
-                    label={
-                      <React.Fragment>
-                        I have read the <Link>terms and conditions</Link>
-                      </React.Fragment>
-                    }
-                  />
-                  {errors.terms ? <FormHelperText error>{errors.terms.message}</FormHelperText> : null}
-                </div>
-              )}
-            />
-            {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
-            <Button disabled={isPending} type="submit" variant="contained">
-              Create account
-            </Button>
+        <Stack spacing={4}>
+          <div>
+            <Box component={RouterLink} href={paths.index} sx={{ display: "inline-block", fontSize: 0 }}>
+              {/* <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} /> */}
+            </Box>
+          </div>
+          <Stack spacing={1}>
+            <Typography variant="h5">Sign up</Typography>
+            <Typography color="text.secondary" variant="body2">
+              Already have an account?{" "}
+              <Link component={RouterLink} href={paths.auth.firebase.login} variant="subtitle2">
+                Sign in
+              </Link>
+            </Typography>
           </Stack>
-        </form>
-      </Stack>
-    </Stack>
+          <Stack spacing={3}>
+            <Stack spacing={2}>
+              {oAuthProviders.map(
+                (provider): React.JSX.Element => (
+                  <Button
+                    color="secondary"
+                    disabled={isPending}
+                    endIcon={<Box alt="" component="img" height={24} src={provider.logo} width={24} />}
+                    key={provider.id}
+                    onClick={(): void => {
+                      onAuth(provider.id).catch(() => {});
+                    }}
+                    variant="outlined"
+                  >
+                    Continue with {provider.name}
+                  </Button>
+                )
+              )}
+            </Stack>
+            <Divider>or</Divider>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Stack spacing={2}>
+                <Controller
+                  control={control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormControl error={Boolean(errors.firstName)}>
+                      <InputLabel>First name</InputLabel>
+                      <OutlinedInput {...field} />
+                      {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormControl error={Boolean(errors.lastName)}>
+                      <InputLabel>Last name</InputLabel>
+                      <OutlinedInput {...field} />
+                      {errors.lastName ? <FormHelperText>{errors.lastName.message}</FormHelperText> : null}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormControl error={Boolean(errors.email)}>
+                      <InputLabel>Email address</InputLabel>
+                      <OutlinedInput {...field} type="email" />
+                      {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormControl error={Boolean(errors.password)}>
+                      <InputLabel>Password</InputLabel>
+                      <OutlinedInput {...field} type="password" />
+                      {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="terms"
+                  render={({ field }) => (
+                    <div>
+                      <FormControlLabel
+                        control={<Checkbox {...field} />}
+                        label={
+                          <React.Fragment>
+                            I have read the <Link>terms and conditions</Link>
+                          </React.Fragment>
+                        }
+                      />
+                      {errors.terms ? <FormHelperText error>{errors.terms.message}</FormHelperText> : null}
+                    </div>
+                  )}
+                />
+                {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
+                <Button disabled={isPending} type="submit" variant="contained">
+                  Create account
+                </Button>
+              </Stack>
+            </form>
+          </Stack>
+        </Stack>
+      </SplitLayout>
+    </GuestGuard>
   );
 };
 

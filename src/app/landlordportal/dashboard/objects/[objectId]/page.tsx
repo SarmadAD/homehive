@@ -54,14 +54,13 @@ import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { AddRenterModal } from "src/components/widgets/modals/add-renter-modal";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import { AuthContextType } from "src/contexts/auth/firebase";
-import { useAuth } from "src/hooks/use-auth";
 import { RentalObject } from "prisma/types/objects";
 import { toast } from "src/components/toaster";
 import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { PlusCircle } from "@untitled-ui/icons-react";
+import { useUser } from "src/hooks/use-user";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -134,7 +133,7 @@ const Page: PageType = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const { user } = useAuth<AuthContextType>();
+  const { user, error } = useUser();
 
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -296,6 +295,7 @@ const Page: PageType = () => {
       formatter: (row): React.JSX.Element => (
         <div>
           <Link
+            component={RouterLink}
             color="text.primary"
             sx={{ whiteSpace: "nowrap" }}
             variant="subtitle2"

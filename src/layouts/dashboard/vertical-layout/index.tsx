@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from "react";
 import PropTypes from "prop-types";
 import type { Theme } from "@mui/material/styles/createTheme";
-import { useMediaQuery } from "@mui/material";
+import { Box, GlobalStyles, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { NavColor } from "src/types/settings";
 import type { Section } from "../config";
@@ -9,46 +9,64 @@ import { MobileNav } from "../mobile-nav";
 import { SideNav } from "./side-nav";
 import { TopNav } from "./top-nav";
 import { useMobileNav } from "./use-mobile-nav";
+import { NavItemConfig } from "src/types/nav";
+import { layoutConfig } from "src/layouts/config";
+import { useSettings } from "src/hooks/use-settings";
 
 const SIDE_NAV_WIDTH: number = 280;
 
-const VerticalLayoutRoot = styled("div")(({ theme }) => ({
-  display: "flex",
-  flex: "1 1 auto",
-  maxWidth: "100%",
-  [theme.breakpoints.up("lg")]: {
-    paddingLeft: SIDE_NAV_WIDTH,
-  },
-}));
-
-const VerticalLayoutContainer = styled("div")({
-  display: "flex",
-  flex: "1 1 auto",
-  flexDirection: "column",
-  width: "100%",
-});
-
 interface VerticalLayoutProps {
   children?: ReactNode;
-  navColor?: NavColor;
-  sections?: Section[];
 }
 
 export const VerticalLayout: FC<VerticalLayoutProps> = (props) => {
-  const { children, sections, navColor } = props;
-  const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
-  const mobileNav = useMobileNav();
+  const { children } = props;
+  const settings = useSettings();
 
   return (
     <>
-      <TopNav onMobileNavOpen={mobileNav.handleOpen} />
-      {lgUp && <SideNav color={navColor} sections={sections} />}
-      {!lgUp && (
-        <MobileNav color={navColor} onClose={mobileNav.handleClose} open={mobileNav.open} sections={sections} />
-      )}
-      <VerticalLayoutRoot>
-        <VerticalLayoutContainer>{children}</VerticalLayoutContainer>
-      </VerticalLayoutRoot>
+      <GlobalStyles
+        styles={{
+          body: {
+            "--MainNav-height": "56px",
+            "--MainNav-zIndex": 1000,
+            "--SideNav-width": "280px",
+            "--SideNav-zIndex": 1100,
+            "--MobileNav-width": "320px",
+            "--MobileNav-zIndex": 1100,
+          },
+        }}
+      />
+      <Box
+        sx={{
+          bgcolor: "var(--mui-palette-background-default)",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          minHeight: "100%",
+        }}
+      >
+        <SideNav color={settings.settings.navColor} items={layoutConfig.navItems} />
+        <Box sx={{ display: "flex", flex: "1 1 auto", flexDirection: "column", pl: { lg: "var(--SideNav-width)" } }}>
+          <TopNav items={layoutConfig.navItems} />
+          <Box
+            component="main"
+            sx={{
+              "--Content-margin": "0 auto",
+              "--Content-maxWidth": "var(--maxWidth-xl)",
+              "--Content-paddingX": "24px",
+              "--Content-paddingY": { xs: "24px", lg: "64px" },
+              "--Content-padding": "var(--Content-paddingY) var(--Content-paddingX)",
+              "--Content-width": "100%",
+              display: "flex",
+              flex: "1 1 auto",
+              flexDirection: "column",
+            }}
+          >
+            {children}
+          </Box>
+        </Box>
+      </Box>
     </>
   );
 };

@@ -35,9 +35,6 @@ import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
 import { RepairRequest } from "prisma/types/repairRequest";
 import { renterDefault } from "prisma/types/renter";
 import agent from "src/api/agent";
-import { SplashScreen } from "src/components/splash-screen";
-import { useAuth } from "src/hooks/use-auth";
-import { AuthContextType } from "src/contexts/auth/firebase";
 import { ObjectBasicDetails } from "src/app/landlordportal/dashboard/objects/object-basic-details";
 import { ObjectRentInfoChart } from "src/app/landlordportal/dashboard/objects/object-rentInfo-chart";
 import { ObjectRepairRequestList } from "src/app/landlordportal/dashboard/objects/repairRequests/objects-repairRequests-list";
@@ -50,6 +47,7 @@ import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { renterAtom } from "src/state/atoms/renterAtom";
 import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
+import { useUser } from "src/hooks/use-user";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -93,7 +91,7 @@ const Page: PageType = () => {
     dialog.data
   );
 
-  const { user } = useAuth<AuthContextType>();
+  const { user, error } = useUser();
 
   usePageView();
 

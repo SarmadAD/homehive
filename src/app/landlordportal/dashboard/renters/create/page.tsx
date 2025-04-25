@@ -4,18 +4,18 @@ import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import type { Page as PageType } from "src/types/page";
 import { useEffect } from "react";
-import { useAuth } from "src/hooks/use-auth";
-import { AuthContextType } from "src/contexts/auth/firebase";
 import agent from "src/api/agent";
 import { useSetRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { RenterCreateForm } from "../renter-create-form";
+import { AuthContextType } from "src/contexts/auth/firebase-context";
+import { useUser } from "src/hooks/use-user";
 
 const Page: PageType = () => {
   usePageView();
 
   const setLandlord = useSetRecoilState(currentUserAtom);
-  const { user } = useAuth<AuthContextType>();
+  const { user, error } = useUser();
 
   useEffect(() => {
     getLandlord();

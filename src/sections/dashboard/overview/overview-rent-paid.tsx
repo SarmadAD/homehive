@@ -5,6 +5,7 @@ import { Box, Button, Card, CardActions, Divider, Skeleton, Stack, SvgIcon, Typo
 import { paths } from "src/paths";
 import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { totalPaidRents } from "src/state/selectors/totalPaidRents";
+import { RouterLink } from "src/components/router-link";
 
 interface OverviewRentPaidProps {
   showActions: boolean;
@@ -66,6 +67,7 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
           <Divider />
           <CardActions>
             <Button
+              component={RouterLink}
               color="inherit"
               endIcon={
                 <SvgIcon>

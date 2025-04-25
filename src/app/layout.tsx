@@ -1,3 +1,5 @@
+"use client";
+
 // Remove if react-quill is not used
 import "react-quill/dist/quill.snow.css";
 // Remove if react-draft-wysiwyg is not used
@@ -7,12 +9,26 @@ import "simplebar-react/dist/simplebar.min.css";
 // Remove if mapbox is not used
 import "mapbox-gl/dist/mapbox-gl.css";
 
+import "../styles/global.css";
+
 import { type FC, type ReactNode } from "react";
 import { cookies } from "next/headers";
 
-import { Layout as RootLayout } from "src/layouts/root";
+// import { Layout as RootLayout } from "src/layouts/root";
+
+import type { Viewport } from "next/types";
+
 import type { Settings } from "src/types/settings";
 import { Analytics } from "@vercel/analytics/next";
+import { applyDefaultSettings } from "src/lib/settings/apply-default-settings";
+import { getSettings as getPersistedSettings } from "../lib/settings/get-settings";
+import { site } from "src/config";
+import { LocalizationProvider } from "src/components/localization-provider";
+import { Toaster } from "src/components/toaster";
+import { RecoilRoot } from "recoil";
+import { UserProvider } from "src/contexts/auth/user-context";
+import { SettingsProvider } from "src/contexts/settings";
+import { ThemeProvider } from "src/components/widgets/core/theme-provider/theme-provider";
 
 // Force-Dynamic is required otherwise all pages are marked as client-side
 // due to the usage of the "cookies" function.
@@ -50,40 +66,49 @@ const Vendors: FC = () => (
   </>
 );
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: site.themeColor,
+} satisfies Viewport;
+
 const SETTINGS_STORAGE_KEY = "app.settings";
 
-const restoreSettings = (): Settings | undefined => {
-  const cookieList = cookies();
+// const restoreSettings = (): Settings | undefined => {
+//   const cookieList = cookies();
 
-  let value: Settings | undefined;
+//   let value: Settings | undefined;
 
-  if (cookieList.has(SETTINGS_STORAGE_KEY)) {
-    try {
-      const restored = cookieList.get(SETTINGS_STORAGE_KEY);
+//   if (cookieList.has(SETTINGS_STORAGE_KEY)) {
+//     try {
+//       const restored = cookieList.get(SETTINGS_STORAGE_KEY);
 
-      if (restored) {
-        value = JSON.parse(restored!.value);
-      }
-    } catch (err) {
-      console.error(err);
-      // If stored data is not a strigified JSON this will fail,
-      // that's why we catch the error
-    }
-  }
+//       if (restored) {
+//         value = JSON.parse(restored!.value);
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       // If stored data is not a strigified JSON this will fail,
+//       // that's why we catch the error
+//     }
+//   }
 
-  return value;
-};
+//   return value;
+// };
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-const Layout = (props: LayoutProps) => {
-  const { children } = props;
-  const settings = restoreSettings();
+export default async function Layout({ children }: LayoutProps): Promise<React.JSX.Element> {
+  // const { children } = props;
+  // const settings = restoreSettings();
+  // const settings = applyDefaultSettings(await getPersistedSettings());
+
+  const defaultSettings = applyDefaultSettings({});
 
   return (
-    <html>
+    <html data-mui-color-scheme={defaultSettings.colorScheme} lang="de">
       <head>
         <title>HomeHive</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -92,10 +117,25 @@ const Layout = (props: LayoutProps) => {
         <Vendors />
       </head>
       <body>
-        <RootLayout settings={settings}>{children}</RootLayout> <Analytics />
+        {/* <RootLayout settings={settings}>{children}</RootLayout> <Analytics /> */}
+
+        <RecoilRoot>
+          <LocalizationProvider>
+            <UserProvider>
+              {/* <SettingsProvider settings={settings}> */}
+              <SettingsProvider settings={defaultSettings}>
+                {/* <I18nProvider language="en"> */}
+                <ThemeProvider>
+                  {children}
+                  {/* <SettingsButton /> */}
+                  <Toaster position="bottom-right" />
+                </ThemeProvider>
+                {/* </I18nProvider> */}
+              </SettingsProvider>
+            </UserProvider>
+          </LocalizationProvider>
+        </RecoilRoot>
       </body>
     </html>
   );
-};
-
-export default Layout;
+}

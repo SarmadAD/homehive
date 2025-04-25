@@ -4,6 +4,7 @@ import { Box, Button, Card, CardActions, Divider, Skeleton, Stack, SvgIcon, Typo
 import { paths } from "src/paths";
 import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import { RouterLink } from "src/components/router-link";
 
 interface OverviewRepairRequest {
   showActions: boolean;
@@ -67,6 +68,7 @@ export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
       {showActions && (
         <CardActions>
           <Button
+            component={RouterLink}
             color="inherit"
             href={paths.landlordportal.dashboard.objects.index}
             endIcon={

@@ -10,12 +10,11 @@ import { OverviewRentalIncome } from "src/sections/dashboard/overview/overview-r
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
 import { useEffect, useState } from "react";
 import agent from "src/api/agent";
-import { useAuth } from "src/hooks/use-auth";
-import { AuthContextType } from "src/contexts/auth/firebase";
 import { useSetRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { RoleBasedGuard } from "../../auth/role/RoleBasedGuard";
 import { SplashScreen } from "src/components/splash-screen";
+import { useUser } from "src/hooks/use-user";
 
 const Page = () => {
   usePageView();
@@ -23,7 +22,7 @@ const Page = () => {
   const setLandlord = useSetRecoilState(currentUserAtom);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user } = useAuth<AuthContextType>();
+  const { user, error } = useUser();
 
   useEffect(() => {
     getLandlord();
@@ -61,7 +60,7 @@ const Page = () => {
             backgroundColor: "background.paper",
           }}
         >
-          <Container maxWidth={settings.stretch ? false : "xl"}>
+          <Container maxWidth={settings.settings.stretch ? false : "xl"}>
             <Grid
               container
               disableEqualOverflow

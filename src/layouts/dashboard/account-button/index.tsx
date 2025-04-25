@@ -1,42 +1,39 @@
 import type { FC } from "react";
 import User01Icon from "@untitled-ui/icons-react/build/esm/User01";
-import { Avatar, Box, ButtonBase, SvgIcon } from "@mui/material";
+import { Avatar, Badge, Box, ButtonBase, SvgIcon } from "@mui/material";
 import { usePopover } from "src/hooks/use-popover";
 import { AccountPopover } from "./account-popover";
-import { useAuth } from "src/hooks/use-auth";
+import { useUser } from "src/hooks/use-user";
 
 export const AccountButton: FC = () => {
-  const { user } = useAuth();
+  const { user, error } = useUser();
   const popover = usePopover<HTMLButtonElement>();
 
   return (
     <>
       <Box
-        component={ButtonBase}
+        component="button"
         onClick={popover.handleOpen}
         ref={popover.anchorRef}
-        sx={{
-          alignItems: "center",
-          display: "flex",
-          borderWidth: 2,
-          borderStyle: "solid",
-          borderColor: "divider",
-          height: 40,
-          width: 40,
-          borderRadius: "50%",
-        }}
+        sx={{ border: "none", background: "transparent", cursor: "pointer", p: 0 }}
       >
-        <Avatar
+        <Badge
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          color="success"
           sx={{
-            height: 32,
-            width: 32,
+            "& .MuiBadge-dot": {
+              border: "2px solid var(--MainNav-background)",
+              borderRadius: "50%",
+              bottom: "6px",
+              height: "12px",
+              right: "6px",
+              width: "12px",
+            },
           }}
-          src={user?.avatar}
+          variant="dot"
         >
-          <SvgIcon>
-            <User01Icon />
-          </SvgIcon>
-        </Avatar>
+          <Avatar src={user?.avatar} />
+        </Badge>
       </Box>
       <AccountPopover anchorEl={popover.anchorRef.current} onClose={popover.handleClose} open={popover.open} />
     </>
