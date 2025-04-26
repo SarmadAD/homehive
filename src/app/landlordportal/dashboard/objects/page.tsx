@@ -30,7 +30,6 @@ import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
-import { SplashScreen } from "src/components/splash-screen";
 import { ColumnDef, DataTable } from "src/components/data-table";
 import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
 import { getInitials } from "src/utils/get-initials";
@@ -142,10 +141,6 @@ const Page: PageType = () => {
       setIsLoading(false);
     }
   }
-
-  // if (isLoading) {
-  //   return <SplashScreen />;
-  // }
 
   function handleDelete() {}
 

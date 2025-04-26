@@ -1,5 +1,6 @@
 "use client";
-import { Box, CircularProgress, Grid, Stack, Typography } from "@mui/material";
+
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import type { Page as PageType } from "src/types/page";
@@ -9,7 +10,6 @@ import { useSearchParams } from "next/navigation";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { ObjectEditForm } from "../../object-edit-form";
-import { SplashScreen } from "src/components/splash-screen";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { useUser } from "src/hooks/use-user";
@@ -50,10 +50,6 @@ const Page: PageType = () => {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  if (!rentalObject.id) {
-    return <SplashScreen />;
   }
 
   return (

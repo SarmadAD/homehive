@@ -47,7 +47,6 @@ import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
 import { RepairRequest } from "prisma/types/repairRequest";
 import { Renter } from "prisma/types/renter";
 import agent from "src/api/agent";
-import { SplashScreen } from "src/components/splash-screen";
 import { DeleteOutline } from "@mui/icons-material";
 import { useRouter } from "src/hooks/use-router";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
@@ -65,7 +64,7 @@ import { useUser } from "src/hooks/use-user";
 const tabs = [
   { label: "Details", value: "details" },
   { label: "Mieter", value: "renter" },
-  { label: "Wartung/Reperatur", value: "repairRequests" },
+  // { label: "Wartung/Reperatur", value: "repairRequests" },
 ];
 
 const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undefined => {

@@ -29,7 +29,6 @@ import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
-import { SplashScreen } from "src/components/splash-screen";
 import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
 import { Renter } from "prisma/types/renter";

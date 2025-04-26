@@ -2,44 +2,30 @@
 
 import { ChangeEvent, useMemo, useRef } from "react";
 import { useCallback, useEffect, useState } from "react";
-import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
-import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
-import Edit02Icon from "@untitled-ui/icons-react/build/esm/Edit02";
 import {
   Avatar,
   Box,
-  Button,
-  Chip,
   Container,
   Divider,
-  Link,
   Stack,
-  SvgIcon,
   Tab,
   Tabs,
   Typography,
   Unstable_Grid2 as Grid,
   Skeleton,
 } from "@mui/material";
-import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
-import { paths } from "src/paths";
 import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
-import { useSelection } from "src/hooks/use-selection";
 import { useDialog } from "src/hooks/use-dialog";
 import { ObjectSingleView } from "src/app/landlordportal/dashboard/objects/renter/object-single-view";
-import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
-import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
 import { RepairRequest } from "prisma/types/repairRequest";
-import { renterDefault } from "prisma/types/renter";
 import agent from "src/api/agent";
 import { ObjectBasicDetails } from "src/app/landlordportal/dashboard/objects/object-basic-details";
 import { ObjectRentInfoChart } from "src/app/landlordportal/dashboard/objects/object-rentInfo-chart";
-import { ObjectRepairRequestList } from "src/app/landlordportal/dashboard/objects/repairRequests/objects-repairRequests-list";
 import { ObjectRepairRequestDrawer } from "src/app/landlordportal/dashboard/objects/repairRequests/object-repairRequest-drawer";
-import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
 import { toast } from "src/components/toaster";
@@ -51,7 +37,7 @@ import { useUser } from "src/hooks/use-user";
 
 const tabs = [
   { label: "Details", value: "details" },
-  { label: "Wartung/Reperatur", value: "repairRequests" },
+  // { label: "Wartung/Reperatur", value: "repairRequests" },
 ];
 
 const useCurrentRepairRequest = (

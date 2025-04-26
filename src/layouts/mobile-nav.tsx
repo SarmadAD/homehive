@@ -66,9 +66,7 @@ export function MobileNav({ items = [], open, onClose }: MobileNavProps): React.
     >
       <Stack spacing={2} sx={{ p: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Box component={RouterLink} href={paths.index} sx={{ display: "inline-flex" }}>
-            <Logo height={32} width={60} />
-          </Box>
+          <Logo width={35} height={35} showLogoName={false} />
           <TenantSwitch />
         </Box>
       </Stack>
