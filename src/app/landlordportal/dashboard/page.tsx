@@ -13,7 +13,6 @@ import agent from "src/api/agent";
 import { useSetRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { RoleBasedGuard } from "../../auth/role/RoleBasedGuard";
-import { SplashScreen } from "src/components/splash-screen";
 import { useUser } from "src/hooks/use-user";
 
 const Page = () => {
@@ -43,10 +42,6 @@ const Page = () => {
       setIsLoading(false);
     }
   }
-
-  // if (isLoading) {
-  //   return <SplashScreen />;
-  // }
 
   return (
     <>

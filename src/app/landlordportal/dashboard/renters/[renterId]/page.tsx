@@ -35,7 +35,6 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
 import { renterAtom } from "src/state/atoms/renterAtom";
 import { getRenterName } from "src/utils/get-renter-name";
-import { SplashScreen } from "src/components/splash-screen";
 import { DeleteOutline } from "@mui/icons-material";
 import agent from "src/api/agent";
 import { useRouter } from "src/hooks/use-router";
