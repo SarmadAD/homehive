@@ -57,11 +57,11 @@ export function Footer(): React.JSX.Element {
         bottom: 0,
         position: "fixed",
         width: "100%",
-        bgcolor: "var(--mui-palette-background-default)",
-        borderTop: "1px solid var(--mui-palette-divider)",
+        // bgcolor: "var(--mui-palette-background-default)",
+        // borderTop: "1px solid var(--mui-palette-divider)",
         pb: 3,
         zIndex: 10,
-        pt: { md: 30, xs: 6 },
+        pt: { md: 5, xs: 6 },
       }}
     >
       <Container maxWidth="lg">

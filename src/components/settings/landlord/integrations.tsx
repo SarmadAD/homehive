@@ -34,7 +34,7 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
             <PlugsConnectedIcon fontSize="var(--Icon-fontSize)" />
           </Avatar>
         }
-        title="Integrations"
+        title="Integration"
       />
       <CardContent>
         <Card sx={{ borderRadius: 1 }} variant="outlined">

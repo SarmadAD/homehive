@@ -1,9 +1,10 @@
-import type { FC } from "react";
+"use client";
+
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
-export const HomeHero: FC = () => {
+export function Hero(): React.JSX.Element {
   return (
     <Box
       sx={{
@@ -15,15 +16,15 @@ export const HomeHero: FC = () => {
     >
       <Container maxWidth="lg">
         <Box maxWidth="sm">
-          <Typography variant="h1" sx={{ mb: 2 }}>
-            Verwalte deine Immobilien &nbsp;
-            <Typography component="span" color="primary.main" variant="inherit">
-              mühelos &nbsp;
-            </Typography>
-            und &nbsp;
-            <Typography component="span" color="primary.main" variant="inherit">
+          <Typography sx={{ fontSize: "3.5rem", fontWeight: 600, lineHeight: 1.2 }}>
+            Verwalte deine Immobilien{" "}
+            <Typography color="primary.main" component="span" variant="inherit">
+              mühelos
+            </Typography>{" "}
+            und{" "}
+            <Typography color="primary.main" component="span" variant="inherit">
               effizient
-            </Typography>
+            </Typography>{" "}
           </Typography>
           <Typography
             color="text.secondary"
@@ -35,107 +36,8 @@ export const HomeHero: FC = () => {
             Unsere benutzerfreundliche Software macht es einfach, deine Immobilien effizient zu verwalten. Behalte den
             Überblick über Mietzahlungen, Reparaturen und mehr – alles auf einen Blick
           </Typography>
-          {/* <Stack alignItems="center" direction="row" flexWrap="wrap" spacing={1} sx={{ my: 3 }}>
-            <Rating readOnly value={4.7} precision={0.1} max={5} />
-            <Typography color="text.primary" variant="caption" sx={{ fontWeight: 700 }}>
-              4.7/5
-            </Typography>
-            <Typography color="text.secondary" variant="caption">
-              based on (70+ reviews)
-            </Typography>
-          </Stack> */}
-          {/* <Stack alignItems="center" direction="row" spacing={2}>
-            <Button
-              component={RouterLink}
-              href={paths.landlordportal.dashboard.index}
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <EyeIcon />
-                </SvgIcon>
-              }
-              sx={(theme) =>
-                theme.palette.mode === "dark"
-                  ? {
-                      backgroundColor: "neutral.50",
-                      color: "neutral.900",
-                      "&:hover": {
-                        backgroundColor: "neutral.200",
-                      },
-                    }
-                  : {
-                      backgroundColor: "neutral.900",
-                      color: "neutral.50",
-                      "&:hover": {
-                        backgroundColor: "neutral.700",
-                      },
-                    }
-              }
-              variant="contained"
-            >
-              Live Demo
-            </Button>
-            <Button
-              color="inherit"
-              component={RouterLink}
-              href={paths.components.index}
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <LayoutBottomIcon />
-                </SvgIcon>
-              }
-            >
-              Components
-            </Button>
-          </Stack> */}
         </Box>
-
-        {/* <Box
-          sx={{
-            pt: "120px",
-            position: "relative",
-          }}
-        >
-          <Box
-            sx={{
-              overflow: "hidden",
-              width: "90%",
-              fontSize: 0,
-              mt: -2, // hack to cut the bottom box shadow
-              mx: -2,
-              pt: 2,
-              px: 2,
-              "& img": {
-                borderTopLeftRadius: (theme) => theme.shape.borderRadius * 2.5,
-                borderTopRightRadius: (theme) => theme.shape.borderRadius * 2.5,
-                boxShadow: 16,
-                width: "100%",
-              },
-            }}
-          >
-            <img
-              src={
-                theme.palette.mode === "dark" ? "/assets/home-thumbnail-dark.png" : "/assets/home-thumbnail-light.png"
-              }
-            />
-          </Box>
-          <Box
-            sx={{
-              maxHeight: "100%",
-              maxWidth: "100%",
-              overflow: "hidden",
-              position: "absolute",
-              right: 0,
-              top: 40,
-              "& > div": {
-                height: 460,
-                width: 560,
-              },
-            }}
-          > */}
-        {/* <HomeCodeSamples /> */}
-        {/* </Box> */}
-        {/* </Box> */}
       </Container>
     </Box>
   );
-};
+}
