@@ -1,24 +1,14 @@
 "use client";
 
-import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
-import { HomeHero } from "src/sections/home/home-hero";
+import * as React from "react";
+import { Hero } from "src/sections/home/home-hero";
 
-const Page = () => {
-  usePageView();
+// export const metadata = { title: config.site.name, description: config.site.description } satisfies Metadata;
 
+export default function Page(): React.JSX.Element {
   return (
-    <>
-      <Seo />
-      <main>
-        <HomeHero />
-        {/* <HomeFeatures />
-        <HomeReviews />
-        <HomeCta />
-        <HomeFaqs /> */}
-      </main>
-    </>
+    <main>
+      <Hero />
+    </main>
   );
-};
-
-export default Page;
+}

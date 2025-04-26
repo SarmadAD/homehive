@@ -35,13 +35,13 @@ export default function Page(): React.JSX.Element {
   return (
     <Stack spacing={4}>
       <div>
-        <Typography variant="h4">Integrations</Typography>
+        <Typography variant="h4">Integration</Typography>
       </div>
       <Integrations
         integrations={[
           {
             id: "tink",
-            name: "Tink",
+            name: "Bankverbindung herstellen",
             icon: "/assets/tink-logo.png",
             description: "Verbinde dein Bankkonto, um Mieteingänge nachzuverflogen",
             connected: false,
