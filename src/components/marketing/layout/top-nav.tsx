@@ -44,7 +44,6 @@ export function MainNav(): React.JSX.Element {
               component="a"
               href={user ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
               sx={{ display: { xs: "none", md: "flex" } }}
-              target="_blank"
               variant="contained"
             >
               Dashboard
