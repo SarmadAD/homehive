@@ -15,9 +15,6 @@ import {
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMounted } from "src/hooks/use-mounted";
-import { usePageView } from "src/hooks/use-page-view";
-import { useSearchParams } from "src/hooks/use-search-params";
 import { EyeSlash as EyeSlashIcon } from "@phosphor-icons/react/dist/ssr/EyeSlash";
 import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
 import { paths } from "src/paths";
@@ -162,8 +159,6 @@ export default function Page(): React.JSX.Element {
     },
     [firebaseAuth, setError]
   );
-
-  usePageView();
 
   return (
     <GuestGuard>

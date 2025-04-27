@@ -1,4 +1,4 @@
-import { Landlord, RentPayment, RentalObjectInfo } from "@prisma/client";
+import { Landlord, RentPayment, RentalObjectInfo, Token } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
 import { RentalObject } from "prisma/types/objects";
 import { Renter } from "prisma/types/renter";
@@ -52,7 +52,20 @@ const userRoles = {
 };
 
 const rentPayments = {
+  checkForNewTransactions: (landlordId: string, renterId: string) =>
+    requests.get<void>(`/api/rentPayments/?landlordId=${landlordId}&renterId=${renterId}`),
   update: (rentPayment: RentPayment) => requests.put<void>(`/api/rentPayments/${rentPayment.id}`, rentPayment),
+};
+
+const tinkToken = {
+  generate: (code: string, clientId: string, clientSecret: string, landlordId: string) =>
+    requests.get<void>(
+      `/api/dashboard/settings/integrations/?code=${code}&clientId=${clientId}&clientSecret=${clientSecret}&landlordId=${landlordId}`
+    ),
+};
+
+const token = {
+  get: (landlordId: string) => requests.get<Token>(`/api/token/?landlordId=${landlordId}`),
 };
 
 const agent = {
@@ -62,6 +75,8 @@ const agent = {
   renters,
   userRoles,
   rentPayments,
+  tinkToken,
+  token,
 };
 
 export default agent;

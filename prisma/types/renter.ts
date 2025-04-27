@@ -1,7 +1,7 @@
-import { Prisma, RentalObjectStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 // 1: Define a type that includes the relation to `Post`
-const renter = Prisma.validator<Prisma.RenterArgs>()({
+const renter = Prisma.validator<Prisma.RenterDefaultArgs>()({
   include: {
     rentalObject: {
       include: {
@@ -47,7 +47,6 @@ export const renterDefault: Renter = {
     state: 1,
     name: "",
     image: "",
-    status: RentalObjectStatus.UNINHABITED,
     address: "",
     houseNr: 0,
     additionalHouseDetails: "",

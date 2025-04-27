@@ -33,19 +33,6 @@ export async function PATCH(request: NextRequest) {
       data: { rentalObjectId: null },
     });
 
-    // Check if there are any renters left for the rentalObject
-    const remainingRenters = await prisma.renter.count({
-      where: { rentalObjectId: rentalObjectId },
-    });
-
-    // If no renters are left, update the rentalObject status to UNINHIBITED
-    if (remainingRenters === 0) {
-      await prisma.rentalObject.update({
-        where: { id: rentalObjectId },
-        data: { status: "UNINHABITED" },
-      });
-    }
-
     return NextResponse.json({
       message: "Rental objects updated successfully",
       count: updatedRenters.count,

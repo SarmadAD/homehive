@@ -10,14 +10,11 @@ import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
 import { PricingFaqs } from "src/sections/pricing/pricing-faqs";
 import { PricingPlan } from "src/sections/pricing/pricing-plan";
 import { PricingPlanIcon } from "src/sections/pricing/pricing-plan-icon";
 
-const Page = () => {
-  usePageView();
-
+export default function Page(): React.JSX.Element {
   return (
     <>
       <Seo title="Preis" />
@@ -125,6 +122,4 @@ const Page = () => {
       </Box>
     </>
   );
-};
-
-export default Page;
+}

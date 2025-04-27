@@ -1,9 +1,11 @@
-import { RentPaymentStatus, RentalObjectStatus, RepairRequestStatus } from "@prisma/client";
-import { RentalObject } from "prisma/types/objects";
-import { SeverityPill, SeverityPillColor } from "src/components/severity-pill";
+import { Chip } from "@mui/material";
+import { RentPaymentStatus, RepairRequestStatus } from "@prisma/client";
+import { RentalObject, RentalObjectStatus } from "prisma/types/objects";
+
+export type ChipColor = "primary" | "secondary" | "error" | "info" | "warning" | "success";
 
 export function getRentPaidStatusPill(rentPaidStatus: RentPaymentStatus): JSX.Element {
-  const map: Record<RentPaymentStatus, { color: SeverityPillColor; text: string }> = {
+  const map: Record<RentPaymentStatus, { color: ChipColor; text: string }> = {
     PAID: {
       color: "success",
       text: "Bezahlt",
@@ -20,11 +22,11 @@ export function getRentPaidStatusPill(rentPaidStatus: RentPaymentStatus): JSX.El
 
   const { text, color } = map[rentPaidStatus];
 
-  return <SeverityPill color={color}>{text}</SeverityPill>;
+  return <Chip color={color} label={text} size="small" variant="soft"></Chip>;
 }
 
 export const useRepairRequestStatusPill = (orderStatus: RepairRequestStatus): JSX.Element => {
-  const map: Record<RepairRequestStatus, { color: SeverityPillColor; text: string }> = {
+  const map: Record<RepairRequestStatus, { color: ChipColor; text: string }> = {
     DONE: {
       color: "success",
       text: "Fertig",
@@ -49,11 +51,11 @@ export const useRepairRequestStatusPill = (orderStatus: RepairRequestStatus): JS
 
   const { text, color } = map[orderStatus];
 
-  return <SeverityPill color={color}>{text}</SeverityPill>;
+  return <Chip color={color} label={text} size="small" variant="soft"></Chip>;
 };
 
 export const useRentalObjectStatusPill = (rentalObject: RentalObject): JSX.Element => {
-  const map: Record<RentalObjectStatus, { color: SeverityPillColor; text: string }> = {
+  const map: Record<RentalObjectStatus, { color: ChipColor; text: string }> = {
     INHABITED: {
       color: "success",
       text: "Bewohnt",
@@ -63,11 +65,11 @@ export const useRentalObjectStatusPill = (rentalObject: RentalObject): JSX.Eleme
       text: "Unbewohnt",
     },
   };
-  let status: RentalObjectStatus = "UNINHABITED";
-  if (rentalObject.status === "INHABITED") {
-    status = "INHABITED";
+  let status: RentalObjectStatus = RentalObjectStatus.UNINHABITED;
+  if (rentalObject.renter.length > 0) {
+    status = RentalObjectStatus.INHABITED;
   }
   const { text, color } = map[status];
 
-  return <SeverityPill color={color}>{text}</SeverityPill>;
+  return <Chip color={color} label={text} size="small" variant="soft"></Chip>;
 };

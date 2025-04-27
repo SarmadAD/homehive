@@ -7,6 +7,7 @@ export async function GET(request: Request, { params }: { params: { renterId: st
   if (renterId) {
     const renter = await prisma.renter.findFirst({
       where: { id: renterId },
+      include: { rentPayment: true },
     });
     if (renter) {
       return NextResponse.json(renter);

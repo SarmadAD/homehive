@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 
 // 1: Define a type that includes the relation to `Post`
-const userRole = Prisma.validator<Prisma.UserRoleArgs>()({
+const userRole = Prisma.validator<Prisma.UserRoleDefaultArgs>()({
   include: { role: true },
 });
 

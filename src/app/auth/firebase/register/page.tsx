@@ -1,25 +1,13 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
-import * as Yup from "yup";
-import { useFormik } from "formik";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 
 import { RouterLink } from "src/components/router-link";
-import { Seo } from "src/components/seo";
-import { useMounted } from "src/hooks/use-mounted";
-import { usePageView } from "src/hooks/use-page-view";
-import { useRouter } from "src/hooks/use-router";
-import { useSearchParams } from "src/hooks/use-search-params";
+import { useRouter } from "next/navigation";
 import { paths } from "src/paths";
-import { useRecoilValue } from "recoil";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import {
   Divider,
@@ -60,8 +48,8 @@ const oAuthProviders = [
 ] satisfies OAuthProvider[];
 
 const schema = zod.object({
-  firstName: zod.string().min(1, { message: "First name is required" }),
-  lastName: zod.string().min(1, { message: "Last name is required" }),
+  // firstName: zod.string().min(1, { message: "First name is required" }),
+  // lastName: zod.string().min(1, { message: "Last name is required" }),
   email: zod.string().min(1, { message: "Email is required" }).email(),
   password: zod.string().min(6, { message: "Password should be at least 6 characters" }),
   terms: zod.boolean().refine((value) => value, "You must accept the terms and conditions"),
@@ -69,11 +57,9 @@ const schema = zod.object({
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { firstName: "", lastName: "", email: "", password: "", terms: false } satisfies Values;
+const defaultValues = { email: "", password: "", terms: false } satisfies Values;
 
 const Page = () => {
-  usePageView();
-  const isMounted = useMounted();
   const router = useRouter();
   const [firebaseAuth] = React.useState<Auth>(getFirebaseAuth());
   const [isPending, setIsPending] = React.useState<boolean>(false);
@@ -190,12 +176,15 @@ const Page = () => {
         // Only Landlords can register. It makes no sense that Renter can register
         let path = "";
         const user = await createUserWithEmailAndPassword(firebaseAuth, values.email, values.password);
-        if (await checkIfLandlordExists(user)) {
-          router.push(paths.landlordportal.dashboard.index);
-        } else {
+        if (!(await checkIfLandlordExists(user))) {
           await createLandlord(user);
-          router.push(paths.landlordportal.dashboard.index);
         }
+        // if (await checkIfLandlordExists(user)) {
+        //   router.push(paths.landlordportal.dashboard.index);
+        // } else {
+        //   await createLandlord(user);
+        //   router.push(paths.landlordportal.dashboard.index);
+        // }
       } catch (err) {
         setError("root", { type: "server", message: (err as { message: string }).message });
         setIsPending(false);
@@ -291,7 +280,9 @@ const Page = () => {
             <Divider>or</Divider>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
-                <Controller
+                {/**Erstmal rausgenommen weil Firstname und Lastname nicht zur zeit gespeichert werden irgendwo. Daher macht es kein Sinn das der User diese ausfüllt */}
+
+                {/* <Controller
                   control={control}
                   name="firstName"
                   render={({ field }) => (
@@ -312,7 +303,7 @@ const Page = () => {
                       {errors.lastName ? <FormHelperText>{errors.lastName.message}</FormHelperText> : null}
                     </FormControl>
                   )}
-                />
+                /> */}
                 <Controller
                   control={control}
                   name="email"

@@ -92,7 +92,7 @@ const Page: PageType = () => {
         </div>
       ),
       name: "Name",
-      width: "650px",
+      // width: "650px",
     },
     {
       formatter: (row): React.JSX.Element => (
