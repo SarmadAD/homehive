@@ -60,6 +60,6 @@ export const paths = {
 
   docs: "https://material-kit-pro-react-docs.devias.io",
   notAuthorized: "/errors/401",
-  notFound: "/errors/404",
+  notFound: "/errors/not-found",
   serverError: "/errors/500",
 };

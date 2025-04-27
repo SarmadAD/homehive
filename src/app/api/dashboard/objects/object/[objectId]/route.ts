@@ -64,7 +64,6 @@ export async function PUT(request: Request, { params }: { params: { objectId: st
         data: {
           name: rentalObject.name,
           createdAt: rentalObject.createdAt,
-          status: rentalObject.status,
           image: "",
           address: rentalObject.address,
           houseNr: rentalObject.houseNr,

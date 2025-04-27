@@ -91,7 +91,7 @@ export function AddRenterModal({
                   {renters.filter(
                     (renter) => !rentalObject.renter?.some((assignedRenter) => assignedRenter.id === renter.id)
                   ).length === 0 ? (
-                    <MenuItem disabled>Keine Mieter verfügbar. Bitte löschen oder erstellen Sie Mieter. </MenuItem>
+                    <MenuItem disabled>Alle Mieter wurden bereits Objekten zugewiesen. </MenuItem>
                   ) : (
                     renters
                       .filter(

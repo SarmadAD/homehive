@@ -126,39 +126,37 @@ export const ObjectCreateForm: FC = () => {
     return rentalAgreements;
   }
 
-  function createRentPayment() {
-    const rentPayments: RentPayment[] = newObject.renter.map((renter) => {
-      const newRentPayment: RentPayment = {
-        id: "",
-        status: "NOTPAID",
-        renter: renter,
-        renterId: renter.id,
-        rentalObjectId: newObject.id,
-        rentalObject: newObject,
-        paymentDate: null,
-        dueDate: getDueDateOfRent(renter.rentalAgreement ? renter.rentalAgreement.dueDateState : "FIRSTMONTH"),
-        paymentAmount:
-          newObject.rentalObjectInfo.baseRent +
-          newObject.rentalObjectInfo.electricityCosts +
-          newObject.rentalObjectInfo.waterCosts +
-          newObject.rentalObjectInfo.heatingCosts,
-      };
-      return newRentPayment;
-    });
-    return rentPayments;
-  }
+  // function createRentPayment() {
+  //   const rentPayments: RentPayment[] = newObject.renter.map((renter) => {
+  //     const newRentPayment: RentPayment = {
+  //       id: "",
+  //       renter: renter,
+  //       renterId: renter.id,
+  //       rentalObjectId: newObject.id,
+  //       rentalObject: newObject,
+  //       paymentDate: null,
+  //       dueDate: getDueDateOfRent(renter.rentalAgreement ? renter.rentalAgreement.dueDateState : "FIRSTMONTH"),
+  //       paymentAmount:
+  //         newObject.rentalObjectInfo.baseRent +
+  //         newObject.rentalObjectInfo.electricityCosts +
+  //         newObject.rentalObjectInfo.waterCosts +
+  //         newObject.rentalObjectInfo.heatingCosts,
+  //     };
+  //     return newRentPayment;
+  //   });
+  //   return rentPayments;
+  // }
 
   useEffect(() => {
     if (isComplete && newObject) {
       const rentalAgreements = createRentalAgreement();
-      const rentPayments = createRentPayment();
+      // const rentPayments = createRentPayment();
       setNewObject({
         ...newObject,
         landlord: landlord,
         createdAt: new Date(),
-        status: newObject.renter.length > 0 ? "INHABITED" : "UNINHABITED",
         rentalAgreement: rentalAgreements,
-        rentPayment: rentPayments,
+        // rentPayment: rentPayments,
       });
     }
   }, [isComplete]);

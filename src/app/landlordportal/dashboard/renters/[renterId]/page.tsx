@@ -40,21 +40,29 @@ import agent from "src/api/agent";
 import { useRouter } from "src/hooks/use-router";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useUser } from "src/hooks/use-user";
+import { PaidRents } from "src/sections/dashboard/renter/paid-rents";
+import { userRoleAtom } from "src/state/atoms/userRoleAtom";
+import { RentPayment } from "@prisma/client";
 
 const tabs = [{ label: "Details", value: "details" }];
 
 const Page: PageType = () => {
-  const [currentTab, setCurrentTab] = useState<string>("details");
+  // const [currentTab, setCurrentTab] = useState<string>("details");
 
   const router = useRouter();
-  const { user, error } = useUser();
+  const { user } = useUser();
 
   const renter = useRecoilValue(renterAtom);
   const setLandlord = useSetRecoilState(currentUserAtom);
   const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
+  const landlord = useRecoilValue(currentUserAtom);
 
   const searchParams = useSearchParams();
   const renterId = searchParams?.get("renterId");
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [rentPayments, setRentPayments] = useState<RentPayment[]>([]);
+  const [isLoadingPayments, setIsLoadingPayments] = useState(false);
 
   usePageView();
 
@@ -80,8 +88,6 @@ const Page: PageType = () => {
       setSelectedRenterIdAtom(renterId.toString() ?? "");
     }
   }
-
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -112,9 +118,27 @@ const Page: PageType = () => {
     []
   );
 
-  const handleTabsChange = useCallback((event: ChangeEvent<{}>, value: string): void => {
-    setCurrentTab(value);
-  }, []);
+  useEffect(() => {
+    if (landlord.id && renterId) {
+      getRentPayments();
+    }
+  }, [landlord]);
+
+  async function getRentPayments() {
+    try {
+      setIsLoadingPayments(true);
+      await agent.rentPayments.checkForNewTransactions(landlord.id, renterId ?? "");
+      setRentPayments(renter.rentPayment);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoadingPayments(false);
+    }
+  }
+
+  // const handleTabsChange = useCallback((event: ChangeEvent<{}>, value: string): void => {
+  //   setCurrentTab(value);
+  // }, []);
 
   return (
     <>
@@ -233,7 +257,7 @@ const Page: PageType = () => {
                     </Menu>
                   </Stack>
                 </Stack>
-                <div>
+                {/* <div>
                   <Tabs
                     indicatorColor="primary"
                     onChange={handleTabsChange}
@@ -248,17 +272,20 @@ const Page: PageType = () => {
                     ))}
                   </Tabs>
                   <Divider />
-                </div>
+                </div> */}
               </Stack>
-              {currentTab === "details" && (
-                <div>
-                  <Grid container spacing={4}>
-                    <Grid xs={12} lg={4}>
-                      <RenterBasicDetails />
-                    </Grid>
+              {/* {currentTab === "details" && ( */}
+              <div>
+                <Grid container spacing={4}>
+                  <Grid xs={12} lg={4}>
+                    <RenterBasicDetails />
                   </Grid>
-                </div>
-              )}
+                  <Grid lg={8} xs={12}>
+                    <PaidRents rentPayments={rentPayments} isLoadingPayments={isLoadingPayments} />
+                  </Grid>
+                </Grid>
+              </div>
+              {/* )} */}
             </Stack>
           </Container>
         </Box>

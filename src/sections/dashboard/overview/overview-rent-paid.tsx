@@ -6,6 +6,7 @@ import { paths } from "src/paths";
 import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { totalPaidRents } from "src/state/selectors/totalPaidRents";
 import { RouterLink } from "src/components/router-link";
+import { dayjs } from "src/lib/dayjs";
 
 interface OverviewRentPaidProps {
   showActions: boolean;
@@ -56,7 +57,7 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
         </div>
         <Box>
           <Typography color="text.secondary" variant="body2">
-            Mieten bezahlt
+            Mieten bezahlt im {dayjs().format("MMMM")}
           </Typography>
           {content}
         </Box>

@@ -252,7 +252,6 @@ const Page: PageType = () => {
       const updatedRentalObject = {
         ...rentalObject,
         renter: updatedRenters,
-        status: updatedRenters.length === 0 ? "UNINHABITED" : rentalObject.status,
       };
       setRentalObject(updatedRentalObject);
       toast.success("Mieter erfolgreich gelöscht");
@@ -276,7 +275,6 @@ const Page: PageType = () => {
         const updatedRentalObject = {
           ...rentalObject,
           renter: updatedRenters,
-          status: updatedRenters.length > 0 ? "INHABITED" : rentalObject.status,
         };
         const updatedRentalObjectFromResponse: RentalObject = await agent.objects.update(updatedRentalObject);
         setRentalObject(updatedRentalObjectFromResponse);
@@ -305,11 +303,14 @@ const Page: PageType = () => {
         </div>
       ),
       name: "Name",
-      width: "650px",
     },
     {
       formatter: (row): React.JSX.Element => (
-        <IconButton component={RouterLink} onClick={() => handleDialog(row.id)} href={""}>
+        <IconButton
+          component={RouterLink}
+          // onClick={() => handleDialog(row.id)}
+          href={`${paths.landlordportal.dashboard.renters.details}${row.id}`}
+        >
           <SvgIcon>
             <ArrowRightIcon />
           </SvgIcon>

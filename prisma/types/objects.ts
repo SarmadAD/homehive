@@ -1,4 +1,4 @@
-import { Prisma, RentalObjectStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 // 1: Define a type that includes the relation to `Post`
 const rentalObject = Prisma.validator<Prisma.RentalObjectDefaultArgs>()({
@@ -26,7 +26,6 @@ export const rentalObjectDefault: RentalObject = {
   state: 1,
   name: "",
   image: "",
-  status: RentalObjectStatus.UNINHABITED,
   address: "",
   houseNr: 0,
   additionalHouseDetails: "",
@@ -51,3 +50,8 @@ export const rentalObjectDefault: RentalObject = {
   },
   landlordId: "",
 };
+
+export enum RentalObjectStatus {
+  INHABITED = "INHABITED",
+  UNINHABITED = "UNINHABITED",
+}

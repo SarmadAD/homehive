@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { RouterLink } from "src/components/router-link";
 import { useMounted } from "src/hooks/use-mounted";
-import { usePageView } from "src/hooks/use-page-view";
 import { useRouter } from "src/hooks/use-router";
 import { useSearchParams } from "src/hooks/use-search-params";
 import { paths } from "src/paths";
@@ -55,7 +54,6 @@ type Values = zod.infer<typeof schema>;
 const defaultValues = { firstName: "", lastName: "", email: "", password: "", terms: false } satisfies Values;
 
 const Page = () => {
-  usePageView();
   const isMounted = useMounted();
   const router = useRouter();
   const searchParams = useSearchParams();

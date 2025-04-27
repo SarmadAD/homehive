@@ -1,74 +1,52 @@
-"use client";
-
+import * as React from "react";
+import RouterLink from "next/link";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import type { Theme } from "@mui/material/styles/createTheme";
-
-import { RouterLink } from "src/components/router-link";
-import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
 import { paths } from "src/paths";
+import { site } from "src/config";
+import { Metadata } from "next/types";
 
-const NotFound = () => {
-  const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+export const metadata = { title: `Not found | ${site.name}` } satisfies Metadata;
 
-  usePageView();
-
+export default function NotFound(): React.JSX.Element {
   return (
-    <>
-      <Seo title="Error: Not Found" />
-      <Box
-        component="main"
-        sx={{
-          alignItems: "center",
-          display: "flex",
-          flexGrow: 1,
-          py: "80px",
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              mb: 6,
-            }}
-          >
+    <Box
+      component="main"
+      sx={{
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        minHeight: "100%",
+        py: "64px",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Stack spacing={6}>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Box
               alt="Not found"
               component="img"
               src="/assets/errors/error-404.png"
-              sx={{
-                height: "auto",
-                maxWidth: "100%",
-                width: 400,
-              }}
+              sx={{ height: "auto", maxWidth: "100%", width: "200px" }}
             />
           </Box>
-          <Typography align="center" variant={mdUp ? "h1" : "h4"}>
-            404: The page you are looking for isn’t here
-          </Typography>
-          <Typography align="center" color="text.secondary" sx={{ mt: 0.5 }}>
-            You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation.
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              mt: 6,
-            }}
-          >
-            <Button component={RouterLink} href={paths.index}>
-              Back to Home
+          <Stack spacing={1} sx={{ textAlign: "center" }}>
+            <Typography variant="h4">404: The page you are looking for isn&apos;t here</Typography>
+            <Typography color="text.secondary">
+              You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation.
+            </Typography>
+          </Stack>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Button component={RouterLink} href={paths.index} variant="contained">
+              Back to home
             </Button>
           </Box>
-        </Container>
-      </Box>
-    </>
+        </Stack>
+      </Container>
+    </Box>
   );
-};
-
-export default NotFound;
+}

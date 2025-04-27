@@ -15,7 +15,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
 import { useSettings } from "src/hooks/use-settings";
 import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-repair-request";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
@@ -106,7 +105,6 @@ const useObjectsIds = (objects: RentalObject[] = []) => {
 };
 
 const Page: PageType = () => {
-  usePageView();
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
@@ -160,7 +158,7 @@ const Page: PageType = () => {
         </div>
       ),
       name: "Name",
-      width: "250px",
+      // width: "150px",
     },
     {
       formatter: (row): React.JSX.Element => {
@@ -170,7 +168,7 @@ const Page: PageType = () => {
       },
 
       name: "Status",
-      width: "100px",
+      // width: "100px",
     },
     {
       formatter: (row): React.JSX.Element => (
@@ -198,7 +196,7 @@ const Page: PageType = () => {
         </Stack>
       ),
       name: "Mieter",
-      width: "250px",
+      // width: "250px",
     },
   ] satisfies ColumnDef<RentalObject>[];
 
@@ -243,10 +241,7 @@ const Page: PageType = () => {
                     </Button>
                   </Stack>
                 </Stack>
-              </Grid>
-              <Grid xs={12} md={4}>
-                <OverviewRepairRequest showActions={false} />
-              </Grid>
+              </Grid>{" "}
               <Grid xs={12} md={4}>
                 <OverviewStatusObjects showActions={false} />
               </Grid>

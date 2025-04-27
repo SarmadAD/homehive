@@ -29,7 +29,6 @@ export async function POST(request: Request, { params }: { params: { landlordId:
       const createdRentalObject = await prisma.rentalObject.create({
         data: {
           name: rentalObject.name,
-          status: rentalObject.status,
           createdAt: rentalObject.createdAt,
           image: "",
           address: rentalObject.address,

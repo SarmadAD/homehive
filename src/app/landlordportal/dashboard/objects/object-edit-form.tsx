@@ -118,11 +118,9 @@ export const ObjectEditForm: FC = () => {
     if (isComplete && currentObject) {
       const object: RentalObject = {
         ...currentObject,
-        status: currentObject.renter.length > 0 ? "INHABITED" : "UNINHABITED",
       };
       setCurrentObject({
         ...currentObject,
-        status: currentObject.renter.length > 0 ? "INHABITED" : "UNINHABITED",
       });
 
       updateRentalObject(object);

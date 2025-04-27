@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 
 // 1: Define a type that includes the relation to `Post`
-const repairRequest = Prisma.validator<Prisma.RepairRequestArgs>()({
+const repairRequest = Prisma.validator<Prisma.RepairRequestDefaultArgs>()({
   include: { renter: true },
 });
 

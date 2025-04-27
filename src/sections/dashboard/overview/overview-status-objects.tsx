@@ -103,8 +103,8 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
     content =
       statusData[0] === 0 && statusData[1] === 0 ? (
         <Container maxWidth="sm">
-          <CardContent>
-            <Typography color="text.primary" variant="body2">
+          <CardContent sx={{ mt: 1 }}>
+            <Typography color="text.secondary" variant="body2">
               Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zu sehen
             </Typography>
           </CardContent>

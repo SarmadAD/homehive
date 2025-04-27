@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 
 // 1: Define a type that includes the relation to `Post`
-const rentPayment = Prisma.validator<Prisma.RentPaymentArgs>()({
+const rentPayment = Prisma.validator<Prisma.RentPaymentDefaultArgs>()({
   include: { rentalObject: true, renter: true },
 });
 

@@ -43,7 +43,7 @@ export default function Page(): React.JSX.Element {
             id: "tink",
             name: "Bankverbindung herstellen",
             icon: "/assets/tink-logo.png",
-            description: "Verbinde dein Bankkonto, um Mieteingänge nachzuverflogen",
+            description: "Verbinde dein Bankkonto, um Mieteingänge nachzuverfolgen",
             connected: false,
           },
         ]}

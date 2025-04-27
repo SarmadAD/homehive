@@ -2,10 +2,8 @@
 
 import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
 import { useSettings } from "src/hooks/use-settings";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
-import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-repair-request";
 import { OverviewRentalIncome } from "src/sections/dashboard/overview/overview-rental-income";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
 import { useEffect, useState } from "react";
@@ -15,8 +13,7 @@ import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { RoleBasedGuard } from "../../auth/role/RoleBasedGuard";
 import { useUser } from "src/hooks/use-user";
 
-const Page = () => {
-  usePageView();
+export default function Page(): React.JSX.Element {
   const settings = useSettings();
   const setLandlord = useSetRecoilState(currentUserAtom);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,7 +72,7 @@ const Page = () => {
                 <OverviewRentPaid showActions={true} />
               </Grid>
               <Grid xs={12} md={4}>
-                <OverviewRepairRequest showActions={true} />
+                {/* <OverviewRepairRequest showActions={true} /> */}
               </Grid>
               <Grid xs={12} md={4}>
                 <OverviewStatusObjects showActions={true} />
@@ -89,6 +86,4 @@ const Page = () => {
       </RoleBasedGuard>
     </>
   );
-};
-
-export default Page;
+}
