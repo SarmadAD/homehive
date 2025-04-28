@@ -58,7 +58,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
             <ListItemIcon>
               <UserIcon />
             </ListItemIcon>
-            Account
+            Kontoeinstellungen
           </MenuItem>
         </RoleBasedGuard>
         <RoleBasedGuard permission="/renterportal/dashboard">
@@ -66,7 +66,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
             <ListItemIcon>
               <UserIcon />
             </ListItemIcon>
-            Account
+            Kontoeinstellungen
           </MenuItem>
         </RoleBasedGuard>
       </List>
@@ -74,7 +74,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
 
       <Box sx={{ p: 1 }}>
         <MenuItem component="div" onClick={handleLogout} sx={{ justifyContent: "center" }}>
-          Logout
+          Abmelden
         </MenuItem>
       </Box>
     </Popover>

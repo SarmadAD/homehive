@@ -29,20 +29,23 @@ import { GuestGuard } from "../../guest-guard";
 import { SplitLayout } from "src/components/split-layout";
 import { Logo } from "src/components/logo";
 import { useRouter } from "next/navigation";
+// import { site } from "src/config";
+// import { Metadata } from "next/types";
 
 interface OAuthProvider {
   id: "google" | "github";
   name: string;
   logo: string;
 }
+// export const metadata = { title: `Login | Anmelden | ${site.name}` } satisfies Metadata;
 
 const oAuthProviders = [
   { id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" },
 ] satisfies OAuthProvider[];
 
 const schema = zod.object({
-  email: zod.string().min(1, { message: "Email is required" }).email(),
-  password: zod.string().min(1, { message: "Password is required" }),
+  email: zod.string().min(1, { message: "E-Mail ist erforderlich" }).email(),
+  password: zod.string().min(1, { message: "Passwort ist erforderlich" }),
 });
 
 type Values = zod.infer<typeof schema>;
@@ -171,11 +174,11 @@ export default function Page(): React.JSX.Element {
             </Box>
           </div>
           <Stack spacing={1}>
-            <Typography variant="h5">Sign in</Typography>
+            <Typography variant="h5">Anmelden</Typography>
             <Typography color="text.secondary" variant="body2">
-              Don&apos;t have an account?{" "}
+              Noch kein Konto?{" "}
               <Link component={RouterLink} href={paths.auth.firebase.register} variant="subtitle2">
-                Sign up
+                Registrieren
               </Link>
             </Typography>
           </Stack>
@@ -193,12 +196,12 @@ export default function Page(): React.JSX.Element {
                     }}
                     variant="outlined"
                   >
-                    Continue with {provider.name}
+                    Weiter mit {provider.name}
                   </Button>
                 )
               )}
             </Stack>
-            <Divider>or</Divider>
+            <Divider>oder</Divider>
             <Stack spacing={2}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={2}>
@@ -207,7 +210,7 @@ export default function Page(): React.JSX.Element {
                     name="email"
                     render={({ field }) => (
                       <FormControl error={Boolean(errors.email)}>
-                        <InputLabel>Email address</InputLabel>
+                        <InputLabel>E-Mail-Adresse</InputLabel>
                         <OutlinedInput {...field} type="email" />
                         {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
                       </FormControl>
@@ -218,7 +221,7 @@ export default function Page(): React.JSX.Element {
                     name="password"
                     render={({ field }) => (
                       <FormControl error={Boolean(errors.password)}>
-                        <InputLabel>Password</InputLabel>
+                        <InputLabel>Passwort</InputLabel>
                         <OutlinedInput
                           {...field}
                           endAdornment={
@@ -240,7 +243,7 @@ export default function Page(): React.JSX.Element {
                               />
                             )
                           }
-                          label="Password"
+                          label="Passwort"
                           type={showPassword ? "text" : "password"}
                         />
                         {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
@@ -249,7 +252,7 @@ export default function Page(): React.JSX.Element {
                   />
                   {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
                   <Button disabled={isPending} type="submit" variant="contained">
-                    Sign in
+                    Anmelden
                   </Button>
                 </Stack>
               </form>

@@ -31,7 +31,7 @@ interface OverviewStatusObjects {
 
 const labels: string[] = ["Bewohnt", "Unbewohnt"];
 const mainColor = "var(--mui-palette-primary-main)";
-const secondaryColor = "var(--mui-palette-text-secondary)";
+const secondaryColor = "var(--mui-palette-text-primary)";
 
 const useChartOptions = (): ApexOptions => {
   const theme = useTheme();
@@ -55,7 +55,7 @@ const useChartOptions = (): ApexOptions => {
     labels,
     legend: {
       labels: {
-        colors: theme.palette.text.secondary,
+        colors: [mainColor, secondaryColor],
       },
       show: true,
     },

@@ -35,6 +35,10 @@ import { Renter } from "prisma/types/renter";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { RouterLink } from "src/components/router-link";
 import { useUser } from "src/hooks/use-user";
+// import { site } from "src/config";
+// import { Metadata } from "next/types";
+
+// export const metadata = { title: `Renters | Mieter | ${site.name}` } satisfies Metadata;
 
 const Page: PageType = () => {
   usePageView();

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-// import type { Metadata } from "next";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AccountDetails } from "src/components/settings/landlord/account-details";
@@ -10,9 +9,12 @@ import { useEffect } from "react";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { useUser } from "src/hooks/use-user";
+// import { site } from "src/config";
+// import { Metadata } from "next/types";
 
-// import { config } from "@/config";
-// export const metadata = { title: `Account | Settings | Dashboard | ${config.site.name}` } satisfies Metadata;
+// export const metadata = {
+//   title: `Account | Settings | Dashboard| Kontoeinstellungen  | ${site.name}`,
+// } satisfies Metadata;
 
 export default function Page(): React.JSX.Element {
   const setLandlord = useSetRecoilState(currentUserAtom);
@@ -37,7 +39,7 @@ export default function Page(): React.JSX.Element {
   return (
     <Stack spacing={4}>
       <div>
-        <Typography variant="h4">Account</Typography>
+        <Typography variant="h4">Kontoeinstellungen</Typography>
       </div>
       <Stack spacing={4}>
         <AccountDetails />

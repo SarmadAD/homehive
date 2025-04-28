@@ -62,7 +62,7 @@ export const ObjectRentInfoChart: FC = () => {
     return (
       <Box>
         <Card>
-          <CardHeader title="Mietinfos" subheader="Mietkosten des Objekts" />
+          <CardHeader title="Mieteinnahmen" subheader="Mieteinnahmen des Objekts" />
           <CardContent>
             <Stack alignItems="center" direction="row" flexWrap="wrap" spacing={3}>
               <Skeleton variant="circular" width={200} height={200} />
@@ -75,7 +75,7 @@ export const ObjectRentInfoChart: FC = () => {
                 </Stack>
                 <Stack spacing={1}>
                   <Typography color="text.secondary" variant="overline">
-                    Kosten
+                    Einnahmen
                   </Typography>
                   <Stack
                     component="ul"
@@ -107,7 +107,7 @@ export const ObjectRentInfoChart: FC = () => {
     return (
       <Box>
         <Card>
-          <CardHeader title="Mietinfos" subheader="Mietkosten des Objekts" />
+          <CardHeader title="Mieteinnahmen" subheader="Mieteinnahmen des Objekts" />
           <CardContent>
             <Typography color="error" variant="body2">
               Fehler beim Laden der Daten.
@@ -128,7 +128,7 @@ export const ObjectRentInfoChart: FC = () => {
   return (
     <Box>
       <Card>
-        <CardHeader title="Mietinfos" subheader="Mietkosten des Objekts" />
+        <CardHeader title="Mieteinnahmen" subheader="Mieteinnahmen des Objekts" />
         <CardContent>
           <Stack alignItems="center" direction="row" flexWrap="wrap" spacing={3}>
             <Box
@@ -151,7 +151,7 @@ export const ObjectRentInfoChart: FC = () => {
               </Stack>
               <Stack spacing={1}>
                 <Typography color="text.secondary" variant="overline">
-                  Kosten
+                  Einnahmen
                 </Typography>
                 <Stack
                   component="ul"

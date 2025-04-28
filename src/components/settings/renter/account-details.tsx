@@ -75,7 +75,7 @@ export function AccountDetails(): React.JSX.Element {
               <OutlinedInput defaultValue={user?.name} name="fullName" />
             </FormControl>
             <FormControl disabled>
-              <InputLabel>Email address</InputLabel>
+              <InputLabel>E-Mail-Adresse</InputLabel>
               <OutlinedInput name="email" type="email" value={user?.email} />
               {/* <FormHelperText>
                 Please <Link variant="inherit">contact us</Link> to change your email

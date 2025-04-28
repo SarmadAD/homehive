@@ -34,7 +34,7 @@ export function Hero(): React.JSX.Element {
             }}
           >
             Unsere benutzerfreundliche Software macht es einfach, deine Immobilien effizient zu verwalten. Behalte den
-            Überblick über Mietzahlungen, Reparaturen und mehr – alles auf einen Blick
+            Überblick über Mietzahlungen, Mieter, Objekte und mehr – alles auf einen Blick
           </Typography>
         </Box>
       </Container>

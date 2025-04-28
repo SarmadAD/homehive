@@ -26,7 +26,12 @@ const navItems = [
     key: "personal",
     title: "Personal",
     items: [
-      { key: "account", title: "Account", href: paths.renterportal.dashboard.settings.account, icon: "user-circle" },
+      {
+        key: "account",
+        title: "Kontoeinstellungen",
+        href: paths.renterportal.dashboard.settings.account,
+        icon: "user-circle",
+      },
     ],
   },
 ] satisfies NavItemConfig[];
