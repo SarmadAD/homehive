@@ -20,11 +20,12 @@ interface PricingPlanProps {
   name: string;
   popular?: boolean;
   price: string;
+  subscription: boolean;
   sx?: SxProps<Theme>;
 }
 
 export const PricingPlan: FC<PricingPlanProps> = (props) => {
-  const { cta, currency, description, features, icon, name, popular, price, sx, ...other } = props;
+  const { cta, currency, description, subscription, features, icon, name, popular, price, sx, ...other } = props;
 
   return (
     <Card
@@ -49,16 +50,18 @@ export const PricingPlan: FC<PricingPlanProps> = (props) => {
             {currency}
             {price}
           </Typography>
-          <Typography
-            color="text.secondary"
-            sx={{
-              alignSelf: "flex-end",
-              ml: 1,
-            }}
-            variant="subtitle2"
-          >
-            /Monat
-          </Typography>
+          {subscription && (
+            <Typography
+              color="text.secondary"
+              sx={{
+                alignSelf: "flex-end",
+                ml: 1,
+              }}
+              variant="subtitle2"
+            >
+              /Monat
+            </Typography>
+          )}
         </Box>
         <Typography sx={{ mt: 2 }} variant="h6">
           {name}

@@ -30,6 +30,12 @@ export const layoutConfig = {
           icon: "person",
         },
         {
+          key: "pricing",
+          title: "Preis",
+          href: paths.landlordportal.dashboard.pricing,
+          icon: "credit-card",
+        },
+        {
           key: "renterPortalObjects",
           title: "Objekte",
           href: paths.renterportal.dashboard.objects.index,

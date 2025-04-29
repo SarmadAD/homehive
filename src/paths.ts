@@ -27,6 +27,7 @@ export const paths = {
   landlordportal: {
     dashboard: {
       index: "/landlordportal/dashboard",
+      pricing: "/landlordportal/dashboard/pricing",
       objects: {
         index: "/landlordportal/dashboard/objects",
         details: "/landlordportal/dashboard/objects/:objectId?objectId=",

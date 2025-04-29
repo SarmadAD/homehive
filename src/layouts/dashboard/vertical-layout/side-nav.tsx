@@ -1,18 +1,10 @@
-import type { FC } from "react";
-import { useMemo, useState } from "react";
-import PropTypes from "prop-types";
-import File04Icon from "@untitled-ui/icons-react/build/esm/File04";
-import { Box, Button, Chip, Drawer, Stack, SvgIcon, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
+import { Box, Chip, Stack, Typography } from "@mui/material";
 import { Logo } from "src/components/logo";
 import { RouterLink } from "src/components/router-link";
-import { Scrollbar } from "src/components/scrollbar";
 import { usePathname } from "src/hooks/use-pathname";
-import { paths } from "src/paths";
 import type { NavColor } from "src/types/settings";
-import type { Section } from "../config";
 import { TenantSwitch } from "../tenant-switch";
-import { SideNavSection } from "./side-nav-section";
 import { navColorStyles } from "./styles";
 import { useSettings } from "src/hooks/use-settings";
 import { ColorScheme } from "src/styles/theme/types";
@@ -85,6 +77,8 @@ export function SideNav({ color = "evident", items = [] }: SideNavProps): React.
 
 function renderNavGroups({ items, pathname }: { items: NavItemConfig[]; pathname: string }): React.JSX.Element {
   const children = items.reduce((acc: React.ReactNode[], curr: NavItemConfig): React.ReactNode[] => {
+    const pricingItem = curr.items?.find((item) => item.key === "pricing");
+    const otherItems = curr.items?.filter((item) => item.key !== "pricing");
     acc.push(
       <Stack component="li" key={curr.key} spacing={1.5}>
         {curr.title ? (
@@ -94,7 +88,21 @@ function renderNavGroups({ items, pathname }: { items: NavItemConfig[]; pathname
             </Typography>
           </div>
         ) : null}
-        <div>{renderNavItems({ depth: 0, items: curr.items, pathname })}</div>
+        <div>{renderNavItems({ depth: 0, items: otherItems, pathname })}</div>
+
+        {pricingItem && (
+          <Box
+            sx={{
+              position: "fixed",
+              width: "var(--SideNav-width)",
+              bottom: 0,
+              left: 0,
+              p: 2,
+            }}
+          >
+            {renderNavItems({ depth: 0, items: [pricingItem], pathname })}
+          </Box>
+        )}
       </Stack>
     );
 
