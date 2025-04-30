@@ -57,7 +57,14 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
       </Stack>
       <Stack spacing={3} direction={{ xs: "column", lg: "row" }}>
         <TextField fullWidth label="Ort" name="city" value={newObject.city} onChange={handleChange} />
-        <TextField fullWidth label="PLZ" name="postalCode" value={newObject.postalCode} onChange={handleChange} />
+        <TextField
+          fullWidth
+          label="PLZ"
+          name="postalCode"
+          type="number"
+          value={newObject.postalCode}
+          onChange={handleChange}
+        />
       </Stack>
       <Stack alignItems="center" direction="row" spacing={2}>
         <Button

@@ -11,6 +11,8 @@ import {
   SvgIcon,
   Link,
   IconButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -35,6 +37,9 @@ import { Renter } from "prisma/types/renter";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { RouterLink } from "src/components/router-link";
 import { useUser } from "src/hooks/use-user";
+import { DotsVertical, User03 } from "@untitled-ui/icons-react";
+import { DeleteModal } from "src/components/widgets/modals/delete-modal";
+import { toast } from "src/components/toaster";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -47,6 +52,7 @@ const Page: PageType = () => {
   const setLandlord = useSetRecoilState(currentUserAtom);
   const rentersSearch = useRentersSearch();
   const renters = useRecoilValue(rentersAtom);
+  const setRenters = useSetRecoilState(rentersAtom);
   const rentersIds = useRentersIds(renters);
   // const rentersIds = React.useMemo(() => renters.map((renter) => renter.id), [renters]);
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
@@ -54,6 +60,17 @@ const Page: PageType = () => {
   // const rentersSelection = useSelection<string>(rentersIds);
   const [isLoading, setIsLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  // Renter Menu Three Dots Menu
+  const [anchorElRenterThreeDotsMenu, setAnchorElRenterThreeDotsMenu] = React.useState<null | HTMLElement>(null);
+  const openRenterThreeDotsMenu = Boolean(anchorElRenterThreeDotsMenu);
+  const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElRenterThreeDotsMenu(event.currentTarget);
+  };
+  const handleCloseRenterThreeDotsMenu = () => {
+    setAnchorElRenterThreeDotsMenu(null);
+    deselectAll();
+  };
 
   const { user, error } = useUser();
 
@@ -76,9 +93,30 @@ const Page: PageType = () => {
       setIsLoading(false);
     }
   }
-  const handleAddRenter = () => {
-    // setOpenAddRenterModal(true);
+
+  const handleDelete = async () => {
+    try {
+      const deletedRenter = await agent.renters.delete(Array.from(selected)[0]);
+      const updatedRenters = renters.filter((renter) => renter.id !== deletedRenter.id);
+      setRenters(updatedRenters);
+      toast.success("Mieter erfolgreich gelöscht");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOpenDeleteModal(false);
+    }
   };
+
+  function handleDeleteModalOpen(row: Renter) {
+    handleCloseRenterThreeDotsMenu();
+    setOpenDeleteModal(true);
+    selectOne(row.id);
+  }
+
+  function handleCancelDeleteModal() {
+    setOpenDeleteModal(false);
+    deselectAll();
+  }
 
   const columns = [
     {
@@ -100,11 +138,32 @@ const Page: PageType = () => {
     },
     {
       formatter: (row): React.JSX.Element => (
-        <IconButton component={RouterLink} href={""}>
-          <SvgIcon>
-            <ArrowRightIcon />
-          </SvgIcon>
-        </IconButton>
+        <div>
+          <Button
+            // component={RouterLink}
+            // onClick={() => handleDialog(row.id)}
+            // href={`${paths.landlordportal.dashboard.renters.details}${row.id}`}
+            aria-controls={openRenterThreeDotsMenu ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openRenterThreeDotsMenu ? "true" : undefined}
+            onClick={handleClickRenterThreeDotsMenu}
+          >
+            <SvgIcon>
+              <DotsVertical />
+            </SvgIcon>
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorElRenterThreeDotsMenu}
+            open={openRenterThreeDotsMenu}
+            onClose={handleCloseRenterThreeDotsMenu}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem onClick={() => handleDeleteModalOpen(row)}>Löschen</MenuItem>
+          </Menu>
+        </div>
       ),
       name: "",
       align: "right",
@@ -113,14 +172,14 @@ const Page: PageType = () => {
 
   return (
     <>
-      <Seo title="Dashboard: Übersicht" />
+      <Seo title="Mieter" />
 
       <RoleBasedGuard permission="/landlordportal/dashboard/renters">
         <Box
           component="main"
           sx={{
             flexGrow: 1,
-            py: 8,
+            py: 3,
             backgroundColor: "background.paper",
           }}
         >
@@ -164,14 +223,20 @@ const Page: PageType = () => {
                     selectOne(row.id);
                   }}
                   selected={selected}
-                  setOpenDeleteModal={setOpenDeleteModal}
                   isLoading={isLoading}
+                  rowStartIcon={<User03 />}
                   selectable
                 />
               </Grid>
             </Grid>
           </Container>
-        </Box>
+        </Box>{" "}
+        <DeleteModal
+          text={"Möchten Sie wirklich den Mieter löschen?"}
+          handleCancelDeleteModal={handleCancelDeleteModal}
+          onDelete={handleDelete}
+          openDeleteModal={openDeleteModal}
+        />
       </RoleBasedGuard>
     </>
   );

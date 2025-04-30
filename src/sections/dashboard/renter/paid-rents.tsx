@@ -116,7 +116,6 @@ export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProp
                   renterLoadable.state === "loading" ||
                   (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "")
                 }
-                setOpenDeleteModal={setOpenDeleteModal}
               />
             </Box>
           </Card>

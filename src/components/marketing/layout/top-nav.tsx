@@ -31,6 +31,7 @@ export function MainNav(): React.JSX.Element {
           right: 0,
           top: 0,
           zIndex: "var(--MainNav-zIndex)",
+          backgroundColor: "white",
         }}
       >
         <Container maxWidth="lg" sx={{ display: "flex", minHeight: "var(--MainNav-height)", py: "16px" }}>
@@ -46,7 +47,7 @@ export function MainNav(): React.JSX.Element {
               sx={{ display: { xs: "none", md: "flex" } }}
               variant="contained"
             >
-              Dashboard
+              Testen
             </Button>
             <IconButton
               onClick={() => {

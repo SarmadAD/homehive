@@ -13,6 +13,8 @@ import {
   Avatar,
   AvatarGroup,
   Tooltip,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { useSettings } from "src/hooks/use-settings";
@@ -36,6 +38,8 @@ import { getRenterName } from "src/utils/get-renter-name";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { useUser } from "src/hooks/use-user";
 import { RouterLink } from "src/components/router-link";
+import { DotsVertical, Home02 } from "@untitled-ui/icons-react";
+import { toast } from "src/components/toaster";
 
 interface Filters {
   query?: string;
@@ -108,6 +112,7 @@ const Page: PageType = () => {
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
+  const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
   const setLandlord = useSetRecoilState(currentUserAtom);
   const objectsIds = useObjectsIds(rentalObjects);
   // const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject]);
@@ -117,6 +122,17 @@ const Page: PageType = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  // Rental Object Menu Three Dots Menu
+  const [anchorElRentalObjectThreeDotsMenu, setAnchorElRentalObjectThreeDotsMenu] = useState<null | HTMLElement>(null);
+  const openRentalObjectThreeDotsMenu = Boolean(anchorElRentalObjectThreeDotsMenu);
+  const handleClickRentalObjectThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElRentalObjectThreeDotsMenu(event.currentTarget);
+  };
+  const handleCloseRentalObjectThreeDotsMenu = () => {
+    setAnchorElRentalObjectThreeDotsMenu(null);
+    deselectAll();
+  };
 
   const { user, error } = useUser();
 
@@ -140,7 +156,30 @@ const Page: PageType = () => {
     }
   }
 
-  function handleDelete() {}
+  async function handleDelete() {
+    try {
+      const deltedObject = await agent.objects.delete(Array.from(selected)[0]);
+
+      const updatedRentalObjects = rentalObjects.filter((object) => object.id !== deltedObject.id);
+      setRentalObjects(updatedRentalObjects);
+      toast.success("Objekt erfolgreich gelöscht");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOpenDeleteModal(false);
+    }
+  }
+
+  function handleDeleteModalOpen(row: RentalObject) {
+    handleCloseRentalObjectThreeDotsMenu();
+    setOpenDeleteModal(true);
+    selectOne(row.id);
+  }
+
+  function handleCancelDeleteModal() {
+    setOpenDeleteModal(false);
+    deselectAll();
+  }
 
   const columns = [
     {
@@ -198,17 +237,46 @@ const Page: PageType = () => {
       name: "Mieter",
       // width: "250px",
     },
+    {
+      formatter: (row): React.JSX.Element => (
+        <div>
+          <Button
+            aria-controls={openRentalObjectThreeDotsMenu ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openRentalObjectThreeDotsMenu ? "true" : undefined}
+            onClick={handleClickRentalObjectThreeDotsMenu}
+          >
+            <SvgIcon>
+              <DotsVertical />
+            </SvgIcon>
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorElRentalObjectThreeDotsMenu}
+            open={openRentalObjectThreeDotsMenu}
+            onClose={handleCloseRentalObjectThreeDotsMenu}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem onClick={() => handleDeleteModalOpen(row)}>Löschen</MenuItem>
+          </Menu>
+        </div>
+      ),
+      name: "",
+      align: "right",
+    },
   ] satisfies ColumnDef<RentalObject>[];
 
   return (
     <>
-      <Seo title="Dashboard: Übersicht" />
+      <Seo title="Objekte" />
       <RoleBasedGuard permission="/landlordportal/dashboard/objects">
         <Box
           component="main"
           sx={{
             flexGrow: 1,
-            py: 8,
+            py: 3,
             backgroundColor: "background.paper",
           }}
         >
@@ -258,8 +326,8 @@ const Page: PageType = () => {
                     selectOne(row.id);
                   }}
                   selected={selected}
-                  setOpenDeleteModal={setOpenDeleteModal}
                   isLoading={isLoading}
+                  rowStartIcon={<Home02 />}
                   selectable
                 />
               </Grid>
@@ -267,7 +335,8 @@ const Page: PageType = () => {
           </Container>
         </Box>
         <DeleteModal
-          setOpenDeleteModal={setOpenDeleteModal}
+          text={"Möchten Sie wirklich das Objekt löschen?"}
+          handleCancelDeleteModal={handleCancelDeleteModal}
           onDelete={handleDelete}
           openDeleteModal={openDeleteModal}
         />

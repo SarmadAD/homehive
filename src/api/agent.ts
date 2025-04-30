@@ -20,7 +20,7 @@ const objects = {
   details: (objectId: string) => requests.get<RentalObject>(`/api/dashboard/objects/object/${objectId}`),
   create: (object: RentalObject) => requests.post<RentalObject>(`/api/dashboard/objects/${object.landlord.id}`, object),
   update: (object: RentalObject) => requests.put<RentalObject>(`/api/dashboard/objects/object/${object.id}`, object),
-  delete: (id: string) => requests.del<void>(`/api/dashboard/objects/object/${id}`),
+  delete: (id: string) => requests.del<RentalObject>(`/api/dashboard/objects/object/${id}`),
   rentalObjectInfo: (id: string) => requests.get<RentalObjectInfo>(`/rentalObjectInfo/${id}`),
   updateRepairRequest: (repairRequest: RepairRequest) =>
     requests.put<void>(`/api/dashboard/objects/object/repairRequest/${repairRequest.id}`, repairRequest),
@@ -42,7 +42,7 @@ const renters = {
   list: (landlordId: string) => requests.get<Renter[]>(`/api/dashboard/renters/${landlordId}`),
   details: (renterId: string) => requests.get<Renter>(`/api/dashboard/renters/renter/${renterId}`),
   create: (renter: Renter, landlordId: string) => requests.post<void>(`/api/dashboard/renters/${landlordId}`, renter),
-  delete: (id: string) => requests.del<void>(`/api/dashboard/renters/renter/${id}`),
+  delete: (id: string) => requests.del<Renter>(`/api/dashboard/renters/renter/${id}`),
   updateFirebaseUserId: (renterId: string, firebaseUserId: string) =>
     requests.put<void>(`/api/dashboard/renters/renter/${renterId}`, firebaseUserId),
 };
@@ -53,8 +53,9 @@ const userRoles = {
 
 const rentPayments = {
   checkForNewTransactions: (landlordId: string, renterId: string) =>
-    requests.get<void>(`/api/rentPayments/?landlordId=${landlordId}&renterId=${renterId}`),
+    requests.post<void>(`/api/rentPayments/?landlordId=${landlordId}&renterId=${renterId}`, {}),
   update: (rentPayment: RentPayment) => requests.put<void>(`/api/rentPayments/${rentPayment.id}`, rentPayment),
+  list: (landlordId: string) => requests.get<RentPayment[]>(`/api/rentPayments/?landlordId=${landlordId}`),
 };
 
 const tinkToken = {

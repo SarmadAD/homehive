@@ -35,7 +35,7 @@ export function MobileNav({ onClose, open = false }: MobileNavProps): React.JSX.
       items: [
         {
           key: "home",
-          title: "Dashboard",
+          title: "Übersicht",
           href: user ? paths.landlordportal.dashboard.index : paths.auth.firebase.login,
         },
       ],

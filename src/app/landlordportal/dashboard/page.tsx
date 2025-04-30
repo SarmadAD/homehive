@@ -46,13 +46,13 @@ export default function Page(): React.JSX.Element {
 
   return (
     <>
-      <Seo title="Dashboard: Übersicht" />
+      <Seo title="Übersicht" />
       <RoleBasedGuard permission="/landlordportal/dashboard">
         <Box
           component="main"
           sx={{
             flexGrow: 1,
-            py: 1,
+            py: 3,
             backgroundColor: "background.paper",
           }}
         >
@@ -68,7 +68,7 @@ export default function Page(): React.JSX.Element {
               <Grid xs={12}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
                   <div>
-                    <Typography variant="h4">Dashboard</Typography>
+                    <Typography variant="h4">Übersicht</Typography>
                   </div>
                 </Stack>
               </Grid>
