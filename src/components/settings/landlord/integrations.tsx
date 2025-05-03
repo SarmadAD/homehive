@@ -11,8 +11,8 @@ import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PlugsConnected as PlugsConnectedIcon } from "@phosphor-icons/react/dist/ssr/PlugsConnected";
+import { Bank as BankIcon } from "@phosphor-icons/react/dist/ssr/Bank";
 import { Plus as PlusIcon } from "@phosphor-icons/react/dist/ssr/Plus";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
@@ -80,7 +80,7 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
             <PlugsConnectedIcon fontSize="var(--Icon-fontSize)" />
           </Avatar>
         }
-        title="Integration"
+        title="Integrationen"
       />
       <CardContent>
         <Card sx={{ borderRadius: 1 }} variant="outlined">
@@ -94,7 +94,9 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
                     boxShadow: "var(--mui-shadows-8)",
                     color: "var(--mui-palette-text-primary)",
                   }}
-                />
+                >
+                  {!integration.icon && <BankIcon fontSize="var(--Icon-fontSize)" />}{" "}
+                </Avatar>
                 <Box sx={{ flex: "1 1 auto" }}>
                   <Typography variant="subtitle2">{integration.name}</Typography>
                   <Typography color="text.secondary" variant="caption">
@@ -104,7 +106,6 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
                 {connected ? (
                   <Button
                     color="secondary"
-                    disabled={integration.connected}
                     // endIcon={<PlusIcon />}
                     size="small"
                     variant="outlined"
@@ -115,7 +116,6 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
                 ) : (
                   <Button
                     color="secondary"
-                    disabled={integration.connected}
                     endIcon={<PlusIcon />}
                     size="small"
                     variant="outlined"

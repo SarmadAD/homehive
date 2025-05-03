@@ -30,12 +30,15 @@ import { getFirebaseAuth } from "src/lib/auth/firebase/client";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, FormControl, FormControlLabel, InputLabel, OutlinedInput } from "@mui/material";
 import { GuestGuard } from "src/app/auth/guest-guard";
+// import { site } from "src/config";
+// import { Metadata } from "next/types";
 
 interface OAuthProvider {
   id: "google";
   name: string;
   logo: string;
 }
+// export const metadata = { title: `Register | Registrieren | ${site.name}` } satisfies Metadata;
 
 const oAuthProviders = [
   { id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" },
@@ -44,9 +47,9 @@ const oAuthProviders = [
 const schema = zod.object({
   firstName: zod.string().min(1, { message: "First name is required" }),
   lastName: zod.string().min(1, { message: "Last name is required" }),
-  email: zod.string().min(1, { message: "Email is required" }).email(),
-  password: zod.string().min(6, { message: "Password should be at least 6 characters" }),
-  terms: zod.boolean().refine((value) => value, "You must accept the terms and conditions"),
+  email: zod.string().min(1, { message: "E-Mail ist erforderlich" }).email(),
+  password: zod.string().min(6, { message: "Das Passwort muss mindestens 6 Zeichen lang sein" }),
+  terms: zod.boolean().refine((value) => value, "Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren."),
 });
 
 type Values = zod.infer<typeof schema>;
@@ -183,11 +186,11 @@ const Page = () => {
             </Box>
           </div>
           <Stack spacing={1}>
-            <Typography variant="h5">Sign up</Typography>
+            <Typography variant="h5">Registrieren</Typography>
             <Typography color="text.secondary" variant="body2">
-              Already have an account?{" "}
+              Bereits ein Konto?{" "}
               <Link component={RouterLink} href={paths.auth.firebase.login} variant="subtitle2">
-                Sign in
+                Anmelden{" "}
               </Link>
             </Typography>
           </Stack>
@@ -205,12 +208,12 @@ const Page = () => {
                     }}
                     variant="outlined"
                   >
-                    Continue with {provider.name}
+                    Weiter mit {provider.name}
                   </Button>
                 )
               )}
             </Stack>
-            <Divider>or</Divider>
+            <Divider>oder</Divider>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
                 <Controller
@@ -240,7 +243,7 @@ const Page = () => {
                   name="email"
                   render={({ field }) => (
                     <FormControl error={Boolean(errors.email)}>
-                      <InputLabel>Email address</InputLabel>
+                      <InputLabel>E-Mail-Adresse</InputLabel>
                       <OutlinedInput {...field} type="email" />
                       {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
                     </FormControl>
@@ -251,7 +254,7 @@ const Page = () => {
                   name="password"
                   render={({ field }) => (
                     <FormControl error={Boolean(errors.password)}>
-                      <InputLabel>Password</InputLabel>
+                      <InputLabel>Passwort</InputLabel>
                       <OutlinedInput {...field} type="password" />
                       {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
                     </FormControl>
@@ -266,7 +269,7 @@ const Page = () => {
                         control={<Checkbox {...field} />}
                         label={
                           <React.Fragment>
-                            I have read the <Link>terms and conditions</Link>
+                            Ich habe die <Link>Allgemeinen Geschäftsbedingungen</Link> gelesen.
                           </React.Fragment>
                         }
                       />
@@ -276,7 +279,7 @@ const Page = () => {
                 />
                 {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
                 <Button disabled={isPending} type="submit" variant="contained">
-                  Create account
+                  Konto erstellen{" "}
                 </Button>
               </Stack>
             </form>

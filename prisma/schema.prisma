@@ -62,8 +62,8 @@ model Landlord {
   firebaseUserId String         @unique
   rentalObjects  RentalObject[]
   renters        Renter[] 
-  tokens         Token[]       
-
+  tokens         Token[]
+  rentPayments   RentPayment[]       
 }
 
 model Token {
@@ -123,16 +123,20 @@ model RentPayment {
   id             String            @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   renter         Renter            @relation(fields: [renterId], references: [id])
   rentalObject   RentalObject      @relation(fields: [rentalObjectId], references: [id])
+  landlord       Landlord          @relation(fields: [landlordId], references: [id])
   status         RentPaymentStatus
   transactionId  String?
   paymentAmount  Float
   paymentDate    DateTime?
   dueDate        DateTime
   renterId       String            @db.Uuid 
-  rentalObjectId String            @db.Uuid 
+  rentalObjectId String            @db.Uuid
+  landlordId     String            @db.Uuid
+
 
   @@index([renterId])
   @@index([rentalObjectId])
+  @@index([landlordId])
 }
 
 model RentalAgreement {

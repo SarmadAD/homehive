@@ -8,7 +8,8 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Box, Button, Skeleton, Stack } from "@mui/material";
+import { Box, Button, IconButton, Skeleton, Stack } from "@mui/material";
+import PlusCircle from "@untitled-ui/icons-react/build/cjs/PlusCircle";
 
 export interface ColumnDef<TRowModel> {
   align?: "left" | "right" | "center";
@@ -35,8 +36,9 @@ export interface DataTableProps<TRowModel> extends Omit<TableProps, "onClick"> {
   selectable?: boolean;
   selected?: Set<RowId>;
   uniqueRowId?: (row: TRowModel) => RowId;
-  setOpenDeleteModal: (open: boolean) => void;
+  // setOpenDeleteModal: (open: boolean) => void;
   isLoading: boolean;
+  rowStartIcon?: React.JSX.Element;
 }
 
 export function DataTable<TRowModel extends object & { id?: RowId | null }>({
@@ -52,8 +54,9 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
   selectable,
   selected,
   uniqueRowId,
-  setOpenDeleteModal,
+  // setOpenDeleteModal,
   isLoading,
+  rowStartIcon,
   ...props
 }: DataTableProps<TRowModel>): React.JSX.Element {
   const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
@@ -61,7 +64,7 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
   const enableBulkActions = (selected?.size ?? 0) > 0;
 
   return (
-    <Box sx={{ position: "relative", mt: 2 }}>
+    <Box sx={{ position: "relative" }}>
       {enableBulkActions && (
         <Stack
           direction="row"
@@ -77,9 +80,10 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
             px: 2,
             py: 0.5,
             zIndex: 10,
+            borderRadius: 10,
           }}
         >
-          <Checkbox
+          {/* <Checkbox
             checked={selectedAll}
             indeterminate={selectedSome}
             onChange={(event) => {
@@ -89,10 +93,10 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
                 onDeselectAll?.(event);
               }
             }}
-          />
-          <Button color="inherit" size="small" onClick={() => setOpenDeleteModal(true)}>
+          /> */}
+          {/* <Button color="inherit" size="small" onClick={() => setOpenDeleteModal(true)}>
             Delete
-          </Button>
+          </Button> */}
         </Stack>
       )}
       <Table {...props}>
@@ -100,7 +104,7 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
           <TableRow>
             {selectable ? (
               <TableCell padding="checkbox" sx={{ width: "40px", minWidth: "40px", maxWidth: "40px" }}>
-                <Checkbox
+                {/* <Checkbox
                   checked={selectedAll}
                   indeterminate={selectedSome}
                   onChange={(event: React.ChangeEvent) => {
@@ -110,7 +114,7 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
                       onSelectAll?.(event);
                     }
                   }}
-                />
+                /> */}
               </TableCell>
             ) : null}
             {columns.map(
@@ -163,8 +167,8 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
                     sx={{ ...(onClick && { cursor: "pointer" }) }}
                   >
                     {selectable ? (
-                      <TableCell padding="checkbox">
-                        <Checkbox
+                      <TableCell>
+                        {/* <Checkbox
                           checked={rowId ? rowSelected : false}
                           onChange={(event: React.ChangeEvent) => {
                             if (rowSelected) {
@@ -178,7 +182,8 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
                               event.stopPropagation();
                             }
                           }}
-                        />
+                        /> */}{" "}
+                        {rowStartIcon}
                       </TableCell>
                     ) : null}
                     {columns.map(

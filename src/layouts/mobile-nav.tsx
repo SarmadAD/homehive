@@ -87,6 +87,9 @@ function renderNavGroups({
   pathname: string;
 }): React.JSX.Element {
   const children = items.reduce((acc: React.ReactNode[], curr: NavItemConfig): React.ReactNode[] => {
+    const pricingItem = curr.items?.find((item) => item.key === "pricing");
+    const otherItems = curr.items?.filter((item) => item.key !== "pricing");
+
     acc.push(
       <Stack component="li" key={curr.key} spacing={1.5}>
         {curr.title ? (
@@ -96,7 +99,17 @@ function renderNavGroups({
             </Typography>
           </div>
         ) : null}
-        <div>{renderNavItems({ depth: 0, items: curr.items, onClose, pathname })}</div>
+        <div>{renderNavItems({ depth: 0, items: otherItems, onClose, pathname })}</div>
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            p: 2,
+          }}
+        >
+          {pricingItem && <div>{renderNavItems({ depth: 0, items: [pricingItem], onClose, pathname })}</div>}
+        </Box>
       </Stack>
     );
 

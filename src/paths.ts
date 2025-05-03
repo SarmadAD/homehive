@@ -27,6 +27,7 @@ export const paths = {
   landlordportal: {
     dashboard: {
       index: "/landlordportal/dashboard",
+      pricing: "/landlordportal/dashboard/pricing",
       objects: {
         index: "/landlordportal/dashboard/objects",
         details: "/landlordportal/dashboard/objects/:objectId?objectId=",
@@ -38,6 +39,9 @@ export const paths = {
         details: "/landlordportal/dashboard/renters/:renterId?renterId=",
         edit: "/landlordportal/dashboard/renter/:renterId/edit",
         create: "/landlordportal/dashboard/renters/create",
+      },
+      finances: {
+        index: "/landlordportal/dashboard/finances",
       },
       settings: {
         account: "/landlordportal/dashboard/settings/account",
@@ -58,7 +62,6 @@ export const paths = {
     },
   },
 
-  docs: "https://material-kit-pro-react-docs.devias.io",
   notAuthorized: "/errors/401",
   notFound: "/errors/not-found",
   serverError: "/errors/500",

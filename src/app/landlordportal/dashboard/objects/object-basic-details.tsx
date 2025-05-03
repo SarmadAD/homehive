@@ -23,7 +23,7 @@ export const ObjectBasicDetails: FC = () => {
           <PropertyListItem divider label="Straße" valueJSX={<Skeleton width="60%" />} />
           <PropertyListItem divider label="Ort" valueJSX={<Skeleton width="40%" />} />
           <PropertyListItem divider label="Fläche" valueJSX={<Skeleton width="30%" />} />
-          <PropertyListItem divider align={align} label="Miet Status">
+          <PropertyListItem divider align={align} label="Wohnstatus">
             <Skeleton width="50%" />
           </PropertyListItem>
         </PropertyList>
@@ -58,7 +58,7 @@ export const ObjectBasicDetails: FC = () => {
         />
         <PropertyListItem divider label="Ort" value={`${postalCode} ${city}`} />
         <PropertyListItem divider label="Fläche" value={areaSize?.toString()} />
-        <PropertyListItem divider align={align} label="Miet Status">
+        <PropertyListItem divider align={align} label="Wohnstatus">
           {statusPill}
         </PropertyListItem>
       </PropertyList>

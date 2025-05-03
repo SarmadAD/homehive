@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import { Renter } from "prisma/types/renter";
 import { prisma } from "src/app/db/db";
 import { Resend } from "resend";
-import { json } from "stream/consumers";
 
 export async function GET(request: Request, { params }: { params: { landlordId: string } }) {
   const { landlordId } = params;

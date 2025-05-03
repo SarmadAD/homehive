@@ -3,8 +3,9 @@ import { Box, Card, CardHeader, Skeleton, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { RentPayment } from "@prisma/client";
-import { useRecoilValueLoadable } from "recoil";
+import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 
 type ChartSeries = {
   name: string;
@@ -87,6 +88,7 @@ const useChartOptions = (months: string[]): ApexOptions => {
 
 export function OverviewRentalIncome() {
   const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
+  const rentPaymentsState = useRecoilValue(rentPaymentsAtom);
 
   if (rentalObjectsLoadable.state === "loading") {
     return (
@@ -112,21 +114,17 @@ export function OverviewRentalIncome() {
     );
   }
 
-  const rentalObjects = rentalObjectsLoadable.contents;
-
   const getAllRentPayments = () => {
     const allRentPayments: RentPayment[] = [];
-    rentalObjects.forEach((rentalObject) => {
-      if (rentalObject.rentPayment && rentalObject.rentPayment.length > 0) {
-        const filterNullPaymentDateRentPayments = rentalObject.rentPayment.filter(
-          (rentPayment) => rentPayment.paymentDate !== null
-        );
-        const filterNotPaidPaymentRentPayments = filterNullPaymentDateRentPayments.filter(
-          (rentPayment) => rentPayment.status === "PAID"
-        );
-        allRentPayments.push(...filterNotPaidPaymentRentPayments);
-      }
-    });
+    if (rentPaymentsState && rentPaymentsState.length > 0) {
+      const filterNullPaymentDateRentPayments = rentPaymentsState.filter(
+        (rentPayment) => rentPayment.paymentDate !== null
+      );
+      const filterNotPaidPaymentRentPayments = filterNullPaymentDateRentPayments.filter(
+        (rentPayment) => rentPayment.status === "PAID"
+      );
+      allRentPayments.push(...filterNotPaidPaymentRentPayments);
+    }
     return allRentPayments;
   };
 

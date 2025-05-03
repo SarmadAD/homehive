@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
@@ -9,7 +8,6 @@ import Typography from "@mui/material/Typography";
 
 import { Logo } from "src/components/logo";
 import { RouterLink } from "src/components/router-link";
-import { paths } from "src/paths";
 import { NavItemConfig } from "src/types/nav";
 
 interface GroupConfig {
@@ -54,14 +52,13 @@ export function Footer(): React.JSX.Element {
     <Box
       component="footer"
       sx={{
-        bottom: 0,
-        position: "fixed",
-        width: "100%",
+        // bottom: 0,
+        // position: "fixed",
+        // width: "100%",
         // bgcolor: "var(--mui-palette-background-default)",
         // borderTop: "1px solid var(--mui-palette-divider)",
-        pb: 3,
-        zIndex: 10,
-        pt: { md: 5, xs: 6 },
+        pb: 6,
+        pt: { xs: 6, md: 15, lg: 15 },
       }}
     >
       <Container maxWidth="lg">

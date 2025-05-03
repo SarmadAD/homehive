@@ -12,18 +12,19 @@ import Typography from "@mui/material/Typography";
 import { Scrollbar } from "src/components/scrollbar";
 import { Renter } from "prisma/types/renter";
 import { getRentPaidStatusPill } from "src/hooks/use-status-pill";
-import { RentPayment, RentPaymentStatus } from "@prisma/client";
+import { RentPaymentStatus } from "@prisma/client";
 import agent from "src/api/agent";
-import { InputLabel, Select } from "@mui/material";
+import { Select } from "@mui/material";
 import { Option } from "src/components/option";
 import { useState } from "react";
+import { RentPayment } from "prisma/types/rentPayment";
 
 interface Props {
   renter: Renter;
 }
 
 export function RentPaymentList({ renter }: Props) {
-  const [payments, setPayments] = useState(renter.rentPayment);
+  const [payments, setPayments] = useState<RentPayment[]>(renter.rentPayment as RentPayment[]);
 
   async function handleStatusChange(rentPaymentId: string, updatedStatus: RentPaymentStatus) {
     try {

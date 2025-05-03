@@ -30,6 +30,10 @@ import { UserProvider } from "src/contexts/auth/user-context";
 import { SettingsProvider } from "src/contexts/settings";
 import { ThemeProvider } from "src/components/widgets/core/theme-provider/theme-provider";
 
+import dayjs from "dayjs";
+import "dayjs/locale/de";
+dayjs.locale("de");
+
 // Force-Dynamic is required otherwise all pages are marked as client-side
 // due to the usage of the "cookies" function.
 export const dynamic = "force-dynamic";
@@ -37,6 +41,7 @@ export const dynamic = "force-dynamic";
 const Favicon: FC = () => (
   <>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="android-chrome-icon" sizes="192x192" href="/android-chrome-icon.png" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />

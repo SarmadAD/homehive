@@ -12,13 +12,17 @@ import { useSetRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { RoleBasedGuard } from "../../auth/role/RoleBasedGuard";
 import { useUser } from "src/hooks/use-user";
+// import { site } from "src/config";
+// import { Metadata } from "next/types";
+
+// export const metadata = { title: `Dashboard | Übersicht | ${site.name}` } satisfies Metadata;
 
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
   const setLandlord = useSetRecoilState(currentUserAtom);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, error } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     getLandlord();
@@ -42,13 +46,13 @@ export default function Page(): React.JSX.Element {
 
   return (
     <>
-      <Seo title="Dashboard: Übersicht" />
+      <Seo title="Dashboard" />
       <RoleBasedGuard permission="/landlordportal/dashboard">
         <Box
           component="main"
           sx={{
             flexGrow: 1,
-            py: 1,
+            py: 3,
             backgroundColor: "background.paper",
           }}
         >

@@ -29,7 +29,8 @@ import { Upload as UploadIcon } from "@phosphor-icons/react/dist/ssr/Upload";
 import { Users as UsersIcon } from "@phosphor-icons/react/dist/ssr/Users";
 import { WarningDiamond as WarningDiamondIcon } from "@phosphor-icons/react/dist/ssr/WarningDiamond";
 import { ChartLineUp as ChartLineUpIcon } from "@phosphor-icons/react/dist/ssr/ChartLineUp";
-import { Person as PersonIcon } from "@phosphor-icons/react/dist/ssr/Person";
+import { User as UserIcon } from "@phosphor-icons/react/dist/ssr/User";
+import { HandCoins as HandCoinsIcon } from "@phosphor-icons/react/dist/ssr/HandCoins";
 
 export const icons = {
   "address-book": AddressBookIcon,
@@ -51,6 +52,7 @@ export const icons = {
   "text-align-left": TextAlignLeftIcon,
   "warning-diamond": WarningDiamondIcon,
   "chart-line-up": ChartLineUpIcon,
+  "hand-coins": HandCoinsIcon,
   cube: CubeIcon,
   file: FileIcon,
   house: HouseIcon,
@@ -62,5 +64,5 @@ export const icons = {
   upload: UploadIcon,
   gear: GearIcon,
   users: UsersIcon,
-  person: PersonIcon,
+  user: UserIcon,
 } as Record<string, Icon>;

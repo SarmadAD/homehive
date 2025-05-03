@@ -23,6 +23,7 @@ import {
   IconButton,
   Tooltip,
   Skeleton,
+  Card,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -57,9 +58,11 @@ import { RentalObject } from "prisma/types/objects";
 import { toast } from "src/components/toaster";
 import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
-import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { PlusCircle } from "@untitled-ui/icons-react";
+import DotsVertical from "@untitled-ui/icons-react/build/esm/DotsVertical";
+import { PlusCircle, User03 } from "@untitled-ui/icons-react";
 import { useUser } from "src/hooks/use-user";
+import { GeneralPagination } from "src/components/common/pagination/general-pagination";
+import { useGeneralPagination } from "src/hooks/use-general-pagination";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -123,20 +126,33 @@ const Page: PageType = () => {
   const currentRenter = useCurrentRenter(rentalObject?.renter as Renter[], dialog.data);
   const currentRepairRequest = useCurrentRepairRequest(rentalObject?.repairRequests as RepairRequest[], dialog.data);
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddRenterModal, setOpenAddRenterModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Renter Menu Three Dots Menu
+  const [anchorElRenterThreeDotsMenu, setAnchorElRenterThreeDotsMenu] = React.useState<null | HTMLElement>(null);
+  const openRenterThreeDotsMenu = Boolean(anchorElRenterThreeDotsMenu);
+  const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElRenterThreeDotsMenu(event.currentTarget);
+  };
+  const handleCloseRenterThreeDotsMenu = () => {
+    setAnchorElRenterThreeDotsMenu(null);
+    deselectAll();
+  };
+
+  // Action Menu
+  const [anchorElActionMenu, setAnchorElActionMenu] = useState<HTMLButtonElement | null>(null);
   const handleMainActionMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorElActionMenu(event.currentTarget);
+  };
+  const handleActionMenuClose = () => {
+    setAnchorElActionMenu(null);
   };
 
-  const { user, error } = useUser();
+  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+  const { user } = useUser();
 
   const handleObjectDelete = async () => {
     try {
@@ -147,7 +163,7 @@ const Page: PageType = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setAnchorEl(null);
+      setAnchorElActionMenu(null);
     }
   };
 
@@ -287,6 +303,23 @@ const Page: PageType = () => {
     }
   };
 
+  function handleDeleteModalOpen(row: Renter) {
+    handleCloseRenterThreeDotsMenu();
+    setOpenDeleteModal(true);
+    selectOne(row.id);
+  }
+
+  function handleCancelDeleteModal() {
+    setOpenDeleteModal(false);
+    deselectAll();
+  }
+
+  const paginatedRenter = useMemo(() => {
+    const startIndex = paginationState.page * paginationState.rowsPerPage;
+    const endIndex = startIndex + paginationState.rowsPerPage;
+    return rentalObject.renter.slice(startIndex, endIndex);
+  }, [rentalObject.renter, paginationState.page, paginationState.rowsPerPage]);
+
   const columns = [
     {
       formatter: (row): React.JSX.Element => (
@@ -306,15 +339,32 @@ const Page: PageType = () => {
     },
     {
       formatter: (row): React.JSX.Element => (
-        <IconButton
-          component={RouterLink}
-          // onClick={() => handleDialog(row.id)}
-          href={`${paths.landlordportal.dashboard.renters.details}${row.id}`}
-        >
-          <SvgIcon>
-            <ArrowRightIcon />
-          </SvgIcon>
-        </IconButton>
+        <div>
+          <Button
+            // component={RouterLink}
+            // onClick={() => handleDialog(row.id)}
+            // href={`${paths.landlordportal.dashboard.renters.details}${row.id}`}
+            aria-controls={openRenterThreeDotsMenu ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openRenterThreeDotsMenu ? "true" : undefined}
+            onClick={handleClickRenterThreeDotsMenu}
+          >
+            <SvgIcon>
+              <DotsVertical />
+            </SvgIcon>
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorElRenterThreeDotsMenu}
+            open={openRenterThreeDotsMenu}
+            onClose={handleCloseRenterThreeDotsMenu}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem onClick={() => handleDeleteModalOpen(row)}>Löschen</MenuItem>
+          </Menu>
+        </div>
       ),
       name: "",
       nameJSX: (
@@ -427,9 +477,9 @@ const Page: PageType = () => {
                         Aktionen
                       </Button>
                       <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleMenuClose}
+                        anchorEl={anchorElActionMenu}
+                        open={Boolean(anchorElActionMenu)}
+                        onClose={handleActionMenuClose}
                         PaperProps={{
                           style: {
                             maxHeight: 48 * 4.5,
@@ -475,24 +525,35 @@ const Page: PageType = () => {
                   </div>
                 )}
                 {currentTab === "renter" && (
-                  <Box sx={{ overflowX: "auto" }}>
-                    <DataTable<Renter>
-                      columns={columns}
-                      rows={(rentalObject.renter as Renter[]) || []}
-                      onDeselectAll={deselectAll}
-                      onDeselectOne={(_, row) => {
-                        deselectOne(row.id);
-                      }}
-                      onSelectAll={selectAll}
-                      onSelectOne={(_, row) => {
-                        selectOne(row.id);
-                      }}
-                      selected={selected}
-                      setOpenDeleteModal={setOpenDeleteModal}
-                      isLoading={isLoading}
-                      selectable
-                    />
-                  </Box>
+                  <Grid xs={12} sx={{ pt: 3 }}>
+                    <Card>
+                      <DataTable<Renter>
+                        columns={columns}
+                        rows={(paginatedRenter as Renter[]) || []}
+                        onDeselectAll={deselectAll}
+                        onDeselectOne={(_, row) => {
+                          deselectOne(row.id);
+                        }}
+                        onSelectAll={selectAll}
+                        onSelectOne={(_, row) => {
+                          selectOne(row.id);
+                        }}
+                        selected={selected}
+                        // setOpenDeleteModal={setOpenDeleteModal}
+                        isLoading={isLoading}
+                        rowStartIcon={<User03 />}
+                        selectable
+                      />
+                      <Divider />
+                      <GeneralPagination
+                        rowsPerPage={paginationState.rowsPerPage}
+                        page={paginationState.page}
+                        count={rentalObject.renter.length}
+                        onPageChange={handlePageChange}
+                        onRowsPerPageChange={handleRowsPerPageChange}
+                      />
+                    </Card>
+                  </Grid>
                 )}
                 {/* {currentTab === "repairRequests" && (
                   // <ObjectRepairRequestList
@@ -534,7 +595,12 @@ const Page: PageType = () => {
           )}
         </Box>
       </Box>
-      <DeleteModal setOpenDeleteModal={setOpenDeleteModal} onDelete={handleDelete} openDeleteModal={openDeleteModal} />
+      <DeleteModal
+        text={"Möchten Sie wirklich den Mieter von diesem Objekt löschen?"}
+        handleCancelDeleteModal={handleCancelDeleteModal}
+        onDelete={handleDelete}
+        openDeleteModal={openDeleteModal}
+      />
       <AddRenterModal
         setOpenAddRenterModal={setOpenAddRenterModal}
         onAddRenter={onAddRenter}

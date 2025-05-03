@@ -5,6 +5,24 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const landlordId = searchParams.get("landlordId");
+    if (!landlordId) {
+      return NextResponse.json({ error: "Missing required parameter: landlordId" }, { status: 400 });
+    }
+    const existingPayment = await prisma.rentPayment.findMany({
+      where: { landlordId },
+      include: { renter: true },
+    });
+    return NextResponse.json(existingPayment, { status: 200 });
+  } catch (error) {
+    console.error("Fehler:", error);
+    return NextResponse.json({ error: "Internal server error", details: error.message }, { status: 500 });
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const landlordId = searchParams.get("landlordId");
     const renterId = searchParams.get("renterId");
 
     if (!landlordId || !renterId) {
@@ -46,7 +64,7 @@ export async function GET(request: NextRequest) {
     if (rentalObjectInfo) {
       // Add here more criteria
       const searchCriteria = [
-        (transaction: any) => transaction.descriptions?.display?.toString() === "Miete",
+        // (transaction: any) => transaction.descriptions?.display?.toString() === "Miete",
         (transaction: any) => {
           const totalRent =
             rentalObjectInfo.baseRent +
@@ -85,6 +103,7 @@ export async function GET(request: NextRequest) {
           await prisma.rentPayment.create({
             data: {
               transactionId,
+              landlordId,
               paymentAmount: Math.abs(transactionAmount),
               paymentDate: new Date(transaction.dates?.booked),
               dueDate: new Date(),
@@ -97,7 +116,9 @@ export async function GET(request: NextRequest) {
           console.log(`RentPayment mit transactionId ${transactionId} existiert bereits.`);
         }
       }
-      return NextResponse.json({});
+      return NextResponse.json(filteredTransactions);
+    } else {
+      return NextResponse.json({ error: "Rental object info not found" }, { status: 404 });
     }
   } catch (error) {
     console.error("Fehler:", error);

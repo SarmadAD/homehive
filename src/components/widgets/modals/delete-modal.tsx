@@ -9,12 +9,18 @@ import Typography from "@mui/material/Typography";
 import { Warning as WarningIcon } from "@phosphor-icons/react/dist/ssr/Warning";
 
 interface Props {
-  setOpenDeleteModal: (open: boolean) => void;
+  handleCancelDeleteModal: () => void;
   onDelete: () => void;
   openDeleteModal: boolean;
+  text: string;
 }
 
-export function DeleteModal({ setOpenDeleteModal, openDeleteModal, onDelete }: Props): React.JSX.Element | null {
+export function DeleteModal({
+  handleCancelDeleteModal,
+  openDeleteModal,
+  onDelete,
+  text,
+}: Props): React.JSX.Element | null {
   if (!openDeleteModal) {
     return null;
   }
@@ -44,11 +50,11 @@ export function DeleteModal({ setOpenDeleteModal, openDeleteModal, onDelete }: P
               <Stack spacing={1}>
                 <Typography variant="h5">Löschen</Typography>
                 <Typography color="text.secondary" variant="body2">
-                  Möchten Sie wirklich die ausgewählten Items löschen?
+                  {text}{" "}
                 </Typography>
               </Stack>
               <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-end" }}>
-                <Button color="secondary" onClick={() => setOpenDeleteModal(false)}>
+                <Button color="secondary" onClick={() => handleCancelDeleteModal()}>
                   Abbrechen
                 </Button>
                 <Button color="error" variant="contained" onClick={() => onDelete()}>

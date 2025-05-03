@@ -24,9 +24,14 @@ import { isNavItemActive } from "src/lib/is-nav-item-active";
 const navItems = [
   {
     key: "personal",
-    title: "Personal",
+    title: "Persöhnliches",
     items: [
-      { key: "account", title: "Account", href: paths.renterportal.dashboard.settings.account, icon: "user-circle" },
+      {
+        key: "account",
+        title: "Kontoeinstellungen",
+        href: paths.renterportal.dashboard.settings.account,
+        icon: "user-circle",
+      },
     ],
   },
 ] satisfies NavItemConfig[];

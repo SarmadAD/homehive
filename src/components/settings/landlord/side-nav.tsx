@@ -19,23 +19,26 @@ import { paths } from "src/paths";
 import { NavItemConfig } from "src/types/nav";
 import { isNavItemActive } from "src/lib/is-nav-item-active";
 
-// NOTE: First level elements are groups.
-
 const navItems = [
   {
     key: "personal",
-    title: "Personal",
+    title: "Persöhnliches",
     items: [
-      { key: "account", title: "Account", href: paths.landlordportal.dashboard.settings.account, icon: "user-circle" },
+      {
+        key: "account",
+        title: "Kontoeinstellungen",
+        href: paths.landlordportal.dashboard.settings.account,
+        icon: "user-circle",
+      },
     ],
   },
   {
-    key: "orgranization",
-    title: "Integrations",
+    key: "integrations",
+    title: "Integrationen",
     items: [
       {
         key: "integrations",
-        title: "Integrations",
+        title: "Integrationen",
         href: paths.landlordportal.dashboard.settings.integrations,
         icon: "plugs-connected",
       },
