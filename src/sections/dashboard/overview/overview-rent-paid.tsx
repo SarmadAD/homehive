@@ -8,6 +8,8 @@ import { totalPaidRents } from "src/state/selectors/totalPaidRents";
 import { RouterLink } from "src/components/router-link";
 import { dayjs } from "src/lib/dayjs";
 
+dayjs.locale("de");
+
 interface OverviewRentPaidProps {
   showActions: boolean;
 }
@@ -76,9 +78,9 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
                 </SvgIcon>
               }
               size="small"
-              href={paths.landlordportal.dashboard.renters.index}
+              href={paths.landlordportal.dashboard.finances.index}
             >
-              Mieter anzeigen
+              Mieten anzeigen
             </Button>
           </CardActions>
         </>

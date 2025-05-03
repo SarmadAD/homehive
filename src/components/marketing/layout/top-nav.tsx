@@ -41,14 +41,25 @@ export function MainNav(): React.JSX.Element {
             spacing={2}
             sx={{ alignItems: "center", flex: "1 1 auto", justifyContent: "flex-end" }}
           >
-            <Button
-              component="a"
-              href={user ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
-              sx={{ display: { xs: "none", md: "flex" } }}
-              variant="contained"
-            >
-              Testen
-            </Button>
+            {user ? (
+              <Button
+                component="a"
+                href={paths.landlordportal.dashboard.index}
+                sx={{ display: { xs: "none", md: "flex" } }}
+                variant="contained"
+              >
+                Dashboard
+              </Button>
+            ) : (
+              <Button
+                component="a"
+                href={paths.auth.firebase.login}
+                sx={{ display: { xs: "none", md: "flex" } }}
+                variant="contained"
+              >
+                Einloggen
+              </Button>
+            )}
             <IconButton
               onClick={() => {
                 setOpenNav(true);

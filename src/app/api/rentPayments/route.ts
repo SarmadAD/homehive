@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
     }
     const existingPayment = await prisma.rentPayment.findMany({
       where: { landlordId },
+      include: { renter: true },
     });
     return NextResponse.json(existingPayment, { status: 200 });
   } catch (error) {

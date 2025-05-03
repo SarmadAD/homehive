@@ -47,7 +47,7 @@ export function Hero(): React.JSX.Element {
               href={user ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
               variant="contained"
             >
-              Testen
+              Jetzt ausprobieren
             </Button>
           </Stack>
         </Stack>
@@ -56,10 +56,10 @@ export function Hero(): React.JSX.Element {
       <div id="pattern"></div>
       <Container
         maxWidth="lg"
-        sx={{ position: "relative", zIndex: 2, mt: { xs: "0px", sm: "100px", md: "100px", lg: "400px" } }}
+        sx={{ position: "relative", zIndex: 2, mt: { xs: "0px", sm: "100px", md: "100px", lg: "100px" } }}
       >
         <Box sx={{ bottom: 0, left: 0, position: "absolute", px: "24px", right: 0, top: 0, zIndex: 0 }}>
-          <Box sx={{ borderRadius: "28px", height: "100%", width: "100%" }} />
+          <Box sx={{ bgcolor: "#f8f8fa", borderRadius: "28px", height: "110%", width: "100%" }} />
         </Box>
         <Box
           sx={{
@@ -76,7 +76,7 @@ export function Hero(): React.JSX.Element {
         />
         <Box
           component="img"
-          src={"/assets/home-hero.png"}
+          src={"/assets/home-hero-light.png"}
           sx={{
             display: "block",
             height: "auto",

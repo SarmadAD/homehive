@@ -50,7 +50,7 @@ export default function Page(): React.JSX.Element {
       <Box component="main" sx={{ flexGrow: 1 }}>
         <Box
           sx={{
-            backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.800" : "neutral.50"),
+            // backgroundColor: (theme) => (theme.palette.mode === "dark" ? "neutral.800" : "neutral.50"),
             // pb: "20px",
             pt: "30px",
           }}

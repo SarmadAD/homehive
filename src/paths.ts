@@ -40,6 +40,9 @@ export const paths = {
         edit: "/landlordportal/dashboard/renter/:renterId/edit",
         create: "/landlordportal/dashboard/renters/create",
       },
+      finances: {
+        index: "/landlordportal/dashboard/finances",
+      },
       settings: {
         account: "/landlordportal/dashboard/settings/account",
         integrations: "/landlordportal/dashboard/settings/integrations",
@@ -59,7 +62,6 @@ export const paths = {
     },
   },
 
-  docs: "https://material-kit-pro-react-docs.devias.io",
   notAuthorized: "/errors/401",
   notFound: "/errors/not-found",
   serverError: "/errors/500",

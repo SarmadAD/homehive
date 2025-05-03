@@ -64,7 +64,7 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
   const enableBulkActions = (selected?.size ?? 0) > 0;
 
   return (
-    <Box sx={{ position: "relative", mt: 2 }}>
+    <Box sx={{ position: "relative" }}>
       {enableBulkActions && (
         <Stack
           direction="row"

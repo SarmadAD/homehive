@@ -5,6 +5,9 @@ import * as React from "react";
 import { site } from "src/config";
 import { Hero } from "src/sections/home/home-hero";
 import { useEffect } from "react";
+import { Features } from "src/sections/home/features";
+import { HomeFeatures } from "src/sections/home/home-features";
+import { StartManaging } from "src/sections/home/start-managing";
 
 // export const metadata = { title: site.name, description: site.description } satisfies Metadata;
 
@@ -12,6 +15,9 @@ export default function Page(): React.JSX.Element {
   return (
     <main>
       <Hero />
+      <Features />
+      {/* <HomeFeatures /> */}
+      <StartManaging />
     </main>
   );
 }

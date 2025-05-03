@@ -1,7 +1,8 @@
-import { Landlord, RentPayment, RentalObjectInfo, Token } from "@prisma/client";
+import { Landlord, RentalObjectInfo, Token } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
 import { RentalObject } from "prisma/types/objects";
 import { Renter } from "prisma/types/renter";
+import { RentPayment } from "prisma/types/rentPayment";
 import { RepairRequest } from "prisma/types/repairRequest";
 import { UserRole } from "prisma/types/userrole";
 

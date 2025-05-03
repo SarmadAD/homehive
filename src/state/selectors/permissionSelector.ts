@@ -15,9 +15,14 @@ const permissions = [
     role: "Landlord",
   },
   {
+    permission: "/landlordportal/dashboard/finances",
+    role: "Landlord",
+  },
+  {
     permission: "/landlordportal/dashboard/pricing",
     role: "Landlord",
   },
+
   {
     permission: "/renterportal/dashboard/objects",
     role: "Renter",

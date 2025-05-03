@@ -150,7 +150,7 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
             }
             size="small"
           >
-            Objekte ansehen
+            Objekte anzeigen
           </Button>
         </CardActions>
       )}

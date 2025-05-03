@@ -13,7 +13,7 @@ export const layoutConfig = {
       items: [
         {
           key: "dashboard",
-          title: "Übersicht",
+          title: "Dashboard",
           href: paths.landlordportal.dashboard.index,
           icon: "chart-line-up",
         },
@@ -28,6 +28,12 @@ export const layoutConfig = {
           title: "Mieter",
           href: paths.landlordportal.dashboard.renters.index,
           icon: "user",
+        },
+        {
+          key: "finances",
+          title: "Finanzen",
+          href: paths.landlordportal.dashboard.finances.index,
+          icon: "hand-coins",
         },
         {
           key: "pricing",

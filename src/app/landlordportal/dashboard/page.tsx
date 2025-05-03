@@ -22,7 +22,7 @@ export default function Page(): React.JSX.Element {
   const setLandlord = useSetRecoilState(currentUserAtom);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, error } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     getLandlord();
@@ -46,7 +46,7 @@ export default function Page(): React.JSX.Element {
 
   return (
     <>
-      <Seo title="Übersicht" />
+      <Seo title="Dashboard" />
       <RoleBasedGuard permission="/landlordportal/dashboard">
         <Box
           component="main"
@@ -68,7 +68,7 @@ export default function Page(): React.JSX.Element {
               <Grid xs={12}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
                   <div>
-                    <Typography variant="h4">Übersicht</Typography>
+                    <Typography variant="h4">Dashboard</Typography>
                   </div>
                 </Stack>
               </Grid>

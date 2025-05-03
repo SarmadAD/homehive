@@ -23,6 +23,7 @@ import {
   IconButton,
   Tooltip,
   Skeleton,
+  Card,
 } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
@@ -60,6 +61,8 @@ import { ColumnDef, DataTable } from "src/components/data-table";
 import DotsVertical from "@untitled-ui/icons-react/build/esm/DotsVertical";
 import { PlusCircle, User03 } from "@untitled-ui/icons-react";
 import { useUser } from "src/hooks/use-user";
+import { GeneralPagination } from "src/components/common/pagination/general-pagination";
+import { useGeneralPagination } from "src/hooks/use-general-pagination";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -146,6 +149,8 @@ const Page: PageType = () => {
   const handleActionMenuClose = () => {
     setAnchorElActionMenu(null);
   };
+
+  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
   const { user } = useUser();
 
@@ -308,6 +313,12 @@ const Page: PageType = () => {
     setOpenDeleteModal(false);
     deselectAll();
   }
+
+  const paginatedRenter = useMemo(() => {
+    const startIndex = paginationState.page * paginationState.rowsPerPage;
+    const endIndex = startIndex + paginationState.rowsPerPage;
+    return rentalObject.renter.slice(startIndex, endIndex);
+  }, [rentalObject.renter, paginationState.page, paginationState.rowsPerPage]);
 
   const columns = [
     {
@@ -514,25 +525,35 @@ const Page: PageType = () => {
                   </div>
                 )}
                 {currentTab === "renter" && (
-                  <Box sx={{ overflowX: "auto" }}>
-                    <DataTable<Renter>
-                      columns={columns}
-                      rows={(rentalObject.renter as Renter[]) || []}
-                      onDeselectAll={deselectAll}
-                      onDeselectOne={(_, row) => {
-                        deselectOne(row.id);
-                      }}
-                      onSelectAll={selectAll}
-                      onSelectOne={(_, row) => {
-                        selectOne(row.id);
-                      }}
-                      selected={selected}
-                      // setOpenDeleteModal={setOpenDeleteModal}
-                      isLoading={isLoading}
-                      rowStartIcon={<User03 />}
-                      selectable
-                    />
-                  </Box>
+                  <Grid xs={12} sx={{ pt: 3 }}>
+                    <Card>
+                      <DataTable<Renter>
+                        columns={columns}
+                        rows={(paginatedRenter as Renter[]) || []}
+                        onDeselectAll={deselectAll}
+                        onDeselectOne={(_, row) => {
+                          deselectOne(row.id);
+                        }}
+                        onSelectAll={selectAll}
+                        onSelectOne={(_, row) => {
+                          selectOne(row.id);
+                        }}
+                        selected={selected}
+                        // setOpenDeleteModal={setOpenDeleteModal}
+                        isLoading={isLoading}
+                        rowStartIcon={<User03 />}
+                        selectable
+                      />
+                      <Divider />
+                      <GeneralPagination
+                        rowsPerPage={paginationState.rowsPerPage}
+                        page={paginationState.page}
+                        count={rentalObject.renter.length}
+                        onPageChange={handlePageChange}
+                        onRowsPerPageChange={handleRowsPerPageChange}
+                      />
+                    </Card>
+                  </Grid>
                 )}
                 {/* {currentTab === "repairRequests" && (
                   // <ObjectRepairRequestList

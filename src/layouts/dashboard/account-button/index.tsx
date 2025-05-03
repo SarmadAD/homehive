@@ -32,7 +32,7 @@ export const AccountButton: FC = () => {
           }}
           variant="dot"
         >
-          <Avatar src={user?.avatar} />
+          <Avatar src={user?.avsatar} />
         </Badge>
       </Box>
       <AccountPopover anchorEl={popover.anchorRef.current} onClose={popover.handleClose} open={popover.open} />

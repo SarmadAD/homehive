@@ -15,6 +15,8 @@ import {
   Tooltip,
   Menu,
   MenuItem,
+  Card,
+  Divider,
 } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { useSettings } from "src/hooks/use-settings";
@@ -40,6 +42,9 @@ import { useUser } from "src/hooks/use-user";
 import { RouterLink } from "src/components/router-link";
 import { DotsVertical, Home02 } from "@untitled-ui/icons-react";
 import { toast } from "src/components/toaster";
+import { beenYellow } from "src/styles/theme/colors";
+import { useGeneralPagination } from "src/hooks/use-general-pagination";
+import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 
 interface Filters {
   query?: string;
@@ -133,6 +138,7 @@ const Page: PageType = () => {
     setAnchorElRentalObjectThreeDotsMenu(null);
     deselectAll();
   };
+  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
   const { user, error } = useUser();
 
@@ -200,16 +206,6 @@ const Page: PageType = () => {
       // width: "150px",
     },
     {
-      formatter: (row): React.JSX.Element => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const statusPill = useRentalObjectStatusPill(row);
-        return statusPill;
-      },
-
-      name: "Status",
-      // width: "100px",
-    },
-    {
       formatter: (row): React.JSX.Element => (
         <Stack alignItems="center" direction="row" spacing={1}>
           <AvatarGroup max={3}>
@@ -220,13 +216,7 @@ const Page: PageType = () => {
                   key={getRenterName(renter.firstname, renter.surname)}
                   title={getRenterName(renter.firstname, renter.surname)}
                 >
-                  <Avatar
-                    src={row.image}
-                    sx={{
-                      height: 42,
-                      width: 42,
-                    }}
-                  >
+                  <Avatar src={row.image} sx={{ bgcolor: "#8a94a6", height: 42, width: 42 }}>
                     {getInitials(getRenterName(renter.firstname, renter.surname))}
                   </Avatar>
                 </Tooltip>
@@ -236,6 +226,16 @@ const Page: PageType = () => {
       ),
       name: "Mieter",
       // width: "250px",
+    },
+    {
+      formatter: (row): React.JSX.Element => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const statusPill = useRentalObjectStatusPill(row);
+        return statusPill;
+      },
+
+      name: "Status",
+      // width: "100px",
     },
     {
       formatter: (row): React.JSX.Element => (
@@ -313,23 +313,33 @@ const Page: PageType = () => {
               <Grid xs={12} md={4}>
                 <OverviewStatusObjects showActions={false} />
               </Grid>
-              <Grid xs={12} sx={{ overflowX: "auto" }}>
-                <DataTable<RentalObject>
-                  columns={columns}
-                  rows={rentalObjects}
-                  onDeselectAll={deselectAll}
-                  onDeselectOne={(_, row) => {
-                    deselectOne(row.id);
-                  }}
-                  onSelectAll={selectAll}
-                  onSelectOne={(_, row) => {
-                    selectOne(row.id);
-                  }}
-                  selected={selected}
-                  isLoading={isLoading}
-                  rowStartIcon={<Home02 />}
-                  selectable
-                />
+              <Grid xs={12}>
+                <Card>
+                  <DataTable<RentalObject>
+                    columns={columns}
+                    rows={rentalObjects}
+                    onDeselectAll={deselectAll}
+                    onDeselectOne={(_, row) => {
+                      deselectOne(row.id);
+                    }}
+                    onSelectAll={selectAll}
+                    onSelectOne={(_, row) => {
+                      selectOne(row.id);
+                    }}
+                    selected={selected}
+                    isLoading={isLoading}
+                    rowStartIcon={<Home02 />}
+                    selectable
+                  />
+                  <Divider />
+                  <GeneralPagination
+                    rowsPerPage={paginationState.rowsPerPage}
+                    page={paginationState.page}
+                    count={rentalObjects.length}
+                    onPageChange={handlePageChange}
+                    onRowsPerPageChange={handleRowsPerPageChange}
+                  />
+                </Card>
               </Grid>
             </Grid>
           </Container>

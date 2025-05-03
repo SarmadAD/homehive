@@ -1,0 +1,153 @@
+"use client";
+
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import { useColorScheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { CaretRight as CaretRightIcon } from "@phosphor-icons/react/dist/ssr/CaretRight";
+import { paths } from "src/paths";
+import { NoSsr } from "src/components/no-ssr";
+import { useUser } from "src/hooks/use-user";
+
+export function StartManaging(): React.JSX.Element {
+  const { colorScheme } = useColorScheme();
+  const { user } = useUser();
+
+  return (
+    <Box sx={{ bgcolor: "var(--mui-palette-background-level1)", pb: "60px" }}>
+      <Container>
+        <Box
+          sx={{
+            borderRadius: "20px",
+            border: "1px solid transparent",
+            color: "var(--mui-palette-common-white)",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            overflow: "hidden",
+            position: "relative",
+          }}
+        >
+          <Box
+            sx={{
+              bgcolor: "var(--mui-palette-neutral-950)",
+              borderRadius: "20px",
+              bottom: "1px",
+              left: "-1px",
+              position: "absolute",
+              right: "1px",
+              top: "-1px",
+              zIndex: 0,
+            }}
+          >
+            {/* <Box
+              sx={{
+                alignItems: "center",
+                bottom: 0,
+                display: "flex",
+                justifyContent: "center",
+                left: 0,
+                position: "absolute",
+                right: 0,
+                top: 0,
+                zIndex: 0,
+              }}
+            >
+              <Box component="img" src="/assets/home-cosmic.svg" sx={{ height: "auto", width: "1600px" }} />
+            </Box> */}
+            {/* <Box
+              sx={{
+                alignItems: "center",
+                bottom: 0,
+                display: "flex",
+                justifyContent: "center",
+                left: 0,
+                position: "absolute",
+                right: 0,
+                top: 0,
+                zIndex: 1,
+              }}
+            >
+              <Box component="img" src="/assets/home-rectangles.svg" sx={{ height: "auto", width: "1900px" }} />
+            </Box> */}
+          </Box>
+          <Stack
+            spacing={3}
+            sx={{
+              flex: "0 1 auto",
+              position: "relative",
+              px: "64px",
+              py: "120px",
+              width: { xs: "100%", md: "45%" },
+              zIndex: 1,
+            }}
+          >
+            <Stack spacing={2}>
+              <Typography color="inherit" variant="h3">
+                Weniger Aufwand, mehr Überblick{" "}
+              </Typography>
+              <Typography color="neutral.300">
+                Verwalte Mieten, Objekte und Mieter automatisch — einfach, übersichtlich und jederzeit griffbereit.
+              </Typography>
+            </Stack>
+            <div>
+              <Button
+                endIcon={<CaretRightIcon />}
+                href={user ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
+                variant="contained"
+              >
+                Jetzt ausprobieren
+              </Button>
+            </div>
+          </Stack>
+          <Box
+            sx={{
+              alignItems: { xs: "flex-end", md: "stretch" },
+              borderRadius: "20px",
+              display: "flex",
+              flex: "1 1 auto",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              pl: { xs: "64px", md: 0 },
+              position: "relative",
+              zIndex: 2,
+            }}
+          >
+            <NoSsr>
+              <Box sx={{ height: "340px", position: "relative", width: { xs: "80%", md: "100%" } }}>
+                <Box
+                  sx={{
+                    bgcolor: "#FFFBF5",
+                    filter: "blur(50px)",
+                    height: "40px",
+                    left: 0,
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                    zIndex: 0,
+                  }}
+                />
+                <Box sx={{ height: "100%", position: "relative", width: "100%", zIndex: 1 }}>
+                  <Box
+                    component="img"
+                    src={colorScheme === "dark" ? "/assets/home-cta-dark.png" : "/assets/home-cta-light.png"}
+                    sx={{
+                      display: "block",
+                      bottom: "1px",
+                      height: "100%",
+                      left: 0,
+                      position: "absolute",
+                      width: "auto",
+                    }}
+                  />
+                </Box>
+              </Box>
+            </NoSsr>
+          </Box>
+        </Box>
+      </Container>
+    </Box>
+  );
+}

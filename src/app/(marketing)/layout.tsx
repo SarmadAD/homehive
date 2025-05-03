@@ -24,15 +24,14 @@ export default function Layout({ children }: LayoutProps): React.JSX.Element {
     for (let i = 0; i < countY; i++) {
       for (let j = 0; j < countX; j++) {
         const hexagon = document.createElement("div");
-        hexagon.style = `
-        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODciIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgODcgMTAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMi4xOTg3MyAyNi4xNTQ3TDQzLjUgMi4zMDk0TDg0LjgwMTMgMjYuMTU0N1Y3My44NDUzTDQzLjUgOTcuNjkwNkwyLjE5ODczIDczLjg0NTNWMjYuMTU0N1oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI0Ii8+Cjwvc3ZnPgo=') no-repeat;
-        width: 44px;
-        height: 50px;
-        background-size: contain;
-        position: absolute;
-        top: ${i * 40}px;
-        left: ${j * 48 + ((i * 24) % 48)}px;
-      `;
+        hexagon.style.background =
+          "url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODciIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgODcgMTAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMi4xOTg3MyAyNi4xNTQ3TDQzLjUgMi4zMDk0TDg0LjgwMTMgMjYuMTU0N1Y3My44NDUzTDQzLjUgOTcuNjkwNkwyLjE5ODczIDczLjg0NTNWMjYuMTU0N1oiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI0Ii8+Cjwvc3ZnPgo=') no-repeat";
+        hexagon.style.width = "44px";
+        hexagon.style.height = "50px";
+        hexagon.style.backgroundSize = "contain";
+        hexagon.style.position = "absolute";
+        hexagon.style.top = `${i * 40}px`;
+        hexagon.style.left = `${j * 48 + ((i * 24) % 48)}px`;
 
         patternElement.appendChild(hexagon);
       }

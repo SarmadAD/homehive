@@ -30,6 +30,10 @@ import { UserProvider } from "src/contexts/auth/user-context";
 import { SettingsProvider } from "src/contexts/settings";
 import { ThemeProvider } from "src/components/widgets/core/theme-provider/theme-provider";
 
+import dayjs from "dayjs";
+import "dayjs/locale/de";
+dayjs.locale("de");
+
 // Force-Dynamic is required otherwise all pages are marked as client-side
 // due to the usage of the "cookies" function.
 export const dynamic = "force-dynamic";

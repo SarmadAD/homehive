@@ -51,6 +51,7 @@ export async function POST(request: Request, { params }: { params: { landlordId:
               paymentDate: rentPayment.paymentDate,
               renter: { connect: { id: rentPayment.renter?.id } },
               status: rentPayment.status,
+              landlord: { connect: { id: landlordId } },
             })),
           },
           rentalObjectInfo: {

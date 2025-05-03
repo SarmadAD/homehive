@@ -13,8 +13,10 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Card,
+  Divider,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
@@ -40,6 +42,8 @@ import { useUser } from "src/hooks/use-user";
 import { DotsVertical, User03 } from "@untitled-ui/icons-react";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { toast } from "src/components/toaster";
+import { GeneralPagination } from "src/components/common/pagination/general-pagination";
+import { useGeneralPagination } from "src/hooks/use-general-pagination";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -67,6 +71,8 @@ const Page: PageType = () => {
   const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElRenterThreeDotsMenu(event.currentTarget);
   };
+  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
+
   const handleCloseRenterThreeDotsMenu = () => {
     setAnchorElRenterThreeDotsMenu(null);
     deselectAll();
@@ -117,6 +123,12 @@ const Page: PageType = () => {
     setOpenDeleteModal(false);
     deselectAll();
   }
+
+  const paginatedRenter = useMemo(() => {
+    const startIndex = paginationState.page * paginationState.rowsPerPage;
+    const endIndex = startIndex + paginationState.rowsPerPage;
+    return renters.slice(startIndex, endIndex);
+  }, [renters, paginationState.page, paginationState.rowsPerPage]);
 
   const columns = [
     {
@@ -209,24 +221,33 @@ const Page: PageType = () => {
               <Grid xs={12} md={4}>
                 <OverviewRentPaid showActions={false} />
               </Grid>
-
-              <Grid xs={12} sx={{ overflowX: "auto", pt: 3 }}>
-                <DataTable<Renter>
-                  columns={columns}
-                  rows={(renters as Renter[]) || []}
-                  onDeselectAll={deselectAll}
-                  onDeselectOne={(_, row) => {
-                    deselectOne(row.id);
-                  }}
-                  onSelectAll={selectAll}
-                  onSelectOne={(_, row) => {
-                    selectOne(row.id);
-                  }}
-                  selected={selected}
-                  isLoading={isLoading}
-                  rowStartIcon={<User03 />}
-                  selectable
-                />
+              <Grid xs={12} sx={{ pt: 3 }}>
+                <Card>
+                  <DataTable<Renter>
+                    columns={columns}
+                    rows={(paginatedRenter as Renter[]) || []}
+                    onDeselectAll={deselectAll}
+                    onDeselectOne={(_, row) => {
+                      deselectOne(row.id);
+                    }}
+                    onSelectAll={selectAll}
+                    onSelectOne={(_, row) => {
+                      selectOne(row.id);
+                    }}
+                    selected={selected}
+                    isLoading={isLoading}
+                    rowStartIcon={<User03 />}
+                    selectable
+                  />{" "}
+                  <Divider />
+                  <GeneralPagination
+                    rowsPerPage={paginationState.rowsPerPage}
+                    page={paginationState.page}
+                    count={renters.length}
+                    onPageChange={handlePageChange}
+                    onRowsPerPageChange={handleRowsPerPageChange}
+                  />
+                </Card>
               </Grid>
             </Grid>
           </Container>
