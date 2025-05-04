@@ -11,7 +11,7 @@ export const userRoleAtom = atom<UserRole | null>({
       const user = get(currentUserAtom);
       if (user?.id) {
         try {
-          const userRole = await agent.userRoles.details(user.firebaseUserId);
+          const userRole = await agent.userRoles.details(user.authenticatedUserId);
           return userRole;
         } catch (error) {
           console.error("Fehler beim Abrufen der Benutzerrolle:", error);

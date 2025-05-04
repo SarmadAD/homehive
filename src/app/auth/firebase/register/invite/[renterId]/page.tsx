@@ -169,7 +169,7 @@ const Page = () => {
     try {
       const firebaseUserId = user.user.uid;
       if (renterId && firebaseUserId) {
-        await agent.renters.updateFirebaseUserId(renterId, firebaseUserId);
+        // await agent.renters.updateFirebaseUserId(renterId, firebaseUserId);
       }
     } catch (error) {
       console.log(error);

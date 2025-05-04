@@ -23,6 +23,15 @@ export const paths = {
       register: "/auth/amplify/register",
       resetPassword: "/auth/amplify/reset-password",
     },
+    supabase: {
+      callback: { implicit: "/auth/supabase/callback/implicit", pkce: "/auth/supabase/callback/pkce" },
+      signIn: "/auth/supabase/sign-in",
+      signUp: "/auth/supabase/sign-up",
+      signUpConfirm: "/auth/supabase/sign-up-confirm",
+      resetPassword: "/auth/supabase/reset-password",
+      recoveryLinkSent: "/auth/supabase/recovery-link-sent",
+      updatePassword: "/auth/supabase/update-password",
+    },
   },
   landlordportal: {
     dashboard: {

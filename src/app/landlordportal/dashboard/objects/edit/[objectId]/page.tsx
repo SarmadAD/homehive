@@ -42,9 +42,9 @@ const Page: PageType = () => {
 
   async function getLandlord() {
     try {
-      const firebaseUserId = user?.id;
-      if (firebaseUserId) {
-        const landlord = await agent.landlord.details(firebaseUserId);
+      const authenticatedUserId = user?.id;
+      if (authenticatedUserId) {
+        const landlord = await agent.landlord.details(authenticatedUserId);
         setLandlord(landlord);
       }
     } catch (error) {

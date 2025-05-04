@@ -46,7 +46,7 @@ export const rentalObjectDefault: RentalObject = {
   rentalObjectInfoId: "",
   landlord: {
     id: "",
-    firebaseUserId: "",
+    authenticatedUserId: "",
   },
   landlordId: "",
 };

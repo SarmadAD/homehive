@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "src/app/db/db";
 
 export async function GET(request: NextRequest) {
-  const firebaseUserId = request.nextUrl.searchParams.get("fbId");
-  if (!firebaseUserId) return NextResponse.json({ error: "firebaseUserId not there!" });
-  const renter = await getRenter(firebaseUserId);
+  const authenticatedUserId = request.nextUrl.searchParams.get("aId");
+  if (!authenticatedUserId) return NextResponse.json({ error: "authenticatedUserId not there!" });
+  const renter = await getRenter(authenticatedUserId);
   if (renter) {
     return NextResponse.json(renter);
   }
@@ -45,10 +45,10 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-const getRenter = async (firebaseUserId: string) => {
+const getRenter = async (authenticatedUserId: string) => {
   try {
     return await prisma.renter.findFirst({
-      where: { firebaseUserId: firebaseUserId },
+      where: { authenticatedUserId: authenticatedUserId },
       include: { rentalObject: true },
     });
   } catch (error) {

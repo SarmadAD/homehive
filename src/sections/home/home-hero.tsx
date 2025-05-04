@@ -44,7 +44,7 @@ export function Hero(): React.JSX.Element {
           <Stack direction="row" spacing={2} sx={{ justifyContent: "center" }}>
             <Button
               component={RouterLink}
-              href={user ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
+              href={user ? paths.landlordportal.dashboard.index : paths.auth.supabase.signIn}
               variant="contained"
             >
               Jetzt ausprobieren

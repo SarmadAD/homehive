@@ -1,8 +1,7 @@
-// import { createBrowserClient } from '@supabase/ssr';
-// import type { SupabaseClient } from '@supabase/supabase-js';
+import { createBrowserClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "src/config";
 
-// import { config } from '@/config';
-
-// export function createClient(): SupabaseClient {
-//   return createBrowserClient(config.supabase.url!, config.supabase.anonKey!);
-// }
+export function createClient(): SupabaseClient {
+  return createBrowserClient(supabase.url!, supabase.anonKey!);
+}

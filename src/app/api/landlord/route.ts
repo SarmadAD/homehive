@@ -4,13 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "src/app/db/db";
 
 export async function POST(request: Request) {
-  const firebaseUserId: string = await request.text();
-  if (!firebaseUserId) return NextResponse.json({ error: "firebaseUserId not there!" }, { status: 400 });
-  await createLandlord(firebaseUserId);
+  const authenticatedUserId: string = await request.text();
+  if (!authenticatedUserId) return NextResponse.json({ error: "authenticatedUserId not there!" }, { status: 400 });
+  await createLandlord(authenticatedUserId);
   return NextResponse.json({ status: "Ok" }, { status: 200 });
 }
 
-const createLandlord = async (firebaseUserId: string) => {
+const createLandlord = async (authenticatedUserId: string) => {
   try {
     // Get Landlord
     const landlordRole = await prisma.role.findUnique({
@@ -22,12 +22,12 @@ const createLandlord = async (firebaseUserId: string) => {
     }
     //Create LandLord
     await prisma.landlord.create({
-      data: { firebaseUserId: firebaseUserId },
+      data: { authenticatedUserId: authenticatedUserId },
     });
     //Assign User-Role Landlord
     await prisma.userRole.create({
       data: {
-        firebaseUserId: firebaseUserId,
+        authenticatedUserId: authenticatedUserId,
         role: { connect: { id: landlordRole.id } },
       },
     });
@@ -39,19 +39,19 @@ const createLandlord = async (firebaseUserId: string) => {
 };
 
 export async function GET(request: NextRequest) {
-  const firebaseUserId = request.nextUrl.searchParams.get("fbId");
-  if (!firebaseUserId) return NextResponse.json({ error: "firebaseUserId not there!" });
-  const landlord = await getLandlord(firebaseUserId);
+  const authenticatedUserId = request.nextUrl.searchParams.get("aId");
+  if (!authenticatedUserId) return NextResponse.json({ error: "authenticatedUserId not there!" });
+  const landlord = await getLandlord(authenticatedUserId);
   if (landlord) {
     return NextResponse.json(landlord);
   }
   return NextResponse.json({ error: "landlord not found!" });
 }
 
-const getLandlord = async (firebaseUserId: string) => {
+const getLandlord = async (authenticatedUserId: string) => {
   try {
-    return await prisma.landlord.findUnique({
-      where: { firebaseUserId: firebaseUserId },
+    return await prisma.landlord.findFirst({
+      where: { authenticatedUserId: authenticatedUserId },
     });
   } catch (error) {
     console.error(error);

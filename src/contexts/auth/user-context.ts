@@ -5,8 +5,8 @@ import { auth } from "../../config";
 // import { UserContext as Auth0UserContext, UserProvider as Auth0UserProvider } from "./auth0/user-context";
 // import { UserContext as CognitoUserContext, UserProvider as CognitoUserProvider } from "./cognito/user-context";
 // import { UserContext as CustomUserContext, UserProvider as CustomUserProvider } from "./custom/user-context";
-// import { UserContext as SupabaseUserContext, UserProvider as SupabaseUserProvider } from "./supabase/user-context";
-import { UserContext as FirebaseUserContext, UserProvider as FirebaseUserProvider } from "./firebase/user-context";
+import { UserContext as SupabaseUserContext, UserProvider as SupabaseUserProvider } from "./supabase/user-context";
+// import { UserContext as FirebaseUserContext, UserProvider as FirebaseUserProvider } from "./firebase/user-context";
 
 import { AuthStrategy } from "src/lib/auth/strategy";
 import { UserContextValue } from "./types";
@@ -30,14 +30,14 @@ switch (auth.strategy) {
   //   UserContext = CognitoUserContext;
   //   UserProvider = CognitoUserProvider;
   //   break;
-  case AuthStrategy.FIREBASE:
-    UserContext = FirebaseUserContext;
-    UserProvider = FirebaseUserProvider;
-    break;
-  // case AuthStrategy.SUPABASE:
-  //   UserContext = SupabaseUserContext;
-  //   UserProvider = SupabaseUserProvider;
+  // case AuthStrategy.FIREBASE:
+  //   UserContext = FirebaseUserContext;
+  //   UserProvider = FirebaseUserProvider;
   //   break;
+  case AuthStrategy.SUPABASE:
+    UserContext = SupabaseUserContext;
+    UserProvider = SupabaseUserProvider;
+    break;
   default:
     throw new Error("Invalid auth strategy");
 }

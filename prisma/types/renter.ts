@@ -33,7 +33,7 @@ export const renterDefault: Renter = {
   surname: "",
   image: "",
   email: "",
-  firebaseUserId: "",
+  authenticatedUserId: "",
   rentalAgreementId: "",
   rentPayment: [],
   rentalAgreement: {
@@ -66,7 +66,7 @@ export const renterDefault: Renter = {
     rentalObjectInfoId: "",
     landlord: {
       id: "",
-      firebaseUserId: "",
+      authenticatedUserId: "",
     },
     landlordId: "",
   },

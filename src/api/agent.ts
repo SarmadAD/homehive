@@ -29,12 +29,12 @@ const objects = {
 };
 
 const landlord = {
-  details: (firebaseUserId: string) => requests.get<Landlord>(`/api/landlord?fbId=${firebaseUserId}`),
-  create: (firebaseUserId: string) => requests.post<void>(`/api/landlord/`, firebaseUserId),
+  details: (authenticatedUserId: string) => requests.get<Landlord>(`/api/landlord?aId=${authenticatedUserId}`),
+  create: (authenticatedUserId: string) => requests.post<void>(`/api/landlord/`, authenticatedUserId),
 };
 
 const renter = {
-  details: (firebaseUserId: string) => requests.get<Renter>(`/api/renter?fbId=${firebaseUserId}`),
+  details: (authenticatedUserId: string) => requests.get<Renter>(`/api/renter?aId=${authenticatedUserId}`),
   removeRentalObjectFromRenter: (renters: string[], rentalObjectId: string) =>
     requests.patch<Renter>(`/api/renter`, { renters, rentalObjectId }),
 };
@@ -42,14 +42,14 @@ const renter = {
 const renters = {
   list: (landlordId: string) => requests.get<Renter[]>(`/api/dashboard/renters/${landlordId}`),
   details: (renterId: string) => requests.get<Renter>(`/api/dashboard/renters/renter/${renterId}`),
-  create: (renter: Renter, landlordId: string) => requests.post<void>(`/api/dashboard/renters/${landlordId}`, renter),
+  create: (renter: Renter, landlordId: string) => requests.post<Renter>(`/api/dashboard/renters/${landlordId}`, renter),
   delete: (id: string) => requests.del<Renter>(`/api/dashboard/renters/renter/${id}`),
-  updateFirebaseUserId: (renterId: string, firebaseUserId: string) =>
-    requests.put<void>(`/api/dashboard/renters/renter/${renterId}`, firebaseUserId),
+  updateAuthenticatedUserId: (renterId: string, authenticatedUserId: string) =>
+    requests.put<void>(`/api/dashboard/renters/renter/${renterId}`, authenticatedUserId),
 };
 
 const userRoles = {
-  details: (firebaseUserId: string) => requests.get<UserRole>(`/api/role/${firebaseUserId}`),
+  details: (authenticatedUserId: string) => requests.get<UserRole>(`/api/role/${authenticatedUserId}`),
 };
 
 const rentPayments = {

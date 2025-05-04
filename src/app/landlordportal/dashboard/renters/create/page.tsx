@@ -8,7 +8,6 @@ import agent from "src/api/agent";
 import { useSetRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { RenterCreateForm } from "../renter-create-form";
-import { AuthContextType } from "src/contexts/auth/firebase-context";
 import { useUser } from "src/hooks/use-user";
 
 const Page: PageType = () => {
@@ -24,9 +23,9 @@ const Page: PageType = () => {
 
   async function getLandlord() {
     try {
-      const firebaseUserId = user?.id;
-      if (firebaseUserId) {
-        const landlord = await agent.landlord.details(firebaseUserId);
+      const authenticatedUserId = user?.id;
+      if (authenticatedUserId) {
+        const landlord = await agent.landlord.details(authenticatedUserId);
         setLandlord(landlord);
       }
     } catch (error) {

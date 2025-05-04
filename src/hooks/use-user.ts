@@ -1,6 +1,6 @@
 import * as React from "react";
-import { UserContext } from "src/contexts/auth/firebase/user-context";
 import type { UserContextValue } from "src/contexts/auth/types";
+import { UserContext } from "src/contexts/auth/user-context";
 
 export function useUser(): UserContextValue {
   const context = React.useContext(UserContext);
