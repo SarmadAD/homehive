@@ -17,10 +17,64 @@ import { useUser } from "src/hooks/use-user";
 import { NavItemConfig } from "src/types/nav";
 import { isNavItemActive } from "src/lib/is-nav-item-active";
 import { MobileNav } from "./mobile-nav";
+import agent from "src/api/agent";
+import { useEffect, useState } from "react";
+import { logger } from "src/lib/default-logger";
 
 export function MainNav(): React.JSX.Element {
-  const [openNav, setOpenNav] = React.useState<boolean>(false);
+  const [openNav, setOpenNav] = useState<boolean>(false);
+  const [rederict, setRederict] = useState<string>("");
   const { user } = useUser();
+
+  async function checkIfUserIsLandlord() {
+    let result = false;
+    try {
+      const authenticatedUserId = user?.id;
+      if (authenticatedUserId) {
+        const landlord = await agent.landlord.details(authenticatedUserId);
+        if ("error" in landlord) {
+          throw new Error(String(landlord.error));
+        } else {
+          result = true;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
+  }
+
+  async function checkIfRenterExistsWithAuthenticatedUserId() {
+    let result = false;
+    try {
+      const authenticatedUserId = user?.id;
+      const renter = await agent.renter.details(authenticatedUserId);
+      if ("error" in renter) {
+        throw new Error(String(renter.error));
+      } else {
+        result = true;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user) {
+        if (await checkIfRenterExistsWithAuthenticatedUserId()) {
+          logger.debug("[GuestGuard]: User is logged in, redirecting to renter portal");
+          setRederict(paths.renterportal.dashboard.objects.index);
+        } else if (await checkIfUserIsLandlord()) {
+          logger.debug("[GuestGuard]: User is logged in, redirecting to landlord portal");
+          setRederict(paths.landlordportal.dashboard.index);
+        }
+      }
+    };
+
+    fetchData();
+  }, [user]);
 
   return (
     <React.Fragment>
@@ -42,18 +96,13 @@ export function MainNav(): React.JSX.Element {
             sx={{ alignItems: "center", flex: "1 1 auto", justifyContent: "flex-end" }}
           >
             {user ? (
-              <Button
-                component="a"
-                href={paths.landlordportal.dashboard.index}
-                sx={{ display: { xs: "none", md: "flex" } }}
-                variant="contained"
-              >
+              <Button component="a" href={rederict} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Dashboard
               </Button>
             ) : (
               <Button
                 component="a"
-                href={paths.auth.firebase.login}
+                href={paths.auth.supabase.signIn}
                 sx={{ display: { xs: "none", md: "flex" } }}
                 variant="contained"
               >

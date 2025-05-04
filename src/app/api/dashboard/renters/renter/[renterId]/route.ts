@@ -19,17 +19,17 @@ export async function GET(request: Request, { params }: { params: { renterId: st
 export async function PUT(request: Request, { params }: { params: { renterId: string } }) {
   try {
     const { renterId } = params;
-    const firebaseUserId: string = await request.text();
+    const authenticatedUserId: string = await request.text();
     if (renterId) {
       const renter = await prisma.renter.update({
         where: { id: renterId },
         data: {
-          firebaseUserId: firebaseUserId,
+          authenticatedUserId: authenticatedUserId,
         },
       });
       await prisma.userRole.create({
         data: {
-          firebaseUserId: firebaseUserId,
+          authenticatedUserId: authenticatedUserId,
           role: { connect: { id: "20f9fbe2-0855-11ee-be56-0242ac120044" } },
         },
       });

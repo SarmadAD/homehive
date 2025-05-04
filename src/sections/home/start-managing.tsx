@@ -95,7 +95,7 @@ export function StartManaging(): React.JSX.Element {
             <div>
               <Button
                 endIcon={<CaretRightIcon />}
-                href={user ? paths.landlordportal.dashboard.index : paths.auth.firebase.login}
+                href={user ? paths.landlordportal.dashboard.index : paths.auth.supabase.signIn}
                 variant="contained"
               >
                 Jetzt ausprobieren

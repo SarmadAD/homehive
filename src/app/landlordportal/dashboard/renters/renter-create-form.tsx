@@ -12,8 +12,9 @@ import { useRouter } from "src/hooks/use-router";
 import { RenterBasicInfosStep } from "./renter-basicinfos-step";
 import { Renter, renterDefault } from "prisma/types/renter";
 import { RenterSendInviteStep } from "./renter-send-invite-step";
-import InviteEmail from "./InviteEmail";
 import { Resend } from "resend";
+import { createClient as createSupabaseClient } from "../../../../lib/supabase/client";
+import { toast } from "src/components/toaster";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -49,6 +50,8 @@ export const RenterCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newRenter, setNewRenter] = useState<Renter>(renterDefault);
+  const [supabaseClient] = useState(createSupabaseClient());
+
   const landlord = useRecoilValue(currentUserAtom);
   const router = useRouter();
 

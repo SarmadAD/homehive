@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const getRenter = (landLords: Landlord[]): Prisma.RenterCreateInput[] => [
   {
-    firebaseUserId: "BeispielfirebaseId1",
+    authenticatedUserId: "c0c1d309-ede3-4d83-bbe8-dabe8c94857b",
     createdAt: new Date("2023-06-01T12:00:00Z"),
     firstname: "John",
     surname: "Doe",
@@ -15,7 +15,7 @@ const getRenter = (landLords: Landlord[]): Prisma.RenterCreateInput[] => [
     },
   },
   {
-    firebaseUserId: "BeispielfirebaseId2",
+    authenticatedUserId: "BeispielId2",
     createdAt: new Date("2023-06-01T12:00:00Z"),
     firstname: "Sarmad",
     surname: "Doe",
@@ -26,7 +26,7 @@ const getRenter = (landLords: Landlord[]): Prisma.RenterCreateInput[] => [
     },
   },
   {
-    firebaseUserId: "BeispielfirebaseId3",
+    authenticatedUserId: "BeispielId3",
     createdAt: new Date("2023-06-01T12:00:00Z"),
     firstname: "Hamza",
     surname: "Doe",
@@ -72,7 +72,7 @@ const getRentalObject = (
 
 const getLandLords = (): Prisma.LandlordCreateInput[] => [
   {
-    firebaseUserId: "LAg5mcTtMKZU0AVbymt7V4Ut9Cx1",
+    authenticatedUserId: "LAg5mcTtMKZU0AVbymt7V4Ut9Cx1",
   },
 ];
 
@@ -119,15 +119,15 @@ const getRoles = (): Prisma.RoleCreateInput[] => [
 
 const getUserRole = (roles: Role[]): Prisma.UserRoleCreateInput[] => [
   {
-    firebaseUserId: "beispielId",
+    authenticatedUserId: "beispielId",
     role: { connect: { id: roles[0].id } },
   },
   {
-    firebaseUserId: "beispielId",
+    authenticatedUserId: "beispielId",
     role: { connect: { id: roles[0].id } },
   },
   {
-    firebaseUserId: "LAg5mcTtMKZU0AVbymt7V4Ut9Cx1",
+    authenticatedUserId: "LAg5mcTtMKZU0AVbymt7V4Ut9Cx1",
     role: { connect: { id: roles[1].id } },
   },
 ];
@@ -206,7 +206,7 @@ async function main() {
   // await prisma.renter.create({
   //   data: {
   //     id: "0fc15dda-0ae3-11ee-be56-0242ac120002",
-  //     firebaseUserId: "BeispielfirebaseId1",
+  //     authenticatedUserId: "BeispielId1",
   //     createdAt: new Date("2023-06-01T12:00:00Z"),
   //     firstname: "John",
   //     surname: "Doe",
@@ -248,7 +248,7 @@ async function main() {
   // await prisma.renter.create({
   //   data: {
   //     id: "0fc15dda-0ae3-11ee-be56-0242ac130008",
-  //     firebaseUserId: "BeispielfirebaseId2",
+  //     authenticatedUserId: "BeispielId2",
   //     createdAt: new Date("2023-06-01T12:00:00Z"),
   //     firstname: "Sarmad",
   //     surname: "Doe",
@@ -283,7 +283,7 @@ async function main() {
   // await prisma.renter.create({
   //   data: {
   //     id: "0fc15dda-0ae3-11ee-be56-0242ac130015",
-  //     firebaseUserId: "BeispielfirebaseId3",
+  //     authenticatedUserId: "BeispielId3",
   //     createdAt: new Date("2023-06-01T12:00:00Z"),
   //     firstname: "Hamza",
   //     surname: "Doe",

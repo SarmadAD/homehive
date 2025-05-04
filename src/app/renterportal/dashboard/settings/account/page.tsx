@@ -27,9 +27,9 @@ export default function Page(): React.JSX.Element {
 
   async function getRenter() {
     try {
-      const firebaseUserId = user?.id;
-      if (firebaseUserId) {
-        const renter = await agent.renter.details(firebaseUserId);
+      const authenticatedUserId = user?.id;
+      if (authenticatedUserId) {
+        const renter = await agent.renter.details(authenticatedUserId);
         setRenter(renter);
         setSelectedRenterIdAtom(renter.id);
       }

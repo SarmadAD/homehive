@@ -7,11 +7,12 @@ import { useRouter } from "src/hooks/use-router";
 import { paths } from "src/paths";
 import { Issuer } from "src/utils/auth";
 import { User as UserIcon } from "@phosphor-icons/react/dist/ssr/User";
-import { getFirebaseAuth } from "src/lib/auth/firebase/client";
-import { Auth, signOut } from "firebase/auth";
 import { useUser } from "src/hooks/use-user";
 import { RouterLink } from "src/components/router-link";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
+import { createClient as createSupabaseClient } from "../../../lib/supabase/client";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { logger } from "src/lib/default-logger";
 
 interface AccountPopoverProps {
   anchorEl: null | Element;
@@ -22,18 +23,26 @@ interface AccountPopoverProps {
 export const AccountPopover: FC<AccountPopoverProps> = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const router = useRouter();
-  // const auth = useAuth();
-  const [firebaseAuth] = useState<Auth>(getFirebaseAuth());
-  const { user, error } = useUser();
+  const [supabaseClient] = useState<SupabaseClient>(createSupabaseClient());
 
-  const handleLogout = useCallback(async (): Promise<void> => {
+  const { user } = useUser();
+
+  const handleSignOut = useCallback(async (): Promise<void> => {
     try {
-      await signOut(firebaseAuth);
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        logger.error("Sign out error", error);
+        toast.error("Something went wrong, unable to sign out");
+      } else {
+        // UserProvider will handle Router refresh
+        // After refresh, GuestGuard will handle the redirect
+      }
     } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong!");
+      logger.error("Sign out error", err);
+      toast.error("Something went wrong, unable to sign out");
     }
-  }, [firebaseAuth, router]);
+  }, [supabaseClient]);
 
   return (
     <Popover
@@ -73,7 +82,7 @@ export const AccountPopover: FC<AccountPopoverProps> = (props) => {
       <Divider />
 
       <Box sx={{ p: 1 }}>
-        <MenuItem component="div" onClick={handleLogout} sx={{ justifyContent: "center" }}>
+        <MenuItem component="div" onClick={handleSignOut} sx={{ justifyContent: "center" }}>
           Abmelden
         </MenuItem>
       </Box>

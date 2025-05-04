@@ -3,7 +3,7 @@ import { Landlord, RentalObjectInfo, RepairRequest, Role, UserRole } from "@pris
 const landlords: Landlord[] = [
   {
     id: "04e35c74-0ae3-11ee-be56-0242ac120002",
-    firebaseUserId: "BeispielfirebaseId",
+    authenticatedUserId: "BeispielId",
   },
 ];
 
@@ -59,17 +59,17 @@ const role: Role[] = [
 const userRole: UserRole[] = [
   {
     id: "20f9fbe2-0855-11ee-be56-0242ac130052",
-    firebaseUserId: "beispielId",
+    authenticatedUserId: "beispielId",
     roleId: "20f9fbe2-0855-11ee-be56-0242ac130052",
   },
   {
     id: "20f9fbe2-0855-11ee-be56-0252ac130052",
-    firebaseUserId: "beispielId",
+    authenticatedUserId: "beispielId",
     roleId: "20f9fbe2-0855-11ee-be56-0242ac120052",
   },
   {
     id: "20f9fbe2-0855-11ee-be57-0252ac130052",
-    firebaseUserId: "aHVAVJTNzOQgvyHXW0wMOZLbLXK2",
+    authenticatedUserId: "aHVAVJTNzOQgvyHXW0wMOZLbLXK2",
     roleId: "20f9fbe2-0855-11ee-be56-0242ac130052",
   },
 ];

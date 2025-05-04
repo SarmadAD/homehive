@@ -1,9 +1,8 @@
 import { Prisma, Renter as ClientRenter } from "@prisma/client";
-import { InviteEmail } from "../../../../landlordportal/dashboard/renters/InviteEmail";
 import { NextResponse } from "next/server";
 import { Renter } from "prisma/types/renter";
 import { prisma } from "src/app/db/db";
-import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
 
 export async function GET(request: Request, { params }: { params: { landlordId: string } }) {
   const { landlordId } = params;
@@ -19,6 +18,10 @@ export async function GET(request: Request, { params }: { params: { landlordId: 
     return NextResponse.json({ error: "error" });
   }
 }
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY || ""
+);
 
 export async function POST(request: Request, { params }: { params: { landlordId: string } }) {
   try {
@@ -28,7 +31,7 @@ export async function POST(request: Request, { params }: { params: { landlordId:
       const createdRenter = await prisma.renter.create({
         data: {
           firstname: renter.firstname,
-          firebaseUserId: "",
+          authenticatedUserId: "00000000-0000-0000-0000-000000000000",
           surname: renter.surname,
           email: renter.email,
           image: "",
@@ -37,14 +40,18 @@ export async function POST(request: Request, { params }: { params: { landlordId:
         },
       });
       if (createdRenter) {
-        const resend = new Resend("re_L94tobgR_A4GqBSz6sfiv9JN85W6za5jC");
-        const data = await resend.emails.send({
-          from: "invite@homehive.me",
-          to: createdRenter.email,
-          subject: "Einladung zum Mieter-Portal",
-          react: InviteEmail({ renter: createdRenter }),
+        const buildRegisterLink =
+          process.env.NODE_ENV === "production"
+            ? `https://homehive.me/auth/supabase/sign-up/invite/:renterId?renterId=${createdRenter.id}`
+            : `http://localhost:3000/auth/supabase/sign-up/invite/:renterId?renterId=${createdRenter.id}`;
+
+        const { error } = await supabase.auth.admin.inviteUserByEmail(createdRenter.email, {
+          redirectTo: buildRegisterLink,
         });
-        return NextResponse.json({ data }, { status: 200 });
+        if (error) {
+          return NextResponse.json({ error: error.message }, { status: 400 });
+        }
+        return NextResponse.json(createdRenter, { status: 200 });
       }
     }
   } catch (e) {

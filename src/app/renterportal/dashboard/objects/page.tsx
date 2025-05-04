@@ -92,10 +92,10 @@ const Page: PageType = () => {
 
   async function getRenter() {
     try {
-      const firebaseUserId = user?.id;
-      if (firebaseUserId) {
+      const authenticatedUserId = user?.id;
+      if (authenticatedUserId) {
         setIsLoading(true);
-        const renter = await agent.renter.details(firebaseUserId);
+        const renter = await agent.renter.details(authenticatedUserId);
         setRenter(renter);
         setSelectedRenterIdAtom(renter.id);
         setSelectedRentalObjectId(renter.rentalObjectId ?? "");
