@@ -66,11 +66,7 @@ export async function POST(request: NextRequest) {
       const searchCriteria = [
         // (transaction: any) => transaction.descriptions?.display?.toString() === "Miete",
         (transaction: any) => {
-          const totalRent =
-            rentalObjectInfo.baseRent +
-            rentalObjectInfo.heatingCosts +
-            rentalObjectInfo.waterCosts +
-            rentalObjectInfo.electricityCosts;
+          const totalRent = (rentalObjectInfo.baseRent ?? 0) + (rentalObjectInfo.serviceCharges ?? 0);
 
           const transactionAmount =
             parseInt(transaction?.amount?.value?.unscaledValue) /

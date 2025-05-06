@@ -345,7 +345,7 @@ const Page: PageType = () => {
           </Container>
         </Box>
         <DeleteModal
-          text={"Möchten Sie wirklich das Objekt löschen?"}
+          text={"Möchtest Du wirklich das Objekt löschen?"}
           handleCancelDeleteModal={handleCancelDeleteModal}
           onDelete={handleDelete}
           openDeleteModal={openDeleteModal}

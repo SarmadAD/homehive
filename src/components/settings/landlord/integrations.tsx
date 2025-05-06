@@ -44,12 +44,7 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
         const query = new URLSearchParams(window.location.search);
         const code = query.get("code");
         if (code && landlord.id) {
-          await agent.tinkToken.generate(
-            code,
-            process.env.NEXT_PUBLIC_TINK_CLIENT_ID ?? "",
-            process.env.NEXT_PUBLIC_TINK_CLIENT_SECRET ?? "",
-            landlord.id
-          );
+          await agent.tinkToken.generate(code, landlord.id);
         }
       } catch (error) {
         console.log(error);

@@ -79,12 +79,14 @@ const getLandLords = (): Prisma.LandlordCreateInput[] => [
 const getRentalObjectInfos = (): Prisma.RentalObjectInfoCreateInput[] => [
   {
     baseRent: 1000,
+    serviceCharges: 200,
     heatingCosts: 100,
     waterCosts: 50,
     electricityCosts: 75,
   },
   {
     baseRent: 2000,
+    serviceCharges: 200,
     heatingCosts: 100,
     waterCosts: 50,
     electricityCosts: 75,

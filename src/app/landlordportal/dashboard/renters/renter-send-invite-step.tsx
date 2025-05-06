@@ -18,8 +18,8 @@ export const RenterSendInviteStep: FC<ObjectDetailsStepProps> = (props) => {
     <Stack spacing={3} {...other}>
       <div>
         <Typography color="text.secondary" sx={{ mt: 1 }} variant="body2">
-          Nachdem Sie auf &quot;Einladung versenden&quot; klicken, wird eine E-Mail an dem Vermieter gesendet und somit
-          der Mieter eingeladen zu seinem seperaten Mieterportal.
+          Nachdem du auf &quot;Einladung versenden&quot; klickst, wird eine E-Mail an dem Mieter gesendet und somit
+          dieser zu seinem seperaten Mieterportal eingeladen.
         </Typography>
       </div>
       <Stack alignItems="center" direction="row" spacing={2}>

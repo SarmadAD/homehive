@@ -39,6 +39,7 @@ export const rentalObjectDefault: RentalObject = {
   rentalObjectInfo: {
     id: "",
     baseRent: 0,
+    serviceCharges: 0,
     electricityCosts: 0,
     heatingCosts: 0,
     waterCosts: 0,

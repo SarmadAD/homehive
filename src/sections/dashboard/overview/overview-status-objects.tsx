@@ -105,7 +105,7 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
         <Container maxWidth="sm">
           <CardContent sx={{ mt: 1 }}>
             <Typography color="text.secondary" variant="body2">
-              Legen Sie Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zu sehen
+              Lege Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zu sehen
             </Typography>
           </CardContent>
         </Container>

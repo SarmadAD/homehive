@@ -7,7 +7,7 @@ import { Chart } from "src/components/chart";
 import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
-const labels: string[] = ["Kaltmiete", "Heißkosten", "Stromkosten", "Wasserkosten"];
+const labels: string[] = ["Kaltmiete", "Nebenkosten"];
 
 type ChartSeries = number[];
 const useChartOptions = (): ApexOptions => {
@@ -119,9 +119,9 @@ export const ObjectRentInfoChart: FC = () => {
   }
 
   const rentalObject = rentalObjectLoadable.contents;
-  const { baseRent, electricityCosts, heatingCosts, waterCosts } = rentalObject.rentalObjectInfo;
+  const { baseRent, serviceCharges } = rentalObject.rentalObjectInfo;
 
-  const chartSeries: ChartSeries = [baseRent, electricityCosts, heatingCosts, waterCosts];
+  const chartSeries: ChartSeries = [baseRent ?? 0, serviceCharges ?? 0];
   const totalAmount = chartSeries.reduce((acc, item) => (acc += item), 0);
   const formattedTotalAmount = numeral(totalAmount).format("$0,0.00");
 
