@@ -58,6 +58,8 @@ model Renter {
 model Landlord {
   id                  String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   authenticatedUserId String         @db.Uuid
+  hasAccess           Boolean        @default(false)
+  priceId             String?
   rentalObjects       RentalObject[]
   renters             Renter[]
   tokens              Token[]
