@@ -19,6 +19,44 @@ import agent from "src/api/agent";
 import { useUser } from "src/hooks/use-user";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 
+export const pricingPlans = [
+  {
+    cta: "Standard",
+    subscription: true,
+    currency: "€",
+    description: "Alles was wir haben",
+    features: ["Vermieter-Portal", "Mieter-Portal", "Mieteinnahmen einsehen", "Objekte erstellen", "Mieter einladen"],
+    icon: <PricingPlanIcon name="standard" />,
+    name: "Standard",
+    price: "2,59",
+    link: process.env.NODE_ENV === "development" ? "https://buy.stripe.com/test_7sIfZafKM4ZQcs8000" : "",
+    priceId: process.env.NODE_ENV === "development" ? "price_1RLqk2FJT2pyPaEfZLChFA2t" : "",
+    sx: {
+      height: "100%",
+      maxWidth: 460,
+      mx: "auto",
+    },
+  },
+  {
+    cta: "Einmalig",
+    subscription: false,
+    currency: "€",
+    description: "Alles was wir haben ein Lebenlang",
+    features: ["Vermieter-Portal", "Mieter-Portal", "Mieteinnahmen einsehen", "Objekte erstellen", "Mieter einladen"],
+    icon: <PricingPlanIcon name="lifetime" />,
+    name: "Einmalig",
+    price: "39,99",
+    link: process.env.NODE_ENV === "development" ? "https://buy.stripe.com/test_6oE28keGI9g64ZG9AB" : "",
+    priceId: process.env.NODE_ENV === "development" ? "price_1RLqlBFJT2pyPaEfkiFIo14q" : "",
+    popular: true,
+    sx: {
+      height: "100%",
+      maxWidth: 460,
+      mx: "auto",
+    },
+  },
+];
+
 export default function Page(): React.JSX.Element {
   const setLandlord = useSetRecoilState(currentUserAtom);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +82,7 @@ export default function Page(): React.JSX.Element {
       setIsLoading(false);
     }
   }
+
   return (
     <>
       <Seo title="Preis" />
@@ -78,76 +117,11 @@ export default function Page(): React.JSX.Element {
               </Stack> */}
             </Box>
             <Grid container spacing={6} justifyContent={"center"}>
-              <Grid xs={12} md={4}>
-                <PricingPlan
-                  cta="Standard"
-                  subscription={true}
-                  currency="€"
-                  description="Alles was wir haben"
-                  features={[
-                    "Vermieter-Portal",
-                    "Mieter-Portal",
-                    "Mieteinnahmen einsehen",
-                    "Objekte erstellen",
-                    "Mieter einladen",
-                  ]}
-                  icon={<PricingPlanIcon name="standard" />}
-                  name="Standard"
-                  // popular
-                  price="1,59"
-                  sx={{
-                    height: "100%",
-                    maxWidth: 460,
-                    mx: "auto",
-                  }}
-                />{" "}
-              </Grid>
-              <Grid xs={12} md={4}>
-                <PricingPlan
-                  cta="Einmalig"
-                  subscription={false}
-                  currency="€"
-                  description="Alles was wir haben ein Lebenlang"
-                  features={[
-                    "Vermieter-Portal",
-                    "Mieter-Portal",
-                    "Mieteinnahmen einsehen",
-                    "Objekte erstellen",
-                    "Mieter einladen",
-                  ]}
-                  icon={<PricingPlanIcon name="lifetime" />}
-                  name="Einmalig"
-                  price="39,99"
-                  popular
-                  sx={{
-                    height: "100%",
-                    maxWidth: 460,
-                    mx: "auto",
-                  }}
-                />
-              </Grid>
-              {/* <Grid xs={12} md={4}>
-                <PricingPlan
-                  cta="Contact Us"
-                  currency="€"
-                  description="To familiarize yourself with our tools."
-                  features={[
-                    "All previous",
-                    "Unlimited contacts",
-                    "Analytics platform",
-                    "Public API access",
-                    "Send and sign unlimited contracts",
-                  ]}
-                  icon={<PricingPlanIcon name="business" />}
-                  name="Business"
-                  price="29.99"
-                  sx={{
-                    height: "100%",
-                    maxWidth: 460,
-                    mx: "auto",
-                  }}
-                />
-              </Grid> */}
+              {pricingPlans.map((plan, index) => (
+                <Grid key={index} xs={12} md={4}>
+                  <PricingPlan {...plan} />
+                </Grid>
+              ))}
             </Grid>
           </Container>
         </Box>

@@ -6,8 +6,8 @@ import { prisma } from "src/app/db/db";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  const clientId = searchParams.get("clientId");
-  const clientSecret = searchParams.get("clientSecret");
+  const clientId = process.env.NEXT_PUBLIC_TINK_CLIENT_ID;
+  const clientSecret = process.env.TINK_CLIENT_SECRET;
   const landlordId = searchParams.get("landlordId");
 
   if (!code || !clientId || !clientSecret || !landlordId) {

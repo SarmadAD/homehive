@@ -60,10 +60,8 @@ const rentPayments = {
 };
 
 const tinkToken = {
-  generate: (code: string, clientId: string, clientSecret: string, landlordId: string) =>
-    requests.get<void>(
-      `/api/dashboard/settings/integrations/?code=${code}&clientId=${clientId}&clientSecret=${clientSecret}&landlordId=${landlordId}`
-    ),
+  generate: (code: string, landlordId: string) =>
+    requests.get<void>(`/api/dashboard/settings/integrations/?code=${code}&landlordId=${landlordId}`),
 };
 
 const token = {

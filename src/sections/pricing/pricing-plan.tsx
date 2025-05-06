@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import type { Theme } from "@mui/material/styles/createTheme";
+import { useUser } from "src/hooks/use-user";
 
 interface PricingPlanProps {
   cta: string;
@@ -21,11 +22,14 @@ interface PricingPlanProps {
   popular?: boolean;
   price: string;
   subscription: boolean;
+  link: string;
+  priceId: string;
   sx?: SxProps<Theme>;
 }
 
 export const PricingPlan: FC<PricingPlanProps> = (props) => {
-  const { cta, currency, description, subscription, features, icon, name, popular, price, sx, ...other } = props;
+  const { cta, currency, description, subscription, features, icon, name, popular, price, link, sx, ...other } = props;
+  const { user } = useUser();
 
   return (
     <Card
@@ -107,23 +111,16 @@ export const PricingPlan: FC<PricingPlanProps> = (props) => {
             mt: 6,
           }}
         >
-          <Button fullWidth variant={popular ? "contained" : "outlined"}>
+          <Button
+            target="_blank"
+            href={link + "?prefilled_email=" + user.email}
+            fullWidth
+            variant={popular ? "contained" : "outlined"}
+          >
             {cta}
           </Button>
         </Box>
       </Box>
     </Card>
   );
-};
-
-PricingPlan.propTypes = {
-  cta: propTypes.string.isRequired,
-  currency: propTypes.string.isRequired,
-  description: propTypes.string.isRequired,
-  features: propTypes.array.isRequired,
-  icon: propTypes.any.isRequired,
-  name: propTypes.string.isRequired,
-  popular: propTypes.bool,
-  price: propTypes.string.isRequired,
-  sx: propTypes.object,
 };

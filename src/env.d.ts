@@ -34,16 +34,13 @@ export interface Env {
   NEXT_PUBLIC_SUPABASE_REF_ID?: string;
   NEXT_PUBLIC_SUPABASE_URL?: string;
   NEXT_PUBLIC_SUPABASE_ANON_KEY?: string;
-  NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY?: string;
+  SUPABASE_SERVICE_ROLE_KEY?: string;
 
   // Mapbox
   NEXT_PUBLIC_MAPBOX_API_KEY?: string;
 
   // Google Tag Manager
   NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID?: string;
-
-  // Resend
-  NEXT_PUBLIC_RESEND_API_KEY?: string;
 }
 
 declare global {
