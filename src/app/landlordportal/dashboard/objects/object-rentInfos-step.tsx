@@ -53,6 +53,15 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
         />
         <TextField
           fullWidth
+          label="Nebenkosten"
+          name="serviceCharges"
+          value={currentObject.rentalObjectInfo.serviceCharges}
+          onChange={handleChange}
+          type="number"
+        />
+        {/* </Stack> */}
+        {/* <TextField
+          fullWidth
           label="Heizkosten"
           name="heatingCosts"
           value={currentObject.rentalObjectInfo.heatingCosts}
@@ -77,7 +86,7 @@ export const ObjectRentInfosStep: FC<ObjectRentInfosStep> = (props) => {
           value={currentObject.rentalObjectInfo.electricityCosts}
           onChange={handleChange}
           type="number"
-        />
+        /> */}
       </Stack>
       {operation === "create" && (
         <Stack spacing={3} direction="column">

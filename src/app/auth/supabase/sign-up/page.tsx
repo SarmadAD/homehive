@@ -49,7 +49,7 @@ const schema = zod.object({
   // lastName: zod.string().min(1, { message: "Nachname ist erforderlich" }),
   email: zod.string().min(1, { message: "E-Mail ist erforderlich" }).email(),
   password: zod.string().min(6, { message: "Das Passwort muss mindestens 6 Zeichen lang sein" }),
-  terms: zod.boolean().refine((value) => value, "Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren."),
+  terms: zod.boolean().refine((value) => value, "Du musst die Allgemeinen Geschäftsbedingungen akzeptieren."),
 });
 
 type Values = zod.infer<typeof schema>;

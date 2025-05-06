@@ -260,7 +260,7 @@ const Page: PageType = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteRenterFromObject = async () => {
     try {
       const updatedRenters = (rentalObject.renter as Renter[]).filter((renter: Renter) => !selected.has(renter.id));
       await agent.renter.removeRentalObjectFromRenter(Array.from(selected), rentalObject.id);
@@ -278,7 +278,13 @@ const Page: PageType = () => {
     }
   };
 
+  function handleDeleteRentalObject() {
+    setAnchorElActionMenu(null);
+    setOpenDeleteModal(true);
+  }
+
   const handleAddRenter = () => {
+    setAnchorElActionMenu(null);
     setOpenAddRenterModal(true);
   };
 
@@ -309,9 +315,13 @@ const Page: PageType = () => {
     selectOne(row.id);
   }
 
-  function handleCancelDeleteModal() {
+  function handleCancelDeleteRenterFromRentalObjectModal() {
     setOpenDeleteModal(false);
     deselectAll();
+  }
+
+  function handleCancelDeleteRentalObject() {
+    setOpenDeleteModal(false);
   }
 
   const paginatedRenter = useMemo(() => {
@@ -480,18 +490,26 @@ const Page: PageType = () => {
                         anchorEl={anchorElActionMenu}
                         open={Boolean(anchorElActionMenu)}
                         onClose={handleActionMenuClose}
-                        PaperProps={{
-                          style: {
-                            maxHeight: 48 * 4.5,
+                        slotProps={{
+                          paper: {
+                            style: {
+                              maxHeight: 48 * 4.5,
+                            },
                           },
                         }}
                       >
-                        <MenuItem onClick={() => handleObjectDelete()}>
+                        <MenuItem onClick={() => handleAddRenter()} divider>
+                          <SvgIcon>
+                            <PlusCircle />
+                          </SvgIcon>
+                          Mieter hinzufügen
+                        </MenuItem>
+                        <MenuItem onClick={() => handleDeleteRentalObject()}>
                           <SvgIcon>
                             <DeleteOutline />
                           </SvgIcon>
                           Objekt löschen
-                        </MenuItem>
+                        </MenuItem>{" "}
                       </Menu>
                     </Stack>
                   </Stack>
@@ -596,9 +614,15 @@ const Page: PageType = () => {
         </Box>
       </Box>
       <DeleteModal
-        text={"Möchten Sie wirklich den Mieter von diesem Objekt löschen?"}
-        handleCancelDeleteModal={handleCancelDeleteModal}
-        onDelete={handleDelete}
+        text={"Möchtest Du wirklich den Mieter von diesem Objekt löschen?"}
+        handleCancelDeleteModal={handleCancelDeleteRenterFromRentalObjectModal}
+        onDelete={handleDeleteRenterFromObject}
+        openDeleteModal={openDeleteModal}
+      />
+      <DeleteModal
+        text={"Möchtest Du wirklich das Objekt löschen?"}
+        handleCancelDeleteModal={handleCancelDeleteRentalObject}
+        onDelete={handleObjectDelete}
         openDeleteModal={openDeleteModal}
       />
       <AddRenterModal

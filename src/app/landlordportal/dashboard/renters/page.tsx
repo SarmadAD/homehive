@@ -253,7 +253,7 @@ const Page: PageType = () => {
           </Container>
         </Box>{" "}
         <DeleteModal
-          text={"Möchten Sie wirklich den Mieter löschen?"}
+          text={"Möchtest du wirklich den Mieter löschen?"}
           handleCancelDeleteModal={handleCancelDeleteModal}
           onDelete={handleDelete}
           openDeleteModal={openDeleteModal}

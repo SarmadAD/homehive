@@ -65,11 +65,11 @@ export default function Page(): React.JSX.Element {
               }}
             >
               <Typography variant="h3" sx={{ textAlign: "center" }}>
-                Verwalten Sie Ihre Immobilien mühelos mit unserer Lösung
+                Verwalte deine Immobilien mühelos mit unserer Lösung{" "}
               </Typography>
               <Typography color="text.secondary" sx={{ my: 2, textAlign: "center" }} variant="body1">
-                Unsere benutzerfreundliche Plattform bietet eine maßgeschneiderte Möglichkeit, <br />
-                Ihre Immobilien effektiv zu verwalten und zu optimieren.
+                Unsere benutzerfreundliche Software macht es einfach, deine Immobilien effizient zu verwalten. Behalte
+                den Überblick über Mietzahlungen, Mieter, Objekte und mehr – alles auf einen Blick
               </Typography>
               {/* <Stack alignItems="center" direction="row" spacing={1}>
                 <Switch checked />

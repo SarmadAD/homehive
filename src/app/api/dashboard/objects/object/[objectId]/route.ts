@@ -90,9 +90,10 @@ export async function PUT(request: Request, { params }: { params: { objectId: st
           rentalObjectInfo: {
             update: {
               baseRent: rentalObject.rentalObjectInfo.baseRent,
-              electricityCosts: rentalObject.rentalObjectInfo.electricityCosts,
-              heatingCosts: rentalObject.rentalObjectInfo.heatingCosts,
-              waterCosts: rentalObject.rentalObjectInfo.waterCosts,
+              serviceCharges: rentalObject.rentalObjectInfo.serviceCharges,
+              // electricityCosts: rentalObject.rentalObjectInfo.electricityCosts,
+              // heatingCosts: rentalObject.rentalObjectInfo.heatingCosts,
+              // waterCosts: rentalObject.rentalObjectInfo.waterCosts,
             },
           },
         },

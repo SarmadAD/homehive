@@ -80,10 +80,11 @@ model Token {
 
 model RentalObjectInfo {
   id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  baseRent         Int
-  heatingCosts     Int
-  waterCosts       Int
-  electricityCosts Int
+  baseRent         Int?
+  serviceCharges   Int?
+  heatingCosts     Int?
+  waterCosts       Int?
+  electricityCosts Int?
   rentalObject     RentalObject?
 }
 

@@ -11,6 +11,7 @@ const rentalObjectInfos: RentalObjectInfo[] = [
   {
     id: "fe7743a0-0ae2-11ee-be56-0242ac120002",
     baseRent: 1000,
+    serviceCharges: 200,
     heatingCosts: 100,
     waterCosts: 50,
     electricityCosts: 75,
@@ -18,6 +19,7 @@ const rentalObjectInfos: RentalObjectInfo[] = [
   {
     id: "81b2bd44-0ae3-11ee-be56-0242ac120002",
     baseRent: 2000,
+    serviceCharges: 200,
     heatingCosts: 100,
     waterCosts: 50,
     electricityCosts: 75,
