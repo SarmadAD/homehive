@@ -27,8 +27,20 @@ interface PricingPlanProps {
   sx?: SxProps<Theme>;
 }
 
-export const PricingPlan: FC<PricingPlanProps> = (props) => {
-  const { cta, currency, description, subscription, features, icon, name, popular, price, link, sx, ...other } = props;
+export function PricingPlan({
+  cta,
+  currency,
+  description,
+  subscription,
+  features,
+  icon,
+  name,
+  popular,
+  price,
+  link,
+  sx,
+  ...other
+}: PricingPlanProps) {
   const { user } = useUser();
 
   return (
@@ -123,4 +135,4 @@ export const PricingPlan: FC<PricingPlanProps> = (props) => {
       </Box>
     </Card>
   );
-};
+}
