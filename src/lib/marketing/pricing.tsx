@@ -2,11 +2,11 @@ import { PricingPlanIcon } from "src/sections/pricing/pricing-plan-icon";
 
 export const pricingPlans = [
   {
-    cta: "Standard",
+    cta: "Monatlich starten",
     subscription: true,
     currency: "€",
     description: "Alles was wir haben",
-    features: ["Vermieter-Portal", "Mieter-Portal", "Mieteinnahmen einsehen", "Objekte erstellen", "Mieter einladen"],
+    features: ["Mieteinnahmen tracken", "Vermieter-Portal", "Mieter-Portal", "Objekte erstellen", "Mieter erstellen"],
     icon: <PricingPlanIcon name="standard" />,
     name: "Standard",
     price: "2,59",
@@ -19,11 +19,11 @@ export const pricingPlans = [
     },
   },
   {
-    cta: "Einmalig",
+    cta: "Für immer freischalten",
     subscription: false,
     currency: "€",
     description: "Alles was wir haben ein Lebenlang",
-    features: ["Vermieter-Portal", "Mieter-Portal", "Mieteinnahmen einsehen", "Objekte erstellen", "Mieter einladen"],
+    features: ["Mieteinnahmen tracken", "Vermieter-Portal", "Mieter-Portal", "Objekte erstellen", "Mieter erstellen"],
     icon: <PricingPlanIcon name="lifetime" />,
     name: "Einmalig",
     price: "39,99",

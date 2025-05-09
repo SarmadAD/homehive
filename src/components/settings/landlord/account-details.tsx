@@ -26,49 +26,6 @@ export function AccountDetails(): React.JSX.Element {
       />
       <CardContent>
         <Stack spacing={3}>
-          {/* <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-            <Box
-              sx={{
-                border: "1px dashed var(--mui-palette-divider)",
-                borderRadius: "50%",
-                display: "inline-flex",
-                p: "4px",
-              }}
-            >
-              <Box sx={{ borderRadius: "inherit", position: "relative" }}>
-                <Box
-                  sx={{
-                    alignItems: "center",
-                    bgcolor: "rgba(0, 0, 0, 0.5)",
-                    borderRadius: "inherit",
-                    bottom: 0,
-                    color: "var(--mui-palette-common-white)",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "center",
-                    left: 0,
-                    opacity: 0,
-                    position: "absolute",
-                    right: 0,
-                    top: 0,
-                    zIndex: 1,
-                    "&:hover": { opacity: 1 },
-                  }}
-                >
-                  <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-                    <CameraIcon fontSize="var(--icon-fontSize-md)" />
-                    <Typography color="inherit" variant="subtitle2">
-                      Select
-                    </Typography>
-                  </Stack>
-                </Box>
-                <Avatar src="/assets/avatar.png" sx={{ "--Avatar-size": "100px" }} />
-              </Box>
-            </Box>
-            <Button color="secondary" size="small">
-              Remove
-            </Button>
-          </Stack> */}
           <Stack spacing={2}>
             <FormControl disabled>
               <InputLabel>Full name</InputLabel>

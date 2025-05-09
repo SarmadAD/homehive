@@ -53,8 +53,10 @@ const userRoles = {
 };
 
 const rentPayments = {
-  checkForNewTransactions: (landlordId: string, renterId: string) =>
-    requests.post<void>(`/api/rentPayments/?landlordId=${landlordId}&renterId=${renterId}`, {}),
+  checkForNewTransactionsForRenter: (landlordId: string, renterId: string) =>
+    requests.post<void>(`/api/rentPayments/renter/?landlordId=${landlordId}&renterId=${renterId}`, {}),
+  checkForNewTransactions: (landlordId: string) =>
+    requests.post<void>(`/api/rentPayments/?landlordId=${landlordId}`, {}),
   update: (rentPayment: RentPayment) => requests.put<void>(`/api/rentPayments/${rentPayment.id}`, rentPayment),
   list: (landlordId: string) => requests.get<RentPayment[]>(`/api/rentPayments/?landlordId=${landlordId}`),
 };

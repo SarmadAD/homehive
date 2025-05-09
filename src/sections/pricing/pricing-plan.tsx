@@ -125,7 +125,7 @@ export function PricingPlan({
         >
           <Button
             target="_blank"
-            href={link + "?prefilled_email=" + user.email}
+            href={`${link}?prefilled_email=${user?.email}&client_reference_id=${user?.id}`}
             fullWidth
             variant={popular ? "contained" : "outlined"}
           >

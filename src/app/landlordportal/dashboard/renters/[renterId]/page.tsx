@@ -141,7 +141,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   async function getRentPayments() {
     try {
       setIsLoadingPayments(true);
-      await agent.rentPayments.checkForNewTransactions(landlord.id, renterId ?? "");
+      await agent.rentPayments.checkForNewTransactionsForRenter(landlord.id, renterId ?? "");
       setRentPayments(renter.rentPayment);
     } catch (error) {
       console.log(error);

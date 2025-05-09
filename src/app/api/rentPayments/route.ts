@@ -23,10 +23,9 @@ export async function POST(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const landlordId = searchParams.get("landlordId");
-    const renterId = searchParams.get("renterId");
 
-    if (!landlordId || !renterId) {
-      return NextResponse.json({ error: "Missing required parameter: landlordId or renterId" }, { status: 400 });
+    if (!landlordId) {
+      return NextResponse.json({ error: "Missing required parameter: landlordId" }, { status: 400 });
     }
     const tokenResponse = await fetch(`${request.nextUrl.origin}/api/token?landlordId=${landlordId}`);
     if (!tokenResponse.ok) {
@@ -54,12 +53,9 @@ export async function POST(request: NextRequest) {
     const transactionsResponse = await tinkResponse.json();
     const transactions = transactionsResponse.transactions;
 
-    const renter = await prisma.renter.findFirst({
-      where: { id: renterId },
-      include: { rentalObject: { include: { rentalObjectInfo: true } } },
+    const rentPayments = await prisma.rentPayment.findMany({
+      where: { landlordId },
     });
-
-    const rentalObjectInfo = renter?.rentalObject?.rentalObjectInfo;
 
     if (rentalObjectInfo) {
       // Add here more criteria
@@ -82,7 +78,7 @@ export async function POST(request: NextRequest) {
 
       // Neue RentPayment-Einträge erstellen
       for (const transaction of filteredTransactions) {
-        const transactionId = transaction.identifiers?.providerTransactionId;
+        const transactionId = transaction.id;
 
         // Überprüfen, ob die transactionId bereits in RentPayment existiert
         const existingPayment = await prisma.rentPayment.findFirst({

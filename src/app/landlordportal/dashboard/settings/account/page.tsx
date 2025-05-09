@@ -4,11 +4,12 @@ import * as React from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AccountDetails } from "src/components/settings/landlord/account-details";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useEffect } from "react";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { useUser } from "src/hooks/use-user";
+import { Subscription } from "src/components/settings/landlord/subscription";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -19,6 +20,9 @@ import { useUser } from "src/hooks/use-user";
 export default function Page(): React.JSX.Element {
   const setLandlord = useSetRecoilState(currentUserAtom);
   const { user } = useUser();
+  const landlord = useRecoilValue(currentUserAtom);
+
+  const canSeeSubscriptionCard = "hasAccess" in landlord && landlord?.hasAccess;
 
   useEffect(() => {
     getLandlord();
@@ -44,6 +48,11 @@ export default function Page(): React.JSX.Element {
       <Stack spacing={4}>
         <AccountDetails />
       </Stack>
+      {canSeeSubscriptionCard && (
+        <Stack spacing={4}>
+          <Subscription />
+        </Stack>
+      )}
     </Stack>
   );
 }
