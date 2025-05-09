@@ -50,48 +50,42 @@ export async function POST(request: NextRequest) {
         (transaction: any) => {
           const totalRent = (rentalObjectInfo.baseRent ?? 0) + (rentalObjectInfo.serviceCharges ?? 0);
 
-          const transactionAmount =
-            parseInt(transaction?.amount?.value?.unscaledValue) /
-            Math.pow(10, parseInt(transaction?.amount?.value?.scale));
+          const transactionAmount = parseInt(transaction?.amount?.value?.unscaledValue) / Math.pow(10, parseInt(transaction?.amount?.value?.scale));
 
           return Math.abs(transactionAmount) === totalRent;
         },
       ];
 
-      const filteredTransactions = transactions.filter((transaction: any) =>
-        searchCriteria.some((criterion) => criterion(transaction))
-      );
+      const filteredTransactions = transactions.filter((transaction: any) => searchCriteria.some((criterion) => criterion(transaction)));
 
       // Neue RentPayment-Einträge erstellen
       for (const transaction of filteredTransactions) {
-        const transactionId = transaction.id;
+        const transactionId = transaction.identifiers?.providerTransactionId;
 
         // Überprüfen, ob die transactionId bereits in RentPayment existiert
-        const existingPayment = await prisma.rentPayment.findFirst({
+        const existingPayment = await prisma.rentPayment.findUnique({
           where: { transactionId, renterId },
         });
 
         if (!existingPayment) {
           // RentPayment erstellen, wenn die transactionId nicht existiert
 
-          const transactionAmount =
-            parseInt(transaction?.amount?.value?.unscaledValue) /
-            Math.pow(10, parseInt(transaction?.amount?.value?.scale));
+          const transactionAmount = parseInt(transaction?.amount?.value?.unscaledValue) / Math.pow(10, parseInt(transaction?.amount?.value?.scale));
 
           await prisma.rentPayment.create({
             data: {
               transactionId,
+              renterId,
               landlordId,
               paymentAmount: Math.abs(transactionAmount),
               paymentDate: new Date(transaction.dates?.booked),
               dueDate: new Date(),
               status: transaction.status === "BOOKED" ? "PAID" : "NOTPAID",
-              renterId: renterId!,
               rentalObjectId: renter?.rentalObject?.id!,
             },
           });
         } else {
-          console.log(`RentPayment mit transactionId ${transactionId} existiert bereits.`);
+          console.log(`RentPayment mit transactionId ${transactionId} existiert bereits`);
         }
       }
       return NextResponse.json(filteredTransactions);

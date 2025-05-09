@@ -166,9 +166,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   }
 
   const isLoadingPaymentsAll =
-    isLoadingPayments ||
-    renterLoadable.state === "loading" ||
-    (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "");
+    isLoadingPayments || renterLoadable.state === "loading" || (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "");
 
   let sortedRentPayments: RentPayment[] = [];
   if (!isLoadingPaymentsAll) {
@@ -335,10 +333,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                   </Grid>
                   <Grid lg={8} xs={12}>
                     <Card>
-                      <RentPaymentFilters
-                        sortDir={sortDir}
-                        path={`${paths.landlordportal.dashboard.renters.details}${renterId}`}
-                      />
+                      <RentPaymentFilters sortDir={sortDir} path={`${paths.landlordportal.dashboard.renters.details}${renterId}`} />
                       <Divider />{" "}
                       <Box sx={{ overflowX: "auto" }}>
                         <PaidRents rentPayments={paginatedRentPayments} isLoadingPayments={isLoadingPaymentsAll} />

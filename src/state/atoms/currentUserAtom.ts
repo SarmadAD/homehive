@@ -1,4 +1,4 @@
-import { Landlord } from "@prisma/client";
+import { Landlord } from "prisma/types/landlord";
 import { Renter } from "prisma/types/renter";
 import { atom } from "recoil";
 

@@ -44,13 +44,8 @@ const columns = [
   {
     formatter: (row): React.JSX.Element => (
       <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-        <Tooltip
-          key={getRenterName(row.renter.firstname, row.renter.surname)}
-          title={getRenterName(row.renter.firstname, row.renter.surname)}
-        >
-          <Avatar sx={{ bgcolor: "#8a94a6", height: 42, width: 42 }}>
-            {getInitials(getRenterName(row.renter.firstname, row.renter.surname))}
-          </Avatar>
+        <Tooltip key={getRenterName(row.renter.firstname, row.renter.surname)} title={getRenterName(row.renter.firstname, row.renter.surname)}>
+          <Avatar sx={{ bgcolor: "#8a94a6", height: 42, width: 42 }}>{getInitials(getRenterName(row.renter.firstname, row.renter.surname))}</Avatar>
         </Tooltip>
         <div>
           <Typography variant="subtitle2">{getRenterName(row.renter.firstname, row.renter.surname)}</Typography>

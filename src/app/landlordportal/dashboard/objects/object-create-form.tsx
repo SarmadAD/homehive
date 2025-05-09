@@ -16,6 +16,7 @@ import { useRouter } from "src/hooks/use-router";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
 import { RentPayment } from "prisma/types/rentPayment";
 import { getDueDateOfRent } from "src/utils/getDueDate";
+import { defaultLandlord } from "prisma/types/landlord";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -68,20 +69,11 @@ export const ObjectCreateForm: FC = () => {
     return [
       {
         label: "Basisinformationen",
-        content: (
-          <ObjectBasicInfosStep
-            onBack={handleBack}
-            onNext={handleNext}
-            newObject={newObject}
-            setNewObject={setNewObject}
-          />
-        ),
+        content: <ObjectBasicInfosStep onBack={handleBack} onNext={handleNext} newObject={newObject} setNewObject={setNewObject} />,
       },
       {
         label: "Objektinformationen",
-        content: (
-          <ObjectInfosStep onBack={handleBack} onNext={handleNext} newObject={newObject} setNewObject={setNewObject} />
-        ),
+        content: <ObjectInfosStep onBack={handleBack} onNext={handleNext} newObject={newObject} setNewObject={setNewObject} />,
       },
       {
         label: "Mietinformationen",
@@ -153,7 +145,7 @@ export const ObjectCreateForm: FC = () => {
       // const rentPayments = createRentPayment();
       setNewObject({
         ...newObject,
-        landlord: landlord,
+        landlord: "hasAccess" in landlord ? landlord : defaultLandlord,
         createdAt: new Date(),
         rentalAgreement: rentalAgreements,
         // rentPayment: rentPayments,

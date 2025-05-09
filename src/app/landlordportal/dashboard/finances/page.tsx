@@ -1,34 +1,20 @@
 "use client";
 
-import {
-  Box,
-  Container,
-  Stack,
-  Typography,
-  Unstable_Grid2 as Grid,
-  Divider,
-  Card,
-  CardHeader,
-  Avatar,
-  TablePagination,
-} from "@mui/material";
+import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Divider, Card } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
 import { useSettings } from "src/hooks/use-settings";
-import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import type { Page as PageType } from "src/types/page";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import React from "react";
 import { useUser } from "src/hooks/use-user";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 import { RentPaymentFilters } from "src/sections/dashboard/finances/rent-payment-filters";
 import { paths } from "src/paths";
-import { filter } from "lodash";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { RentPayment } from "prisma/types/rentPayment";
@@ -44,13 +30,18 @@ interface PageProps {
 
 export default function Page({ searchParams }: PageProps): React.JSX.Element {
   usePageView();
-  const settings = useSettings();
-  const setLandlord = useSetRecoilState(currentUserAtom);
-  const rentPaymentsLoadable = useRecoilValueLoadable(rentPaymentsAtom);
-  const [isLoading, setIsLoading] = useState(false);
-  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
+  const settings = useSettings();
   const { user } = useUser();
+
+  const setLandlord = useSetRecoilState(currentUserAtom);
+  const landlord = useRecoilValue(currentUserAtom);
+
+  const rentPaymentsLoadable = useRecoilValueLoadable(rentPaymentsAtom);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
   useEffect(() => {
     getLandlord();
@@ -86,6 +77,21 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
       return dateB - dateA;
     });
+  }
+
+  useEffect(() => {
+    if (landlord.id) {
+      getRentPayments();
+    }
+  }, [landlord]);
+
+  async function getRentPayments() {
+    try {
+      await agent.rentPayments.checkForNewTransactions(landlord.id);
+      // setRentPayments("hasAccess" in landlord && landlord.rentPayments ? landlord.rentPayments : []);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   let sortedRentPayments: RentPayment[] = [];
@@ -130,10 +136,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                   <RentPaymentFilters sortDir={sortDir} path={paths.landlordportal.dashboard.finances.index} />
                   <Divider />{" "}
                   <Box sx={{ overflowX: "auto" }}>
-                    <PaidRents
-                      rentPayments={paginatedRentPayments}
-                      isLoadingPayments={isLoading || rentPaymentsLoadable.state === "loading"}
-                    />
+                    <PaidRents rentPayments={paginatedRentPayments} isLoadingPayments={isLoading || rentPaymentsLoadable.state === "loading"} />
                   </Box>
                   <Divider />
                   <GeneralPagination

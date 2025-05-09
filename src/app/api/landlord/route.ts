@@ -1,4 +1,3 @@
-import { Landlord } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "src/app/db/db";
