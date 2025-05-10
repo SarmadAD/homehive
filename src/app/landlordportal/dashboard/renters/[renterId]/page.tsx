@@ -73,6 +73,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const rentPaymentsLoadable = useRecoilValueLoadable(rentPaymentsAtom);
+
   const [isLoading, setIsLoading] = useState(false);
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
@@ -146,7 +147,8 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
       await agent.rentPayments.checkForNewTransactionsForRenter(landlord.id, renterId ?? "");
     } catch (error) {
       console.log(error);
-   
+    } finally {
+    }
   }
 
   function applySort(rentPayments: RentPayment[], sortDir: "asc" | "desc" | undefined): RentPayment[] {
