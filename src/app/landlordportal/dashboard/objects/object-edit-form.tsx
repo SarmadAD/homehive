@@ -10,10 +10,11 @@ import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
 import { RentalObject } from "prisma/types/objects";
 import agent from "src/api/agent";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "src/hooks/use-router";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
+import { paths } from "src/paths";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -49,6 +50,7 @@ export const ObjectEditForm: FC = () => {
 
   const rentalObject = useRecoilValue(rentalObjectAtom);
   const [currentObject, setCurrentObject] = useState<RentalObject>(rentalObject);
+  const setRentalObject = useSetRecoilState(rentalObjectAtom);
 
   const router = useRouter();
 
@@ -68,25 +70,11 @@ export const ObjectEditForm: FC = () => {
     return [
       {
         label: "Basisinformationen",
-        content: (
-          <ObjectBasicInfosStep
-            onBack={handleBack}
-            onNext={handleNext}
-            newObject={currentObject}
-            setNewObject={setCurrentObject}
-          />
-        ),
+        content: <ObjectBasicInfosStep onBack={handleBack} onNext={handleNext} newObject={currentObject} setNewObject={setCurrentObject} />,
       },
       {
         label: "Objektinformationen",
-        content: (
-          <ObjectInfosStep
-            onBack={handleBack}
-            onNext={handleNext}
-            newObject={currentObject}
-            setNewObject={setCurrentObject}
-          />
-        ),
+        content: <ObjectInfosStep onBack={handleBack} onNext={handleNext} newObject={currentObject} setNewObject={setCurrentObject} />,
       },
       {
         label: "Mietinformationen",
@@ -122,10 +110,11 @@ export const ObjectEditForm: FC = () => {
       setCurrentObject({
         ...currentObject,
       });
+      setRentalObject({ ...currentObject });
 
       updateRentalObject(object);
       setIsComplete(false);
-      router.push("/landlordportal/dashboard/objects");
+      router.push(`${paths.landlordportal.dashboard.objects.details}${encodeURIComponent(object.id)}`);
     }
   }, [isComplete]);
 

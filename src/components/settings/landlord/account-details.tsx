@@ -27,10 +27,12 @@ export function AccountDetails(): React.JSX.Element {
       <CardContent>
         <Stack spacing={3}>
           <Stack spacing={2}>
-            <FormControl disabled>
-              <InputLabel>Full name</InputLabel>
-              <OutlinedInput defaultValue={user?.name} name="fullName" />
-            </FormControl>
+            {user?.name && (
+              <FormControl disabled>
+                <InputLabel>Name</InputLabel>
+                <OutlinedInput defaultValue={user?.name} name="fullName" />
+              </FormControl>
+            )}
             <FormControl disabled>
               <InputLabel>E-Mail-Adresse</InputLabel>
               <OutlinedInput name="email" type="email" value={user?.email} />

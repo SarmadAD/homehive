@@ -1,6 +1,5 @@
 import { useRecoilValue } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import { userRoleAtom } from "src/state/atoms/userRoleAtom";
 import { permissionSelector } from "src/state/selectors/permissionSelector";
 
 interface Props {

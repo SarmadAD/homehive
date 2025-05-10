@@ -80,10 +80,7 @@ const useCurrentRenter = (renters?: Renter[], renterId?: string): Renter | undef
   }, [renters, renterId]);
 };
 
-const useCurrentRepairRequest = (
-  repairRequests?: RepairRequest[],
-  repairRequestId?: string
-): RepairRequest | undefined => {
+const useCurrentRepairRequest = (repairRequests?: RepairRequest[], repairRequestId?: string): RepairRequest | undefined => {
   return useMemo((): RepairRequest | undefined => {
     if (!repairRequestId) {
       return undefined;
@@ -126,14 +123,16 @@ const Page: PageType = () => {
   const currentRenter = useCurrentRenter(rentalObject?.renter as Renter[], dialog.data);
   const currentRepairRequest = useCurrentRepairRequest(rentalObject?.repairRequests as RepairRequest[], dialog.data);
 
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openDeleteModalForRenter, setOpenDeleteModalForRenter] = useState(false);
+  const [openDeleteModalForRentalObject, setOpenDeleteModalForRentalObject] = useState(false);
   const [openAddRenterModal, setOpenAddRenterModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // Renter Menu Three Dots Menu
   const [anchorElRenterThreeDotsMenu, setAnchorElRenterThreeDotsMenu] = React.useState<null | HTMLElement>(null);
   const openRenterThreeDotsMenu = Boolean(anchorElRenterThreeDotsMenu);
-  const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: Renter) => {
+    selectOne(row.id);
     setAnchorElRenterThreeDotsMenu(event.currentTarget);
   };
   const handleCloseRenterThreeDotsMenu = () => {
@@ -274,13 +273,13 @@ const Page: PageType = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setOpenDeleteModal(false);
+      setOpenDeleteModalForRenter(false);
     }
   };
 
   function handleDeleteRentalObject() {
     setAnchorElActionMenu(null);
-    setOpenDeleteModal(true);
+    setOpenDeleteModalForRentalObject(true);
   }
 
   const handleAddRenter = () => {
@@ -309,19 +308,18 @@ const Page: PageType = () => {
     }
   };
 
-  function handleDeleteModalOpen(row: Renter) {
-    handleCloseRenterThreeDotsMenu();
-    setOpenDeleteModal(true);
-    selectOne(row.id);
+  function handleDeleteModalOpenForRenter() {
+    setAnchorElRenterThreeDotsMenu(null);
+    setOpenDeleteModalForRenter(true);
   }
 
   function handleCancelDeleteRenterFromRentalObjectModal() {
-    setOpenDeleteModal(false);
+    setOpenDeleteModalForRenter(false);
     deselectAll();
   }
 
   function handleCancelDeleteRentalObject() {
-    setOpenDeleteModal(false);
+    setOpenDeleteModalForRentalObject(false);
   }
 
   const paginatedRenter = useMemo(() => {
@@ -357,7 +355,7 @@ const Page: PageType = () => {
             aria-controls={openRenterThreeDotsMenu ? "basic-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={openRenterThreeDotsMenu ? "true" : undefined}
-            onClick={handleClickRenterThreeDotsMenu}
+            onClick={(event) => handleClickRenterThreeDotsMenu(event, row)}
           >
             <SvgIcon>
               <DotsVertical />
@@ -372,7 +370,7 @@ const Page: PageType = () => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={() => handleDeleteModalOpen(row)}>Löschen</MenuItem>
+            <MenuItem onClick={() => handleDeleteModalOpenForRenter()}>Löschen</MenuItem>
           </Menu>
         </div>
       ),
@@ -455,11 +453,7 @@ const Page: PageType = () => {
                         <Skeleton variant="circular" width={64} height={64} />
                       )}
                       <Stack spacing={1}>
-                        {rentalObject?.name ? (
-                          <Typography variant="h4">{rentalObject.name}</Typography>
-                        ) : (
-                          <Skeleton width={150} height={32} />
-                        )}
+                        {rentalObject?.name ? <Typography variant="h4">{rentalObject.name}</Typography> : <Skeleton width={150} height={32} />}
                       </Stack>
                     </Stack>
                     <Stack alignItems="center" direction="row" spacing={2}>
@@ -561,7 +555,14 @@ const Page: PageType = () => {
                         isLoading={isLoading}
                         rowStartIcon={<User03 />}
                         selectable
-                      />
+                      />{" "}
+                      {!rentalObject.renter.length && !isLoading ? (
+                        <Box sx={{ p: 3 }}>
+                          <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
+                            Es wurden noch kein Mieter diesem Objekt zugewiesen
+                          </Typography>
+                        </Box>
+                      ) : null}
                       <Divider />
                       <GeneralPagination
                         rowsPerPage={paginationState.rowsPerPage}
@@ -604,12 +605,7 @@ const Page: PageType = () => {
               handleCanceledRepairRequest={handleCanceledRepairRequest}
             />
           ) : (
-            <RenterDrawer
-              container={rootRef.current}
-              onClose={dialog.handleClose}
-              open={dialog.open}
-              renter={currentRenter}
-            />
+            <RenterDrawer container={rootRef.current} onClose={dialog.handleClose} open={dialog.open} renter={currentRenter} />
           )}
         </Box>
       </Box>
@@ -617,13 +613,13 @@ const Page: PageType = () => {
         text={"Möchtest Du wirklich den Mieter von diesem Objekt löschen?"}
         handleCancelDeleteModal={handleCancelDeleteRenterFromRentalObjectModal}
         onDelete={handleDeleteRenterFromObject}
-        openDeleteModal={openDeleteModal}
+        openDeleteModal={openDeleteModalForRenter}
       />
       <DeleteModal
         text={"Möchtest Du wirklich das Objekt löschen?"}
         handleCancelDeleteModal={handleCancelDeleteRentalObject}
         onDelete={handleObjectDelete}
-        openDeleteModal={openDeleteModal}
+        openDeleteModal={openDeleteModalForRentalObject}
       />
       <AddRenterModal
         setOpenAddRenterModal={setOpenAddRenterModal}

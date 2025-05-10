@@ -1,15 +1,13 @@
 "use client";
 
 import * as React from "react";
-import Checkbox from "@mui/material/Checkbox";
 import Table from "@mui/material/Table";
 import type { TableProps } from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Box, Button, IconButton, Skeleton, Stack } from "@mui/material";
-import PlusCircle from "@untitled-ui/icons-react/build/cjs/PlusCircle";
+import { Box, Skeleton, Stack } from "@mui/material";
 
 export interface ColumnDef<TRowModel> {
   align?: "left" | "right" | "center";
@@ -189,13 +187,7 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
                     {columns.map(
                       (column): React.JSX.Element => (
                         <TableCell key={column.name} sx={{ ...(column.align && { textAlign: column.align }) }}>
-                          {
-                            (column.formatter
-                              ? column.formatter(row, index)
-                              : column.field
-                                ? row[column.field]
-                                : null) as React.ReactNode
-                          }
+                          {(column.formatter ? column.formatter(row, index) : column.field ? row[column.field] : null) as React.ReactNode}
                         </TableCell>
                       )
                     )}

@@ -14,9 +14,8 @@ import { useRecoilValue } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
-import { RentPayment } from "prisma/types/rentPayment";
-import { getDueDateOfRent } from "src/utils/getDueDate";
 import { defaultLandlord } from "prisma/types/landlord";
+import { paths } from "src/paths";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -97,6 +96,8 @@ export const ObjectCreateForm: FC = () => {
         const response = await agent.objects.create(newObject);
         if ("error" in response) {
           throw new Error(String(response.error));
+        } else if (response.id) {
+          return response;
         }
       }
     } catch (error) {
@@ -105,6 +106,7 @@ export const ObjectCreateForm: FC = () => {
   }
 
   function createRentalAgreement() {
+    // DAs klappt sowiso noch nicht. Das wird garnicht gefüllt
     const rentalAgreements: RentalAgreement[] = newObject.renter.map((renter) => {
       const newRentalAgreement: RentalAgreement = {
         id: "",
@@ -118,46 +120,29 @@ export const ObjectCreateForm: FC = () => {
     return rentalAgreements;
   }
 
-  // function createRentPayment() {
-  //   const rentPayments: RentPayment[] = newObject.renter.map((renter) => {
-  //     const newRentPayment: RentPayment = {
-  //       id: "",
-  //       renter: renter,
-  //       renterId: renter.id,
-  //       rentalObjectId: newObject.id,
-  //       rentalObject: newObject,
-  //       paymentDate: null,
-  //       dueDate: getDueDateOfRent(renter.rentalAgreement ? renter.rentalAgreement.dueDateState : "FIRSTMONTH"),
-  //       paymentAmount:
-  //         newObject.rentalObjectInfo.baseRent +
-  //         newObject.rentalObjectInfo.electricityCosts +
-  //         newObject.rentalObjectInfo.waterCosts +
-  //         newObject.rentalObjectInfo.heatingCosts,
-  //     };
-  //     return newRentPayment;
-  //   });
-  //   return rentPayments;
-  // }
-
   useEffect(() => {
     if (isComplete && newObject) {
-      const rentalAgreements = createRentalAgreement();
-      // const rentPayments = createRentPayment();
+      const rentalAgreements = createRentalAgreement(); // DAs klappt sowiso noch nicht. Das wird garnicht gefüllt
       setNewObject({
         ...newObject,
         landlord: "hasAccess" in landlord ? landlord : defaultLandlord,
         createdAt: new Date(),
         rentalAgreement: rentalAgreements,
-        // rentPayment: rentPayments,
       });
     }
   }, [isComplete]);
 
   useEffect(() => {
     if (isComplete && newObject.landlord.id) {
-      createRentalObject();
-      setIsComplete(false);
-      router.push("/landlordportal/dashboard/objects");
+      (async () => {
+        const newRentalObject = await createRentalObject();
+        setIsComplete(false);
+        if (newRentalObject && newRentalObject.id) {
+          router.push(`${paths.landlordportal.dashboard.objects.details}${encodeURIComponent(newRentalObject.id)}`);
+        } else {
+          router.push("/landlordportal/dashboard/objects");
+        }
+      })();
     }
   }, [newObject.landlord]);
 

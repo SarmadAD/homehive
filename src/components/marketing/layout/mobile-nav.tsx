@@ -55,7 +55,7 @@ export function MobileNav({ onClose, open = false }: MobileNavProps): React.JSX.
           "--NavItem-color": "var(--mui-palette-text-secondary)",
           "--NavItem-hover-background": "var(--mui-palette-action-hover)",
           "--NavItem-active-background": "var(--mui-palette-action-selected)",
-          "--NavItem-active-color": "var(--mui-palette-text-primary)",
+          "--NavItem-active-color": "var(--lette-text-primary)",
           "--NavItem-disabled-color": "var(--mui-palette-text-disabled)",
           "--NavItem-icon-color": "var(--mui-palette-neutral-500)",
           "--NavItem-icon-active-color": "var(--mui-palette-primary-main)",
@@ -83,23 +83,13 @@ export function MobileNav({ onClose, open = false }: MobileNavProps): React.JSX.
   );
 }
 
-function renderNavGroups({
-  items,
-  onClose,
-  pathname,
-}: {
-  items: NavItemConfig[];
-  onClose?: () => void;
-  pathname: string;
-}): React.JSX.Element {
+function renderNavGroups({ items, onClose, pathname }: { items: NavItemConfig[]; onClose?: () => void; pathname: string }): React.JSX.Element {
   const children = items.reduce((acc: React.ReactNode[], curr: NavItemConfig): React.ReactNode[] => {
     acc.push(
       <Stack component="li" key={curr.key} spacing={1.5}>
         {curr.title ? (
           <div>
-            <Typography sx={{ color: "var(--NavGroup-title-color)", fontSize: "0.875rem", fontWeight: 500 }}>
-              {curr.title}
-            </Typography>
+            <Typography sx={{ color: "var(--NavGroup-title-color)", fontSize: "0.875rem", fontWeight: 500 }}>{curr.title}</Typography>
           </div>
         ) : null}
         <div>{renderNavItems({ depth: 0, items: curr.items, onClose, pathname })}</div>
@@ -130,9 +120,7 @@ function renderNavItems({
   const children = items.reduce((acc: React.ReactNode[], curr: NavItemConfig): React.ReactNode[] => {
     const { items: childItems, key, ...item } = curr;
 
-    const forceOpen = childItems
-      ? Boolean(childItems.find((childItem) => childItem.href && pathname.startsWith(childItem.href)))
-      : false;
+    const forceOpen = childItems ? Boolean(childItems.find((childItem) => childItem.href && pathname.startsWith(childItem.href))) : false;
 
     acc.push(
       <NavItem depth={depth} forceOpen={forceOpen} key={key} onClose={onClose} pathname={pathname} {...item}>
@@ -220,17 +208,13 @@ function NavItem({
           ...(active && { bgcolor: "var(--NavItem-active-background)", color: "var(--NavItem-active-color)" }),
           ...(open && { color: "var(--NavItem-open-color)" }),
           "&:hover": {
-            ...(!disabled &&
-              !active && { bgcolor: "var(--NavItem-hover-background)", color: "var(--NavItem-hover-color)" }),
+            ...(!disabled && !active && { bgcolor: "var(--NavItem-hover-background)", color: "var(--NavItem-hover-color)" }),
           },
         }}
         tabIndex={0}
       >
         <Box sx={{ flex: "1 1 auto" }}>
-          <Typography
-            component="span"
-            sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}
-          >
+          <Typography component="span" sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}>
             {title}
           </Typography>
         </Box>
