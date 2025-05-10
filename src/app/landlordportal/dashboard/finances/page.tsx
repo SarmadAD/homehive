@@ -31,6 +31,7 @@ interface PageProps {
 export default function Page({ searchParams }: PageProps): React.JSX.Element {
   usePageView();
 
+  const { sortDir } = searchParams;
   const settings = useSettings();
   const { user } = useUser();
 
@@ -62,22 +63,6 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
       setIsLoading(false);
     }
   }
-  const { sortDir } = searchParams;
-
-  function applySort(rentPayments: RentPayment[], sortDir: "asc" | "desc" | undefined): RentPayment[] {
-    const paymentsCopy = [...rentPayments];
-
-    return paymentsCopy.sort((a, b) => {
-      const dateA = a.paymentDate ? new Date(a.paymentDate).getTime() : 0;
-      const dateB = b.paymentDate ? new Date(b.paymentDate).getTime() : 0;
-
-      if (sortDir === "asc") {
-        return dateA - dateB;
-      }
-
-      return dateB - dateA;
-    });
-  }
 
   useEffect(() => {
     if (landlord.id) {
@@ -92,6 +77,21 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  function applySort(rentPayments: RentPayment[], sortDir: "asc" | "desc" | undefined): RentPayment[] {
+    const paymentsCopy = [...rentPayments];
+
+    return paymentsCopy.sort((a, b) => {
+      const dateA = a.paymentDate ? new Date(a.paymentDate).getTime() : 0;
+      const dateB = b.paymentDate ? new Date(b.paymentDate).getTime() : 0;
+
+      if (sortDir === "asc") {
+        return dateA - dateB;
+      }
+
+      return dateB - dateA;
+    });
   }
 
   let sortedRentPayments: RentPayment[] = [];

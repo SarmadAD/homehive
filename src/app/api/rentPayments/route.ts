@@ -183,6 +183,32 @@ export async function POST(request: NextRequest) {
         status: "BOOKED",
         providerMutability: "MUTABILITY_UNDEFINED",
       },
+      {
+        id: "0590a73f8e7d45d9be7a22dc95715077",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-4500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-01-03",
+        },
+        identifiers: {
+          providerTransactionId: "1885",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
     ];
 
     const landlord = await prisma.landlord.findUnique({
@@ -204,8 +230,12 @@ export async function POST(request: NextRequest) {
           // Filtere die Transaktionen basierend auf der Miete des aktuellen rentalObject
           const transactionsForRentalObject = transactions.filter((transaction: any) => {
             const transactionAmount = parseInt(transaction?.amount?.value?.unscaledValue) / Math.pow(10, parseInt(transaction?.amount?.value?.scale));
+            // const containsRentKeyword =
+            //   transaction.descriptions?.original?.toLowerCase().includes("miete") ||
+            //   transaction.descriptions?.display?.toLowerCase().includes("miete");
 
             return Math.abs(transactionAmount) === totalRent;
+            // return Math.abs(transactionAmount) === totalRent && containsRentKeyword;
           });
 
           filteredTransactions.push(...transactionsForRentalObject);

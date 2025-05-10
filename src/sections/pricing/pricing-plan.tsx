@@ -21,7 +21,7 @@ interface PricingPlanProps {
   name: string;
   popular?: boolean;
   price: string;
-  subscription: boolean;
+  subscriptionText: string;
   link: string;
   priceId: string;
   sx?: SxProps<Theme>;
@@ -31,7 +31,7 @@ export function PricingPlan({
   cta,
   currency,
   description,
-  subscription,
+  subscriptionText,
   features,
   icon,
   name,
@@ -66,7 +66,7 @@ export function PricingPlan({
             {currency}
             {price}
           </Typography>
-          {subscription && (
+          {subscriptionText && (
             <Typography
               color="text.secondary"
               sx={{
@@ -75,7 +75,7 @@ export function PricingPlan({
               }}
               variant="subtitle2"
             >
-              /Monat
+              /{subscriptionText}
             </Typography>
           )}
         </Box>
