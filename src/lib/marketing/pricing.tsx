@@ -27,7 +27,7 @@ export const pricingPlans = [
     icon: <PricingPlanIcon name="standard" />,
     name: "Jährlich",
     price: "24,99",
-    discountPrice: "36",
+    discountPrice: 36,
     link: process.env.NODE_ENV === "development" ? "https://buy.stripe.com/test_fZu28ra6TcbhgKo9eC5gc03" : "",
     priceId: process.env.NODE_ENV === "development" ? "price_1RNJ8tFJT2pyPaEfjdBfNL5s" : "",
     sx: {
