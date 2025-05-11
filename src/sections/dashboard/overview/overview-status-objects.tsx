@@ -9,6 +9,7 @@ import {
   CardContent,
   Container,
   Divider,
+  Link,
   Stack,
   SvgIcon,
   Typography,
@@ -105,7 +106,10 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
         <Container maxWidth="sm">
           <CardContent sx={{ mt: 1 }}>
             <Typography color="text.secondary" variant="body2">
-              Lege Objekte an, um hier die Anzahl der bewohnten und unbewohnten Objekte zu sehen
+              <Link component={RouterLink} href={paths.landlordportal.dashboard.objects.index}>
+                Lege Objekte an
+              </Link>
+              , um hier die Anzahl der bewohnten und unbewohnten Objekte zu sehen
             </Typography>
           </CardContent>
         </Container>
