@@ -37,7 +37,7 @@ export const layoutConfig = {
         },
         {
           key: "pricing",
-          title: "Preis",
+          title: "Preise",
           href: paths.landlordportal.dashboard.pricing,
           icon: "credit-card",
         },

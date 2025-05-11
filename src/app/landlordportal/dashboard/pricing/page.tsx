@@ -13,10 +13,12 @@ import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { PricingPlan } from "src/sections/pricing/pricing-plan";
 import { pricingPlans } from "src/lib/marketing/pricing";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
+import { Chip, Stack, Switch } from "@mui/material";
 
 export default function Page(): React.JSX.Element {
   const setLandlord = useSetRecoilState(currentUserAtom);
   const [isLoading, setIsLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const { user } = useUser();
 
@@ -42,7 +44,7 @@ export default function Page(): React.JSX.Element {
 
   return (
     <>
-      <Seo title="Preis" />{" "}
+      <Seo title="Preise" />{" "}
       <RoleBasedGuard permission="/landlordportal/dashboard/pricing">
         <Box component="main" sx={{ flexGrow: 1 }}>
           <Box
@@ -65,21 +67,30 @@ export default function Page(): React.JSX.Element {
                   Verwalte deine Immobilien mühelos mit unserer Lösung{" "}
                 </Typography>
                 <Typography color="text.secondary" sx={{ my: 2, textAlign: "center" }} variant="body1">
-                  Unsere benutzerfreundliche Software macht es einfach, deine Immobilien effizient zu verwalten. Behalte
-                  den Überblick über Mietzahlungen, Mieter, Objekte und mehr – alles auf einen Blick
+                  Unsere benutzerfreundliche Software macht es einfach, deine Immobilien effizient zu verwalten. Behalte den Überblick über
+                  Mietzahlungen, Mieter, Objekte und mehr – alles auf einen Blick
                 </Typography>
                 {/* <Stack alignItems="center" direction="row" spacing={1}>
-                <Switch checked />
-                <Typography variant="body1">Jährliche Zahlung</Typography>
-                <Chip color="primary" label="25% OFF" size="small" />
-              </Stack> */}
+                  <Switch checked={checked} onChange={(event, checked) => setChecked(checked)} />
+                  <Typography variant="body1">Jährliche Zahlung</Typography>
+                  <Chip color="primary" label="Spare 30 %" size="small" />
+                </Stack> */}
               </Box>
               <Grid container spacing={6} justifyContent={"center"}>
-                {pricingPlans.map((plan, index) => (
-                  <Grid key={index} xs={12} md={4}>
-                    <PricingPlan {...plan} />
-                  </Grid>
-                ))}
+                {pricingPlans
+                  // .filter((plan) => (checked ? plan.name === "Jährlich" : plan.name === "Monatlich"))
+                  .map((plan, index) => (
+                    <Grid key={index} xs={12} md={4}>
+                      <PricingPlan {...plan} />
+                    </Grid>
+                  ))}
+                {/* {pricingPlans
+                  .filter((plan) => plan.name === "Einmalig")
+                  .map((plan, index) => (
+                    <Grid key={`einmalig-${index}`} xs={12} md={4}>
+                      <PricingPlan {...plan} />
+                    </Grid>
+                  ))} */}
               </Grid>
             </Container>
           </Box>

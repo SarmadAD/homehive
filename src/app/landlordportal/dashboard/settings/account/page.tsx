@@ -22,7 +22,7 @@ export default function Page(): React.JSX.Element {
   const { user } = useUser();
   const landlord = useRecoilValue(currentUserAtom);
 
-  const canSeeSubscriptionCard = "hasAccess" in landlord && landlord?.hasAccess;
+  const canSeeSubscriptionCard = "hasAccess" in landlord && landlord?.hasAccess && landlord?.priceId !== "price_1RLqlBFJT2pyPaEfkiFIo14q"; // Einmaliger plan price Id. Abändern, wenn live!
 
   useEffect(() => {
     getLandlord();

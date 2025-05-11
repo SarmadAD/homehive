@@ -100,7 +100,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
       setIsLoading(false);
     }
   }
-
+   
   async function setRenterId() {
     if (renterId) {
       setSelectedRenterIdAtom(renterId.toString() ?? "");
