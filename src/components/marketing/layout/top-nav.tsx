@@ -124,23 +124,14 @@ export function MainNav(): React.JSX.Element {
             }),
           }}
         >
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{ alignItems: "center", flex: "1 1 auto", p: 1, justifyContent: "space-between" }}
-          >
+          <Stack direction="row" spacing={2} sx={{ alignItems: "center", flex: "1 1 auto", p: 1, justifyContent: "space-between" }}>
             <Logo width={45} height={45} fontSize={17} showLogoName={true} />
             {user ? (
               <Button component="a" href={rederict} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Dashboard
               </Button>
             ) : (
-              <Button
-                component="a"
-                href={paths.auth.supabase.signIn}
-                sx={{ display: { xs: "none", md: "flex" } }}
-                variant="contained"
-              >
+              <Button component="a" href={paths.auth.supabase.signIn} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Einloggen
               </Button>
             )}
@@ -170,15 +161,7 @@ interface NavItemProps extends Omit<NavItemConfig, "key" | "items"> {
   pathname: string;
 }
 
-export function NavItem({
-  children,
-  disabled,
-  external,
-  href,
-  matcher,
-  pathname,
-  title,
-}: NavItemProps): React.JSX.Element {
+export function NavItem({ children, disabled, external, href, matcher, pathname, title }: NavItemProps): React.JSX.Element {
   const active = isNavItemActive({ disabled, external, href, matcher, pathname });
   const hasPopover = Boolean(children);
 
@@ -221,17 +204,13 @@ export function NavItem({
           }),
           ...(active && { color: "var(--mui-palette-common-white)" }),
           "&:hover": {
-            ...(!disabled &&
-              !active && { bgcolor: "rgba(255, 255, 255, 0.04)", color: "var(--mui-palette-common-white)" }),
+            ...(!disabled && !active && { bgcolor: "rgba(255, 255, 255, 0.04)", color: "var(--mui-palette-common-white)" }),
           },
         }}
         tabIndex={0}
       >
         <Box component="span" sx={{ flex: "1 1 auto" }}>
-          <Typography
-            component="span"
-            sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}
-          >
+          <Typography component="span" sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}>
             {title}
           </Typography>
         </Box>
