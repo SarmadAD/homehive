@@ -1,15 +1,8 @@
 import type { FC } from "react";
 import { useState } from "react";
-import PropTypes from "prop-types";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
 import ChevronRightIcon from "@untitled-ui/icons-react/build/esm/ChevronRight";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
-import Stack from "@mui/material/Stack";
-import SvgIcon from "@mui/material/SvgIcon";
-import Typography from "@mui/material/Typography";
+import { Box, Collapse, Container, Stack, SvgIcon, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 
 interface FaqType {
   question: string;
@@ -17,30 +10,43 @@ interface FaqType {
 }
 
 const faqs: FaqType[] = [
+  // {
+  //   question: "Kann ich HomeHive kostenlos testen?",
+  //   answer:
+  //     "Ja, du kannst monatlich kündigen und so die Plattform flexibel testen. Es gibt keinen kostenlosen Plan, aber die Einstiegskosten sind sehr gering.",
+  // },
   {
-    question: "Do you have a free demo to review the code before purchasing?",
+    question: "Für wen ist HomeHive geeignet?",
     answer:
-      "Yes, you can check out our open source dashboard template which should give you an overview of the code quality and folder structure. Keep in mind that some aspects may differ from this Paid version.",
+      "HomeHive richtet sich an private Vermieter und kleine Hausverwaltungen, die eine einfache und übersichtliche Lösung zur Mietverwaltung suchen.",
   },
   {
-    question: "How many projects can I build with Devias Kit PRO?",
+    question: "Was ist das Vermieter-Portal?",
     answer:
-      "The license is per project (domain), but if you intend to develop an unknown number of projects feel free to contact us and we'll find a solution.",
+      "Im Vermieter-Portal kannst du deine Objekte verwalten, Mieter einladen, Mieteingänge einsehen und deine Einnahmen übersichtlich analysieren.",
   },
   {
-    question: "How many projects can I build with this template?",
-    answer:
-      "Absolutely! If you intend to charge users for using your product Extended license is created specifically for this context.",
+    question: "Was ist das Mieter-Portal?",
+    answer: "Im Mieter-Portal sehen Mieter das ihnen zugewiesene Objekt und erhalten Informationen wie den Mietbetrag.",
   },
   {
-    question: "What browsers does the template support?",
+    question: "Wie funktioniert das Tracking der Mieteinnahmen?",
     answer:
-      "The components in MUI are designed to work in the latest, stable releases of all major browsers, including Chrome, Firefox, Safari, and Edge. We don't support Internet Explorer 11.",
+      "HomeHive speichert keine Bankdaten, sondern prüft lediglich deine Kontobewegungen auf mögliche Mieteingänge. Anhand von Betrag und den Verwendungszweck werden passende Transaktionen erkannt und im Dashboard angzeigt",
   },
   {
-    question: "For what kind of projects is the Standard license intended?",
+    question: "Was passiert nach dem Kauf?",
     answer:
-      "The Standard license is designed for internal applications in which staff will access the application. An example could be the back-office dashboard of a public-facing e-commerce website in which staff would sign in and manage inventory, customers, etc.",
+      "Nach dem Kauf bekommst du sofort Zugriff auf alle Funktionen. Dein Konto wird entsprechend deinem gewählten Plan aktiviert.",
+  },
+  {
+    question: "Was beinhaltet der Einmal-Kauf?",
+    answer: "Mit dem Einmal-Kauf erhältst du lebenslangen Zugriff auf HomeHive ohne weitere Kosten.",
+  },
+  {
+    question: "Wie kann ich mein Abo kündigen?",
+    answer:
+      "Du kannst dein Abo jederzeit unter den Kontoeinstellungen kündigen. Nach der Kündigung endet dein Zugang automatisch zum Ende des Abrechnungszeitraums.",
   },
 ];
 
@@ -68,21 +74,16 @@ const Faq: FC<FaqProps> = (props) => {
   );
 };
 
-Faq.propTypes = {
-  question: PropTypes.string.isRequired,
-  answer: PropTypes.string.isRequired,
-};
-
-export const HomeFaqs: FC = () => {
+export const HomeFaqs: FC = (props) => {
   return (
-    <Box sx={{ py: "120px" }}>
+    <Box sx={{ py: "120px" }} {...props}>
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid xs={12} md={6}>
             <Stack spacing={2}>
-              <Typography variant="h3">Everything you need to know</Typography>
+              <Typography variant="h3">Alles, was du wissen musst</Typography>
               <Typography color="text.secondary" variant="subtitle2">
-                Frequently asked questions
+                Häufig gestellte Fragen rund um HomeHive
               </Typography>
             </Stack>
           </Grid>
