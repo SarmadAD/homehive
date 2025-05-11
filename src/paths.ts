@@ -2,7 +2,14 @@ export const paths = {
   index: "/",
   checkout: "/checkout",
   contact: "/contact",
-  pricing: "/pricing",
+  marketing: {
+    legal: {
+      imprint: "/legal/imprint",
+      terms: "/legal/terms",
+      cancellation: "/legal/cancellation",
+      privacyPolicy: "/legal/privacypolicy",
+    },
+  },
   auth: {
     auth0: {
       callback: "/auth/auth0/callback",
