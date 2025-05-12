@@ -34,7 +34,7 @@ export default function PrivacyPage() {
           </Typography>
 
           <Typography variant="body1" sx={{ mt: 4 }} gutterBottom>
-            Wir nutzen folgende Dienste, die personenbezogene Daten verarbeiten können:
+            Wir nutzen folgende Dienste:
           </Typography>
           <List>
             <ListItem>
