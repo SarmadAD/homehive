@@ -169,13 +169,6 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     renterLoadable.state === "loading" ||
     (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "");
 
-  useEffect(() => {
-    console.log(rentPaymentsLoadable);
-    console.log(renterLoadable);
-    console.log(isLoadingPaymentsAll);
-    console.log(renterId);
-  }, [rentPaymentsLoadable, renterLoadable, isLoadingPaymentsAll, renterId]);
-
   let sortedRentPayments: RentPayment[] = [];
   if (!isLoadingPaymentsAll && rentPaymentsLoadable.state === "hasValue") {
     const rentPayments = rentPaymentsLoadable.contents.filter((rentPayment) => rentPayment.renterId === renterId);
