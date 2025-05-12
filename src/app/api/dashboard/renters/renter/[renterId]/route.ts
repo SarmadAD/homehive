@@ -5,7 +5,7 @@ import { prisma } from "src/app/db/db";
 export async function GET(request: Request, { params }: { params: { renterId: string } }) {
   const { renterId } = params;
   if (renterId) {
-    const renter = await prisma.renter.findFirst({
+    const renter = await prisma.renter.findUnique({
       where: { id: renterId },
       include: { rentPayment: true },
     });

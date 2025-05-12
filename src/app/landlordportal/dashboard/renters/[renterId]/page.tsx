@@ -62,11 +62,6 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   const { sortDir, renterId } = searchParams;
 
-  // const searchParams = useSearchParams();
-  // const renterId = searchParams?.get("renterId");
-
-  const renter = useRecoilValue(renterAtom);
-  // const searchParams = useSearchParams();
   const setLandlord = useSetRecoilState(currentUserAtom);
   const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
   const landlord = useRecoilValue(currentUserAtom);
@@ -77,6 +72,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
+  const renter = useRecoilValue(renterAtom);
   const renterLoadable = useRecoilValueLoadable(renterAtom);
 
   usePageView();
@@ -100,7 +96,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
       setIsLoading(false);
     }
   }
-   
+
   async function setRenterId() {
     if (renterId) {
       setSelectedRenterIdAtom(renterId.toString() ?? "");
@@ -170,6 +166,13 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     rentPaymentsLoadable.state === "loading" ||
     renterLoadable.state === "loading" ||
     (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "");
+
+  useEffect(() => {
+    console.log(rentPaymentsLoadable);
+    console.log(renterLoadable);
+    console.log(isLoadingPaymentsAll);
+    console.log(renterId);
+  }, [rentPaymentsLoadable, renterLoadable, isLoadingPaymentsAll, renterId]);
 
   let sortedRentPayments: RentPayment[] = [];
   if (!isLoadingPaymentsAll && rentPaymentsLoadable.state === "hasValue") {
