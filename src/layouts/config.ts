@@ -35,12 +35,12 @@ export const layoutConfig = {
           href: paths.landlordportal.dashboard.finances.index,
           icon: "hand-coins",
         },
-        {
-          key: "pricing",
-          title: "Preis",
-          href: paths.landlordportal.dashboard.pricing,
-          icon: "credit-card",
-        },
+        // {
+        //   key: "pricing",
+        //   title: "Preise",
+        //   href: paths.landlordportal.dashboard.pricing,
+        //   icon: "credit-card",
+        // },
         {
           key: "renterPortalObjects",
           title: "Objekte",

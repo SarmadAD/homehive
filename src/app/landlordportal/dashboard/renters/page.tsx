@@ -1,21 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Container,
-  Stack,
-  Typography,
-  Unstable_Grid2 as Grid,
-  CircularProgress,
-  Button,
-  SvgIcon,
-  Link,
-  IconButton,
-  Menu,
-  MenuItem,
-  Card,
-  Divider,
-} from "@mui/material";
+import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Button, SvgIcon, Link, Menu, MenuItem, Card, Divider } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
@@ -36,7 +21,6 @@ import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
 import { Renter } from "prisma/types/renter";
-import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { RouterLink } from "src/components/router-link";
 import { useUser } from "src/hooks/use-user";
 import { DotsVertical, User03 } from "@untitled-ui/icons-react";
@@ -68,7 +52,8 @@ const Page: PageType = () => {
   // Renter Menu Three Dots Menu
   const [anchorElRenterThreeDotsMenu, setAnchorElRenterThreeDotsMenu] = React.useState<null | HTMLElement>(null);
   const openRenterThreeDotsMenu = Boolean(anchorElRenterThreeDotsMenu);
-  const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: Renter) => {
+    selectOne(row.id);
     setAnchorElRenterThreeDotsMenu(event.currentTarget);
   };
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
@@ -78,7 +63,7 @@ const Page: PageType = () => {
     deselectAll();
   };
 
-  const { user, error } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     getLandlord();
@@ -113,10 +98,9 @@ const Page: PageType = () => {
     }
   };
 
-  function handleDeleteModalOpen(row: Renter) {
-    handleCloseRenterThreeDotsMenu();
+  function handleDeleteModalOpen() {
+    setAnchorElRenterThreeDotsMenu(null);
     setOpenDeleteModal(true);
-    selectOne(row.id);
   }
 
   function handleCancelDeleteModal() {
@@ -158,7 +142,7 @@ const Page: PageType = () => {
             aria-controls={openRenterThreeDotsMenu ? "basic-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={openRenterThreeDotsMenu ? "true" : undefined}
-            onClick={handleClickRenterThreeDotsMenu}
+            onClick={(event) => handleClickRenterThreeDotsMenu(event, row)}
           >
             <SvgIcon>
               <DotsVertical />
@@ -173,7 +157,7 @@ const Page: PageType = () => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={() => handleDeleteModalOpen(row)}>Löschen</MenuItem>
+            <MenuItem onClick={() => handleDeleteModalOpen()}>Löschen</MenuItem>
           </Menu>
         </div>
       ),
@@ -185,7 +169,6 @@ const Page: PageType = () => {
   return (
     <>
       <Seo title="Mieter" />
-
       <RoleBasedGuard permission="/landlordportal/dashboard/renters">
         <Box
           component="main"
@@ -239,6 +222,13 @@ const Page: PageType = () => {
                     rowStartIcon={<User03 />}
                     selectable
                   />{" "}
+                  {!renters.length && !isLoading ? (
+                    <Box sx={{ p: 3 }}>
+                      <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
+                        Es wurden noch keine Mieter angelegt
+                      </Typography>
+                    </Box>
+                  ) : null}
                   <Divider />
                   <GeneralPagination
                     rowsPerPage={paginationState.rowsPerPage}

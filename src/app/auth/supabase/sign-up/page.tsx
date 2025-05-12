@@ -49,12 +49,13 @@ const schema = zod.object({
   // lastName: zod.string().min(1, { message: "Nachname ist erforderlich" }),
   email: zod.string().min(1, { message: "E-Mail ist erforderlich" }).email(),
   password: zod.string().min(6, { message: "Das Passwort muss mindestens 6 Zeichen lang sein" }),
-  terms: zod.boolean().refine((value) => value, "Du musst die Allgemeinen Geschäftsbedingungen akzeptieren."),
+  // terms: zod.boolean().refine((value) => value, "Du musst die Allgemeinen Geschäftsbedingungen akzeptieren."),
 });
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { email: "", password: "", terms: false } satisfies Values;
+// const defaultValues = { email: "", password: "", terms: false } satisfies Values;
+const defaultValues = { email: "", password: "" } satisfies Values;
 
 const Page = () => {
   const router = useRouter();
@@ -217,7 +218,7 @@ const Page = () => {
                     </FormControl>
                   )}
                 />
-                <Controller
+                {/* <Controller
                   control={control}
                   name="terms"
                   render={({ field }) => (
@@ -226,18 +227,23 @@ const Page = () => {
                         control={<Checkbox {...field} />}
                         label={
                           <React.Fragment>
-                            Ich habe die <Link>Allgemeinen Geschäftsbedingungen</Link> gelesen.
+                            Mit der Registrierung akzeptiere ich <Link href={paths.marketing.legal.terms}>AGB</Link> &
+                            <Link href={paths.marketing.legal.privacyPolicy}>Datenschutzerklärung</Link>.
                           </React.Fragment>
                         }
                       />
                       {errors.terms ? <FormHelperText error>{errors.terms.message}</FormHelperText> : null}
                     </div>
                   )}
-                />
+                /> */}
                 {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
                 <Button disabled={isPending} type="submit" variant="contained">
                   Konto erstellen
                 </Button>
+                <Typography color="text.secondary" variant="body2" sx={{ textAlign: "center" }}>
+                  Mit der Registrierung akzeptiere ich <Link href={paths.marketing.legal.terms}>AGB</Link> &
+                  <Link href={paths.marketing.legal.privacyPolicy}> Datenschutzerklärung</Link>.
+                </Typography>
               </Stack>
             </form>
           </Stack>

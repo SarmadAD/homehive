@@ -18,14 +18,31 @@ import { NavItemConfig } from "src/types/nav";
 import { isNavItemActive } from "src/lib/is-nav-item-active";
 import { MobileNav } from "./mobile-nav";
 import agent from "src/api/agent";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { logger } from "src/lib/default-logger";
+import { useWindowScroll } from "src/hooks/use-window-scroll";
 
 export function MainNav(): React.JSX.Element {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const [rederict, setRederict] = useState<string>("");
   const { user } = useUser();
 
+  const [elevate, setElevate] = useState<boolean>(false);
+  const offset = 64;
+  const delay = 100;
+
+  const handleWindowScroll = useCallback((): void => {
+    if (window.scrollY > offset) {
+      setElevate(true);
+    } else {
+      setElevate(false);
+    }
+  }, []);
+
+  useWindowScroll({
+    handler: handleWindowScroll,
+    delay,
+  });
   async function checkIfUserIsLandlord() {
     let result = false;
     try {
@@ -79,33 +96,42 @@ export function MainNav(): React.JSX.Element {
   return (
     <React.Fragment>
       <Box
+        component="header"
         sx={{
           left: 0,
-          position: "sticky",
+          position: "fixed",
           right: 0,
           top: 0,
-          zIndex: "var(--MainNav-zIndex)",
-          backgroundColor: "white",
+          pt: 2,
+          zIndex: (theme) => theme.zIndex.appBar,
         }}
       >
-        <Container maxWidth="lg" sx={{ display: "flex", minHeight: "var(--MainNav-height)", py: "16px" }}>
-          <Logo width={45} height={45} fontSize={17} showLogoName={true} />
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{ alignItems: "center", flex: "1 1 auto", justifyContent: "flex-end" }}
-          >
+        <Container
+          maxWidth="lg"
+          sx={{
+            backdropFilter: "blur(6px)",
+            backgroundColor: "transparent",
+            borderRadius: 2.5,
+            boxShadow: "none",
+            transition: (theme) =>
+              theme.transitions.create("box-shadow, background-color", {
+                easing: theme.transitions.easing.easeInOut,
+                duration: 200,
+              }),
+            ...(elevate && {
+              backgroundColor: "white",
+              boxShadow: 8,
+            }),
+          }}
+        >
+          <Stack direction="row" spacing={2} sx={{ alignItems: "center", flex: "1 1 auto", p: 1, justifyContent: "space-between" }}>
+            <Logo width={45} height={45} fontSize={17} showLogoName={true} />
             {user ? (
               <Button component="a" href={rederict} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Dashboard
               </Button>
             ) : (
-              <Button
-                component="a"
-                href={paths.auth.supabase.signIn}
-                sx={{ display: { xs: "none", md: "flex" } }}
-                variant="contained"
-              >
+              <Button component="a" href={paths.auth.supabase.signIn} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Einloggen
               </Button>
             )}
@@ -135,15 +161,7 @@ interface NavItemProps extends Omit<NavItemConfig, "key" | "items"> {
   pathname: string;
 }
 
-export function NavItem({
-  children,
-  disabled,
-  external,
-  href,
-  matcher,
-  pathname,
-  title,
-}: NavItemProps): React.JSX.Element {
+export function NavItem({ children, disabled, external, href, matcher, pathname, title }: NavItemProps): React.JSX.Element {
   const active = isNavItemActive({ disabled, external, href, matcher, pathname });
   const hasPopover = Boolean(children);
 
@@ -186,17 +204,13 @@ export function NavItem({
           }),
           ...(active && { color: "var(--mui-palette-common-white)" }),
           "&:hover": {
-            ...(!disabled &&
-              !active && { bgcolor: "rgba(255, 255, 255, 0.04)", color: "var(--mui-palette-common-white)" }),
+            ...(!disabled && !active && { bgcolor: "rgba(255, 255, 255, 0.04)", color: "var(--mui-palette-common-white)" }),
           },
         }}
         tabIndex={0}
       >
         <Box component="span" sx={{ flex: "1 1 auto" }}>
-          <Typography
-            component="span"
-            sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}
-          >
+          <Typography component="span" sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}>
             {title}
           </Typography>
         </Box>

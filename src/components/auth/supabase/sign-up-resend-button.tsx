@@ -33,15 +33,23 @@ export function SignUpResendButton({ children, email }: SignUpResendButtonProps)
       type: "signup",
       options: { emailRedirectTo: redirectToUrl.href },
     });
-
     if (error) {
-      setSubmitError(error.message);
+      console.log(error.status);
+      if (error.status === 429) {
+        const match = error.message.match(/\d+/);
+        const time = match ? ` (${match[0]})` : "";
+        setSubmitError(
+          `Bitte warte aus Sicherheitsgründen noch ${time} Sekunden, bevor du eine neue Anfrage senden kannst.`
+        );
+      } else {
+        setSubmitError(error.message);
+      }
       setIsPending(false);
       return;
     }
 
     setIsPending(false);
-    toast.success("Verification email sent");
+    toast.success("E-Mail gesendet");
   }, [supabaseClient, email]);
 
   return (

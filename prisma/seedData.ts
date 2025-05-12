@@ -4,6 +4,9 @@ const landlords: Landlord[] = [
   {
     id: "04e35c74-0ae3-11ee-be56-0242ac120002",
     authenticatedUserId: "BeispielId",
+    customerId: "",
+    hasAccess: false,
+    priceId: "",
   },
 ];
 

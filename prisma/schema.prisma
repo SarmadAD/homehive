@@ -57,7 +57,10 @@ model Renter {
 
 model Landlord {
   id                  String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  authenticatedUserId String         @db.Uuid
+  authenticatedUserId String         @unique @db.Uuid
+  hasAccess           Boolean        @default(false)
+  priceId             String?
+  customerId          String?        @unique
   rentalObjects       RentalObject[]
   renters             Renter[]
   tokens              Token[]
@@ -124,14 +127,15 @@ model RentPayment {
   rentalObject   RentalObject      @relation(fields: [rentalObjectId], references: [id])
   landlord       Landlord          @relation(fields: [landlordId], references: [id])
   status         RentPaymentStatus
-  transactionId  String?
   paymentAmount  Float
   paymentDate    DateTime?
   dueDate        DateTime
+  transactionId  String?           @unique
   renterId       String            @db.Uuid
   rentalObjectId String            @db.Uuid
   landlordId     String            @db.Uuid
 
+  @@unique([transactionId, renterId])
   @@index([renterId])
   @@index([rentalObjectId])
   @@index([landlordId])

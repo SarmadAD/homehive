@@ -46,6 +46,7 @@ import { RentPayment } from "@prisma/client";
 import { RentPaymentFilters } from "src/sections/dashboard/finances/rent-payment-filters";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
+import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -71,9 +72,9 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   const landlord = useRecoilValue(currentUserAtom);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [rentPayments, setRentPayments] = useState<RentPayment[]>([]);
-  const [isLoadingPayments, setIsLoadingPayments] = useState(false);
+  const rentPaymentsLoadable = useRecoilValueLoadable(rentPaymentsAtom);
 
+  const [isLoading, setIsLoading] = useState(false);
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
   const renterLoadable = useRecoilValueLoadable(renterAtom);
@@ -87,6 +88,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   async function getLandlord() {
     try {
+      setIsLoading(true);
       const authenticatedUserId = user?.id;
       if (authenticatedUserId) {
         const landlord = await agent.landlord.details(authenticatedUserId);
@@ -94,9 +96,11 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
-
+   
   async function setRenterId() {
     if (renterId) {
       setSelectedRenterIdAtom(renterId.toString() ?? "");
@@ -140,13 +144,10 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   async function getRentPayments() {
     try {
-      setIsLoadingPayments(true);
-      await agent.rentPayments.checkForNewTransactions(landlord.id, renterId ?? "");
-      setRentPayments(renter.rentPayment);
+      await agent.rentPayments.checkForNewTransactionsForRenter(landlord.id, renterId ?? "");
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoadingPayments(false);
     }
   }
 
@@ -166,12 +167,13 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   }
 
   const isLoadingPaymentsAll =
-    isLoadingPayments ||
+    rentPaymentsLoadable.state === "loading" ||
     renterLoadable.state === "loading" ||
     (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "");
 
   let sortedRentPayments: RentPayment[] = [];
-  if (!isLoadingPaymentsAll) {
+  if (!isLoadingPaymentsAll && rentPaymentsLoadable.state === "hasValue") {
+    const rentPayments = rentPaymentsLoadable.contents.filter((rentPayment) => rentPayment.renterId === renterId);
     sortedRentPayments = applySort(rentPayments, sortDir);
   }
 
@@ -335,10 +337,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                   </Grid>
                   <Grid lg={8} xs={12}>
                     <Card>
-                      <RentPaymentFilters
-                        sortDir={sortDir}
-                        path={`${paths.landlordportal.dashboard.renters.details}${renterId}`}
-                      />
+                      <RentPaymentFilters sortDir={sortDir} path={`${paths.landlordportal.dashboard.renters.details}${renterId}`} />
                       <Divider />{" "}
                       <Box sx={{ overflowX: "auto" }}>
                         <PaidRents rentPayments={paginatedRentPayments} isLoadingPayments={isLoadingPaymentsAll} />

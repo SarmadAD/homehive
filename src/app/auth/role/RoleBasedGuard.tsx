@@ -1,4 +1,5 @@
 import { useRecoilValue } from "recoil";
+import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { permissionSelector } from "src/state/selectors/permissionSelector";
 
 interface Props {
@@ -8,8 +9,11 @@ interface Props {
 
 export const RoleBasedGuard = ({ children, permission }: Props) => {
   const checkPermission = useRecoilValue(permissionSelector);
-
-  if (!checkPermission(permission)) {
+  const currentLandlord = useRecoilValue(currentUserAtom);
+  if (
+    !checkPermission(permission) ||
+    (permission === "/landlordportal/dashboard/pricing" && "hasAccess" in currentLandlord && currentLandlord.hasAccess)
+  ) {
     return null;
   }
 

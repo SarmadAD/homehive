@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid } from "@mui/material";
+import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Backdrop, CircularProgress } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { useSettings } from "src/hooks/use-settings";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
@@ -43,6 +43,14 @@ export default function Page(): React.JSX.Element {
       setIsLoading(false);
     }
   }
+
+  // if (isLoading) {
+  //   return (
+  //     <Backdrop sx={(theme) => ({ color: "var(--mui-palette-primary-main)", zIndex: theme.zIndex.drawer + 1 })} open={isLoading}>
+  //       <CircularProgress color="inherit" />
+  //     </Backdrop>
+  //   );
+  // }
 
   return (
     <>

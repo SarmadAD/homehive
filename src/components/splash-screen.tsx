@@ -26,7 +26,7 @@
 //         width: 48,
 //       }}
 //     >
-//       <Logo />
+//       <Logo width={60} height={60} />
 //     </Box>
 //   </Box>
 // );

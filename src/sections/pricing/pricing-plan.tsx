@@ -21,9 +21,10 @@ interface PricingPlanProps {
   name: string;
   popular?: boolean;
   price: string;
-  subscription: boolean;
+  subscriptionText: string;
   link: string;
   priceId: string;
+  discountPrice?: number;
   sx?: SxProps<Theme>;
 }
 
@@ -31,7 +32,8 @@ export function PricingPlan({
   cta,
   currency,
   description,
-  subscription,
+  subscriptionText,
+  discountPrice,
   features,
   icon,
   name,
@@ -61,12 +63,25 @@ export function PricingPlan({
         >
           {icon}
         </Box>
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {discountPrice && (
+            <Typography
+              color="text.secondary"
+              sx={{
+                textDecoration: "line-through",
+                mr: 1,
+              }}
+              variant="h6"
+            >
+              {currency}
+              {discountPrice}
+            </Typography>
+          )}
           <Typography variant="h4">
             {currency}
             {price}
           </Typography>
-          {subscription && (
+          {subscriptionText && (
             <Typography
               color="text.secondary"
               sx={{
@@ -75,7 +90,7 @@ export function PricingPlan({
               }}
               variant="subtitle2"
             >
-              /Monat
+              /{subscriptionText}
             </Typography>
           )}
         </Box>
@@ -124,8 +139,7 @@ export function PricingPlan({
           }}
         >
           <Button
-            target="_blank"
-            href={link + "?prefilled_email=" + user.email}
+            href={`${link}?prefilled_email=${user?.email}&client_reference_id=${user?.id}`}
             fullWidth
             variant={popular ? "contained" : "outlined"}
           >

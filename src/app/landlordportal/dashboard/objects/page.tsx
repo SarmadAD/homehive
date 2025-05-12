@@ -17,6 +17,7 @@ import {
   MenuItem,
   Card,
   Divider,
+  Backdrop,
 } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { useSettings } from "src/hooks/use-settings";
@@ -42,7 +43,6 @@ import { useUser } from "src/hooks/use-user";
 import { RouterLink } from "src/components/router-link";
 import { DotsVertical, Home02 } from "@untitled-ui/icons-react";
 import { toast } from "src/components/toaster";
-import { beenYellow } from "src/styles/theme/colors";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 
@@ -131,7 +131,8 @@ const Page: PageType = () => {
   // Rental Object Menu Three Dots Menu
   const [anchorElRentalObjectThreeDotsMenu, setAnchorElRentalObjectThreeDotsMenu] = useState<null | HTMLElement>(null);
   const openRentalObjectThreeDotsMenu = Boolean(anchorElRentalObjectThreeDotsMenu);
-  const handleClickRentalObjectThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickRentalObjectThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: RentalObject) => {
+    selectOne(row.id);
     setAnchorElRentalObjectThreeDotsMenu(event.currentTarget);
   };
   const handleCloseRentalObjectThreeDotsMenu = () => {
@@ -140,7 +141,7 @@ const Page: PageType = () => {
   };
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  const { user, error } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     getLandlord();
@@ -165,7 +166,6 @@ const Page: PageType = () => {
   async function handleDelete() {
     try {
       const deltedObject = await agent.objects.delete(Array.from(selected)[0]);
-
       const updatedRentalObjects = rentalObjects.filter((object) => object.id !== deltedObject.id);
       setRentalObjects(updatedRentalObjects);
       toast.success("Objekt erfolgreich gelöscht");
@@ -176,10 +176,9 @@ const Page: PageType = () => {
     }
   }
 
-  function handleDeleteModalOpen(row: RentalObject) {
-    handleCloseRentalObjectThreeDotsMenu();
+  function handleDeleteModalOpen() {
+    setAnchorElRentalObjectThreeDotsMenu(null);
     setOpenDeleteModal(true);
-    selectOne(row.id);
   }
 
   function handleCancelDeleteModal() {
@@ -212,10 +211,7 @@ const Page: PageType = () => {
             {row.renter
               ?.filter((renter) => renter.state !== 0)
               .map((renter) => (
-                <Tooltip
-                  key={getRenterName(renter.firstname, renter.surname)}
-                  title={getRenterName(renter.firstname, renter.surname)}
-                >
+                <Tooltip key={getRenterName(renter.firstname, renter.surname)} title={getRenterName(renter.firstname, renter.surname)}>
                   <Avatar src={row.image} sx={{ bgcolor: "#8a94a6", height: 42, width: 42 }}>
                     {getInitials(getRenterName(renter.firstname, renter.surname))}
                   </Avatar>
@@ -244,7 +240,7 @@ const Page: PageType = () => {
             aria-controls={openRentalObjectThreeDotsMenu ? "basic-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={openRentalObjectThreeDotsMenu ? "true" : undefined}
-            onClick={handleClickRentalObjectThreeDotsMenu}
+            onClick={(event) => handleClickRentalObjectThreeDotsMenu(event, row)}
           >
             <SvgIcon>
               <DotsVertical />
@@ -259,7 +255,7 @@ const Page: PageType = () => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={() => handleDeleteModalOpen(row)}>Löschen</MenuItem>
+            <MenuItem onClick={() => handleDeleteModalOpen()}>Löschen</MenuItem>
           </Menu>
         </div>
       ),
@@ -267,6 +263,14 @@ const Page: PageType = () => {
       align: "right",
     },
   ] satisfies ColumnDef<RentalObject>[];
+
+  // if (isLoading) {
+  //   return (
+  //     <Backdrop sx={(theme) => ({ color: "var(--mui-palette-primary-main)", zIndex: theme.zIndex.drawer + 1 })} open={isLoading}>
+  //       <CircularProgress color="inherit" />
+  //     </Backdrop>
+  //   );
+  // }
 
   return (
     <>
@@ -330,7 +334,14 @@ const Page: PageType = () => {
                     isLoading={isLoading}
                     rowStartIcon={<Home02 />}
                     selectable
-                  />
+                  />{" "}
+                  {!rentalObjects.length && !isLoading ? (
+                    <Box sx={{ p: 3 }}>
+                      <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
+                        Es wurden noch keine Objekte angelegt
+                      </Typography>
+                    </Box>
+                  ) : null}
                   <Divider />
                   <GeneralPagination
                     rowsPerPage={paginationState.rowsPerPage}

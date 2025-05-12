@@ -1,5 +1,6 @@
-import { Landlord, RentalObjectInfo, Token } from "@prisma/client";
+import { RentalObjectInfo, Token } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
+import { Landlord } from "prisma/types/landlord";
 import { RentalObject } from "prisma/types/objects";
 import { Renter } from "prisma/types/renter";
 import { RentPayment } from "prisma/types/rentPayment";
@@ -35,8 +36,7 @@ const landlord = {
 
 const renter = {
   details: (authenticatedUserId: string) => requests.get<Renter>(`/api/renter?aId=${authenticatedUserId}`),
-  removeRentalObjectFromRenter: (renters: string[], rentalObjectId: string) =>
-    requests.patch<Renter>(`/api/renter`, { renters, rentalObjectId }),
+  removeRentalObjectFromRenter: (renters: string[], rentalObjectId: string) => requests.patch<Renter>(`/api/renter`, { renters, rentalObjectId }),
 };
 
 const renters = {
@@ -53,15 +53,15 @@ const userRoles = {
 };
 
 const rentPayments = {
-  checkForNewTransactions: (landlordId: string, renterId: string) =>
-    requests.post<void>(`/api/rentPayments/?landlordId=${landlordId}&renterId=${renterId}`, {}),
+  checkForNewTransactionsForRenter: (landlordId: string, renterId: string) =>
+    requests.post<void>(`/api/rentPayments/renter/?landlordId=${landlordId}&renterId=${renterId}`, {}),
+  checkForNewTransactions: (landlordId: string) => requests.post<void>(`/api/rentPayments/?landlordId=${landlordId}`, {}),
   update: (rentPayment: RentPayment) => requests.put<void>(`/api/rentPayments/${rentPayment.id}`, rentPayment),
   list: (landlordId: string) => requests.get<RentPayment[]>(`/api/rentPayments/?landlordId=${landlordId}`),
 };
 
 const tinkToken = {
-  generate: (code: string, landlordId: string) =>
-    requests.get<void>(`/api/dashboard/settings/integrations/?code=${code}&landlordId=${landlordId}`),
+  generate: (code: string, landlordId: string) => requests.get<void>(`/api/dashboard/settings/integrations/?code=${code}&landlordId=${landlordId}`),
 };
 
 const token = {

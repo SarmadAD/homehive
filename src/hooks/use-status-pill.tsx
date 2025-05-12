@@ -66,7 +66,7 @@ export const useRentalObjectStatusPill = (rentalObject: RentalObject): JSX.Eleme
     },
   };
   let status: RentalObjectStatus = RentalObjectStatus.UNINHABITED;
-  if (rentalObject.renter.length > 0) {
+  if (rentalObject.renter?.length > 0) {
     status = RentalObjectStatus.INHABITED;
   }
   const { text, color } = map[status];

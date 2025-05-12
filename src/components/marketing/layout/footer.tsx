@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { Logo } from "src/components/logo";
 import { RouterLink } from "src/components/router-link";
 import { NavItemConfig } from "src/types/nav";
+import { paths } from "src/paths";
 
 interface GroupConfig {
   key: string;
@@ -17,31 +18,16 @@ interface GroupConfig {
 }
 
 const groups = [
-  // {
-  //   key: "Portale",
-  //   title: "Portale",
-  //   items: [
-  //     { key: "vermieterportal", title: "Vermieterportal", href: paths.landlordportal.dashboard.index },
-  //     { key: "mieterportal", title: "Mieterportal", href: paths.renterportal.dashboard.objects.index },
-  //   ],
-  // },
-  // {
-  //   key: "legal",
-  //   title: "Legal",
-  //   items: [
-  //     { key: "terms-and-conditions", title: "Terms & Conditions" },
-  //     { key: "privacy-policy", title: "License" },
-  //     { key: "contact", title: "Contact" },
-  //   ],
-  // },
-  // {
-  //   key: "social",
-  //   title: "Social",
-  //   items: [
-  //     { key: "instagram", title: "Instagram" },
-  //     { key: "linkedin", title: "LinkedIn" },
-  //   ],
-  // },
+  {
+    key: "legal",
+    title: "Rechtliches",
+    items: [
+      { key: "terms-and-conditions", title: "AGB", href: paths.marketing.legal.terms },
+      { key: "cancellation", title: "Widerrufsbelehrung", href: paths.marketing.legal.cancellation },
+      { key: "privacy-policy", title: "Datenschutzerklärung", href: paths.marketing.legal.privacyPolicy },
+      { key: "imprint ", title: "Impressum", href: paths.marketing.legal.imprint },
+    ],
+  },
 ] satisfies GroupConfig[];
 
 const date = new Date();
@@ -71,7 +57,7 @@ export function Footer(): React.JSX.Element {
               </Typography>
             </Stack>
           </Grid>
-          {/* {groups.map((section, index) => (
+          {groups.map((section, index) => (
             <Grid key={section.key} md={3} sm={4} sx={{ order: { md: index + 2, xs: index + 1 } }} xs={12}>
               <Typography color="text.secondary" variant="overline">
                 {section.title}
@@ -82,7 +68,7 @@ export function Footer(): React.JSX.Element {
                 ))}
               </Stack>
             </Grid>
-          ))} */}
+          ))}
         </Grid>
         <Divider sx={{ my: 2 }} />
         <Typography color="text.secondary" variant="caption">

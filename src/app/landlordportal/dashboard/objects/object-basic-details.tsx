@@ -12,10 +12,7 @@ export const ObjectBasicDetails: FC = () => {
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   const align = lgUp ? "horizontal" : "vertical";
 
-  if (
-    rentalObjectLoadable.state === "loading" ||
-    (rentalObjectLoadable.state === "hasValue" && rentalObjectLoadable.contents.id === "")
-  ) {
+  if (rentalObjectLoadable.state === "loading" || (rentalObjectLoadable.state === "hasValue" && rentalObjectLoadable.contents.id === "")) {
     return (
       <Card>
         <CardHeader title="Basisinformationen" />
@@ -51,11 +48,7 @@ export const ObjectBasicDetails: FC = () => {
     <Card>
       <CardHeader title="Basisinformationen" />
       <PropertyList>
-        <PropertyListItem
-          divider
-          label="Straße"
-          value={`${address} ${houseNr} ${additionalHouseDetails ? additionalHouseDetails : ""}`}
-        />
+        <PropertyListItem divider label="Straße" value={`${address} ${houseNr} ${additionalHouseDetails ? additionalHouseDetails : ""}`} />
         <PropertyListItem divider label="Ort" value={`${postalCode} ${city}`} />
         <PropertyListItem divider label="Fläche" value={areaSize?.toString()} />
         <PropertyListItem divider align={align} label="Wohnstatus">

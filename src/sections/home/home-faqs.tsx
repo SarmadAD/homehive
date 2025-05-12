@@ -1,100 +1,133 @@
 import type { FC } from "react";
 import { useState } from "react";
-import PropTypes from "prop-types";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
 import ChevronRightIcon from "@untitled-ui/icons-react/build/esm/ChevronRight";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
-import Stack from "@mui/material/Stack";
-import SvgIcon from "@mui/material/SvgIcon";
-import Typography from "@mui/material/Typography";
+import {
+  Box,
+  Collapse,
+  Container,
+  Stack,
+  SvgIcon,
+  Typography,
+  Unstable_Grid2 as Grid,
+  Card,
+  Chip,
+} from "@mui/material";
+import { Question as QuestionIcon } from "@phosphor-icons/react/dist/ssr/Question";
+import { CaretDown as CaretDownIcon } from "@phosphor-icons/react/dist/ssr/CaretDown";
+import { CaretRight as CaretRightIcon } from "@phosphor-icons/react/dist/ssr/CaretRight";
 
-interface FaqType {
-  question: string;
-  answer: string;
-}
-
-const faqs: FaqType[] = [
+const faqs = [
+  // {
+  //   question: "Kann ich HomeHive kostenlos testen?",
+  //   answer:
+  //     "Ja, du kannst monatlich kündigen und so die Plattform flexibel testen. Es gibt keinen kostenlosen Plan, aber die Einstiegskosten sind sehr gering.",
+  // },
   {
-    question: "Do you have a free demo to review the code before purchasing?",
+    id: "faq-1",
+    question: "Für wen ist HomeHive geeignet?",
     answer:
-      "Yes, you can check out our open source dashboard template which should give you an overview of the code quality and folder structure. Keep in mind that some aspects may differ from this Paid version.",
+      "HomeHive richtet sich an private Vermieter und kleine Hausverwaltungen, die eine einfache und übersichtliche Lösung zur Mietverwaltung suchen.",
   },
   {
-    question: "How many projects can I build with Devias Kit PRO?",
+    id: "faq-2",
+    question: "Was ist das Vermieter-Portal?",
     answer:
-      "The license is per project (domain), but if you intend to develop an unknown number of projects feel free to contact us and we'll find a solution.",
+      "Im Vermieter-Portal kannst du deine Objekte verwalten, Mieter einladen, Mieteingänge einsehen und deine Einnahmen übersichtlich analysieren.",
   },
   {
-    question: "How many projects can I build with this template?",
-    answer:
-      "Absolutely! If you intend to charge users for using your product Extended license is created specifically for this context.",
+    id: "faq-3",
+    question: "Was ist das Mieter-Portal?",
+    answer: "Im Mieter-Portal sehen Mieter das ihnen zugewiesene Objekt und erhalten Informationen wie den Mietbetrag.",
   },
   {
-    question: "What browsers does the template support?",
+    id: "faq-4",
+    question: "Wie funktioniert das Tracking der Mieteinnahmen?",
     answer:
-      "The components in MUI are designed to work in the latest, stable releases of all major browsers, including Chrome, Firefox, Safari, and Edge. We don't support Internet Explorer 11.",
+      "HomeHive speichert keine Bankdaten, sondern prüft lediglich deine Kontobewegungen auf mögliche Mieteingänge. Anhand von Betrag und den Verwendungszweck werden passende Transaktionen erkannt und im Dashboard angzeigt",
   },
   {
-    question: "For what kind of projects is the Standard license intended?",
+    id: "faq-5",
+    question: "Was passiert nach dem Kauf?",
     answer:
-      "The Standard license is designed for internal applications in which staff will access the application. An example could be the back-office dashboard of a public-facing e-commerce website in which staff would sign in and manage inventory, customers, etc.",
+      "Nach dem Kauf bekommst du sofort Zugriff auf alle Funktionen. Dein Konto wird entsprechend deinem gewählten Plan aktiviert.",
   },
-];
+  {
+    id: "faq-6",
+    question: "Was beinhaltet der Einmal-Kauf?",
+    answer: "Mit dem Einmal-Kauf erhältst du lebenslangen Zugriff auf HomeHive ohne weitere Kosten.",
+  },
+  {
+    id: "faq-7",
+    question: "Wie kann ich mein Abo kündigen?",
+    answer:
+      "Du kannst dein Abo jederzeit unter den Kontoeinstellungen kündigen. Nach der Kündigung endet dein Zugang automatisch zum Ende des Abrechnungszeitraums.",
+  },
+] satisfies { id: string; question: string; answer: string }[];
 
-interface FaqProps {
-  answer: string;
-  question: string;
-}
-
-const Faq: FC<FaqProps> = (props) => {
-  const { answer, question } = props;
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
+export function Faqs(): React.JSX.Element {
   return (
-    <Stack onClick={() => setIsExpanded((prevState) => !prevState)} spacing={2} sx={{ cursor: "pointer" }}>
-      <Stack alignItems="center" direction="row" justifyContent="space-between" spacing={2}>
-        <Typography variant="subtitle1">{question}</Typography>
-        <SvgIcon>{isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}</SvgIcon>
-      </Stack>
-      <Collapse in={isExpanded}>
-        <Typography color="text.secondary" variant="body2">
-          {answer}
-        </Typography>
-      </Collapse>
-    </Stack>
-  );
-};
-
-Faq.propTypes = {
-  question: PropTypes.string.isRequired,
-  answer: PropTypes.string.isRequired,
-};
-
-export const HomeFaqs: FC = () => {
-  return (
-    <Box sx={{ py: "120px" }}>
-      <Container maxWidth="lg">
-        <Grid container spacing={4}>
-          <Grid xs={12} md={6}>
+    <Box sx={{ bgcolor: "var(--mui-palette-background-level1)", py: "120px" }}>
+      <Container maxWidth="md">
+        <Stack spacing={8}>
+          <Stack maxWidth="700px" sx={{ mx: "auto" }}>
             <Stack spacing={2}>
-              <Typography variant="h3">Everything you need to know</Typography>
-              <Typography color="text.secondary" variant="subtitle2">
-                Frequently asked questions
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Chip color="primary" icon={<QuestionIcon />} label="FAQ" variant="soft" />
+              </Box>
+              <Typography sx={{ textAlign: "center" }} variant="h3">
+                Häufig gestellte Fragen rund um HomeHive
+              </Typography>
+              <Typography color="text.secondary">
+                Du hast eine weitere Frage, die hier nicht beantwortet wird? Kontaktiere uns über{" "}
+                <Box
+                  component="a"
+                  href="mailto:info@homehive.me"
+                  sx={{ color: "inherit", textDecoration: "underline" }}
+                >
+                  email
+                </Box>
+                .
               </Typography>
             </Stack>
-          </Grid>
-          <Grid xs={12} md={6}>
-            <Stack spacing={4}>
-              {faqs.map((faq, index) => (
-                <Faq key={index} {...faq} />
-              ))}
-            </Stack>
-          </Grid>
-        </Grid>
+          </Stack>
+          <Stack spacing={2}>
+            {faqs.map((faq) => (
+              <Faq key={faq.id} {...faq} />
+            ))}
+          </Stack>
+        </Stack>
       </Container>
     </Box>
   );
-};
+}
+
+export interface FaqProps {
+  answer: string;
+  question: string;
+}
+
+function Faq({ answer, question }: FaqProps): React.JSX.Element {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  return (
+    <Card sx={{ p: 3 }}>
+      <Stack
+        onClick={() => {
+          setIsExpanded((prevState) => !prevState);
+        }}
+        sx={{ cursor: "pointer" }}
+      >
+        <Stack direction="row" spacing={2} sx={{ alignItems: "center", justifyContent: "space-between" }}>
+          <Typography variant="subtitle1">{question}</Typography>
+          {isExpanded ? <CaretDownIcon /> : <CaretRightIcon />}
+        </Stack>
+        <Collapse in={isExpanded}>
+          <Typography color="text.secondary" sx={{ pt: 3 }} variant="body2">
+            {answer}
+          </Typography>
+        </Collapse>
+      </Stack>
+    </Card>
+  );
+}
