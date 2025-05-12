@@ -59,8 +59,10 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   const router = useRouter();
   const { user } = useUser();
+  const customSearchParams = useSearchParams();
+  const renterId = customSearchParams.get("renterId");
 
-  const { sortDir, renterId } = searchParams;
+  const { sortDir } = searchParams;
 
   const setLandlord = useSetRecoilState(currentUserAtom);
   const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
