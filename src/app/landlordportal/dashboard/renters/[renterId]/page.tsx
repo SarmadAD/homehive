@@ -26,9 +26,7 @@ import {
 import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
-import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { paths } from "src/paths";
-import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
 import { RenterBasicDetails } from "src/sections/dashboard/renter/renter-basic-details";
 import { useSearchParams } from "next/navigation";
@@ -166,6 +164,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   const isLoadingPaymentsAll =
     rentPaymentsLoadable.state === "loading" ||
+    isLoading ||
     renterLoadable.state === "loading" ||
     (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "");
 
