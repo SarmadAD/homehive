@@ -1,16 +1,19 @@
-import { Prisma, Renter, Token } from "@prisma/client";
+import { Token } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { RentalObject } from "prisma/types/objects";
 import { prisma } from "src/app/db/db";
+import { CreateUserToken, OneTimeAccessToken } from "src/types/token";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
-  const code = searchParams.get("code");
+
+  const tokenInfo: OneTimeAccessToken | CreateUserToken = await request.json();
+
   const clientId = process.env.NEXT_PUBLIC_TINK_CLIENT_ID;
   const clientSecret = process.env.TINK_CLIENT_SECRET;
+
   const landlordId = searchParams.get("landlordId");
 
-  if (!code || !clientId || !clientSecret || !landlordId) {
+  if (!tokenInfo || !clientId || !clientSecret || !landlordId) {
     return NextResponse.json({ error: "Missing required query parameters" }, { status: 400 });
   }
   try {
@@ -20,10 +23,9 @@ export async function GET(request: Request) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        code: code,
+        ...tokenInfo,
         client_id: clientId,
         client_secret: clientSecret,
-        grant_type: "authorization_code",
       }),
     });
 
@@ -35,7 +37,7 @@ export async function GET(request: Request) {
     const data: Token = await response.json();
 
     if (data?.access_token) {
-      await prisma.token.create({
+      const token = await prisma.token.create({
         data: {
           access_token: data.access_token,
           expires_in: data.expires_in,
@@ -47,9 +49,8 @@ export async function GET(request: Request) {
           },
         },
       });
+      return NextResponse.json(token, { status: 200 });
     }
-
-    return NextResponse.json({ data }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "An unexpected error occurred", details: error.message }, { status: 500 });
   }

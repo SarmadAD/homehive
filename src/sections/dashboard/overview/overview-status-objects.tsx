@@ -1,20 +1,7 @@
 import { FC, useEffect } from "react";
 import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Container,
-  Divider,
-  Link,
-  Stack,
-  SvgIcon,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, Container, Divider, Link, Stack, SvgIcon, Typography, useTheme } from "@mui/material";
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
@@ -93,12 +80,10 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
   const chartOptions = useChartOptions();
   const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
   const objectStatusData = useRecoilValueLoadable(objectStatusSeriesData);
-
   let content;
   if (rentalObjectsLoadable.state === "loading" || objectStatusData.state === "loading") {
     content = <OverViewStatusObjectsSkeleton />;
   } else if (rentalObjectsLoadable.state === "hasValue" && objectStatusData.state === "hasValue") {
-    const rentalObjects = rentalObjectsLoadable.contents;
     const statusData = objectStatusData.contents;
 
     content =

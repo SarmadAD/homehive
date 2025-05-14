@@ -51,165 +51,243 @@ export async function POST(request: NextRequest) {
     }
 
     const transactionsResponse = await tinkResponse.json();
-    const transactions = transactionsResponse.transactions;
-    // const transactions = [
-    //   {
-    //     id: "b83273b1b0924fc78d62da2157c89802",
-    //     accountId: "c683b4b42b214e468e38d76012221e0d",
-    //     amount: {
-    //       value: {
-    //         unscaledValue: "-6500",
-    //         scale: "1",
-    //       },
-    //       currencyCode: "EUR",
-    //     },
-    //     descriptions: {
-    //       original: "Miete",
-    //       display: "Miete",
-    //     },
-    //     dates: {
-    //       booked: "2025-05-03",
-    //     },
-    //     identifiers: {
-    //       providerTransactionId: "1007",
-    //     },
-    //     types: {
-    //       type: "DEFAULT",
-    //     },
-    //     status: "BOOKED",
-    //     providerMutability: "MUTABILITY_UNDEFINED",
-    //   },
-    //   {
-    //     id: "4e07786b1b824c47a7b308bd397eb129",
-    //     accountId: "c683b4b42b214e468e38d76012221e0d",
-    //     amount: {
-    //       value: {
-    //         unscaledValue: "-6500",
-    //         scale: "1",
-    //       },
-    //       currencyCode: "EUR",
-    //     },
-    //     descriptions: {
-    //       original: "Miete",
-    //       display: "Miete",
-    //     },
-    //     dates: {
-    //       booked: "2025-04-03",
-    //     },
-    //     identifiers: {
-    //       providerTransactionId: "1051",
-    //     },
-    //     types: {
-    //       type: "DEFAULT",
-    //     },
-    //     status: "BOOKED",
-    //     providerMutability: "MUTABILITY_UNDEFINED",
-    //   },
-    //   {
-    //     id: "0590a73f8e7d45d9be7a22dc95715894",
-    //     accountId: "c683b4b42b214e468e38d76012221e0d",
-    //     amount: {
-    //       value: {
-    //         unscaledValue: "-6500",
-    //         scale: "1",
-    //       },
-    //       currencyCode: "EUR",
-    //     },
-    //     descriptions: {
-    //       original: "Miete",
-    //       display: "Miete",
-    //     },
-    //     dates: {
-    //       booked: "2025-03-03",
-    //     },
-    //     identifiers: {
-    //       providerTransactionId: "1097",
-    //     },
-    //     types: {
-    //       type: "DEFAULT",
-    //     },
-    //     status: "BOOKED",
-    //     providerMutability: "MUTABILITY_UNDEFINED",
-    //   },
-    //   {
-    //     id: "0590a73f8e7d45d9be7a22dc95715895",
-    //     accountId: "c683b4b42b214e468e38d76012221e0d",
-    //     amount: {
-    //       value: {
-    //         unscaledValue: "-6500",
-    //         scale: "1",
-    //       },
-    //       currencyCode: "EUR",
-    //     },
-    //     descriptions: {
-    //       original: "Miete",
-    //       display: "Miete",
-    //     },
-    //     dates: {
-    //       booked: "2025-02-03",
-    //     },
-    //     identifiers: {
-    //       providerTransactionId: "1666",
-    //     },
-    //     types: {
-    //       type: "DEFAULT",
-    //     },
-    //     status: "BOOKED",
-    //     providerMutability: "MUTABILITY_UNDEFINED",
-    //   },
-    //   {
-    //     id: "0590a73f8e7d45d9be7a22dc95715877",
-    //     accountId: "c683b4b42b214e468e38d76012221e0d",
-    //     amount: {
-    //       value: {
-    //         unscaledValue: "-5500",
-    //         scale: "1",
-    //       },
-    //       currencyCode: "EUR",
-    //     },
-    //     descriptions: {
-    //       original: "Miete",
-    //       display: "Miete",
-    //     },
-    //     dates: {
-    //       booked: "2025-05-03",
-    //     },
-    //     identifiers: {
-    //       providerTransactionId: "1555",
-    //     },
-    //     types: {
-    //       type: "DEFAULT",
-    //     },
-    //     status: "BOOKED",
-    //     providerMutability: "MUTABILITY_UNDEFINED",
-    //   },
-    //   {
-    //     id: "0590a73f8e7d45d9be7a22dc95715077",
-    //     accountId: "c683b4b42b214e468e38d76012221e0d",
-    //     amount: {
-    //       value: {
-    //         unscaledValue: "-4500",
-    //         scale: "1",
-    //       },
-    //       currencyCode: "EUR",
-    //     },
-    //     descriptions: {
-    //       original: "Miete",
-    //       display: "Miete",
-    //     },
-    //     dates: {
-    //       booked: "2025-01-03",
-    //     },
-    //     identifiers: {
-    //       providerTransactionId: "1885",
-    //     },
-    //     types: {
-    //       type: "DEFAULT",
-    //     },
-    //     status: "BOOKED",
-    //     providerMutability: "MUTABILITY_UNDEFINED",
-    //   },
-    // ];
+    // const transactions = transactionsResponse.transactions;
+    const transactions = [
+      {
+        id: "b83273b1b0924fc78d62da2157c89802",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-6500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-05-03",
+        },
+        identifiers: {
+          providerTransactionId: "1007",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
+      {
+        id: "4e07786b1b824c47a7b308bd397eb129",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-6500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-04-03",
+        },
+        identifiers: {
+          providerTransactionId: "1051",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
+      {
+        id: "0590a73f8e7d45d9be7a22dc95715894",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-6500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-03-03",
+        },
+        identifiers: {
+          providerTransactionId: "1097",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
+      {
+        id: "0590a73f8e7d45d9be7a22dc95715895",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-6500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-02-03",
+        },
+        identifiers: {
+          providerTransactionId: "1666",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
+      {
+        id: "0590a73f8e7d45d9be7a22dc95715877",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-5500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-05-03",
+        },
+        identifiers: {
+          providerTransactionId: "1555",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
+      {
+        id: "0590a73f8e7d45d9be7a22dc95715077",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-4500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-01-03",
+        },
+        identifiers: {
+          providerTransactionId: "1885",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
+      {
+        id: "0590a13f8e7d45d9be7a22dc95715894",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-6500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-06-03",
+        },
+        identifiers: {
+          providerTransactionId: "1111",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
+      // {
+      //   id: "0590a83f8e7d45d9be7a22dc95715894",
+      //   accountId: "c683b4b42b214e468e38d76012221e0d",
+      //   amount: {
+      //     value: {
+      //       unscaledValue: "-6500",
+      //       scale: "1",
+      //     },
+      //     currencyCode: "EUR",
+      //   },
+      //   descriptions: {
+      //     original: "Miete",
+      //     display: "Miete",
+      //   },
+      //   dates: {
+      //     booked: "2025-07-03",
+      //   },
+      //   identifiers: {
+      //     providerTransactionId: "1112",
+      //   },
+      //   types: {
+      //     type: "DEFAULT",
+      //   },
+      //   status: "BOOKED",
+      //   providerMutability: "MUTABILITY_UNDEFINED",
+      // },
+      {
+        id: "0590a73f8e7d25d9be7a22dc95715894",
+        accountId: "c683b4b42b214e468e38d76012221e0d",
+        amount: {
+          value: {
+            unscaledValue: "-6500",
+            scale: "1",
+          },
+          currencyCode: "EUR",
+        },
+        descriptions: {
+          original: "Miete",
+          display: "Miete",
+        },
+        dates: {
+          booked: "2025-08-03",
+        },
+        identifiers: {
+          providerTransactionId: "1113",
+        },
+        types: {
+          type: "DEFAULT",
+        },
+        status: "BOOKED",
+        providerMutability: "MUTABILITY_UNDEFINED",
+      },
+    ];
 
     const landlord = await prisma.landlord.findUnique({
       where: { id: landlordId },

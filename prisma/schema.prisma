@@ -77,6 +77,7 @@ model Token {
   landlord     Landlord @relation(fields: [landlordId], references: [id])
   landlordId   String   @db.Uuid
   createdAt    DateTime @default(now())
+  state        Int      @default(1)
 
   @@index([landlordId])
 }

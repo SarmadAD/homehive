@@ -45,6 +45,8 @@ import { DotsVertical, Home02 } from "@untitled-ui/icons-react";
 import { toast } from "src/components/toaster";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
+import checkIfUserIsNotAllowedToCreateRentalObjects from "src/utils/hasAccessForCreateObjects";
+import { Landlord } from "prisma/types/landlord";
 
 interface Filters {
   query?: string;
@@ -119,6 +121,7 @@ const Page: PageType = () => {
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
   const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
   const setLandlord = useSetRecoilState(currentUserAtom);
+  const landlord = useRecoilValue(currentUserAtom);
   const objectsIds = useObjectsIds(rentalObjects);
   // const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject]);
 
@@ -168,6 +171,10 @@ const Page: PageType = () => {
       const deltedObject = await agent.objects.delete(Array.from(selected)[0]);
       const updatedRentalObjects = rentalObjects.filter((object) => object.id !== deltedObject.id);
       setRentalObjects(updatedRentalObjects);
+      setLandlord((prevLandlord) => ({
+        ...prevLandlord,
+        rentalObjects: updatedRentalObjects,
+      }));
       toast.success("Objekt erfolgreich gelöscht");
     } catch (error) {
       console.error(error);
@@ -299,18 +306,36 @@ const Page: PageType = () => {
                     <Typography variant="h4">Objekte</Typography>
                   </div>
                   <Stack direction="row" spacing={4}>
-                    <Button
-                      component={RouterLink}
-                      startIcon={
-                        <SvgIcon>
-                          <PlusIcon />
-                        </SvgIcon>
+                    <Tooltip
+                      title={
+                        checkIfUserIsNotAllowedToCreateRentalObjects(landlord as Landlord) ? (
+                          <>
+                            Mehr Objekte anlegen?{" "}
+                            <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
+                              Jetzt upgraden
+                            </Link>
+                          </>
+                        ) : (
+                          ""
+                        )
                       }
-                      variant="contained"
-                      href={paths.landlordportal.dashboard.objects.create}
                     >
-                      Hinzufügen
-                    </Button>
+                      <span>
+                        <Button
+                          component={RouterLink}
+                          startIcon={
+                            <SvgIcon>
+                              <PlusIcon />
+                            </SvgIcon>
+                          }
+                          variant="contained"
+                          href={paths.landlordportal.dashboard.objects.create}
+                          disabled={checkIfUserIsNotAllowedToCreateRentalObjects(landlord as Landlord)}
+                        >
+                          Hinzufügen
+                        </Button>
+                      </span>
+                    </Tooltip>
                   </Stack>
                 </Stack>
               </Grid>{" "}

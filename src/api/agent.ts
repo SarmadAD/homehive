@@ -6,6 +6,7 @@ import { Renter } from "prisma/types/renter";
 import { RentPayment } from "prisma/types/rentPayment";
 import { RepairRequest } from "prisma/types/repairRequest";
 import { UserRole } from "prisma/types/userrole";
+import { CreateUserToken, OneTimeAccessToken } from "src/types/token";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -60,12 +61,19 @@ const rentPayments = {
   list: (landlordId: string) => requests.get<RentPayment[]>(`/api/rentPayments/?landlordId=${landlordId}`),
 };
 
-const tinkToken = {
-  generate: (code: string, landlordId: string) => requests.get<void>(`/api/dashboard/settings/integrations/?code=${code}&landlordId=${landlordId}`),
+const integrations = {
+  tink: {
+    createUser: (landlordId: string) => requests.post(`/api/dashboard/settings/integrations/tink/user/create/?landlordId=${landlordId}`, {}),
+    token: {
+      generate: (landlordId: string, tokenInfo: OneTimeAccessToken | CreateUserToken) =>
+        requests.post<Token>(`/api/dashboard/settings/integrations/tink/?landlordId=${landlordId}`, tokenInfo),
+    },
+  },
 };
 
 const token = {
   get: (landlordId: string) => requests.get<Token>(`/api/token/?landlordId=${landlordId}`),
+  delete:(landlordId:string) => requests.del(`/api/token/?landlordId=${landlordId}`)
 };
 
 const agent = {
@@ -75,7 +83,7 @@ const agent = {
   renters,
   userRoles,
   rentPayments,
-  tinkToken,
+  integrations,
   token,
 };
 

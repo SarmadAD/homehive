@@ -1,6 +1,20 @@
 "use client";
 
-import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Button, SvgIcon, Link, Menu, MenuItem, Card, Divider } from "@mui/material";
+import {
+  Box,
+  Container,
+  Stack,
+  Typography,
+  Unstable_Grid2 as Grid,
+  Button,
+  SvgIcon,
+  Link,
+  Menu,
+  MenuItem,
+  Card,
+  Divider,
+  Tooltip,
+} from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
@@ -28,6 +42,8 @@ import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { toast } from "src/components/toaster";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
+import checkIfUserIsNotAllowedToCreateRenter from "src/utils/hasAccessForCreateRenter";
+import { Landlord } from "prisma/types/landlord";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -38,6 +54,7 @@ const Page: PageType = () => {
   const settings = useSettings();
 
   const setLandlord = useSetRecoilState(currentUserAtom);
+  const landlord = useRecoilValue(currentUserAtom);
   const rentersSearch = useRentersSearch();
   const renters = useRecoilValue(rentersAtom);
   const setRenters = useSetRecoilState(rentersAtom);
@@ -90,6 +107,10 @@ const Page: PageType = () => {
       const deletedRenter = await agent.renters.delete(Array.from(selected)[0]);
       const updatedRenters = renters.filter((renter) => renter.id !== deletedRenter.id);
       setRenters(updatedRenters);
+      setLandlord((prevLandlord) => ({
+        ...prevLandlord,
+        renters: updatedRenters,
+      }));
       toast.success("Mieter erfolgreich gelöscht");
     } catch (error) {
       console.error(error);
@@ -186,18 +207,36 @@ const Page: PageType = () => {
                     <Typography variant="h4">Mieter</Typography>
                   </div>
                   <Stack direction="row" spacing={4}>
-                    <Button
-                      component={RouterLink}
-                      startIcon={
-                        <SvgIcon>
-                          <PlusIcon />
-                        </SvgIcon>
+                    <Tooltip
+                      title={
+                        checkIfUserIsNotAllowedToCreateRenter(landlord as Landlord) ? (
+                          <>
+                            Mehr Mieter anlegen?{" "}
+                            <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
+                              Jetzt upgraden
+                            </Link>
+                          </>
+                        ) : (
+                          ""
+                        )
                       }
-                      variant="contained"
-                      href={paths.landlordportal.dashboard.renters.create}
                     >
-                      Hinzufügen
-                    </Button>
+                      <span>
+                        <Button
+                          component={RouterLink}
+                          startIcon={
+                            <SvgIcon>
+                              <PlusIcon />
+                            </SvgIcon>
+                          }
+                          variant="contained"
+                          href={paths.landlordportal.dashboard.renters.create}
+                          disabled={checkIfUserIsNotAllowedToCreateRenter(landlord as Landlord)}
+                        >
+                          Hinzufügen
+                        </Button>{" "}
+                      </span>
+                    </Tooltip>
                   </Stack>
                 </Stack>
               </Grid>

@@ -9,6 +9,7 @@ import agent from "src/api/agent";
 import { useSetRecoilState } from "recoil";
 import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useUser } from "src/hooks/use-user";
+import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 const Page: PageType = () => {
   usePageView();
@@ -36,46 +37,48 @@ const Page: PageType = () => {
   return (
     <>
       <Seo title="Objekt erstellen" />
-      <Box
-        component="main"
-        sx={{
-          display: "flex",
-          flexGrow: 1,
-        }}
-      >
-        <Grid container sx={{ flexGrow: 1 }}>
-          <Grid
-            xs={12}
-            sm={4}
-            sx={{
-              backgroundImage: "url(/assets/people-talking.png)",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              display: {
-                xs: "none",
-                md: "block",
-              },
-            }}
-          />
-          <Grid
-            xs={12}
-            md={8}
-            sx={{
-              p: {
-                xs: 4,
-                sm: 6,
-                md: 8,
-              },
-            }}
-          >
-            <Stack maxWidth="sm" spacing={3}>
-              <Typography variant="h4">Erstelle ein Objekt</Typography>
-              <ObjectCreateForm />
-            </Stack>
+      <RoleBasedGuard permission="/landlordportal/dashboard/objects/create">
+        <Box
+          component="main"
+          sx={{
+            display: "flex",
+            flexGrow: 1,
+          }}
+        >
+          <Grid container sx={{ flexGrow: 1 }}>
+            <Grid
+              xs={12}
+              sm={4}
+              sx={{
+                backgroundImage: "url(/assets/people-talking.png)",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                display: {
+                  xs: "none",
+                  md: "block",
+                },
+              }}
+            />
+            <Grid
+              xs={12}
+              md={8}
+              sx={{
+                p: {
+                  xs: 4,
+                  sm: 6,
+                  md: 8,
+                },
+              }}
+            >
+              <Stack maxWidth="sm" spacing={3}>
+                <Typography variant="h4">Erstelle ein Objekt</Typography>
+                <ObjectCreateForm />
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      </RoleBasedGuard>
     </>
   );
 };
