@@ -11,7 +11,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields landlordId" }, { status: 400 });
     }
     const createUserToken = await prisma.token.findFirst({
-      where: { landlordId: landlordId, token_type: "user:create" },
+      where: { landlordId: landlordId, token_type: "user:create", state: 1 },
       orderBy: { createdAt: "desc" },
     });
 

@@ -34,7 +34,6 @@ export interface IntegrationsProps {
 export function Integrations({ integrations }: IntegrationsProps): React.JSX.Element {
   const landlord = useRecoilValue(currentUserAtom);
   const setLandlord = useSetRecoilState(currentUserAtom);
-  // const [connected, setConnected] = useState(false);
   // const [tinkLink, setTinkLink] = useState("");
   const tinkLink =
     process.env.NODE_ENV === "production"
@@ -62,7 +61,6 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
       }
     };
     fetchData();
-    // fetchIntegrationStatus();
   }, [landlord.id]);
 
   // async function handleCreateRentPaymentIntegration() {
@@ -97,19 +95,6 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
       console.log("Error removing tokens", error);
     }
   }
-
-  // const fetchIntegrationStatus = async () => {
-  //   try {
-  //     if (landlord.id) {
-  //       const response = await agent.token.get(landlord.id);
-  //       if (response?.access_token) {
-  //         setConnected(true);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching integration status:", error);
-  //   }
-  // };
 
   return (
     <Card>
