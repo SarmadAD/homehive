@@ -11,7 +11,7 @@ export async function GET(request: Request) {
 
   try {
     const token = await prisma.token.findFirst({
-      where: { landlordId, state: 1 },
+      where: { landlordId, state: 1, scope: "user:delete,provider-consents:read,balances:read,accounts:read,transactions:read" },
       orderBy: { createdAt: "desc" },
     });
 
@@ -19,13 +19,13 @@ export async function GET(request: Request) {
       return NextResponse.json({ access_token: "", expires_in: 0, id_hint: "", scope: "", token_type: "" }, { status: 200 });
     }
     if (token) {
-      const tokenCreatedAt = new Date(token.createdAt).getTime();
-      const tokenExpiresAt = tokenCreatedAt + token.expires_in * 1000;
-      const now = Date.now();
+      // const tokenCreatedAt = new Date(token.createdAt).getTime();
+      // const tokenExpiresAt = tokenCreatedAt + token.expires_in * 1000;
+      // const now = Date.now();
 
-      if (now >= tokenExpiresAt) {
-        return NextResponse.json({ access_token: "", expires_in: 0, id_hint: "", scope: "", token_type: "" }, { status: 200 });
-      }
+      // if (now >= tokenExpiresAt) {
+      //   return NextResponse.json({ access_token: "", expires_in: 0, id_hint: "", scope: "", token_type: "" }, { status: 200 });
+      // }
 
       return NextResponse.json(token, { status: 200 });
     }

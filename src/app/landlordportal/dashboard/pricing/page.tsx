@@ -18,7 +18,7 @@ import { Chip, Stack, Switch } from "@mui/material";
 export default function Page(): React.JSX.Element {
   const setLandlord = useSetRecoilState(currentUserAtom);
   const [isLoading, setIsLoading] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   const { user } = useUser();
 
@@ -70,27 +70,29 @@ export default function Page(): React.JSX.Element {
                   Unsere benutzerfreundliche Software macht es einfach, deine Immobilien effizient zu verwalten. Behalte den Überblick über
                   Mietzahlungen, Mieter, Objekte und mehr – alles auf einen Blick
                 </Typography>
-                {/* <Stack alignItems="center" direction="row" spacing={1}>
-                  <Switch checked={checked} onChange={(event, checked) => setChecked(checked)} />
-                  <Typography variant="body1">Jährliche Zahlung</Typography>
-                  <Chip color="primary" label="Spare 30 %" size="small" />
-                </Stack> */}
               </Box>
               <Grid container spacing={6} justifyContent={"center"}>
                 {pricingPlans
-                  // .filter((plan) => (checked ? plan.name === "Jährlich" : plan.name === "Monatlich"))
+                  .filter((plan) => plan.name === "Free")
                   .map((plan, index) => (
-                    <Grid key={index} xs={12} md={4}>
+                    <Grid key={`einmalig-${index}`} xs={12} md={4}>
                       <PricingPlan {...plan} />
                     </Grid>
                   ))}
-                {/* {pricingPlans
+                {pricingPlans
+                  .filter((plan) => (checked ? plan.name === "Jährlich" : plan.name === "Monatlich"))
+                  .map((plan, index) => (
+                    <Grid key={index} xs={12} md={4}>
+                      <PricingPlan {...plan} setChecked={setChecked} checked={checked} />
+                    </Grid>
+                  ))}
+                {pricingPlans
                   .filter((plan) => plan.name === "Einmalig")
                   .map((plan, index) => (
                     <Grid key={`einmalig-${index}`} xs={12} md={4}>
                       <PricingPlan {...plan} />
                     </Grid>
-                  ))} */}
+                  ))}
               </Grid>
             </Container>
           </Box>

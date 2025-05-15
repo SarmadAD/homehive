@@ -6,7 +6,7 @@ import { Renter } from "prisma/types/renter";
 import { RentPayment } from "prisma/types/rentPayment";
 import { RepairRequest } from "prisma/types/repairRequest";
 import { UserRole } from "prisma/types/userrole";
-import { CreateUserToken, OneTimeAccessToken } from "src/types/token";
+import { TokenWithGrantTypeAndScope, OneTimeAccessToken, TokenWithScope } from "src/types/token";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -63,17 +63,24 @@ const rentPayments = {
 
 const integrations = {
   tink: {
-    createUser: (landlordId: string) => requests.post(`/api/dashboard/settings/integrations/tink/user/create/?landlordId=${landlordId}`, {}),
+    user: {
+      create: (landlordId: string) => requests.post(`/api/dashboard/settings/integrations/tink/user/?landlordId=${landlordId}`, {}),
+      delete: (landlordId: string) => requests.del(`/api/dashboard/settings/integrations/tink/user/?landlordId=${landlordId}`),
+      grantAccess: {
+        grant: (landlordId: string) => requests.post(`/api/dashboard/settings/integrations/tink/user/grantAccess/?landlordId=${landlordId}`, {}),
+      },
+    },
     token: {
-      generate: (landlordId: string, tokenInfo: OneTimeAccessToken | CreateUserToken) =>
+      generate: (landlordId: string, tokenInfo: OneTimeAccessToken | TokenWithGrantTypeAndScope | TokenWithScope) =>
         requests.post<Token>(`/api/dashboard/settings/integrations/tink/?landlordId=${landlordId}`, tokenInfo),
+      generateUserAccessToken: (landlordId: string) => requests.get<Token>(`/api/dashboard/settings/integrations/tink/?landlordId=${landlordId}`),
     },
   },
 };
 
 const token = {
   get: (landlordId: string) => requests.get<Token>(`/api/token/?landlordId=${landlordId}`),
-  delete:(landlordId:string) => requests.del(`/api/token/?landlordId=${landlordId}`)
+  delete: (landlordId: string) => requests.del(`/api/token/?landlordId=${landlordId}`),
 };
 
 const agent = {
