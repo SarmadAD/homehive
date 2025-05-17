@@ -11,12 +11,11 @@ export async function GET(request: Request) {
 
   try {
     const token = await prisma.token.findFirst({
-      where: { landlordId, state: 1, scope: "user:delete,provider-consents:read,balances:read,accounts:read,transactions:read" },
-      orderBy: { createdAt: "desc" },
+      where: { landlordId, state: 1 },
     });
 
     if (!token) {
-      return NextResponse.json({ access_token: "", expires_in: 0, id_hint: "", scope: "", token_type: "" }, { status: 200 });
+      return NextResponse.json({ isAlive: false }, { status: 200 });
     }
     if (token) {
       // const tokenCreatedAt = new Date(token.createdAt).getTime();
@@ -27,10 +26,10 @@ export async function GET(request: Request) {
       //   return NextResponse.json({ access_token: "", expires_in: 0, id_hint: "", scope: "", token_type: "" }, { status: 200 });
       // }
 
-      return NextResponse.json(token, { status: 200 });
+      return NextResponse.json({ isAlive: true }, { status: 200 });
     }
   } catch (error) {
-    return NextResponse.json({ error: "An unexpected error occurred", details: error.message }, { status: 500 });
+    return NextResponse.json({ isAlive: false }, { status: 200 });
   }
 }
 

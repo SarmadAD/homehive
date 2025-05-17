@@ -28,9 +28,8 @@ import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { useCallback, useState, ChangeEvent, MouseEvent, useMemo, useEffect } from "react";
 import { useSelection } from "src/hooks/use-selection";
 import { paths } from "src/paths";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
@@ -39,7 +38,6 @@ import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
 import { getInitials } from "src/utils/get-initials";
 import { getRenterName } from "src/utils/get-renter-name";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
-import { useUser } from "src/hooks/use-user";
 import { RouterLink } from "src/components/router-link";
 import { DotsVertical, Home02 } from "@untitled-ui/icons-react";
 import { toast } from "src/components/toaster";
@@ -47,6 +45,7 @@ import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import checkIfUserIsNotAllowedToCreateRentalObjects from "src/utils/hasAccessForCreateObjects";
 import { Landlord } from "prisma/types/landlord";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 interface Filters {
   query?: string;
@@ -115,20 +114,24 @@ const useObjectsIds = (objects: RentalObject[] = []) => {
   }, [objects]);
 };
 
-const Page: PageType = () => {
+export default function Page(): React.JSX.Element {
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
   const rentalObjects = useRecoilValue(rentalObjectsAtom);
   const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
-  const setLandlord = useSetRecoilState(currentUserAtom);
-  const landlord = useRecoilValue(currentUserAtom);
+
+  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
+  const landloadLoading = landlordLoadable.state === "loading";
+  const landlord = landlordLoadable.contents;
+
   const objectsIds = useObjectsIds(rentalObjects);
   // const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject]);
 
   // const objectsSelection = useSelection<string>(objectsIds);
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(objectsIds);
 
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   // Rental Object Menu Three Dots Menu
@@ -143,28 +146,6 @@ const Page: PageType = () => {
     deselectAll();
   };
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
-
-  const { user } = useUser();
-
-  useEffect(() => {
-    getLandlord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getLandlord() {
-    try {
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        setIsLoading(true);
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   async function handleDelete() {
     try {
@@ -356,11 +337,11 @@ const Page: PageType = () => {
                       selectOne(row.id);
                     }}
                     selected={selected}
-                    isLoading={isLoading}
+                    isLoading={landloadLoading}
                     rowStartIcon={<Home02 />}
                     selectable
                   />{" "}
-                  {!rentalObjects.length && !isLoading ? (
+                  {!rentalObjects.length && !landloadLoading ? (
                     <Box sx={{ p: 3 }}>
                       <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
                         Es wurden noch keine Objekte angelegt
@@ -389,6 +370,4 @@ const Page: PageType = () => {
       </RoleBasedGuard>
     </>
   );
-};
-
-export default Page;
+}

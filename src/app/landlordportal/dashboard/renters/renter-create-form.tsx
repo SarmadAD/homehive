@@ -7,14 +7,12 @@ import type { StepIconProps } from "@mui/material";
 import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } from "@mui/material";
 import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
 import { RenterBasicInfosStep } from "./renter-basicinfos-step";
 import { Renter, renterDefault } from "prisma/types/renter";
 import { RenterSendInviteStep } from "./renter-send-invite-step";
-import { Resend } from "resend";
 import { createClient as createSupabaseClient } from "../../../../lib/supabase/client";
-import { toast } from "src/components/toaster";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -44,13 +42,13 @@ const StepIcon: FC<StepIconProps> = (props) => {
   );
 };
 
-export const RenterCreateForm: FC = () => {
+export default function RenterCreateForm(): React.JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newRenter, setNewRenter] = useState<Renter>(renterDefault);
   const [supabaseClient] = useState(createSupabaseClient());
 
-  const landlord = useRecoilValue(currentUserAtom);
+  const landlord = useRecoilValue(currentLandlordAtom);
   const router = useRouter();
 
   const handleNext = useCallback(() => {
@@ -69,25 +67,11 @@ export const RenterCreateForm: FC = () => {
     return [
       {
         label: "Basisinformationen",
-        content: (
-          <RenterBasicInfosStep
-            onBack={handleBack}
-            onNext={handleNext}
-            newRenter={newRenter}
-            setNewRenter={setNewRenter}
-          />
-        ),
+        content: <RenterBasicInfosStep onBack={handleBack} onNext={handleNext} newRenter={newRenter} setNewRenter={setNewRenter} />,
       },
       {
         label: "Einladung versenden",
-        content: (
-          <RenterSendInviteStep
-            onBack={handleBack}
-            handleComplete={handleComplete}
-            newRenter={newRenter}
-            setNewRenter={setNewRenter}
-          />
-        ),
+        content: <RenterSendInviteStep onBack={handleBack} handleComplete={handleComplete} newRenter={newRenter} setNewRenter={setNewRenter} />,
       },
     ];
   }, [handleBack, handleNext, handleComplete, newRenter]);
@@ -150,4 +134,4 @@ export const RenterCreateForm: FC = () => {
       })}
     </Stepper>
   );
-};
+}

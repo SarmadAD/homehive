@@ -9,27 +9,11 @@ import { RouterLink } from "src/components/router-link";
 import { useRouter } from "next/navigation";
 import { paths } from "src/paths";
 import agent from "src/api/agent";
-import {
-  Divider,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  FormHelperText,
-  FormControlLabel,
-  Checkbox,
-  Alert,
-  Stack,
-} from "@mui/material";
+import { Divider, FormControl, InputLabel, OutlinedInput, FormHelperText, FormControlLabel, Checkbox, Alert, Stack } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z as zod } from "zod";
-import {
-  Auth,
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-  UserCredential,
-} from "firebase/auth";
+import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
 import { getFirebaseAuth } from "src/lib/auth/firebase/client";
 import { toast } from "src/components/toaster";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,9 +30,7 @@ interface OAuthProvider {
 }
 // export const metadata = { title: `Register | Registrieren | ${site.name}` } satisfies Metadata;
 
-const oAuthProviders = [
-  { id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" },
-] satisfies OAuthProvider[];
+const oAuthProviders = [{ id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" }] satisfies OAuthProvider[];
 
 const schema = zod.object({
   // firstName: zod.string().min(1, { message: "First name is required" }),

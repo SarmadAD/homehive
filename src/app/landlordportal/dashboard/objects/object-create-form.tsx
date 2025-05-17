@@ -11,11 +11,11 @@ import { ObjectRentInfosStep } from "./object-rentInfos-step";
 import { RentalObject, rentalObjectDefault } from "prisma/types/objects";
 import agent from "src/api/agent";
 import { useRecoilValue } from "recoil";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { useRouter } from "src/hooks/use-router";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
 import { defaultLandlord } from "prisma/types/landlord";
 import { paths } from "src/paths";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -49,7 +49,7 @@ export const ObjectCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newObject, setNewObject] = useState<RentalObject>(rentalObjectDefault);
-  const landlord = useRecoilValue(currentUserAtom);
+  const landlord = useRecoilValue(currentLandlordAtom);
   const router = useRouter();
 
   const handleNext = useCallback(() => {

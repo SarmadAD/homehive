@@ -1,39 +1,10 @@
 "use client";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
-import type { Page as PageType } from "src/types/page";
-import { useEffect } from "react";
-import agent from "src/api/agent";
-import { useSetRecoilState } from "recoil";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import { RenterCreateForm } from "../renter-create-form";
-import { useUser } from "src/hooks/use-user";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
+import RenterCreateForm from "../renter-create-form";
 
-const Page: PageType = () => {
-  usePageView();
-
-  const setLandlord = useSetRecoilState(currentUserAtom);
-  const { user, error } = useUser();
-
-  useEffect(() => {
-    getLandlord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getLandlord() {
-    try {
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
+export default function Page(): React.JSX.Element {
   return (
     <>
       <Seo title="Mieter erstellen" />
@@ -81,6 +52,4 @@ const Page: PageType = () => {
       </RoleBasedGuard>
     </>
   );
-};
-
-export default Page;
+}

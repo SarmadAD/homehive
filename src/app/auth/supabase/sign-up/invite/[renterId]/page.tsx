@@ -2,20 +2,16 @@
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import Divider from "@mui/material/Divider";
 import FormHelperText from "@mui/material/FormHelperText";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { RouterLink } from "src/components/router-link";
-import { useMounted } from "src/hooks/use-mounted";
 import { useRouter } from "src/hooks/use-router";
 import { useSearchParams } from "src/hooks/use-search-params";
 import { paths } from "src/paths";
 import agent from "src/api/agent";
 import { z as zod } from "zod";
-import { toast } from "src/components/toaster";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SplitLayout } from "src/components/split-layout";
 import React, { useEffect } from "react";
@@ -36,21 +32,19 @@ interface OAuthProvider {
 }
 // export const metadata = { title: `Register | Registrieren | ${site.name}` } satisfies Metadata;
 
-const oAuthProviders = [
-  { id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" },
-] satisfies OAuthProvider[];
+const oAuthProviders = [{ id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" }] satisfies OAuthProvider[];
 
 const schema = zod.object({
   // firstName: zod.string().min(1, { message: "First name is required" }),
   // lastName: zod.string().min(1, { message: "Last name is required" }),
   // email: zod.string().min(1, { message: "E-Mail ist erforderlich" }).email(),
   password: zod.string().min(6, { message: "Das Passwort muss mindestens 6 Zeichen lang sein" }),
-  terms: zod.boolean().refine((value) => value, "Du musst die Allgemeinen Geschäftsbedingungen akzeptieren."),
+  // terms: zod.boolean().refine((value) => value, "Du musst die Allgemeinen Geschäftsbedingungen akzeptieren."),
 });
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { password: "", terms: false } satisfies Values;
+const defaultValues = { password: "" } satisfies Values;
 
 const Page = () => {
   const router = useRouter();
@@ -262,7 +256,7 @@ const Page = () => {
                     </FormControl>
                   )}
                 />
-                <Controller
+                {/* <Controller
                   control={control}
                   name="terms"
                   render={({ field }) => (
@@ -278,11 +272,15 @@ const Page = () => {
                       {errors.terms ? <FormHelperText error>{errors.terms.message}</FormHelperText> : null}
                     </div>
                   )}
-                />
+                /> */}
                 {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
                 <Button disabled={isPending} type="submit" variant="contained">
                   Konto verfollständigen
                 </Button>
+                <Typography color="text.secondary" variant="body2" sx={{ textAlign: "center" }}>
+                  Mit der Registrierung akzeptiere ich <Link href={paths.marketing.legal.terms}>AGB</Link> &
+                  <Link href={paths.marketing.legal.privacyPolicy}> Datenschutzerklärung</Link>.
+                </Typography>
               </Stack>
             </form>
           </Stack>

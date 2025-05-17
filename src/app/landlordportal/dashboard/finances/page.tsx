@@ -2,16 +2,13 @@
 
 import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Divider, Card } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { useRecoilRefresher_UNSTABLE, useRecoilValue, useRecoilValueLoadable } from "recoil";
 import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
 import { useSettings } from "src/hooks/use-settings";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import React from "react";
-import { useUser } from "src/hooks/use-user";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 import { RentPaymentFilters } from "src/sections/dashboard/finances/rent-payment-filters";
 import { paths } from "src/paths";
@@ -19,6 +16,7 @@ import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { RentPayment } from "prisma/types/rentPayment";
 import { PaidRents } from "src/sections/dashboard/finances/paid-rents";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -29,53 +27,56 @@ interface PageProps {
 }
 
 export default function Page({ searchParams }: PageProps): React.JSX.Element {
-  usePageView();
-
   const { sortDir } = searchParams;
   const settings = useSettings();
-  const { user } = useUser();
 
-  const setLandlord = useSetRecoilState(currentUserAtom);
-  const landlord = useRecoilValue(currentUserAtom);
+  const landlord = useRecoilValue(currentLandlordAtom);
 
   const rentPaymentsLoadable = useRecoilValueLoadable(rentPaymentsAtom);
+  const refreshRentPayment = useRecoilRefresher_UNSTABLE(rentPaymentsAtom);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
   useEffect(() => {
-    getLandlord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getLandlord() {
-    try {
-      setIsLoading(true);
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
     if (landlord.id) {
-      getRentPayments();
+      handleRefreshPayments();
     }
   }, [landlord]);
 
-  async function getRentPayments() {
+  // async function getRentPayments() {
+  //   try {
+  //     await agent.rentPayments.checkForNewTransactions(landlord.id);
+  //     // setRentPayments("hasAccess" in landlord && landlord.rentPayments ? landlord.rentPayments : []);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  async function syncTransactions() {
     try {
-      await agent.rentPayments.checkForNewTransactions(landlord.id);
-      // setRentPayments("hasAccess" in landlord && landlord.rentPayments ? landlord.rentPayments : []);
+      if (landlord.id) {
+        const transactions = await agent.integrations.plaid.transactions.sync(landlord.id);
+        return transactions;
+      }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async function handleRefreshPayments() {
+    try {
+      setIsLoading(true);
+      const response = await syncTransactions();
+      console.log(response);
+      if (Array.isArray(response) && response.length > 0 && response.some((item) => item !== null && item !== undefined)) {
+        refreshRentPayment();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -133,7 +134,12 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
               </Grid>
               <Grid xs={12} sx={{ pt: 3 }}>
                 <Card>
-                  <RentPaymentFilters sortDir={sortDir} path={paths.landlordportal.dashboard.finances.index} />
+                  <RentPaymentFilters
+                    sortDir={sortDir}
+                    path={paths.landlordportal.dashboard.finances.index}
+                    handleRefreshPayments={handleRefreshPayments}
+                    isLoadingPayments={isLoading || rentPaymentsLoadable.state === "loading"}
+                  />
                   <Divider />{" "}
                   <Box sx={{ overflowX: "auto" }}>
                     <PaidRents rentPayments={paginatedRentPayments} isLoadingPayments={isLoading || rentPaymentsLoadable.state === "loading"} />

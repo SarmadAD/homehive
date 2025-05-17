@@ -2,21 +2,8 @@
 
 import { ChangeEvent, useMemo, useRef } from "react";
 import { useCallback, useEffect, useState } from "react";
-import {
-  Avatar,
-  Box,
-  Container,
-  Divider,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-  Unstable_Grid2 as Grid,
-  Skeleton,
-} from "@mui/material";
+import { Avatar, Box, Container, Divider, Stack, Tab, Tabs, Typography, Unstable_Grid2 as Grid, Skeleton } from "@mui/material";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
-import type { Page as PageType } from "src/types/page";
 import { getInitials } from "src/utils/get-initials";
 import { useDialog } from "src/hooks/use-dialog";
 import { ObjectSingleView } from "src/app/landlordportal/dashboard/objects/renter/object-single-view";
@@ -25,25 +12,19 @@ import agent from "src/api/agent";
 import { ObjectBasicDetails } from "src/app/landlordportal/dashboard/objects/object-basic-details";
 import { ObjectRentInfoChart } from "src/app/landlordportal/dashboard/objects/object-rentInfo-chart";
 import { ObjectRepairRequestDrawer } from "src/app/landlordportal/dashboard/objects/repairRequests/object-repairRequest-drawer";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
 import { toast } from "src/components/toaster";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { renterAtom } from "src/state/atoms/renterAtom";
-import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
-import { useUser } from "src/hooks/use-user";
 
 const tabs = [
   { label: "Details", value: "details" },
   // { label: "Wartung/Reperatur", value: "repairRequests" },
 ];
 
-const useCurrentRepairRequest = (
-  repairRequests?: RepairRequest[],
-  repairRequestId?: string
-): RepairRequest | undefined => {
+const useCurrentRepairRequest = (repairRequests?: RepairRequest[], repairRequestId?: string): RepairRequest | undefined => {
   return useMemo((): RepairRequest | undefined => {
     if (!repairRequestId) {
       return undefined;
@@ -53,59 +34,44 @@ const useCurrentRepairRequest = (
   }, [repairRequests, repairRequestId]);
 };
 
-const Page: PageType = () => {
+export default function Page(): React.JSX.Element {
   const [currentTab, setCurrentTab] = useState<string>("details");
-  const [isLoading, setIsLoading] = useState(false);
 
   const hasShownToast = useRef(false);
-  const renter = useRecoilValue(renterAtom);
+
+  const renterLoadable = useRecoilValueLoadable(renterAtom);
+  const renter = renterLoadable.contents;
+  const isRenterLoading = renterLoadable.state === "loading";
+
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
 
-  const rentalObject = useRecoilValue(rentalObjectAtom);
-  const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
+  const rentalObjectLoadable = useRecoilValueLoadable(rentalObjectAtom);
+  const rentalObject = rentalObjectLoadable.contents;
+  const isRentalObjectLoading = rentalObjectLoadable.state === "loading";
   const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
 
-  const setRenter = useSetRecoilState(currentUserAtom);
+  // const setRenter = useSetRecoilState(renterAtom);
 
   // const repairRequestsSearch = useRepairRequestsSearch();
   // const repairRequestsIds = useRepairRequestsIds(renter.rentalObject?.repairRequests);
   // const repairRequestsSelection = useSelection<string>(repairRequestsIds);
 
-  const currentRepairRequest = useCurrentRepairRequest(
-    renter.rentalObject?.repairRequests as RepairRequest[],
-    dialog.data
-  );
+  const currentRepairRequest = useCurrentRepairRequest(renter.rentalObject?.repairRequests as RepairRequest[], dialog.data);
 
-  const { user, error } = useUser();
-
-  usePageView();
+  const isLoading = isRenterLoading || isRentalObjectLoading;
 
   useEffect(() => {
-    getRenter();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // useEffect(() => {
-  //   setRentalObjectId();
-  // }, [renter]);
-
-  async function getRenter() {
-    try {
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        setIsLoading(true);
-        const renter = await agent.renter.details(authenticatedUserId);
-        setRenter(renter);
-        setSelectedRenterIdAtom(renter.id);
-        setSelectedRentalObjectId(renter.rentalObjectId ?? "");
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+    if (renter.rentalObjectId) {
+      setSelectedRentalObjectId(renter.rentalObjectId ?? "");
+    } else if (!isLoading) {
+      toast.info("Ihnen wurde noch kein Objekt zugewiesen. Bitte wenden Sie sich an Ihren Vermieter.", {
+        duration: 8000,
+        closeButton: true,
+      });
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [renter]);
 
   // const handleDialog = useCallback(
   //   (id: string): void => {
@@ -167,14 +133,14 @@ const Page: PageType = () => {
     }
   };
 
-  if (rentalObject.id === "" && !isLoading && renter.id !== "") {
-    if (!hasShownToast.current) {
-      toast.info("Ihnen wurde noch kein Objekt zugewiesen. Bitte wenden Sie sich an Ihren Vermieter.", {
-        duration: 8000,
-        closeButton: true,
-      });
-      hasShownToast.current = true;
-    }
+  if (!isLoading && rentalObject.id === "" && renter.id !== "") {
+    // if (!hasShownToast.current) {
+    //   toast.info("Ihnen wurde noch kein Objekt zugewiesen. Bitte wenden Sie sich an Ihren Vermieter.", {
+    //     duration: 8000,
+    //     closeButton: true,
+    //   });
+    //   hasShownToast.current = true;
+    // }
     return <></>;
   }
 
@@ -230,11 +196,7 @@ const Page: PageType = () => {
                         <Skeleton variant="circular" width={64} height={64} />
                       )}
                       <Stack spacing={1}>
-                        {rentalObject?.name ? (
-                          <Typography variant="h4">{rentalObject.name}</Typography>
-                        ) : (
-                          <Skeleton width={150} height={32} />
-                        )}
+                        {rentalObject?.name ? <Typography variant="h4">{rentalObject.name}</Typography> : <Skeleton width={150} height={32} />}
                       </Stack>
                     </Stack>
                   </Stack>
@@ -305,6 +267,4 @@ const Page: PageType = () => {
       </Box>
     </>
   );
-};
-
-export default Page;
+}

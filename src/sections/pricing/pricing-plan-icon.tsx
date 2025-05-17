@@ -81,5 +81,5 @@ export const PricingPlanIcon: FC<PlanIconProps> = (props) => {
 };
 
 PricingPlanIcon.propTypes = {
-  name: PropTypes.oneOf<Name>(["startup", "standard", "business"]).isRequired,
+  name: PropTypes.oneOf<Name>(["startup", "standard", "business", "lifetime"]).isRequired,
 };

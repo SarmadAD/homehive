@@ -5,42 +5,13 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import { Seo } from "src/components/seo";
-import { useState, useEffect } from "react";
-import { useSetRecoilState } from "recoil";
-import agent from "src/api/agent";
-import { useUser } from "src/hooks/use-user";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import { useState } from "react";
 import { PricingPlan } from "src/sections/pricing/pricing-plan";
 import { pricingPlans } from "src/lib/marketing/pricing";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
-import { Chip, Stack, Switch } from "@mui/material";
 
 export default function Page(): React.JSX.Element {
-  const setLandlord = useSetRecoilState(currentUserAtom);
-  const [isLoading, setIsLoading] = useState(false);
   const [checked, setChecked] = useState(true);
-
-  const { user } = useUser();
-
-  useEffect(() => {
-    getLandlord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getLandlord() {
-    try {
-      setIsLoading(true);
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   return (
     <>

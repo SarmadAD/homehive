@@ -4,15 +4,12 @@ import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
 import { getRenterName } from "src/utils/get-renter-name";
 import { useRecoilValueLoadable } from "recoil";
-import { renterAtom } from "src/state/atoms/renterAtom";
+import { renterAtom, renterAtomWithRenterId } from "src/state/atoms/renterAtom";
 import { User as UserIcon } from "@phosphor-icons/react/dist/ssr/User";
 
 export const RenterBasicDetails: FC = () => {
-  const renterLoadable = useRecoilValueLoadable(renterAtom);
-  if (
-    renterLoadable.state === "loading" ||
-    (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "")
-  ) {
+  const renterLoadable = useRecoilValueLoadable(renterAtomWithRenterId);
+  if (renterLoadable.state === "loading" || (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "")) {
     return (
       <Card>
         <CardHeader

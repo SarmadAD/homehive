@@ -15,8 +15,8 @@ import {
   Divider,
   Tooltip,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useMemo, useState } from "react";
+import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
@@ -27,7 +27,6 @@ import { useSettings } from "src/hooks/use-settings";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
@@ -36,7 +35,6 @@ import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
 import { Renter } from "prisma/types/renter";
 import { RouterLink } from "src/components/router-link";
-import { useUser } from "src/hooks/use-user";
 import { DotsVertical, User03 } from "@untitled-ui/icons-react";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { toast } from "src/components/toaster";
@@ -44,6 +42,7 @@ import { GeneralPagination } from "src/components/common/pagination/general-pagi
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import checkIfUserIsNotAllowedToCreateRenter from "src/utils/hasAccessForCreateRenter";
 import { Landlord } from "prisma/types/landlord";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -53,8 +52,10 @@ const Page: PageType = () => {
   usePageView();
   const settings = useSettings();
 
-  const setLandlord = useSetRecoilState(currentUserAtom);
-  const landlord = useRecoilValue(currentUserAtom);
+  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
+  const landlord = landlordLoadable.contents;
+  const landloadLoading = landlordLoadable.state === "loading";
   const rentersSearch = useRentersSearch();
   const renters = useRecoilValue(rentersAtom);
   const setRenters = useSetRecoilState(rentersAtom);
@@ -63,7 +64,6 @@ const Page: PageType = () => {
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
 
   // const rentersSelection = useSelection<string>(rentersIds);
-  const [isLoading, setIsLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   // Renter Menu Three Dots Menu
@@ -79,28 +79,6 @@ const Page: PageType = () => {
     setAnchorElRenterThreeDotsMenu(null);
     deselectAll();
   };
-
-  const { user } = useUser();
-
-  useEffect(() => {
-    getLandlord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getLandlord() {
-    try {
-      setIsLoading(true);
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const handleDelete = async () => {
     try {
@@ -257,11 +235,11 @@ const Page: PageType = () => {
                       selectOne(row.id);
                     }}
                     selected={selected}
-                    isLoading={isLoading}
+                    isLoading={landloadLoading}
                     rowStartIcon={<User03 />}
                     selectable
                   />{" "}
-                  {!renters.length && !isLoading ? (
+                  {!renters.length && !landloadLoading ? (
                     <Box sx={{ p: 3 }}>
                       <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
                         Es wurden noch keine Mieter angelegt

@@ -1,5 +1,6 @@
 import { RentalObjectInfo, Token } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
+import { LinkTokenCreateResponse, Transaction } from "plaid";
 import { Landlord } from "prisma/types/landlord";
 import { RentalObject } from "prisma/types/objects";
 import { Renter } from "prisma/types/renter";
@@ -76,10 +77,26 @@ const integrations = {
       generateUserAccessToken: (landlordId: string) => requests.get<Token>(`/api/dashboard/settings/integrations/tink/?landlordId=${landlordId}`),
     },
   },
+  plaid: {
+    linktoken: {
+      create: (landlordId: string) =>
+        requests.post<LinkTokenCreateResponse>(`/api/dashboard/settings/integrations/plaid/linktoken/create/?landlordId=${landlordId}`, {}),
+    },
+    accessToken: {
+      create: (landlordId: string, public_token: string) =>
+        requests.post(`/api/dashboard/settings/integrations/plaid/accesstoken/create`, { landlordId, public_token }),
+      deactivate: (landlordId: string) =>
+        requests.post(`/api/dashboard/settings/integrations/plaid/accesstoken/deactivate/?landlordId=${landlordId}`, {}),
+    },
+    transactions: {
+      sync: (landlordId: string) =>
+        requests.post<Transaction[]>(`/api/dashboard/settings/integrations/plaid/transactions/sync/?landlordId=${landlordId}`, {}),
+    },
+  },
 };
 
 const token = {
-  get: (landlordId: string) => requests.get<Token>(`/api/token/?landlordId=${landlordId}`),
+  get: (landlordId: string) => requests.get(`/api/token/?landlordId=${landlordId}`),
   delete: (landlordId: string) => requests.del(`/api/token/?landlordId=${landlordId}`),
 };
 

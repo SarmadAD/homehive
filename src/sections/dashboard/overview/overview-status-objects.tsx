@@ -1,15 +1,11 @@
-import { FC, useEffect } from "react";
-import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, CardContent, Container, Divider, Link, Stack, SvgIcon, Typography, useTheme } from "@mui/material";
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
-import { useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
-import agent from "src/api/agent";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import OverViewStatusObjectsSkeleton from "src/skeleton/dashboard-skeletons";
 import { RouterLink } from "src/components/router-link";
 

@@ -47,16 +47,13 @@ export default function PrivacyPage() {
             </ListItem>
             <ListItem>
               <Typography variant="body1">
-                <strong>Tink</strong> – zur Bankkontointegration. Weitere Informationen in der{" "}
-                <Link
-                  href="https://assets.ctfassets.net/c78bhj3obgck/5hsHRQ5CA8v3pakiSW7TCn/5107c9cc68ffdf5e670c2aa07f4bf875/General_Privacy_Notice_08-04-2025.pdf"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  Tink Datenschutzerklärung
+                <strong>Plaid</strong> – zur Bankkontointegration. Weitere Informationen in der{" "}
+                <Link href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener">
+                  Plaid Datenschutzerklärung
                 </Link>
+                .
               </Typography>
-            </ListItem>{" "}
+            </ListItem>
             <ListItem>
               <Typography variant="body1">
                 <strong>Supabase</strong> – zur Verwaltung von Benutzerdaten (z. B. E-Mail, Login). Weitere Informationen in der{" "}

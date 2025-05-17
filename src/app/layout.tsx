@@ -11,7 +11,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import "../styles/global.css";
 
-import { type FC, type ReactNode } from "react";
+import { useEffect, type FC, type ReactNode } from "react";
 import { cookies } from "next/headers";
 
 // import { Layout as RootLayout } from "src/layouts/root";
@@ -25,13 +25,15 @@ import { getSettings as getPersistedSettings } from "../lib/settings/get-setting
 import { site } from "src/config";
 import { LocalizationProvider } from "src/components/localization-provider";
 import { Toaster } from "src/components/toaster";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useSetRecoilState } from "recoil";
 import { UserProvider } from "src/contexts/auth/user-context";
 import { SettingsProvider } from "src/contexts/settings";
 import { ThemeProvider } from "src/components/widgets/core/theme-provider/theme-provider";
 
 import dayjs from "dayjs";
 import "dayjs/locale/de";
+import { useUser } from "src/hooks/use-user";
+import { currentUserIdAtom } from "src/state/atoms/currentUserIdAtom";
 dayjs.locale("de");
 
 // Force-Dynamic is required otherwise all pages are marked as client-side
@@ -52,15 +54,9 @@ const Fonts: FC = () => (
   <>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&display=swap" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap" />
   </>
 );
 
@@ -116,7 +112,8 @@ export default async function Layout({ children }: LayoutProps): Promise<React.J
     <html data-mui-color-scheme={defaultSettings.colorScheme} lang="de">
       <head>
         <title>HomeHive</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta name="viewport" content="initial-scale=1, width=device-width" />{" "}
+        <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
         <Favicon />
         <Fonts />
         <Vendors />

@@ -68,16 +68,18 @@ model Landlord {
 }
 
 model Token {
-  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  access_token String
-  expires_in   Int
-  id_hint      String?
-  scope        String
-  token_type   String
-  landlord     Landlord @relation(fields: [landlordId], references: [id])
-  landlordId   String   @db.Uuid
-  createdAt    DateTime @default(now())
-  state        Int      @default(1)
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  access_token      String
+  expires_in        Int?
+  id_hint           String?
+  scope             String?
+  token_type        String?
+  itemId            String?
+  transactionCursor String?
+  landlord          Landlord @relation(fields: [landlordId], references: [id])
+  landlordId        String   @db.Uuid
+  createdAt         DateTime @default(now())
+  state             Int      @default(1)
 
   @@index([landlordId])
 }
