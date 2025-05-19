@@ -22,10 +22,17 @@ export interface RentPaymentFilters {
   sortDir?: SortDir;
   path: string;
   handleRefreshPayments: () => void;
+  showFilters: boolean;
   isLoadingPayments: boolean;
 }
 
-export function RentPaymentFilters({ sortDir = "desc", path, handleRefreshPayments, isLoadingPayments }: RentPaymentFilters): React.JSX.Element {
+export function RentPaymentFilters({
+  sortDir = "desc",
+  path,
+  handleRefreshPayments,
+  isLoadingPayments,
+  showFilters,
+}: RentPaymentFilters): React.JSX.Element {
   const router = useRouter();
   const landlord = useRecoilValue(currentLandlordAtom);
   const [isTokenAlive, setIsTokenAlive] = useState(false);
@@ -112,10 +119,12 @@ export function RentPaymentFilters({ sortDir = "desc", path, handleRefreshPaymen
               </Button>
             </span>
           </Tooltip>
-          <Select name="sort" onChange={handleSortChange} sx={{ maxWidth: "100%", width: "120px" }} value={sortDir}>
-            <Option value="desc">Neueste</Option>
-            <Option value="asc">Älteste</Option>
-          </Select>
+          {showFilters && (
+            <Select name="sort" onChange={handleSortChange} sx={{ maxWidth: "100%", width: "120px" }} value={sortDir}>
+              <Option value="desc">Neueste</Option>
+              <Option value="asc">Älteste</Option>
+            </Select>
+          )}
         </Stack>
       </Stack>
     </div>

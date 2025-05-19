@@ -136,6 +136,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                 <Card>
                   <RentPaymentFilters
                     sortDir={sortDir}
+                    showFilters={true}
                     path={paths.landlordportal.dashboard.finances.index}
                     handleRefreshPayments={handleRefreshPayments}
                     isLoadingPayments={isLoading || rentPaymentsLoadable.state === "loading"}

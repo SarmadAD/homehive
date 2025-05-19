@@ -69,6 +69,7 @@ export async function POST(request: Request, { params }: { params: { landlordId:
             },
           },
         },
+        include: { renter: true },
       });
       if (createdRentalObject) {
         return NextResponse.json(createdRentalObject);

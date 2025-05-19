@@ -6,13 +6,13 @@ import CheckIcon from "@untitled-ui/icons-react/build/esm/Check";
 import type { StepIconProps } from "@mui/material";
 import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } from "@mui/material";
 import agent from "src/api/agent";
-import { useRecoilValue } from "recoil";
+import { useRecoilRefresher_UNSTABLE, useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "src/hooks/use-router";
 import { RenterBasicInfosStep } from "./renter-basicinfos-step";
 import { Renter, renterDefault } from "prisma/types/renter";
 import { RenterSendInviteStep } from "./renter-send-invite-step";
-import { createClient as createSupabaseClient } from "../../../../lib/supabase/client";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { rentersAtom } from "src/state/atoms/rentersAtom";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -46,7 +46,8 @@ export default function RenterCreateForm(): React.JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newRenter, setNewRenter] = useState<Renter>(renterDefault);
-  const [supabaseClient] = useState(createSupabaseClient());
+  const setRenters = useSetRecoilState(rentersAtom);
+  const setLandlords = useSetRecoilState(currentLandlordAtom);
 
   const landlord = useRecoilValue(currentLandlordAtom);
   const router = useRouter();
@@ -79,7 +80,13 @@ export default function RenterCreateForm(): React.JSX.Element {
   async function createRenter() {
     try {
       if (newRenter) {
-        await agent.renters.create(newRenter, landlord.id);
+        const newRenterResponse = await agent.renters.create(newRenter, landlord.id);
+        setRenters((prevRenters) => (prevRenters ? [...prevRenters, newRenterResponse] : [newRenterResponse]));
+        setLandlords((prevLandlord) =>
+          prevLandlord
+            ? { ...prevLandlord, renters: prevLandlord.renters ? [...prevLandlord.renters, newRenterResponse] : [newRenterResponse] }
+            : prevLandlord
+        );
       }
     } catch (error) {
       console.error(error);

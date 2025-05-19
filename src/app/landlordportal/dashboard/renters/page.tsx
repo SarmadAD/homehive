@@ -56,9 +56,12 @@ const Page: PageType = () => {
   const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
   const landlord = landlordLoadable.contents;
   const landloadLoading = landlordLoadable.state === "loading";
+
   const rentersSearch = useRentersSearch();
-  const renters = useRecoilValue(rentersAtom);
+  const rentersLoadable = useRecoilValueLoadable(rentersAtom);
+  const rentersLoading = rentersLoadable.state === "loading";
   const setRenters = useSetRecoilState(rentersAtom);
+  const renters: Renter[] = rentersLoadable.contents;
   const rentersIds = useRentersIds(renters);
   // const rentersIds = React.useMemo(() => renters.map((renter) => renter.id), [renters]);
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
@@ -74,6 +77,8 @@ const Page: PageType = () => {
     setAnchorElRenterThreeDotsMenu(event.currentTarget);
   };
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
+
+  const isLoading = rentersLoading || landloadLoading;
 
   const handleCloseRenterThreeDotsMenu = () => {
     setAnchorElRenterThreeDotsMenu(null);
@@ -108,9 +113,11 @@ const Page: PageType = () => {
   }
 
   const paginatedRenter = useMemo(() => {
-    const startIndex = paginationState.page * paginationState.rowsPerPage;
-    const endIndex = startIndex + paginationState.rowsPerPage;
-    return renters.slice(startIndex, endIndex);
+    if (rentersLoadable.state === "hasValue") {
+      const startIndex = paginationState.page * paginationState.rowsPerPage;
+      const endIndex = startIndex + paginationState.rowsPerPage;
+      return renters.slice(startIndex, endIndex);
+    }
   }, [renters, paginationState.page, paginationState.rowsPerPage]);
 
   const columns = [
@@ -235,11 +242,11 @@ const Page: PageType = () => {
                       selectOne(row.id);
                     }}
                     selected={selected}
-                    isLoading={landloadLoading}
+                    isLoading={isLoading}
                     rowStartIcon={<User03 />}
                     selectable
                   />{" "}
-                  {!renters.length && !landloadLoading ? (
+                  {!renters.length && !isLoading ? (
                     <Box sx={{ p: 3 }}>
                       <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
                         Es wurden noch keine Mieter angelegt

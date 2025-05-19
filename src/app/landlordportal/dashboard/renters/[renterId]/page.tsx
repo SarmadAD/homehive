@@ -40,6 +40,9 @@ import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { DeleteModal } from "src/components/widgets/modals/delete-modal";
+import { toast } from "src/components/toaster";
+import { rentersAtom } from "src/state/atoms/rentersAtom";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -68,6 +71,11 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   const renter = useRecoilValue(renterAtom);
   const renterLoadable = useRecoilValueLoadable(renterAtom);
   const refreshRentPayment = useRecoilRefresher_UNSTABLE(rentPaymentsAtom);
+
+  const renters = useRecoilValue(rentersAtom);
+  const setRenters = useSetRecoilState(rentersAtom);
+
+  const [openDeleteModalForRenter, setOpenDeleteModalForRenter] = useState(false);
 
   async function setRenterId() {
     if (renterId) {
@@ -158,6 +166,29 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
       return dateB - dateA;
     });
   }
+
+  function handleDeleteModalOpenForRenter() {
+    setAnchorEl(null);
+    setOpenDeleteModalForRenter(true);
+  }
+
+  function handleCancelDeleteRenterFromRentalObjectModal() {
+    setOpenDeleteModalForRenter(false);
+  }
+
+  const handleDeleteRenterFromObject = async () => {
+    try {
+      await agent.renters.delete(renterId ?? "");
+      const updatedRenters = renters.filter((renter) => renter.id !== renterId);
+      setRenters(updatedRenters);
+      router.push(paths.landlordportal.dashboard.renters.index);
+      toast.success("Mieter erfolgreich gelöscht");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOpenDeleteModalForRenter(false);
+    }
+  };
 
   const isLoadingPaymentsAll =
     rentPaymentsLoadable.state === "loading" ||
@@ -297,7 +328,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                         },
                       }}
                     >
-                      <MenuItem onClick={handleDeleteClick}>
+                      <MenuItem onClick={() => handleDeleteModalOpenForRenter()}>
                         <SvgIcon>
                           <DeleteOutline />
                         </SvgIcon>
@@ -333,6 +364,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                     <Card>
                       <RentPaymentFilters
                         sortDir={sortDir}
+                        showFilters={false}
                         path={`${paths.landlordportal.dashboard.renters.details}${renterId}`}
                         handleRefreshPayments={handleRefreshPayments}
                         isLoadingPayments={isLoadingPaymentsAll}
@@ -356,7 +388,13 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
               {/* )} */}
             </Stack>
           </Container>
-        </Box>
+        </Box>{" "}
+        <DeleteModal
+          text={"Möchtest Du wirklich den Mieter löschen?"}
+          handleCancelDeleteModal={handleCancelDeleteRenterFromRentalObjectModal}
+          onDelete={handleDeleteRenterFromObject}
+          openDeleteModal={openDeleteModalForRenter}
+        />
       </Box>
     </>
   );

@@ -10,12 +10,13 @@ import { ObjectInfosStep } from "./object-objectInfos-step";
 import { ObjectRentInfosStep } from "./object-rentInfos-step";
 import { RentalObject, rentalObjectDefault } from "prisma/types/objects";
 import agent from "src/api/agent";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "src/hooks/use-router";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
 import { defaultLandlord } from "prisma/types/landlord";
 import { paths } from "src/paths";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -51,6 +52,8 @@ export const ObjectCreateForm: FC = () => {
   const [newObject, setNewObject] = useState<RentalObject>(rentalObjectDefault);
   const landlord = useRecoilValue(currentLandlordAtom);
   const router = useRouter();
+  const setLandlords = useSetRecoilState(currentLandlordAtom);
+  const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
 
   const handleNext = useCallback(() => {
     setActiveStep((prevState) => prevState + 1);
@@ -97,6 +100,12 @@ export const ObjectCreateForm: FC = () => {
         if ("error" in response) {
           throw new Error(String(response.error));
         } else if (response.id) {
+          setRentalObjects((prevRentalObjects) => (prevRentalObjects ? [...prevRentalObjects, response] : [response]));
+          setLandlords((prevLandlord) =>
+            prevLandlord
+              ? { ...prevLandlord, rentalObjects: prevLandlord.rentalObjects ? [...prevLandlord.rentalObjects, response] : [response] }
+              : prevLandlord
+          );
           return response;
         }
       }
