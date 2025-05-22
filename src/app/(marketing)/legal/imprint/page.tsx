@@ -36,10 +36,6 @@ export default function Page() {
             Kontaktinformationen
           </Typography>
           <Typography variant="body2">E-Mail: info@homehive.me</Typography>
-          <Typography variant="h6" sx={{ mt: 4 }} gutterBottom>
-            Umsatzsteuer-ID
-          </Typography>
-          <Typography variant="body2">Beantragt – wird nachgereicht gemäß § 27a UStG.</Typography>
 
           <Typography variant="h6" sx={{ mt: 4 }} gutterBottom>
             Verantwortlich für den Inhalt
