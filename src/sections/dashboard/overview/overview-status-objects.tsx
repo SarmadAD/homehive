@@ -1,28 +1,11 @@
-import { FC, useEffect } from "react";
-import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Container,
-  Divider,
-  Link,
-  Stack,
-  SvgIcon,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, Container, Divider, Link, Stack, SvgIcon, Typography, useTheme } from "@mui/material";
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
-import { useRecoilState, useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
-import agent from "src/api/agent";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import OverViewStatusObjectsSkeleton from "src/skeleton/dashboard-skeletons";
 import { RouterLink } from "src/components/router-link";
 
@@ -93,12 +76,10 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
   const chartOptions = useChartOptions();
   const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
   const objectStatusData = useRecoilValueLoadable(objectStatusSeriesData);
-
   let content;
   if (rentalObjectsLoadable.state === "loading" || objectStatusData.state === "loading") {
     content = <OverViewStatusObjectsSkeleton />;
   } else if (rentalObjectsLoadable.state === "hasValue" && objectStatusData.state === "hasValue") {
-    const rentalObjects = rentalObjectsLoadable.contents;
     const statusData = objectStatusData.contents;
 
     content =

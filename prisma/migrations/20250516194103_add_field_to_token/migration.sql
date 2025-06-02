@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Token" ADD COLUMN     "itemId" TEXT,
+ALTER COLUMN "scope" DROP NOT NULL,
+ALTER COLUMN "token_type" DROP NOT NULL;

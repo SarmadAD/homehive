@@ -9,9 +9,8 @@ export async function GET(request: Request, { params }: { params: { objectId: st
     const rentalObject = await prisma.rentalObject.findFirst({
       where: { id: objectId },
       include: {
-        renter: { include: { rentalAgreement: true, rentPayment: true } },
+        renter: { where: { state: 1 }, include: { rentalAgreement: true, rentPayment: true } },
         rentalAgreement: true,
-        rentalObjectInfo: true,
         repairRequests: { include: { renter: true } },
       },
     });
@@ -72,34 +71,9 @@ export async function PUT(request: Request, { params }: { params: { objectId: st
           postalCode: rentalObject.postalCode,
           renter: { connect: rentersId },
           areaSize: rentalObject.areaSize,
-          // rentalAgreement: {
-          //   upsert: rentalObject.rentalAgreement.map((agreement) => ({
-          //     where: { id: agreement.id },
-          //     update: {
-          //       dueDate: agreement.dueDate,
-          //       dueDateState: agreement.dueDateState,
-          //       renter: { connect: { id: agreement.renter?.id } },
-          //     },
-          //     create: {
-          //       dueDate: agreement.dueDate,
-          //       dueDateState: agreement.dueDateState,
-          //       renter: { connect: { id: agreement.renter?.id } },
-          //     },
-          //   })),
-          // },
-          rentalObjectInfo: {
-            update: {
-              baseRent: rentalObject.rentalObjectInfo.baseRent,
-              serviceCharges: rentalObject.rentalObjectInfo.serviceCharges,
-              // electricityCosts: rentalObject.rentalObjectInfo.electricityCosts,
-              // heatingCosts: rentalObject.rentalObjectInfo.heatingCosts,
-              // waterCosts: rentalObject.rentalObjectInfo.waterCosts,
-            },
-          },
         },
         include: {
           renter: true,
-          rentalObjectInfo: true,
         },
       });
       if (updatedRentalObject) {

@@ -83,9 +83,7 @@ function renderNavGroups({ items, pathname }: { items: NavItemConfig[]; pathname
       <Stack component="li" key={curr.key} spacing={1.5}>
         {curr.title ? (
           <div>
-            <Typography sx={{ color: "var(--NavGroup-title-color)", fontSize: "0.875rem", fontWeight: 500 }}>
-              {curr.title}
-            </Typography>
+            <Typography sx={{ color: "var(--NavGroup-title-color)", fontSize: "0.875rem", fontWeight: 500 }}>{curr.title}</Typography>
           </div>
         ) : null}
         <div>{renderNavItems({ depth: 0, items: otherItems, pathname })}</div>
@@ -116,20 +114,10 @@ function renderNavGroups({ items, pathname }: { items: NavItemConfig[]; pathname
   );
 }
 
-function renderNavItems({
-  depth = 0,
-  items = [],
-  pathname,
-}: {
-  depth: number;
-  items?: NavItemConfig[];
-  pathname: string;
-}): React.JSX.Element {
+function renderNavItems({ depth = 0, items = [], pathname }: { depth: number; items?: NavItemConfig[]; pathname: string }): React.JSX.Element {
   const children = items.reduce((acc: React.ReactNode[], curr: NavItemConfig): React.ReactNode[] => {
     const { items: childItems, key, ...item } = curr;
-    const forceOpen = childItems
-      ? Boolean(childItems.find((childItem) => childItem.href && pathname.startsWith(childItem.href)))
-      : false;
+    const forceOpen = childItems ? Boolean(childItems.find((childItem) => childItem.href && pathname.startsWith(childItem.href))) : false;
 
     acc.push(
       <RoleBasedGuard permission={item.href ?? ""}>
@@ -235,8 +223,7 @@ function NavItem({
           }),
           ...(open && { color: "var(--NavItem-open-color)" }),
           "&:hover": {
-            ...(!disabled &&
-              !active && { bgcolor: "var(--NavItem-hover-background)", color: "var(--NavItem-hover-color)" }),
+            ...(!disabled && !active && { bgcolor: "var(--NavItem-hover-background)", color: "var(--NavItem-hover-color)" }),
           },
         }}
         tabIndex={0}
@@ -251,10 +238,7 @@ function NavItem({
           ) : null}
         </Box>
         <Box sx={{ flex: "1 1 auto" }}>
-          <Typography
-            component="span"
-            sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}
-          >
+          <Typography component="span" sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}>
             {title}
           </Typography>
         </Box>

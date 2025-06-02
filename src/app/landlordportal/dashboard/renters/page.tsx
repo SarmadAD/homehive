@@ -1,8 +1,22 @@
 "use client";
 
-import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Button, SvgIcon, Link, Menu, MenuItem, Card, Divider } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  Box,
+  Container,
+  Stack,
+  Typography,
+  Unstable_Grid2 as Grid,
+  Button,
+  SvgIcon,
+  Link,
+  Menu,
+  MenuItem,
+  Card,
+  Divider,
+  Tooltip,
+} from "@mui/material";
+import { useMemo, useState } from "react";
+import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
 import { usePageView } from "src/hooks/use-page-view";
@@ -13,7 +27,6 @@ import { useSettings } from "src/hooks/use-settings";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
@@ -22,31 +35,37 @@ import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
 import { Renter } from "prisma/types/renter";
 import { RouterLink } from "src/components/router-link";
-import { useUser } from "src/hooks/use-user";
 import { DotsVertical, User03 } from "@untitled-ui/icons-react";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { toast } from "src/components/toaster";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
+import checkIfUserIsNotAllowedToCreateRenter from "src/utils/hasAccessForCreateRenter";
+import { Landlord } from "prisma/types/landlord";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
 // export const metadata = { title: `Renters | Mieter | ${site.name}` } satisfies Metadata;
 
-const Page: PageType = () => {
-  usePageView();
+export default function Page(): React.JSX.Element {
   const settings = useSettings();
 
-  const setLandlord = useSetRecoilState(currentUserAtom);
+  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
+  const landlord = landlordLoadable.contents;
+  const landloadLoading = landlordLoadable.state === "loading";
+
   const rentersSearch = useRentersSearch();
-  const renters = useRecoilValue(rentersAtom);
+  const rentersLoadable = useRecoilValueLoadable(rentersAtom);
+  const rentersLoading = rentersLoadable.state === "loading";
   const setRenters = useSetRecoilState(rentersAtom);
+  const renters: Renter[] = rentersLoadable.contents;
   const rentersIds = useRentersIds(renters);
   // const rentersIds = React.useMemo(() => renters.map((renter) => renter.id), [renters]);
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
 
   // const rentersSelection = useSelection<string>(rentersIds);
-  const [isLoading, setIsLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   // Renter Menu Three Dots Menu
@@ -58,38 +77,22 @@ const Page: PageType = () => {
   };
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
+  const isLoading = rentersLoading || landloadLoading;
+
   const handleCloseRenterThreeDotsMenu = () => {
     setAnchorElRenterThreeDotsMenu(null);
     deselectAll();
   };
-
-  const { user } = useUser();
-
-  useEffect(() => {
-    getLandlord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getLandlord() {
-    try {
-      setIsLoading(true);
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const handleDelete = async () => {
     try {
       const deletedRenter = await agent.renters.delete(Array.from(selected)[0]);
       const updatedRenters = renters.filter((renter) => renter.id !== deletedRenter.id);
       setRenters(updatedRenters);
+      setLandlord((prevLandlord) => ({
+        ...prevLandlord,
+        renters: updatedRenters,
+      }));
       toast.success("Mieter erfolgreich gelöscht");
     } catch (error) {
       console.error(error);
@@ -109,9 +112,11 @@ const Page: PageType = () => {
   }
 
   const paginatedRenter = useMemo(() => {
-    const startIndex = paginationState.page * paginationState.rowsPerPage;
-    const endIndex = startIndex + paginationState.rowsPerPage;
-    return renters.slice(startIndex, endIndex);
+    if (rentersLoadable.state === "hasValue") {
+      const startIndex = paginationState.page * paginationState.rowsPerPage;
+      const endIndex = startIndex + paginationState.rowsPerPage;
+      return renters.slice(startIndex, endIndex);
+    }
   }, [renters, paginationState.page, paginationState.rowsPerPage]);
 
   const columns = [
@@ -186,18 +191,37 @@ const Page: PageType = () => {
                     <Typography variant="h4">Mieter</Typography>
                   </div>
                   <Stack direction="row" spacing={4}>
-                    <Button
-                      component={RouterLink}
-                      startIcon={
-                        <SvgIcon>
-                          <PlusIcon />
-                        </SvgIcon>
+                    <Tooltip
+                      title={
+                        checkIfUserIsNotAllowedToCreateRenter(landlord as Landlord) ? (
+                          <>
+                            Mehr Mieter anlegen?
+                            <br /> Kontaktiere uns durch info@homehive.me
+                            {/* <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
+                              Jetzt upgraden
+                            </Link> */}
+                          </>
+                        ) : (
+                          ""
+                        )
                       }
-                      variant="contained"
-                      href={paths.landlordportal.dashboard.renters.create}
                     >
-                      Hinzufügen
-                    </Button>
+                      <span>
+                        <Button
+                          component={RouterLink}
+                          startIcon={
+                            <SvgIcon>
+                              <PlusIcon />
+                            </SvgIcon>
+                          }
+                          variant="contained"
+                          href={paths.landlordportal.dashboard.renters.create}
+                          disabled={checkIfUserIsNotAllowedToCreateRenter(landlord as Landlord)}
+                        >
+                          Hinzufügen
+                        </Button>{" "}
+                      </span>
+                    </Tooltip>
                   </Stack>
                 </Stack>
               </Grid>
@@ -243,7 +267,7 @@ const Page: PageType = () => {
           </Container>
         </Box>{" "}
         <DeleteModal
-          text={"Möchtest du wirklich den Mieter löschen?"}
+          text={"Möchtest du wirklich den Mieter löschen? Mit den löschen des Mieters werden auch alle zugehörigen Mietverhältnisse gelöscht."}
           handleCancelDeleteModal={handleCancelDeleteModal}
           onDelete={handleDelete}
           openDeleteModal={openDeleteModal}
@@ -251,8 +275,4 @@ const Page: PageType = () => {
       </RoleBasedGuard>
     </>
   );
-};
-
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-
-export default Page;
+}

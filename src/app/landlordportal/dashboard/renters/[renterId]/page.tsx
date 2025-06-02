@@ -1,21 +1,18 @@
 "use client";
 
-import { ChangeEvent, useMemo } from "react";
-import { useCallback, useEffect, useState, MouseEvent } from "react";
+import { useMemo } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
 import {
   Avatar,
   Box,
   Button,
-  Chip,
   Container,
   Divider,
   Link,
   Stack,
   SvgIcon,
-  Tab,
-  Tabs,
   Typography,
   Unstable_Grid2 as Grid,
   Menu,
@@ -23,28 +20,29 @@ import {
   Skeleton,
   Card,
 } from "@mui/material";
-import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { RenterBasicDetails } from "src/sections/dashboard/renter/renter-basic-details";
 import { useSearchParams } from "next/navigation";
-import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { useRecoilRefresher_UNSTABLE, useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
-import { renterAtom } from "src/state/atoms/renterAtom";
+import { renterAtom, renterAtomWithRenterId } from "src/state/atoms/renterAtom";
 import { getRenterName } from "src/utils/get-renter-name";
 import { DeleteOutline } from "@mui/icons-material";
 import agent from "src/api/agent";
 import { useRouter } from "src/hooks/use-router";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import { useUser } from "src/hooks/use-user";
 import { PaidRents } from "src/sections/dashboard/renter/paid-rents";
 import { RentPayment } from "@prisma/client";
 import { RentPaymentFilters } from "src/sections/dashboard/finances/rent-payment-filters";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
+import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { DeleteModal } from "src/components/widgets/modals/delete-modal";
+import { toast } from "src/components/toaster";
+import { rentersAtom } from "src/state/atoms/rentersAtom";
+import { RenterRentalAgreementInfos } from "src/sections/dashboard/renter/renter-rental-agreement-infos";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -56,15 +54,13 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   // const [currentTab, setCurrentTab] = useState<string>("details");
 
   const router = useRouter();
-  const { user } = useUser();
   const customSearchParams = useSearchParams();
   const renterId = customSearchParams.get("renterId");
 
   const { sortDir } = searchParams;
 
-  const setLandlord = useSetRecoilState(currentUserAtom);
   const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
-  const landlord = useRecoilValue(currentUserAtom);
+  const landlord = useRecoilValue(currentLandlordAtom);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const rentPaymentsLoadable = useRecoilValueLoadable(rentPaymentsAtom);
@@ -72,30 +68,14 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  const renter = useRecoilValue(renterAtom);
-  const renterLoadable = useRecoilValueLoadable(renterAtom);
+  const renter = useRecoilValue(renterAtomWithRenterId);
+  const renterLoadable = useRecoilValueLoadable(renterAtomWithRenterId);
+  const refreshRentPayment = useRecoilRefresher_UNSTABLE(rentPaymentsAtom);
 
-  usePageView();
+  const renters = useRecoilValue(rentersAtom);
+  const setRenters = useSetRecoilState(rentersAtom);
 
-  useEffect(() => {
-    getLandlord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getLandlord() {
-    try {
-      setIsLoading(true);
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [openDeleteModalForRenter, setOpenDeleteModalForRenter] = useState(false);
 
   async function setRenterId() {
     if (renterId) {
@@ -111,18 +91,18 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     setAnchorEl(null);
   };
 
-  const handleDeleteClick = async () => {
-    try {
-      if (renter?.id) {
-        await agent.renters.delete(renter.id);
-        router.push("/landlordportal/dashboard/renters");
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setAnchorEl(null);
-    }
-  };
+  // const handleDeleteClick = async () => {
+  //   try {
+  //     if (renter?.id) {
+  //       await agent.renters.delete(renter.id);
+  //       router.push("/landlordportal/dashboard/renters");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setAnchorEl(null);
+  //   }
+  // };
 
   useEffect(
     () => {
@@ -134,16 +114,41 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   useEffect(() => {
     if (landlord.id && renterId) {
-      getRentPayments();
+      handleRefreshPayments();
     }
   }, [landlord]);
 
-  async function getRentPayments() {
+  // async function getRentPayments() {
+  //   try {
+  //     await agent.rentPayments.checkForNewTransactionsForRenter(landlord.id, renterId ?? "");
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //   }
+  // }
+
+  async function syncTransactions() {
     try {
-      await agent.rentPayments.checkForNewTransactionsForRenter(landlord.id, renterId ?? "");
+      if (landlord.id) {
+        const transactions = await agent.integrations.plaid.transactions.sync(landlord.id);
+        return transactions;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleRefreshPayments() {
+    try {
+      setIsLoading(true);
+      const response = await syncTransactions();
+      if (Array.isArray(response) && response.length > 0 && response.some((item) => item !== null && item !== undefined)) {
+        refreshRentPayment();
+      }
     } catch (error) {
       console.log(error);
     } finally {
+      setIsLoading(false);
     }
   }
 
@@ -161,6 +166,29 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
       return dateB - dateA;
     });
   }
+
+  function handleDeleteModalOpenForRenter() {
+    setAnchorEl(null);
+    setOpenDeleteModalForRenter(true);
+  }
+
+  function handleCancelDeleteRenterFromRentalObjectModal() {
+    setOpenDeleteModalForRenter(false);
+  }
+
+  const handleDeleteRenter = async () => {
+    try {
+      await agent.renters.delete(renterId ?? "");
+      const updatedRenters = renters.filter((renter) => renter.id !== renterId);
+      setRenters(updatedRenters);
+      router.push(paths.landlordportal.dashboard.renters.index);
+      toast.success("Mieter erfolgreich gelöscht");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOpenDeleteModalForRenter(false);
+    }
+  };
 
   const isLoadingPaymentsAll =
     rentPaymentsLoadable.state === "loading" ||
@@ -210,21 +238,30 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
             <Stack spacing={4}>
               <Stack spacing={4}>
                 <div>
-                  <Link
-                    color="text.primary"
-                    component={RouterLink}
-                    href={paths.landlordportal.dashboard.renters.index}
+                  <Button
+                    color="inherit"
+                    startIcon={
+                      <SvgIcon>
+                        <ArrowLeftIcon />
+                      </SvgIcon>
+                    }
+                    onClick={() => {
+                      if (window.history.length > 2) {
+                        router.back();
+                      } else {
+                        router.push(paths.landlordportal.dashboard.renters.index);
+                      }
+                    }}
                     sx={{
                       alignItems: "center",
                       display: "inline-flex",
+                      textTransform: "none",
+                      p: 0,
+                      minWidth: 0,
                     }}
-                    underline="hover"
                   >
-                    <SvgIcon sx={{ mr: 1 }}>
-                      <ArrowLeftIcon />
-                    </SvgIcon>
-                    <Typography variant="subtitle2">Mieter</Typography>
-                  </Link>
+                    <Typography variant="subtitle2">Zurück</Typography>
+                  </Button>
                 </div>
                 <Stack
                   alignItems="flex-start"
@@ -300,7 +337,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                         },
                       }}
                     >
-                      <MenuItem onClick={handleDeleteClick}>
+                      <MenuItem onClick={() => handleDeleteModalOpenForRenter()}>
                         <SvgIcon>
                           <DeleteOutline />
                         </SvgIcon>
@@ -331,10 +368,17 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                 <Grid container spacing={4}>
                   <Grid xs={12} lg={4}>
                     <RenterBasicDetails />
+                    <RenterRentalAgreementInfos />
                   </Grid>
-                  <Grid lg={8} xs={12}>
+                  {/* <Grid lg={8} xs={12}>
                     <Card>
-                      <RentPaymentFilters sortDir={sortDir} path={`${paths.landlordportal.dashboard.renters.details}${renterId}`} />
+                      <RentPaymentFilters
+                        sortDir={sortDir}
+                        showFilters={false}
+                        path={`${paths.landlordportal.dashboard.renters.details}${renterId}`}
+                        handleRefreshPayments={handleRefreshPayments}
+                        isLoadingPayments={isLoadingPaymentsAll}
+                      />
                       <Divider />{" "}
                       <Box sx={{ overflowX: "auto" }}>
                         <PaidRents rentPayments={paginatedRentPayments} isLoadingPayments={isLoadingPaymentsAll} />
@@ -348,13 +392,19 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                         onRowsPerPageChange={handleRowsPerPageChange}
                       />
                     </Card>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </div>
               {/* )} */}
             </Stack>
           </Container>
-        </Box>
+        </Box>{" "}
+        <DeleteModal
+          text={"Möchtest Du wirklich den Mieter löschen?"}
+          handleCancelDeleteModal={handleCancelDeleteRenterFromRentalObjectModal}
+          onDelete={handleDeleteRenter}
+          openDeleteModal={openDeleteModalForRenter}
+        />
       </Box>
     </>
   );

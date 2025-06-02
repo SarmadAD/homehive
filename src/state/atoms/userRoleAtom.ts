@@ -1,17 +1,17 @@
 import { atom, selector } from "recoil";
 import agent from "src/api/agent";
 import { UserRole } from "prisma/types/userrole";
-import { currentUserAtom } from "./currentUserAtom";
+import { currentUserIdAtom } from "./currentUserIdAtom";
 
 export const userRoleAtom = atom<UserRole | null>({
   key: "userRoleAtom",
   default: selector({
     key: "userRoleAtom/default",
     get: async ({ get }) => {
-      const user = get(currentUserAtom);
-      if (user?.id) {
+      const userId = get(currentUserIdAtom);
+      if (userId) {
         try {
-          const userRole = await agent.userRoles.details(user.authenticatedUserId);
+          const userRole = await agent.userRoles.details(userId);
           return userRole;
         } catch (error) {
           console.error("Fehler beim Abrufen der Benutzerrolle:", error);

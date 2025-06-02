@@ -6,12 +6,8 @@ import { useSettings } from "src/hooks/use-settings";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
 import { OverviewRentalIncome } from "src/sections/dashboard/overview/overview-rental-income";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
-import { useEffect, useState } from "react";
-import agent from "src/api/agent";
-import { useSetRecoilState } from "recoil";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
+import { useState } from "react";
 import { RoleBasedGuard } from "../../auth/role/RoleBasedGuard";
-import { useUser } from "src/hooks/use-user";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -19,30 +15,6 @@ import { useUser } from "src/hooks/use-user";
 
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
-  const setLandlord = useSetRecoilState(currentUserAtom);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { user } = useUser();
-
-  useEffect(() => {
-    getLandlord();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getLandlord() {
-    try {
-      setIsLoading(true);
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   // if (isLoading) {
   //   return (

@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma, Landlord, RentalObject, RentalObjectInfo, Renter, Role } from "@prisma/client";
+import { PrismaClient, Prisma, Landlord, RentalObject, Renter, Role } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -38,10 +38,7 @@ const getRenter = (landLords: Landlord[]): Prisma.RenterCreateInput[] => [
   },
 ];
 
-const getRentalObject = (
-  landlords: Landlord[],
-  rentalObjectInfos: RentalObjectInfo[]
-): Prisma.RentalObjectCreateInput[] => [
+const getRentalObject = (landlords: Landlord[]): Prisma.RentalObjectCreateInput[] => [
   {
     createdAt: new Date("2023-06-01T12:00:00Z"),
     name: "Apartment 1",
@@ -53,7 +50,6 @@ const getRentalObject = (
     postalCode: 12345,
     areaSize: 100,
     landlord: { connect: { id: landlords[0].id } },
-    rentalObjectInfo: { connect: { id: rentalObjectInfos[0].id } }, // Eindeutige Zuordnung
   },
   {
     createdAt: new Date("2023-06-01T12:00:00Z"),
@@ -66,30 +62,12 @@ const getRentalObject = (
     postalCode: 12345,
     areaSize: 100,
     landlord: { connect: { id: landlords[0].id } },
-    rentalObjectInfo: { connect: { id: rentalObjectInfos[1].id } }, // Eindeutige Zuordnung
   },
 ];
 
 const getLandLords = (): Prisma.LandlordCreateInput[] => [
   {
     authenticatedUserId: "LAg5mcTtMKZU0AVbymt7V4Ut9Cx1",
-  },
-];
-
-const getRentalObjectInfos = (): Prisma.RentalObjectInfoCreateInput[] => [
-  {
-    baseRent: 1000,
-    serviceCharges: 200,
-    heatingCosts: 100,
-    waterCosts: 50,
-    electricityCosts: 75,
-  },
-  {
-    baseRent: 2000,
-    serviceCharges: 200,
-    heatingCosts: 100,
-    waterCosts: 50,
-    electricityCosts: 75,
   },
 ];
 
@@ -145,8 +123,6 @@ async function main() {
   await prisma.landlord.deleteMany();
   await prisma.renter.deleteMany();
 
-  await prisma.rentalObjectInfo.deleteMany();
-
   await prisma.userRole.deleteMany();
   await prisma.role.deleteMany();
 
@@ -155,18 +131,10 @@ async function main() {
 
   const landlords = await Promise.all(getLandLords().map((landlord) => prisma.landlord.create({ data: landlord })));
   const renters = await Promise.all(getRenter(landlords).map((renter) => prisma.renter.create({ data: renter })));
-  const rentalObjectInfos = await Promise.all(
-    getRentalObjectInfos().map((rentalObjectInfo) => prisma.rentalObjectInfo.create({ data: rentalObjectInfo }))
-  );
-  const rentalObjects = await Promise.all(
-    getRentalObject(landlords, rentalObjectInfos).map((rentalObject) =>
-      prisma.rentalObject.create({ data: rentalObject })
-    )
-  );
+
+  const rentalObjects = await Promise.all(getRentalObject(landlords).map((rentalObject) => prisma.rentalObject.create({ data: rentalObject })));
   const repairRequests = await Promise.all(
-    getRepairRequests(renters[0], rentalObjects[0]).map((repairRequest) =>
-      prisma.repairRequest.create({ data: repairRequest })
-    )
+    getRepairRequests(renters[0], rentalObjects[0]).map((repairRequest) => prisma.repairRequest.create({ data: repairRequest }))
   );
 
   // Erstelle die UserRoles

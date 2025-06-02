@@ -2,28 +2,16 @@
 
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
-import type { Page as PageType } from "src/types/page";
 import { useEffect } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useSearchParams } from "next/navigation";
-import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
-import { ObjectEditForm } from "../../object-edit-form";
-import { currentUserAtom } from "src/state/atoms/currentUserAtom";
-import agent from "src/api/agent";
-import { useUser } from "src/hooks/use-user";
+import { ObjectEditForm } from "../object-edit-form";
 
-const Page: PageType = () => {
-  usePageView();
-
-  const rentalObject = useRecoilValue(rentalObjectAtom);
+export default function Page(): React.JSX.Element {
   const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
   const searchParams = useSearchParams();
   const objectId = searchParams.get("objectId");
-
-  const setLandlord = useSetRecoilState(currentUserAtom);
-  const { user, error } = useUser();
 
   async function setRentalObjectId() {
     if (objectId) {
@@ -33,24 +21,11 @@ const Page: PageType = () => {
 
   useEffect(
     () => {
-      getLandlord();
       setRentalObjectId();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
-  async function getLandlord() {
-    try {
-      const authenticatedUserId = user?.id;
-      if (authenticatedUserId) {
-        const landlord = await agent.landlord.details(authenticatedUserId);
-        setLandlord(landlord);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   return (
     <>
@@ -97,6 +72,4 @@ const Page: PageType = () => {
       </Box>
     </>
   );
-};
-
-export default Page;
+}

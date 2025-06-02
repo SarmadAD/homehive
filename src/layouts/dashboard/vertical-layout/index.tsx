@@ -1,15 +1,7 @@
-import type { FC, ReactNode } from "react";
-import PropTypes from "prop-types";
-import type { Theme } from "@mui/material/styles/createTheme";
+import { type FC, type ReactNode } from "react";
 import { Box, GlobalStyles, useMediaQuery } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import type { NavColor } from "src/types/settings";
-import type { Section } from "../config";
-import { MobileNav } from "../mobile-nav";
 import { SideNav } from "./side-nav";
 import { TopNav } from "./top-nav";
-import { useMobileNav } from "./use-mobile-nav";
-import { NavItemConfig } from "src/types/nav";
 import { layoutConfig } from "src/layouts/config";
 import { useSettings } from "src/hooks/use-settings";
 

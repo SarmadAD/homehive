@@ -32,18 +32,18 @@ const navItems = [
       },
     ],
   },
-  {
-    key: "integrations",
-    title: "Integrationen",
-    items: [
-      {
-        key: "integrations",
-        title: "Integrationen",
-        href: paths.landlordportal.dashboard.settings.integrations,
-        icon: "plugs-connected",
-      },
-    ],
-  },
+  // {
+  //   key: "integrations",
+  //   title: "Integrationen",
+  //   items: [
+  //     {
+  //       key: "integrations",
+  //       title: "Integrationen",
+  //       href: paths.landlordportal.dashboard.settings.integrations,
+  //       icon: "plugs-connected",
+  //     },
+  //   ],
+  // },
 ] satisfies NavItemConfig[];
 
 const icons = {
@@ -135,8 +135,7 @@ function NavItem({ disabled, external, href, icon, pathname, title }: NavItemPro
           ...(disabled && { color: "var(--mui-palette-text-disabled)", cursor: "not-allowed" }),
           ...(active && { bgcolor: "var(--mui-palette-action-selected)", color: "var(--mui-palette-text-primary)" }),
           "&:hover": {
-            ...(!active &&
-              !disabled && { bgcolor: "var(--mui-palette-action-hover)", color: "var(---mui-palette-text-primary)" }),
+            ...(!active && !disabled && { bgcolor: "var(--mui-palette-action-hover)", color: "var(---mui-palette-text-primary)" }),
           },
         }}
         tabIndex={0}
@@ -151,10 +150,7 @@ function NavItem({ disabled, external, href, icon, pathname, title }: NavItemPro
           </Box>
         ) : null}
         <Box sx={{ flex: "1 1 auto" }}>
-          <Typography
-            component="span"
-            sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}
-          >
+          <Typography component="span" sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}>
             {title}
           </Typography>
         </Box>

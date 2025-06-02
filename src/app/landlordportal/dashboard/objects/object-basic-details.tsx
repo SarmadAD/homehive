@@ -1,5 +1,4 @@
 import type { FC } from "react";
-import PropTypes from "prop-types";
 import { Card, CardHeader, Skeleton, Theme, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";

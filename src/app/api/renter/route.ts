@@ -49,7 +49,7 @@ const getRenter = async (authenticatedUserId: string) => {
   try {
     return await prisma.renter.findFirst({
       where: { authenticatedUserId: authenticatedUserId },
-      include: { rentalObject: true },
+      include: { rentalObject: true, rentalAgreement: true },
     });
   } catch (error) {
     console.error(error);

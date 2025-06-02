@@ -1,4 +1,4 @@
-import { Landlord, RentalObjectInfo, RepairRequest, Role, UserRole } from "@prisma/client";
+import { Landlord, RepairRequest, Role, UserRole } from "@prisma/client";
 
 const landlords: Landlord[] = [
   {
@@ -7,25 +7,6 @@ const landlords: Landlord[] = [
     customerId: "",
     hasAccess: false,
     priceId: "",
-  },
-];
-
-const rentalObjectInfos: RentalObjectInfo[] = [
-  {
-    id: "fe7743a0-0ae2-11ee-be56-0242ac120002",
-    baseRent: 1000,
-    serviceCharges: 200,
-    heatingCosts: 100,
-    waterCosts: 50,
-    electricityCosts: 75,
-  },
-  {
-    id: "81b2bd44-0ae3-11ee-be56-0242ac120002",
-    baseRent: 2000,
-    serviceCharges: 200,
-    heatingCosts: 100,
-    waterCosts: 50,
-    electricityCosts: 75,
   },
 ];
 
@@ -79,4 +60,4 @@ const userRole: UserRole[] = [
   },
 ];
 
-export { rentalObjectInfos, repairRequests, landlords, role, userRole };
+export { repairRequests, landlords, role, userRole };

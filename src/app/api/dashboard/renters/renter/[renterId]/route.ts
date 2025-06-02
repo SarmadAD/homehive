@@ -7,7 +7,7 @@ export async function GET(request: Request, { params }: { params: { renterId: st
   if (renterId) {
     const renter = await prisma.renter.findUnique({
       where: { id: renterId },
-      include: { rentPayment: true },
+      include: { rentPayment: true, rentalAgreement: true },
     });
     if (renter) {
       return NextResponse.json(renter);
@@ -56,6 +56,11 @@ export async function PUT(request: Request, { params }: { params: { renterId: st
 export async function DELETE(request: Request, { params }: { params: { renterId: string } }) {
   try {
     const { renterId } = params;
+
+    await prisma.rentalAgreement.deleteMany({
+      where: { renter: { id: renterId } },
+    });
+
     if (renterId) {
       const deletedRenter = await prisma.renter.update({
         where: { id: renterId },
