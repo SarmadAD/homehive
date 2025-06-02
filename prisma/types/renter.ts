@@ -1,4 +1,6 @@
 import { Prisma } from "@prisma/client";
+import { rentalAgreementDefault } from "./rentalAgreement";
+import { rentalObjectDefault } from "./objects";
 
 const renter = Prisma.validator<Prisma.RenterDefaultArgs>()({
   include: {
@@ -6,7 +8,6 @@ const renter = Prisma.validator<Prisma.RenterDefaultArgs>()({
       include: {
         renter: { include: { rentalAgreement: true, rentalObject: true } },
         repairRequests: true,
-        rentalObjectInfo: true,
         landlord: true,
         rentalAgreement: true,
       },
@@ -29,43 +30,7 @@ export const renterDefault: Renter = {
   authenticatedUserId: "",
   rentalAgreementId: "",
   rentPayment: [],
-  rentalAgreement: {
-    id: "",
-    rentalObjectId: "",
-    dueDateState: "FIRSTMONTH",
-  },
-  rentalObject: {
-    id: "",
-    createdAt: new Date(),
-    state: 1,
-    name: "",
-    image: "",
-    address: "",
-    houseNr: 0,
-    additionalHouseDetails: "",
-    city: "",
-    postalCode: 0,
-    areaSize: 0,
-    renter: [],
-    repairRequests: [],
-    rentalAgreement: [],
-    rentalObjectInfo: {
-      id: "",
-      baseRent: 0,
-      serviceCharges: 0,
-      electricityCosts: 0,
-      heatingCosts: 0,
-      waterCosts: 0,
-    },
-    rentalObjectInfoId: "",
-    landlord: {
-      id: "",
-      authenticatedUserId: "",
-      customerId: "",
-      hasAccess: false,
-      priceId: "",
-    },
-    landlordId: "",
-  },
+  rentalObject: rentalObjectDefault,
   rentalObjectId: "",
+  rentalAgreement: rentalAgreementDefault,
 };

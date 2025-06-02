@@ -1,11 +1,11 @@
 import { Prisma } from "@prisma/client";
+import { defaultLandlord } from "./landlord";
 
 const rentalObject = Prisma.validator<Prisma.RentalObjectDefaultArgs>()({
   include: {
     renter: { include: { rentalObject: true, rentalAgreement: true, rentPayment: true } },
     rentalAgreement: { include: { renter: true, rentalObject: true } },
     landlord: true,
-    rentalObjectInfo: true,
     repairRequests: true,
     rentPayment: { include: { renter: true, rentalObject: true } },
   },
@@ -29,22 +29,7 @@ export const rentalObjectDefault: RentalObject = {
   rentPayment: [],
   repairRequests: [],
   rentalAgreement: [],
-  rentalObjectInfo: {
-    id: "",
-    baseRent: 0,
-    serviceCharges: 0,
-    electricityCosts: 0,
-    heatingCosts: 0,
-    waterCosts: 0,
-  },
-  rentalObjectInfoId: "",
-  landlord: {
-    id: "",
-    authenticatedUserId: "",
-    customerId: "",
-    hasAccess: false,
-    priceId: "",
-  },
+  landlord: defaultLandlord,
   landlordId: "",
 };
 

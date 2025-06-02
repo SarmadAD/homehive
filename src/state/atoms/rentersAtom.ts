@@ -11,7 +11,7 @@ export const rentersAtom = atom<Renter[]>({
       const landlord = get(currentLandlordAtom);
       if (landlord.id) {
         const response = await agent.renters.list(landlord.id);
-        return response;
+        return response.filter((renter) => renter.state === 1);
       }
       return [];
     },

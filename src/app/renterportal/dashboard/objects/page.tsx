@@ -10,7 +10,6 @@ import { ObjectSingleView } from "src/app/landlordportal/dashboard/objects/rente
 import { RepairRequest } from "prisma/types/repairRequest";
 import agent from "src/api/agent";
 import { ObjectBasicDetails } from "src/app/landlordportal/dashboard/objects/object-basic-details";
-import { ObjectRentInfoChart } from "src/app/landlordportal/dashboard/objects/object-rentInfo-chart";
 import { ObjectRepairRequestDrawer } from "src/app/landlordportal/dashboard/objects/repairRequests/object-repairRequest-drawer";
 import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
@@ -18,6 +17,7 @@ import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/ob
 import { toast } from "src/components/toaster";
 import { renterAtom } from "src/state/atoms/renterAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
+import { ObjectRentalAgreementChart } from "./object-rental-agreement-chart";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -224,7 +224,7 @@ export default function Page(): React.JSX.Element {
                         <ObjectBasicDetails />
                       </Grid>
                       <Grid xs={12} lg={8}>
-                        <ObjectRentInfoChart />
+                        <ObjectRentalAgreementChart />
                       </Grid>
                     </Grid>
                   </div>

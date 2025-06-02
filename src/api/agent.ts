@@ -1,8 +1,9 @@
-import { RentalObjectInfo, Token } from "@prisma/client";
+import { Token } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
 import { LinkTokenCreateResponse, Transaction } from "plaid";
 import { Landlord } from "prisma/types/landlord";
 import { RentalObject } from "prisma/types/objects";
+import { RentalAgreement } from "prisma/types/rentalAgreement";
 import { Renter } from "prisma/types/renter";
 import { RentPayment } from "prisma/types/rentPayment";
 import { RepairRequest } from "prisma/types/repairRequest";
@@ -25,7 +26,6 @@ const objects = {
   create: (object: RentalObject) => requests.post<RentalObject>(`/api/dashboard/objects/${object.landlord.id}`, object),
   update: (object: RentalObject) => requests.put<RentalObject>(`/api/dashboard/objects/object/${object.id}`, object),
   delete: (id: string) => requests.del<RentalObject>(`/api/dashboard/objects/object/${id}`),
-  rentalObjectInfo: (id: string) => requests.get<RentalObjectInfo>(`/rentalObjectInfo/${id}`),
   updateRepairRequest: (repairRequest: RepairRequest) =>
     requests.put<void>(`/api/dashboard/objects/object/repairRequest/${repairRequest.id}`, repairRequest),
   //   attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
@@ -48,6 +48,12 @@ const renters = {
   delete: (id: string) => requests.del<Renter>(`/api/dashboard/renters/renter/${id}`),
   updateAuthenticatedUserId: (renterId: string, authenticatedUserId: string) =>
     requests.put<void>(`/api/dashboard/renters/renter/${renterId}`, authenticatedUserId),
+};
+
+const rentalAgreements = {
+  list: (landlordId: string) => requests.get<RentalAgreement[]>(`/api/rentalAgreements/?landlordId=${landlordId}`),
+  create: (rentalAgreement: RentalAgreement, landlordId: string) =>
+    requests.post<RentalAgreement>(`/api/rentalAgreements/?landlordId=${landlordId}`, rentalAgreement),
 };
 
 const userRoles = {
@@ -105,6 +111,7 @@ const agent = {
   landlord,
   renter,
   renters,
+  rentalAgreements,
   userRoles,
   rentPayments,
   integrations,

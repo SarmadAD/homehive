@@ -36,62 +36,62 @@ export async function POST(request: NextRequest) {
     const transactionsResponse = await tinkResponse.json();
     const transactions = transactionsResponse.transactions;
 
-    const renter = await prisma.renter.findFirst({
-      where: { id: renterId },
-      include: { rentalObject: { include: { rentalObjectInfo: true } } },
-    });
+    // const renter = await prisma.renter.findFirst({
+    //   where: { id: renterId },
+    //   include: { rentalObject: { include: { rentalObjectInfo: true } } },
+    // });
 
-    const rentalObjectInfo = renter?.rentalObject?.rentalObjectInfo;
+    // const rentalObjectInfo = renter?.rentalObject?.rentalObjectInfo;
 
-    if (rentalObjectInfo) {
-      // Add here more criteria
-      const searchCriteria = [
-        // (transaction: any) => transaction.descriptions?.display?.toString() === "Miete",
-        (transaction: any) => {
-          const totalRent = (rentalObjectInfo.baseRent ?? 0) + (rentalObjectInfo.serviceCharges ?? 0);
+    // if (rentalObjectInfo) {
+    //   // Add here more criteria
+    //   const searchCriteria = [
+    //     // (transaction: any) => transaction.descriptions?.display?.toString() === "Miete",
+    //     (transaction: any) => {
+    //       const totalRent = (rentalObjectInfo.baseRent ?? 0) + (rentalObjectInfo.serviceCharges ?? 0);
 
-          const transactionAmount = parseInt(transaction?.amount?.value?.unscaledValue) / Math.pow(10, parseInt(transaction?.amount?.value?.scale));
+    //       const transactionAmount = parseInt(transaction?.amount?.value?.unscaledValue) / Math.pow(10, parseInt(transaction?.amount?.value?.scale));
 
-          return Math.abs(transactionAmount) === totalRent;
-        },
-      ];
+    //       return Math.abs(transactionAmount) === totalRent;
+    //     },
+    //   ];
 
-      const filteredTransactions = transactions.filter((transaction: any) => searchCriteria.some((criterion) => criterion(transaction)));
+    // const filteredTransactions = transactions.filter((transaction: any) => searchCriteria.some((criterion) => criterion(transaction)));
 
-      // Neue RentPayment-Einträge erstellen
-      for (const transaction of filteredTransactions) {
-        const transactionId = transaction.identifiers?.providerTransactionId;
+    // Neue RentPayment-Einträge erstellen
+    //   for (const transaction of filteredTransactions) {
+    //     const transactionId = transaction.identifiers?.providerTransactionId;
 
-        // Überprüfen, ob die transactionId bereits in RentPayment existiert
-        const existingPayment = await prisma.rentPayment.findUnique({
-          where: { transactionId, renterId },
-        });
+    //     // Überprüfen, ob die transactionId bereits in RentPayment existiert
+    //     const existingPayment = await prisma.rentPayment.findUnique({
+    //       where: { transactionId, renterId },
+    //     });
 
-        if (!existingPayment) {
-          // RentPayment erstellen, wenn die transactionId nicht existiert
+    //     if (!existingPayment) {
+    //       // RentPayment erstellen, wenn die transactionId nicht existiert
 
-          const transactionAmount = parseInt(transaction?.amount?.value?.unscaledValue) / Math.pow(10, parseInt(transaction?.amount?.value?.scale));
+    //       const transactionAmount = parseInt(transaction?.amount?.value?.unscaledValue) / Math.pow(10, parseInt(transaction?.amount?.value?.scale));
 
-          await prisma.rentPayment.create({
-            data: {
-              transactionId,
-              renterId,
-              landlordId,
-              paymentAmount: Math.abs(transactionAmount),
-              paymentDate: new Date(transaction.dates?.booked),
-              dueDate: new Date(),
-              status: transaction.status === "BOOKED" ? "PAID" : "NOTPAID",
-              rentalObjectId: renter?.rentalObject?.id!,
-            },
-          });
-        } else {
-          console.log(`RentPayment mit transactionId ${transactionId} existiert bereits`);
-        }
-      }
-      return NextResponse.json(filteredTransactions);
-    } else {
-      return NextResponse.json({ error: "Rental object info not found" }, { status: 404 });
-    }
+    //       await prisma.rentPayment.create({
+    //         data: {
+    //           transactionId,
+    //           renterId,
+    //           landlordId,
+    //           paymentAmount: Math.abs(transactionAmount),
+    //           paymentDate: new Date(transaction.dates?.booked),
+    //           dueDate: new Date(),
+    //           status: transaction.status === "BOOKED" ? "PAID" : "NOTPAID",
+    //           rentalObjectId: renter?.rentalObject?.id!,
+    //         },
+    //       });
+    //     } else {
+    //       console.log(`RentPayment mit transactionId ${transactionId} existiert bereits`);
+    //     }
+    //   }
+    //   return NextResponse.json(filteredTransactions);
+    // } else {
+    //   return NextResponse.json({ error: "Rental object info not found" }, { status: 404 });
+    // }
   } catch (error) {
     console.error("Fehler:", error);
     return NextResponse.json({ error: "Internal server error", details: error.message }, { status: 500 });

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import { useSearchParams } from "next/navigation";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
-import { ObjectEditForm } from "../../object-edit-form";
+import { ObjectEditForm } from "../object-edit-form";
 
 export default function Page(): React.JSX.Element {
   const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);

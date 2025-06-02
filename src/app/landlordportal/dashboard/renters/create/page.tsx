@@ -2,7 +2,7 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
-import RenterCreateForm from "../renter-create-form";
+import RenterCreateForm from "./renter-create-form";
 
 export default function Page(): React.JSX.Element {
   return (

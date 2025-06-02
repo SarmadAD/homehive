@@ -30,17 +30,23 @@ export const layoutConfig = {
           icon: "user",
         },
         {
-          key: "finances",
-          title: "Finanzen",
-          href: paths.landlordportal.dashboard.finances.index,
-          icon: "hand-coins",
+          key: "rentalagreements",
+          title: "Mietverhältnisse",
+          href: paths.landlordportal.dashboard.rentalagreements.index,
+          icon: "address-book",
         },
-        {
-          key: "pricing",
-          title: "Preise",
-          href: paths.landlordportal.dashboard.pricing,
-          icon: "credit-card",
-        },
+        // {
+        //   key: "finances",
+        //   title: "Finanzen",
+        //   href: paths.landlordportal.dashboard.finances.index,
+        //   icon: "hand-coins",
+        // },
+        // {
+        //   key: "pricing",
+        //   title: "Preise",
+        //   href: paths.landlordportal.dashboard.pricing,
+        //   icon: "credit-card",
+        // },
         {
           key: "renterPortalObjects",
           title: "Objekte",

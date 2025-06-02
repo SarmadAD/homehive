@@ -8,7 +8,7 @@ export async function GET(request: Request, { params }: { params: { landlordId: 
   if (landlordId) {
     const rentalObjects = await prisma.rentalObject.findMany({
       where: { landlordId: landlordId, state: 1 },
-      include: { renter: true, rentalObjectInfo: true, repairRequests: true, rentPayment: true },
+      include: { renter: { where: { state: 1 } }, repairRequests: true, rentPayment: true },
     });
     if (rentalObjects.length > 0) {
       return NextResponse.json(rentalObjects);
@@ -38,12 +38,6 @@ export async function POST(request: Request, { params }: { params: { landlordId:
           postalCode: rentalObject.postalCode,
           areaSize: rentalObject.areaSize,
           renter: { connect: rentersId },
-          rentalAgreement: {
-            create: rentalObject.rentalAgreement.map((agreement) => ({
-              dueDateState: agreement.dueDateState,
-              renter: { connect: { id: agreement.renter?.id } },
-            })),
-          },
           rentPayment: {
             create: rentalObject.rentPayment.map((rentPayment) => ({
               paymentAmount: rentPayment.paymentAmount,
@@ -53,15 +47,6 @@ export async function POST(request: Request, { params }: { params: { landlordId:
               status: rentPayment.status,
               landlord: { connect: { id: landlordId } },
             })),
-          },
-          rentalObjectInfo: {
-            create: {
-              baseRent: rentalObject.rentalObjectInfo.baseRent,
-              serviceCharges: rentalObject.rentalObjectInfo.serviceCharges,
-              // electricityCosts: rentalObject.rentalObjectInfo.electricityCosts,
-              // heatingCosts: rentalObject.rentalObjectInfo.heatingCosts,
-              // waterCosts: rentalObject.rentalObjectInfo.waterCosts,
-            },
           },
           landlord: {
             connect: {

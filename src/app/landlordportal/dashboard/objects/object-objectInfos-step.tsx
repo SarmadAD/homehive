@@ -83,7 +83,7 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
             type="submit"
             variant="contained"
           >
-            Weiter
+            Speichern
           </Button>
           <Button color="inherit" onClick={onBack}>
             Zurück

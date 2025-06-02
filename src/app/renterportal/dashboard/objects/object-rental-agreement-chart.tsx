@@ -6,6 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
+import { renterAtom } from "src/state/atoms/renterAtom";
 
 const labels: string[] = ["Kaltmiete", "Nebenkosten"];
 
@@ -51,31 +52,28 @@ const useChartOptions = (): ApexOptions => {
   };
 };
 
-export const ObjectRentInfoChart: FC = () => {
+export const ObjectRentalAgreementChart: FC = () => {
   const chartOptions = useChartOptions();
-  const rentalObjectLoadable = useRecoilValueLoadable(rentalObjectAtom);
+  const renterLoadable = useRecoilValueLoadable(renterAtom);
 
-  if (
-    rentalObjectLoadable.state === "loading" ||
-    (rentalObjectLoadable.state === "hasValue" && rentalObjectLoadable.contents.id === "")
-  ) {
+  if (renterLoadable.state === "loading" || (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "")) {
     return (
       <Box>
         <Card>
-          <CardHeader title="Mieteinnahmen" subheader="Mieteinnahmen des Objekts" />
+          <CardHeader title="Miete" subheader="Monatlichen Miete" />
           <CardContent>
             <Stack alignItems="center" direction="row" flexWrap="wrap" spacing={3}>
               <Skeleton variant="circular" width={200} height={200} />
               <Stack spacing={4} sx={{ flexGrow: 1 }}>
                 <Stack spacing={1}>
                   <Typography color="text.secondary" variant="overline">
-                    Gesamtmiete
+                    Deine monatliche Miete
                   </Typography>
                   <Skeleton width={100} height={32} />
                 </Stack>
                 <Stack spacing={1}>
                   <Typography color="text.secondary" variant="overline">
-                    Einnahmen
+                    Mietkostenaufteilung
                   </Typography>
                   <Stack
                     component="ul"
@@ -103,7 +101,7 @@ export const ObjectRentInfoChart: FC = () => {
     );
   }
 
-  if (rentalObjectLoadable.state === "hasError") {
+  if (renterLoadable.state === "hasError") {
     return (
       <Box>
         <Card>
@@ -118,17 +116,18 @@ export const ObjectRentInfoChart: FC = () => {
     );
   }
 
-  const rentalObject = rentalObjectLoadable.contents;
-  const { baseRent, serviceCharges } = rentalObject.rentalObjectInfo;
+  const renter = renterLoadable.contents;
+  const agreement = renter.rentalAgreement;
 
-  const chartSeries: ChartSeries = [baseRent ?? 0, serviceCharges ?? 0];
+  // Safely access agreement properties, fallback to 0 if agreement is null or undefined
+  const chartSeries: ChartSeries = [agreement?.baseRent ?? 0, agreement?.serviceCharges ?? 0];
   const totalAmount = chartSeries.reduce((acc, item) => (acc += item), 0);
   const formattedTotalAmount = numeral(totalAmount).format("$0,0.00");
 
   return (
     <Box>
       <Card>
-        <CardHeader title="Mieteinnahmen" subheader="Mieteinnahmen des Objekts" />
+        <CardHeader title="Miete" subheader="Monatlichen Miete" />
         <CardContent>
           <Stack alignItems="center" direction="row" flexWrap="wrap" spacing={3}>
             <Box
@@ -145,13 +144,13 @@ export const ObjectRentInfoChart: FC = () => {
             <Stack spacing={4} sx={{ flexGrow: 1 }}>
               <Stack spacing={1}>
                 <Typography color="text.secondary" variant="overline">
-                  Gesamtmiete
+                  Deine monatliche Miete
                 </Typography>
                 <Typography variant="h4">{formattedTotalAmount}</Typography>
               </Stack>
               <Stack spacing={1}>
                 <Typography color="text.secondary" variant="overline">
-                  Einnahmen
+                  Mietkostenaufteilung
                 </Typography>
                 <Stack
                   component="ul"

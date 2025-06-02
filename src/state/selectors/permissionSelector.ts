@@ -19,6 +19,14 @@ const permissions = [
     role: "Landlord",
   },
   {
+    permission: "/landlordportal/dashboard/rentalagreements",
+    role: "Landlord",
+  },
+  {
+    permission: "/landlordportal/dashboard/rentalagreements/create",
+    role: "Landlord",
+  },
+  {
     permission: "/landlordportal/dashboard/pricing",
     role: "Landlord",
   },
@@ -30,6 +38,7 @@ const permissions = [
     permission: "/landlordportal/dashboard/renters/create",
     role: "Landlord",
   },
+
   {
     permission: "showLandlordPortalName",
     role: "Landlord",

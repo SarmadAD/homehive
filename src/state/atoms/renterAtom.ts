@@ -20,9 +20,9 @@ export const renterAtom = atom<Renter>({
 });
 
 export const renterAtomWithRenterId = atom<Renter>({
-  key: "renterAtom",
+  key: "renterAtomWithRenterId",
   default: selector({
-    key: "renterAtom/renter",
+    key: "renterAtomWithRenterId/renter",
     get: async ({ get }) => {
       const id = get(selectedRenterIdAtom);
       if (id) {

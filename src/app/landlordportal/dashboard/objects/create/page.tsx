@@ -2,7 +2,7 @@
 
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Seo } from "src/components/seo";
-import { ObjectCreateForm } from "../object-create-form";
+import { ObjectCreateForm } from "./object-create-form";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 
 export default function Page(): React.JSX.Element {

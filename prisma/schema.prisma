@@ -22,15 +22,12 @@ model RentalObject {
   areaSize               Int
   renter                 Renter[]
   repairRequests         RepairRequest[]
-  rentalObjectInfo       RentalObjectInfo  @relation(fields: [rentalObjectInfoId], references: [id])
-  rentalObjectInfoId     String            @unique @db.Uuid
   landlord               Landlord          @relation(fields: [landlordId], references: [id])
   landlordId             String            @db.Uuid
   rentPayment            RentPayment[]
   rentalAgreement        RentalAgreement[]
   state                  Int               @default(1)
 
-  @@index([rentalObjectInfoId])
   @@index([landlordId])
 }
 
@@ -56,12 +53,13 @@ model Renter {
 }
 
 model Landlord {
-  id                  String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  authenticatedUserId String         @unique @db.Uuid
-  hasAccess           Boolean        @default(false)
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authenticatedUserId String            @unique @db.Uuid
+  hasAccess           Boolean           @default(false)
   priceId             String?
-  customerId          String?        @unique
+  customerId          String?           @unique
   rentalObjects       RentalObject[]
+  rentalAgreements    RentalAgreement[]
   renters             Renter[]
   tokens              Token[]
   rentPayments        RentPayment[]
@@ -82,16 +80,6 @@ model Token {
   state             Int      @default(1)
 
   @@index([landlordId])
-}
-
-model RentalObjectInfo {
-  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  baseRent         Int?
-  serviceCharges   Int?
-  heatingCosts     Int?
-  waterCosts       Int?
-  electricityCosts Int?
-  rentalObject     RentalObject?
 }
 
 model RepairRequest {
@@ -146,12 +134,17 @@ model RentPayment {
 
 model RentalAgreement {
   id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  baseRent       Int?
+  serviceCharges Int?
   dueDateState   DueDateOfRent
   renter         Renter?
   rentalObject   RentalObject  @relation(fields: [rentalObjectId], references: [id])
   rentalObjectId String        @db.Uuid
+  landlord       Landlord      @relation(fields: [landlordId], references: [id])
+  landlordId     String        @db.Uuid
 
   @@index([rentalObjectId])
+  @@index([landlordId])
 }
 
 enum DueDateOfRent {

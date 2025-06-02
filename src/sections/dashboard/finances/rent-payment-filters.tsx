@@ -90,7 +90,7 @@ export function RentPaymentFilters({
             title={
               !isTokenAlive ? (
                 <span>
-                  Verbindung erneuern:{" "}
+                  Bankverbindung erneuern:{" "}
                   <Link component={RouterLink} href={paths.landlordportal.dashboard.settings.integrations} style={{ textDecoration: "none" }}>
                     Erneut anmelden
                   </Link>

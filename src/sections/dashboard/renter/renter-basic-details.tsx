@@ -1,10 +1,10 @@
 import { FC } from "react";
-import { Avatar, Card, CardHeader, Skeleton, Theme, useMediaQuery } from "@mui/material";
+import { Avatar, Card, CardHeader, Skeleton } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
 import { getRenterName } from "src/utils/get-renter-name";
 import { useRecoilValueLoadable } from "recoil";
-import { renterAtom, renterAtomWithRenterId } from "src/state/atoms/renterAtom";
+import { renterAtomWithRenterId } from "src/state/atoms/renterAtom";
 import { User as UserIcon } from "@phosphor-icons/react/dist/ssr/User";
 
 export const RenterBasicDetails: FC = () => {

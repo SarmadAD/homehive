@@ -20,7 +20,6 @@ import {
   Skeleton,
   Card,
 } from "@mui/material";
-import { RouterLink } from "src/components/router-link";
 import { Seo } from "src/components/seo";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
@@ -28,7 +27,7 @@ import { RenterBasicDetails } from "src/sections/dashboard/renter/renter-basic-d
 import { useSearchParams } from "next/navigation";
 import { useRecoilRefresher_UNSTABLE, useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
-import { renterAtom } from "src/state/atoms/renterAtom";
+import { renterAtom, renterAtomWithRenterId } from "src/state/atoms/renterAtom";
 import { getRenterName } from "src/utils/get-renter-name";
 import { DeleteOutline } from "@mui/icons-material";
 import agent from "src/api/agent";
@@ -43,6 +42,7 @@ import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { toast } from "src/components/toaster";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
+import { RenterRentalAgreementInfos } from "src/sections/dashboard/renter/renter-rental-agreement-infos";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -68,8 +68,8 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  const renter = useRecoilValue(renterAtom);
-  const renterLoadable = useRecoilValueLoadable(renterAtom);
+  const renter = useRecoilValue(renterAtomWithRenterId);
+  const renterLoadable = useRecoilValueLoadable(renterAtomWithRenterId);
   const refreshRentPayment = useRecoilRefresher_UNSTABLE(rentPaymentsAtom);
 
   const renters = useRecoilValue(rentersAtom);
@@ -91,18 +91,18 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     setAnchorEl(null);
   };
 
-  const handleDeleteClick = async () => {
-    try {
-      if (renter?.id) {
-        await agent.renters.delete(renter.id);
-        router.push("/landlordportal/dashboard/renters");
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setAnchorEl(null);
-    }
-  };
+  // const handleDeleteClick = async () => {
+  //   try {
+  //     if (renter?.id) {
+  //       await agent.renters.delete(renter.id);
+  //       router.push("/landlordportal/dashboard/renters");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setAnchorEl(null);
+  //   }
+  // };
 
   useEffect(
     () => {
@@ -176,7 +176,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     setOpenDeleteModalForRenter(false);
   }
 
-  const handleDeleteRenterFromObject = async () => {
+  const handleDeleteRenter = async () => {
     try {
       await agent.renters.delete(renterId ?? "");
       const updatedRenters = renters.filter((renter) => renter.id !== renterId);
@@ -238,21 +238,30 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
             <Stack spacing={4}>
               <Stack spacing={4}>
                 <div>
-                  <Link
-                    color="text.primary"
-                    component={RouterLink}
-                    href={paths.landlordportal.dashboard.renters.index}
+                  <Button
+                    color="inherit"
+                    startIcon={
+                      <SvgIcon>
+                        <ArrowLeftIcon />
+                      </SvgIcon>
+                    }
+                    onClick={() => {
+                      if (window.history.length > 2) {
+                        router.back();
+                      } else {
+                        router.push(paths.landlordportal.dashboard.renters.index);
+                      }
+                    }}
                     sx={{
                       alignItems: "center",
                       display: "inline-flex",
+                      textTransform: "none",
+                      p: 0,
+                      minWidth: 0,
                     }}
-                    underline="hover"
                   >
-                    <SvgIcon sx={{ mr: 1 }}>
-                      <ArrowLeftIcon />
-                    </SvgIcon>
-                    <Typography variant="subtitle2">Mieter</Typography>
-                  </Link>
+                    <Typography variant="subtitle2">Zurück</Typography>
+                  </Button>
                 </div>
                 <Stack
                   alignItems="flex-start"
@@ -359,8 +368,9 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                 <Grid container spacing={4}>
                   <Grid xs={12} lg={4}>
                     <RenterBasicDetails />
+                    <RenterRentalAgreementInfos />
                   </Grid>
-                  <Grid lg={8} xs={12}>
+                  {/* <Grid lg={8} xs={12}>
                     <Card>
                       <RentPaymentFilters
                         sortDir={sortDir}
@@ -382,7 +392,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                         onRowsPerPageChange={handleRowsPerPageChange}
                       />
                     </Card>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </div>
               {/* )} */}
@@ -392,7 +402,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
         <DeleteModal
           text={"Möchtest Du wirklich den Mieter löschen?"}
           handleCancelDeleteModal={handleCancelDeleteRenterFromRentalObjectModal}
-          onDelete={handleDeleteRenterFromObject}
+          onDelete={handleDeleteRenter}
           openDeleteModal={openDeleteModalForRenter}
         />
       </Box>

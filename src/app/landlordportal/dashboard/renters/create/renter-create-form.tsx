@@ -13,6 +13,7 @@ import { Renter, renterDefault } from "prisma/types/renter";
 import { RenterSendInviteStep } from "./renter-send-invite-step";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
+import { toast } from "src/components/toaster";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -87,6 +88,7 @@ export default function RenterCreateForm(): React.JSX.Element {
             ? { ...prevLandlord, renters: prevLandlord.renters ? [...prevLandlord.renters, newRenterResponse] : [newRenterResponse] }
             : prevLandlord
         );
+        toast.success("Mieter erfolgreich erstellt");
       }
     } catch (error) {
       console.error(error);

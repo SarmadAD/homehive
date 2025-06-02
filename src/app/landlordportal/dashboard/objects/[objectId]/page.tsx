@@ -40,7 +40,6 @@ import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObject
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { useSearchParams } from "next/navigation";
 import { ObjectBasicDetails } from "../object-basic-details";
-import { ObjectRentInfoChart } from "../object-rentInfo-chart";
 import { ObjectRepairRequestDrawer } from "../repairRequests/object-repairRequest-drawer";
 import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
 import { RepairRequest } from "prisma/types/repairRequest";
@@ -60,6 +59,7 @@ import { PlusCircle, User03 } from "@untitled-ui/icons-react";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { ObjectRentalAgreementChart } from "../object-rentalAgreements-chart";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -120,15 +120,16 @@ export default function Page(): React.JSX.Element {
 
   const [openDeleteModalForRenter, setOpenDeleteModalForRenter] = useState(false);
   const [openDeleteModalForRentalObject, setOpenDeleteModalForRentalObject] = useState(false);
-  const [openAddRenterModal, setOpenAddRenterModal] = useState(false);
+  // const [openAddRenterModal, setOpenAddRenterModal] = useState(false);
 
   // Renter Menu Three Dots Menu
-  const [anchorElRenterThreeDotsMenu, setAnchorElRenterThreeDotsMenu] = React.useState<null | HTMLElement>(null);
-  const openRenterThreeDotsMenu = Boolean(anchorElRenterThreeDotsMenu);
-  const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: Renter) => {
-    selectOne(row.id);
-    setAnchorElRenterThreeDotsMenu(event.currentTarget);
-  };
+  // const [anchorElRenterThreeDotsMenu, setAnchorElRenterThreeDotsMenu] = React.useState<null | HTMLElement>(null);
+
+  // const openRenterThreeDotsMenu = Boolean(anchorElRenterThreeDotsMenu);
+  // const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: Renter) => {
+  //   selectOne(row.id);
+  //   setAnchorElRenterThreeDotsMenu(event.currentTarget);
+  // };
 
   // Action Menu
   const [anchorElActionMenu, setAnchorElActionMenu] = useState<HTMLButtonElement | null>(null);
@@ -138,10 +139,10 @@ export default function Page(): React.JSX.Element {
 
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  const handleCloseRenterThreeDotsMenu = () => {
-    setAnchorElRenterThreeDotsMenu(null);
-    deselectAll();
-  };
+  // const handleCloseRenterThreeDotsMenu = () => {
+  //   setAnchorElRenterThreeDotsMenu(null);
+  //   deselectAll();
+  // };
   const handleActionMenuClose = () => {
     setAnchorElActionMenu(null);
   };
@@ -172,17 +173,17 @@ export default function Page(): React.JSX.Element {
     []
   );
 
-  const handleDialog = useCallback(
-    (id: string): void => {
-      if (dialog.open && dialog.data === id) {
-        dialog.handleClose();
-        return;
-      }
+  // const handleDialog = useCallback(
+  //   (id: string): void => {
+  //     if (dialog.open && dialog.data === id) {
+  //       dialog.handleClose();
+  //       return;
+  //     }
 
-      dialog.handleOpen(id);
-    },
-    [dialog]
-  );
+  //     dialog.handleOpen(id);
+  //   },
+  //   [dialog]
+  // );
 
   const handleTabsChange = useCallback((event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -252,36 +253,36 @@ export default function Page(): React.JSX.Element {
     setOpenDeleteModalForRentalObject(true);
   }
 
-  const handleAddRenter = () => {
-    setAnchorElActionMenu(null);
-    setOpenAddRenterModal(true);
-  };
+  // const handleAddRenter = () => {
+  //   setAnchorElActionMenu(null);
+  //   setOpenAddRenterModal(true);
+  // };
 
-  const onAddRenter = async (selectedRenterId: string) => {
-    try {
-      const selectedRenter = renters.find((renter) => renter.id === selectedRenterId);
+  // const onAddRenter = async (selectedRenterId: string) => {
+  //   try {
+  //     const selectedRenter = renters.find((renter) => renter.id === selectedRenterId);
 
-      if (selectedRenter) {
-        const updatedRenters = rentalObject.renter ? [...rentalObject.renter, selectedRenter] : [selectedRenter];
-        const updatedRentalObject = {
-          ...rentalObject,
-          renter: updatedRenters,
-        };
-        const updatedRentalObjectFromResponse: RentalObject = await agent.objects.update(updatedRentalObject);
-        setRentalObject(updatedRentalObjectFromResponse);
-        toast.success("Mieter erfolgreich hinzugefügt");
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setOpenAddRenterModal(false);
-    }
-  };
+  //     if (selectedRenter) {
+  //       const updatedRenters = rentalObject.renter ? [...rentalObject.renter, selectedRenter] : [selectedRenter];
+  //       const updatedRentalObject = {
+  //         ...rentalObject,
+  //         renter: updatedRenters,
+  //       };
+  //       const updatedRentalObjectFromResponse: RentalObject = await agent.objects.update(updatedRentalObject);
+  //       setRentalObject(updatedRentalObjectFromResponse);
+  //       toast.success("Mieter erfolgreich hinzugefügt");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setOpenAddRenterModal(false);
+  //   }
+  // };
 
-  function handleDeleteModalOpenForRenter() {
-    setAnchorElRenterThreeDotsMenu(null);
-    setOpenDeleteModalForRenter(true);
-  }
+  // function handleDeleteModalOpenForRenter() {
+  //   setAnchorElRenterThreeDotsMenu(null);
+  //   setOpenDeleteModalForRenter(true);
+  // }
 
   function handleCancelDeleteRenterFromRentalObjectModal() {
     setOpenDeleteModalForRenter(false);
@@ -315,45 +316,38 @@ export default function Page(): React.JSX.Element {
       ),
       name: "Name",
     },
-    {
-      formatter: (row): React.JSX.Element => (
-        <div>
-          <Button
-            // component={RouterLink}
-            // onClick={() => handleDialog(row.id)}
-            // href={`${paths.landlordportal.dashboard.renters.details}${row.id}`}
-            aria-controls={openRenterThreeDotsMenu ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={openRenterThreeDotsMenu ? "true" : undefined}
-            onClick={(event) => handleClickRenterThreeDotsMenu(event, row)}
-          >
-            <SvgIcon>
-              <DotsVertical />
-            </SvgIcon>
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorElRenterThreeDotsMenu}
-            open={openRenterThreeDotsMenu}
-            onClose={handleCloseRenterThreeDotsMenu}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem onClick={() => handleDeleteModalOpenForRenter()}>Löschen</MenuItem>
-          </Menu>
-        </div>
-      ),
-      name: "",
-      nameJSX: (
-        <Tooltip title="Mieter hinzufügen">
-          <IconButton onClick={() => handleAddRenter()}>
-            <PlusCircle />
-          </IconButton>
-        </Tooltip>
-      ),
-      align: "right",
-    },
+    // {
+    //   formatter: (row): React.JSX.Element => (
+    //     <div>
+    //       <Button
+    //         // component={RouterLink}
+    //         // onClick={() => handleDialog(row.id)}
+    //         // href={`${paths.landlordportal.dashboard.renters.details}${row.id}`}
+    //         aria-controls={openRenterThreeDotsMenu ? "basic-menu" : undefined}
+    //         aria-haspopup="true"
+    //         aria-expanded={openRenterThreeDotsMenu ? "true" : undefined}
+    //         onClick={(event) => handleClickRenterThreeDotsMenu(event, row)}
+    //       >
+    //         <SvgIcon>
+    //           <DotsVertical />
+    //         </SvgIcon>
+    //       </Button>
+    //       <Menu
+    //         id="basic-menu"
+    //         anchorEl={anchorElRenterThreeDotsMenu}
+    //         open={openRenterThreeDotsMenu}
+    //         onClose={handleCloseRenterThreeDotsMenu}
+    //         MenuListProps={{
+    //           "aria-labelledby": "basic-button",
+    //         }}
+    //       >
+    //         <MenuItem onClick={() => handleDeleteModalOpenForRenter()}>Löschen</MenuItem>
+    //       </Menu>
+    //     </div>
+    //   ),
+    //   name: "",
+    //   align: "right",
+    // },
   ] satisfies ColumnDef<Renter>[];
 
   return (
@@ -462,12 +456,6 @@ export default function Page(): React.JSX.Element {
                           },
                         }}
                       >
-                        <MenuItem onClick={() => handleAddRenter()} divider>
-                          <SvgIcon>
-                            <PlusCircle />
-                          </SvgIcon>
-                          Mieter hinzufügen
-                        </MenuItem>
                         <MenuItem onClick={() => handleDeleteRentalObject()}>
                           <SvgIcon>
                             <DeleteOutline />
@@ -501,7 +489,7 @@ export default function Page(): React.JSX.Element {
                         <ObjectBasicDetails />
                       </Grid>
                       <Grid xs={12} lg={8}>
-                        <ObjectRentInfoChart />
+                        <ObjectRentalAgreementChart />
                       </Grid>
                     </Grid>
                   </div>
@@ -590,13 +578,6 @@ export default function Page(): React.JSX.Element {
         handleCancelDeleteModal={handleCancelDeleteRentalObject}
         onDelete={handleObjectDelete}
         openDeleteModal={openDeleteModalForRentalObject}
-      />
-      <AddRenterModal
-        setOpenAddRenterModal={setOpenAddRenterModal}
-        onAddRenter={onAddRenter}
-        openAddRenterModal={openAddRenterModal}
-        renters={renters}
-        rentalObject={rentalObject}
       />
     </>
   );

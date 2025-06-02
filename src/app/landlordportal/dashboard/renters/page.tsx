@@ -48,8 +48,7 @@ import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 // export const metadata = { title: `Renters | Mieter | ${site.name}` } satisfies Metadata;
 
-const Page: PageType = () => {
-  usePageView();
+export default function Page(): React.JSX.Element {
   const settings = useSettings();
 
   const setLandlord = useSetRecoilState(currentLandlordAtom);
@@ -196,10 +195,11 @@ const Page: PageType = () => {
                       title={
                         checkIfUserIsNotAllowedToCreateRenter(landlord as Landlord) ? (
                           <>
-                            Mehr Mieter anlegen?{" "}
-                            <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
+                            Mehr Mieter anlegen?
+                            <br /> Kontaktiere uns durch info@homehive.me
+                            {/* <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
                               Jetzt upgraden
-                            </Link>
+                            </Link> */}
                           </>
                         ) : (
                           ""
@@ -267,7 +267,7 @@ const Page: PageType = () => {
           </Container>
         </Box>{" "}
         <DeleteModal
-          text={"Möchtest du wirklich den Mieter löschen?"}
+          text={"Möchtest du wirklich den Mieter löschen? Mit den löschen des Mieters werden auch alle zugehörigen Mietverhältnisse gelöscht."}
           handleCancelDeleteModal={handleCancelDeleteModal}
           onDelete={handleDelete}
           openDeleteModal={openDeleteModal}
@@ -275,8 +275,4 @@ const Page: PageType = () => {
       </RoleBasedGuard>
     </>
   );
-};
-
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
-
-export default Page;
+}

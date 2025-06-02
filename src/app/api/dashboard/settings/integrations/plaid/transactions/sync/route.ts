@@ -311,58 +311,59 @@ async function createRentPayments(transactions: Transaction[], landlordId: strin
 
   const landlord = await prisma.landlord.findUnique({
     where: { id: landlordId },
-    include: { rentalObjects: { include: { rentalObjectInfo: true, renter: true } } },
+    include: { rentalObjects: { include: { renter: true } }, rentalAgreements: { include: { renter: true } } },
   });
 
-  if (landlord && landlord.rentalObjects.length > 0) {
+  if (landlord && landlord.rentalAgreements.length > 0) {
     const filteredTransactions: Transaction[] = [];
 
     // Iteriere über alle rentalObjects des landlords
-    for (const rentalObject of landlord.rentalObjects) {
-      const totalRent = (rentalObject.rentalObjectInfo.baseRent ?? 0) + (rentalObject.rentalObjectInfo.serviceCharges ?? 0);
+    for (const rentalAgreement of landlord.rentalAgreements) {
+      const totalRent = (rentalAgreement.baseRent ?? 0) + (rentalAgreement.serviceCharges ?? 0);
 
       // Iteriere über alle renter des aktuellen rentalObject
-      for (const renter of rentalObject.renter) {
-        const renterId = renter.id;
+      const renterId = rentalAgreement.renter?.id;
 
-        // Filtere die Transaktionen basierend auf der Miete des aktuellen rentalObject
-        const transactionsForRentalObject = transactions.filter((transaction) => {
-          // const containsRentKeyword =
-          //   transaction.descriptions?.original?.toLowerCase().includes("miete") ||
-          //   transaction.descriptions?.display?.toLowerCase().includes("miete");
+      // Filtere die Transaktionen basierend auf der Miete des aktuellen rentalObject
+      const transactionsForRentalObject = transactions.filter((transaction) => {
+        // const containsRentKeyword =
+        //   transaction.descriptions?.original?.toLowerCase().includes("miete") ||
+        //   transaction.descriptions?.display?.toLowerCase().includes("miete");
 
-          return transaction.amount === totalRent;
-          // return Math.abs(transactionAmount) === totalRent && containsRentKeyword;
+        return transaction.amount === totalRent;
+        // return Math.abs(transactionAmount) === totalRent && containsRentKeyword;
+      });
+
+      filteredTransactions.push(...transactionsForRentalObject);
+
+      // Neue RentPayment-Einträge erstellen
+      for (const transaction of transactionsForRentalObject) {
+        const transactionId = transaction.transaction_id;
+
+        // Überprüfen, ob die transactionId und renterId bereits in RentPayment existieren
+        const existingPayment = await prisma.rentPayment.findFirst({
+          where: { transactionId },
         });
 
-        filteredTransactions.push(...transactionsForRentalObject);
-
-        // Neue RentPayment-Einträge erstellen
-        for (const transaction of transactionsForRentalObject) {
-          const transactionId = transaction.transaction_id;
-
-          // Überprüfen, ob die transactionId und renterId bereits in RentPayment existieren
-          const existingPayment = await prisma.rentPayment.findFirst({
-            where: { transactionId },
+        // Nur RentPayment erstellen, wenn renterId definiert ist
+        if (!existingPayment && renterId) {
+          // RentPayment erstellen, wenn die transactionId und renterId nicht existieren
+          await prisma.rentPayment.create({
+            data: {
+              transactionId,
+              landlordId,
+              paymentAmount: transaction?.amount,
+              paymentDate: new Date(transaction.authorized_date ?? transaction.date ?? new Date()),
+              dueDate: new Date(), // ToDO: Entfernen, da in RentalAgreement schon vorhanden
+              status: transaction.pending ? "NOTPAID" : "PAID",
+              renterId: renterId,
+              rentalObjectId: rentalAgreement.rentalObjectId,
+            },
           });
-
-          if (!existingPayment) {
-            // RentPayment erstellen, wenn die transactionId und renterId nicht existieren
-            await prisma.rentPayment.create({
-              data: {
-                transactionId,
-                landlordId,
-                paymentAmount: transaction?.amount,
-                paymentDate: new Date(transaction.authorized_date ?? transaction.date ?? new Date()),
-                dueDate: new Date(),
-                status: transaction.pending ? "NOTPAID" : "PAID",
-                renterId: renterId,
-                rentalObjectId: rentalObject.id,
-              },
-            });
-          } else {
-            console.log(`RentPayment mit transactionId ${transactionId} und renterId ${renterId} existiert bereits.`);
-          }
+        } else if (!renterId) {
+          console.warn(`Kein renterId für rentalAgreement ${rentalAgreement.id}, RentPayment wird nicht erstellt.`);
+        } else {
+          console.log(`RentPayment mit transactionId ${transactionId} und renterId ${renterId} existiert bereits.`);
         }
       }
     }
