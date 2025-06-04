@@ -125,7 +125,7 @@ export function MainNav(): React.JSX.Element {
           }}
         >
           <Stack direction="row" spacing={2} sx={{ alignItems: "center", flex: "1 1 auto", p: 1, justifyContent: "space-between" }}>
-            <Logo width={45} height={45} fontSize={17} showLogoName={true} />
+            <Logo width={35} height={35} fontSize={17} showLogoName={true} />
             {user ? (
               <Button component="a" href={rederict} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Dashboard

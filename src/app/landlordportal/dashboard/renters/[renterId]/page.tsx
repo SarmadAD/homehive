@@ -370,7 +370,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                     <RenterBasicDetails />
                     <RenterRentalAgreementInfos />
                   </Grid>
-                  {/* <Grid lg={8} xs={12}>
+                  <Grid lg={8} xs={12}>
                     <Card>
                       <RentPaymentFilters
                         sortDir={sortDir}
@@ -392,7 +392,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                         onRowsPerPageChange={handleRowsPerPageChange}
                       />
                     </Card>
-                  </Grid> */}
+                  </Grid>
                 </Grid>
               </div>
               {/* )} */}
