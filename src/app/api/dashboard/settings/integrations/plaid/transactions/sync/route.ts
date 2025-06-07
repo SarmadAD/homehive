@@ -354,7 +354,7 @@ async function createRentPayments(transactions: Transaction[], landlordId: strin
               landlordId,
               paymentAmount: transaction?.amount,
               paymentDate: new Date(transaction.authorized_date ?? transaction.date ?? new Date()),
-              dueDate: new Date(), // ToDO: Entfernen, da in RentalAgreement schon vorhanden
+              dueDate: new Date(), // ToDO: Besser nutzen
               status: transaction.pending ? "NOTPAID" : "PAID",
               renterId: renterId,
               rentalObjectId: rentalAgreement.rentalObjectId,

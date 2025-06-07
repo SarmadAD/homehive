@@ -214,13 +214,12 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   return (
     <>
-      <Seo title="Objekt Details" />
+      <Seo title="Mieterinformation" />
       <Box
         component="main"
         sx={{
           display: "flex",
           flex: "1 1 auto",
-          overflow: "hidden",
           position: "relative",
         }}
       >
@@ -370,7 +369,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                     <RenterBasicDetails />
                     <RenterRentalAgreementInfos />
                   </Grid>
-                  {/* <Grid lg={8} xs={12}>
+                  <Grid lg={8} xs={12}>
                     <Card>
                       <RentPaymentFilters
                         sortDir={sortDir}
@@ -392,7 +391,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                         onRowsPerPageChange={handleRowsPerPageChange}
                       />
                     </Card>
-                  </Grid> */}
+                  </Grid>
                 </Grid>
               </div>
               {/* )} */}

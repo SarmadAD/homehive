@@ -292,10 +292,9 @@ export default function Page(): React.JSX.Element {
                         checkIfUserIsNotAllowedToCreateRentalObjects(landlord as Landlord) ? (
                           <>
                             Mehr Objekte anlegen?
-                            <br /> Kontaktiere uns durch info@homehive.me
-                            {/* <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
+                            <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
                               Jetzt upgraden
-                            </Link> */}
+                            </Link>
                           </>
                         ) : (
                           ""

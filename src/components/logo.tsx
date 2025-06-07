@@ -10,18 +10,12 @@ interface LogoProps {
   height?: number;
   fontSize?: number;
   showLogoName?: boolean;
+  showLogo?: boolean;
 }
 
 export function Logo({ width, height, fontSize, showLogoName }: LogoProps) {
   return (
-    <Box
-      alignItems="center"
-      component={RouterLink}
-      display="inline-flex"
-      href={paths.index}
-      sx={{ textDecoration: "none" }}
-      mr={0.5}
-    >
+    <Box alignItems="center" component={RouterLink} display="inline-flex" href={paths.index} sx={{ textDecoration: "none" }} mr={0.5}>
       <Box
         component="img"
         mr={0.5}

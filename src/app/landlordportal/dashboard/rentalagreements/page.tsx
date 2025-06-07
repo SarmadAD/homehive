@@ -195,7 +195,7 @@ export default function Page(): React.JSX.Element {
           <Container maxWidth={settings.settings.stretch ? false : "xl"}>
             <Grid container disableEqualOverflow>
               <Grid xs={12} pb={3}>
-                <Stack direction="row" justifyContent="space-between" spacing={4}>
+                <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={4}>
                   <div>
                     <Typography variant="h4">Mietverhältnisse</Typography>
                   </div>

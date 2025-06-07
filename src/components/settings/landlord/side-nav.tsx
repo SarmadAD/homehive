@@ -32,18 +32,18 @@ const navItems = [
       },
     ],
   },
-  // {
-  //   key: "integrations",
-  //   title: "Integrationen",
-  //   items: [
-  //     {
-  //       key: "integrations",
-  //       title: "Integrationen",
-  //       href: paths.landlordportal.dashboard.settings.integrations,
-  //       icon: "plugs-connected",
-  //     },
-  //   ],
-  // },
+  {
+    key: "integrations",
+    title: "Integrationen",
+    items: [
+      {
+        key: "integrations",
+        title: "Integrationen",
+        href: paths.landlordportal.dashboard.settings.integrations,
+        icon: "plugs-connected",
+      },
+    ],
+  },
 ] satisfies NavItemConfig[];
 
 const icons = {

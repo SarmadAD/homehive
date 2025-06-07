@@ -196,10 +196,9 @@ export default function Page(): React.JSX.Element {
                         checkIfUserIsNotAllowedToCreateRenter(landlord as Landlord) ? (
                           <>
                             Mehr Mieter anlegen?
-                            <br /> Kontaktiere uns durch info@homehive.me
-                            {/* <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
+                            <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
                               Jetzt upgraden
-                            </Link> */}
+                            </Link>
                           </>
                         ) : (
                           ""
