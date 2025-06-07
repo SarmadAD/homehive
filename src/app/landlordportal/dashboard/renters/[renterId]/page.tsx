@@ -214,13 +214,12 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   return (
     <>
-      <Seo title="Objekt Details" />
+      <Seo title="Mieterinformation" />
       <Box
         component="main"
         sx={{
           display: "flex",
           flex: "1 1 auto",
-          overflow: "hidden",
           position: "relative",
         }}
       >
