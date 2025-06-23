@@ -112,11 +112,13 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     []
   );
 
-  useEffect(() => {
-    if (landlord.id && renterId) {
-      handleRefreshPayments();
-    }
-  }, [landlord]);
+  // --After when using plaid again
+  // useEffect(() => {
+  //   if (landlord.id && renterId) {
+  //     handleRefreshPayments();
+  //   }
+  // }, [landlord]);
+  // --After when using plaid again
 
   // async function getRentPayments() {
   //   try {

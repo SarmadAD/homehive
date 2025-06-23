@@ -31,12 +31,10 @@ export function RentPaymentList({ renter }: Props) {
       const updatedPayment = payments.find((payment) => payment.id === rentPaymentId);
       if (updatedPayment) {
         const newPayment = { ...updatedPayment, status: updatedStatus, paymentDate: new Date() };
-        await agent.rentPayments.update(newPayment);
+        // await agent.rentPayments.update(newPayment);
 
         setPayments((prevPayments) =>
-          prevPayments.map((payment) =>
-            payment.id === rentPaymentId ? { ...payment, status: updatedStatus } : payment
-          )
+          prevPayments.map((payment) => (payment.id === rentPaymentId ? { ...payment, status: updatedStatus } : payment))
         );
       }
     } catch (error) {
@@ -69,9 +67,7 @@ export function RentPaymentList({ renter }: Props) {
                   return (
                     <TableRow hover key={rentPayment.id}>
                       <TableCell>
-                        <Typography variant="subtitle2">
-                          {new Date(rentPayment.dueDate).toLocaleDateString()}
-                        </Typography>
+                        <Typography variant="subtitle2">{new Date(rentPayment.dueDate).toLocaleDateString()}</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="subtitle2">{rentPayment.paymentAmount}</Typography>
@@ -83,9 +79,7 @@ export function RentPaymentList({ renter }: Props) {
                         <Select
                           variant="standard"
                           value={rentPayment.status}
-                          onChange={(event) =>
-                            handleStatusChange(rentPayment.id, event.target.value as RentPaymentStatus)
-                          }
+                          onChange={(event) => handleStatusChange(rentPayment.id, event.target.value as RentPaymentStatus)}
                         >
                           <Option value="NOTPAID">{getRentPaidStatusPill("NOTPAID")}</Option>
                           {/* <Option value="INARREARS">{getRentPaidStatusPill("INARREARS")}</Option> */}

@@ -39,11 +39,13 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  useEffect(() => {
-    if (landlord.id) {
-      handleRefreshPayments();
-    }
-  }, [landlord]);
+  // --For later when using plaid again
+  // useEffect(() => {
+  //   if (landlord.id) {
+  //     handleRefreshPayments();
+  //   }
+  // }, [landlord]);
+  // -- For later when using plaid again
 
   // async function getRentPayments() {
   //   try {
@@ -69,7 +71,6 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     try {
       setIsLoading(true);
       const response = await syncTransactions();
-      console.log(response);
       if (Array.isArray(response) && response.length > 0 && response.some((item) => item !== null && item !== undefined)) {
         refreshRentPayment();
       }

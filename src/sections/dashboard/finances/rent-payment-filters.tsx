@@ -86,7 +86,7 @@ export function RentPaymentFilters({
           />
         </Stack>
         <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-          <Tooltip
+          {/* <Tooltip
             title={
               !isTokenAlive ? (
                 <span>
@@ -118,7 +118,7 @@ export function RentPaymentFilters({
                 <RefreshIcon className="refresh-contrast" />
               </Button>
             </span>
-          </Tooltip>
+          </Tooltip> */}
           {showFilters && (
             <Select name="sort" onChange={handleSortChange} sx={{ maxWidth: "100%", width: "120px" }} value={sortDir}>
               <Option value="desc">Neueste</Option>

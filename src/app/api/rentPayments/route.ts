@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "src/app/db/db";
+import getNextDueDateFromState from "src/utils/get-next-due-date";
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,11 +9,44 @@ export async function GET(request: NextRequest) {
     if (!landlordId) {
       return NextResponse.json({ error: "Missing required parameter: landlordId" }, { status: 400 });
     }
-    const existingPayment = await prisma.rentPayment.findMany({
+
+    const existingPayments = await prisma.rentPayment.findMany({
       where: { landlordId },
-      include: { renter: true },
+      include: { renter: { include: { rentalAgreement: true } } },
     });
-    return NextResponse.json(existingPayment, { status: 200 });
+
+    if (existingPayments.length === 0) {
+      const rentalAgreements = await prisma.rentalAgreement.findMany({
+        where: { landlordId },
+        include: { renter: true },
+      });
+
+      for (const agreement of rentalAgreements) {
+        if (!agreement.renter) continue;
+        const totalRent = (agreement.baseRent ?? 0) + (agreement.serviceCharges ?? 0);
+
+        const nextDueDate = getNextDueDateFromState(agreement.dueDateState, new Date());
+        await prisma.rentPayment.create({
+          data: {
+            renterId: agreement.renter.id,
+            rentalObjectId: agreement.rentalObjectId,
+            landlordId: landlordId,
+            paymentAmount: totalRent,
+            dueDate: nextDueDate,
+            paymentDate: nextDueDate,
+            status: "NOTPAID",
+          },
+        });
+      }
+
+      const newPayments = await prisma.rentPayment.findMany({
+        where: { landlordId },
+        include: { renter: { include: { rentalAgreement: true } } },
+      });
+      return NextResponse.json(newPayments, { status: 200 });
+    }
+
+    return NextResponse.json(existingPayments, { status: 200 });
   } catch (error) {
     console.error("Fehler:", error);
     return NextResponse.json({ error: "Internal server error", details: error.message }, { status: 500 });
