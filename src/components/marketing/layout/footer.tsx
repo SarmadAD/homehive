@@ -72,7 +72,7 @@ export function Footer(): React.JSX.Element {
         </Grid>
         <Divider sx={{ my: 2 }} />
         <Typography color="text.secondary" variant="caption">
-          All Rights Reserved.
+          Crafted in Germany
         </Typography>
       </Container>
     </Box>

@@ -134,7 +134,8 @@ export function Features(): React.JSX.Element {
                   </div>
                   <Typography variant="h5">Einnahmen einfach im Griff</Typography>
                   <Typography color="text.secondary" variant="body2">
-                    Alle Zahlungen automatisch erfasst – übersichtlich, aktuell und direkt aus dem Bankkonto.
+                    {/* Alle Zahlungen automatisch erfasst – übersichtlich, aktuell und direkt aus dem Bankkonto. */}
+                    Alle Zahlungen erfasst – übersichtlich und aktuell.
                   </Typography>
                 </Stack>
                 <Box sx={{ height: "300px", position: "relative" }}>

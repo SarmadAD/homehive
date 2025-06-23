@@ -2,17 +2,7 @@ import type { FC } from "react";
 import { useState } from "react";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
 import ChevronRightIcon from "@untitled-ui/icons-react/build/esm/ChevronRight";
-import {
-  Box,
-  Collapse,
-  Container,
-  Stack,
-  SvgIcon,
-  Typography,
-  Unstable_Grid2 as Grid,
-  Card,
-  Chip,
-} from "@mui/material";
+import { Box, Collapse, Container, Stack, SvgIcon, Typography, Unstable_Grid2 as Grid, Card, Chip } from "@mui/material";
 import { Question as QuestionIcon } from "@phosphor-icons/react/dist/ssr/Question";
 import { CaretDown as CaretDownIcon } from "@phosphor-icons/react/dist/ssr/CaretDown";
 import { CaretRight as CaretRightIcon } from "@phosphor-icons/react/dist/ssr/CaretRight";
@@ -40,17 +30,16 @@ const faqs = [
     question: "Was ist das Mieter-Portal?",
     answer: "Im Mieter-Portal sehen Mieter das ihnen zugewiesene Objekt und erhalten Informationen wie den Mietbetrag.",
   },
-  {
-    id: "faq-4",
-    question: "Wie funktioniert das Tracking der Mieteinnahmen?",
-    answer:
-      "HomeHive speichert keine Bankdaten, sondern prüft lediglich deine Kontobewegungen auf mögliche Mieteingänge. Anhand von Betrag und den Verwendungszweck werden passende Transaktionen erkannt und im Dashboard angzeigt",
-  },
+  // {
+  //   id: "faq-4",
+  //   question: "Wie funktioniert das Tracking der Mieteinnahmen?",
+  //   answer:
+  //     "HomeHive speichert keine Bankdaten, sondern prüft lediglich deine Kontobewegungen auf mögliche Mieteingänge. Anhand von Betrag und den Verwendungszweck werden passende Transaktionen erkannt und im Dashboard angzeigt",
+  // },
   {
     id: "faq-5",
     question: "Was passiert nach dem Kauf?",
-    answer:
-      "Nach dem Kauf bekommst du sofort Zugriff auf alle Funktionen. Dein Konto wird entsprechend deinem gewählten Plan aktiviert.",
+    answer: "Nach dem Kauf bekommst du sofort Zugriff auf alle Funktionen. Dein Konto wird entsprechend deinem gewählten Plan aktiviert.",
   },
   {
     id: "faq-6",
@@ -80,11 +69,7 @@ export function Faqs(): React.JSX.Element {
               </Typography>
               <Typography color="text.secondary">
                 Du hast eine weitere Frage, die hier nicht beantwortet wird? Kontaktiere uns über{" "}
-                <Box
-                  component="a"
-                  href="mailto:info@homehive.me"
-                  sx={{ color: "inherit", textDecoration: "underline" }}
-                >
+                <Box component="a" href="mailto:info@homehive.me" sx={{ color: "inherit", textDecoration: "underline" }}>
                   email
                 </Box>
                 .
