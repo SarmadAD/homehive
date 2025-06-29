@@ -23,7 +23,7 @@ export default function CancellationPage() {
           <Typography variant="body1" gutterBottom>
             Sarmad Ahmad
             <br />
-            handelnd als HomeHive
+            handelnd als CoreHive
             <br />
             Kreuzkamp 86
             <br />
@@ -31,7 +31,7 @@ export default function CancellationPage() {
             <br />
             Deutschland
             <br />
-            E-Mail: info@homehive.me
+            E-Mail: info@corehive.de
           </Typography>
 
           <Typography variant="body1" sx={{ mt: 4 }} gutterBottom>

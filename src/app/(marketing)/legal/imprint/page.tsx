@@ -23,7 +23,7 @@ export default function Page() {
           <Typography variant="body2">
             Sarmad Ahmad
             <br />
-            handelnd als HomeHive
+            handelnd als CoreHive
             <br />
             Kreuzkamp 86
             <br />
@@ -35,7 +35,7 @@ export default function Page() {
           <Typography variant="h6" sx={{ mt: 4 }} gutterBottom>
             Kontaktinformationen
           </Typography>
-          <Typography variant="body2">E-Mail: info@homehive.me</Typography>
+          <Typography variant="body2">E-Mail: info@corehive.de</Typography>
 
           <Typography variant="h6" sx={{ mt: 4 }} gutterBottom>
             Verantwortlich für den Inhalt
