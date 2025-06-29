@@ -25,8 +25,11 @@ export const pricingPlans = [
     icon: <PricingPlanIcon name="standard" />,
     name: "Monatlich",
     price: "4",
-    link: process.env.NODE_ENV === "development" ? "https://buy.stripe.com/test_dRm14nfrddflcu8cqO5gc05" : "",
-    priceId: process.env.NODE_ENV === "development" ? "price_1RP1rCFJT2pyPaEfwJyrU7UO" : "",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_dRm14nfrddflcu8cqO5gc05"
+        : "https://buy.stripe.com/eVq8wP3GH2sz2lyaSocjS00",
+    priceId: process.env.NODE_ENV === "development" ? "price_1RP1rCFJT2pyPaEfwJyrU7UO" : "price_1RfN2tFAQVAyiPDH4wqYFh5W",
     hint: "Du kannst dein Abonnement jederzeit kündigen",
     sx: {
       height: "100%",
@@ -45,8 +48,11 @@ export const pricingPlans = [
     price: "2.80",
     // discountPrice: 36,
     discountPercentage: 30,
-    link: process.env.NODE_ENV === "development" ? "https://buy.stripe.com/test_6oUdR9a6T3EL51GfD05gc04" : "",
-    priceId: process.env.NODE_ENV === "development" ? "price_1RP1rvFJT2pyPaEf5b4aaViA" : "",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_6oUdR9a6T3EL51GfD05gc04"
+        : "https://buy.stripe.com/5kQ28r5OP3wD7FSe4AcjS01",
+    priceId: process.env.NODE_ENV === "development" ? "price_1RP1rvFJT2pyPaEf5b4aaViA" : "price_1RfN2uFAQVAyiPDHrqxihofK",
     hint: "Du kannst dein Abonnement jederzeit kündigen.",
     sx: {
       height: "100%",
@@ -63,8 +69,11 @@ export const pricingPlans = [
     icon: <PricingPlanIcon name="lifetime" />,
     name: "Einmalig",
     price: "39",
-    link: process.env.NODE_ENV === "development" ? "https://buy.stripe.com/test_6oE28keGI9g64ZG9AB" : "",
-    priceId: process.env.NODE_ENV === "development" ? "price_1RLqlBFJT2pyPaEfkiFIo14q" : "",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_14A6oHa6T1wD0LqgH45gc06"
+        : "https://buy.stripe.com/28EfZh7WX9V1f8kf8EcjS03",
+    priceId: process.env.NODE_ENV === "development" ? "price_1RfQhVFJT2pyPaEfzfAZ93Lr" : "price_1RfQjfFAQVAyiPDHRVfsohtj",
     popular: true,
     hint: "Einmal zahlen, dauerhaft nutzen",
     sx: {
