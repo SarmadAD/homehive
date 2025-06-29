@@ -16,7 +16,8 @@ import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 
 export default function Page(): React.JSX.Element {
   const landlord = useRecoilValue(currentLandlordAtom);
-  const canSeeSubscriptionCard = "hasAccess" in landlord && landlord?.hasAccess && landlord?.priceId !== "price_1RLqlBFJT2pyPaEfkiFIo14q"; // Einmaliger plan price Id. Abändern, wenn live!
+  const oneTimePriceId = process.env.NODE_ENV === "development" ? "price_1RLqlBFJT2pyPaEfkiFIo14q" : "price_1RfN2uFAQVAyiPDH9FsKyzZ2";
+  const canSeeSubscriptionCard = "hasAccess" in landlord && landlord?.hasAccess && landlord?.priceId !== oneTimePriceId;
 
   return (
     <Stack spacing={4}>

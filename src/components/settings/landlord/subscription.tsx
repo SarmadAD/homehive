@@ -14,7 +14,12 @@ import { Button, SvgIcon } from "@mui/material";
 
 export function Subscription(): React.JSX.Element {
   const { user } = useUser();
-  const customerPortalLink = "https://billing.stripe.com/p/login/test_8x28wP0wjdfl2TybmK5gc00";
+  //
+  const customerPortalLink =
+    process.env.NODE_ENV === "development"
+      ? "https://billing.stripe.com/p/login/test_8x28wP0wjdfl2TybmK5gc00"
+      : "https://billing.stripe.com/p/login/eVq8wP3GH2sz2lyaSocjS00";
+
   return (
     <Card>
       <CardHeader

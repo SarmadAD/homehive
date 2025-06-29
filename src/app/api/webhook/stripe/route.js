@@ -1,6 +1,8 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
+const stripeSecret = process.env.NODE_ENV === "development" ? process.env.STRIPE_SECRET_TEST_KEY : process.env.STRIPE_SECRET_LIVE_KEY;
+
+const stripe = new Stripe(stripeSecret ?? "");
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 import { prisma } from "src/app/db/db";
 
