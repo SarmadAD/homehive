@@ -9,6 +9,10 @@ export const paths = {
       cancellation: "/legal/cancellation",
       privacyPolicy: "/legal/privacypolicy",
     },
+    blog: {
+      list: "/blog",
+      details: (postId: string) => `/blog/${postId}`,
+    },
   },
   auth: {
     auth0: {
