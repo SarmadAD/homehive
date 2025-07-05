@@ -17,13 +17,10 @@ interface ObjectDetailsStepProps {
 const schema = zod.object({
   name: zod.string().min(1, { message: "Name des Objekts ist erforderlich" }),
   address: zod.string().min(1, { message: "Straße ist erforderlich" }),
-  houseNr: zod.number().min(1, { message: "Hausnummer ist erforderlich" }),
+  houseNr: zod.string().min(1, { message: "Hausnummer ist erforderlich" }).regex(/^\d+$/, { message: "Hausnummer darf nur Ziffern enthalten" }),
   additionalHouseDetails: zod.string().optional(),
   city: zod.string().min(1, { message: "Ort ist erforderlich" }),
-  postalCode: zod
-    .number()
-    .int()
-    .refine((val) => val.toString().length === 5, { message: "PLZ muss aus 5 Ziffern bestehen" }),
+  postalCode: zod.string().regex(/^\d{5}$/, { message: "PLZ muss aus 5 Ziffern bestehen" }),
 });
 
 type Values = zod.infer<typeof schema>;
@@ -39,16 +36,16 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
     defaultValues: {
       name: newObject.name || "",
       address: newObject.address || "",
-      houseNr: newObject.houseNr || 0,
+      houseNr: newObject.houseNr ? String(newObject.houseNr) : "",
       additionalHouseDetails: newObject.additionalHouseDetails || "",
       city: newObject.city || "",
-      postalCode: newObject.postalCode || 0,
+      postalCode: newObject.postalCode ? String(newObject.postalCode) : "",
     },
     resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: Values) => {
-    setNewObject({ ...newObject, ...data });
+    setNewObject({ ...newObject, ...data, postalCode: Number(data.postalCode), houseNr: Number(data.houseNr) });
     if (onNext) onNext();
   };
 
@@ -98,7 +95,11 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
                 type="number"
                 error={!!errors.houseNr}
                 helperText={errors.houseNr?.message}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  field.onChange(value);
+                }}
               />
             )}
           />
@@ -135,7 +136,11 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
                 type="number"
                 error={!!errors.postalCode}
                 helperText={errors.postalCode?.message}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                inputProps={{ maxLength: 5, inputMode: "numeric", pattern: "[0-9]*" }}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  field.onChange(value);
+                }}
               />
             )}
           />

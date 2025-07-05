@@ -49,6 +49,7 @@ import { rentalAgreementsAtom } from "src/state/atoms/rentalAgreementsAtom";
 import { getInitials } from "src/utils/get-initials";
 import { getRenterName } from "src/utils/get-renter-name";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
+import checkIfUserIsNotAllowedToCreateRentalAgreement from "src/utils/hasAccessForCreateRentalAgreement";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -200,20 +201,37 @@ export default function Page(): React.JSX.Element {
                     <Typography variant="h4">Mietverhältnisse</Typography>
                   </div>
                   <Stack direction="row" spacing={4}>
-                    <span>
-                      <Button
-                        component={RouterLink}
-                        startIcon={
-                          <SvgIcon>
-                            <PlusIcon />
-                          </SvgIcon>
-                        }
-                        variant="contained"
-                        href={paths.landlordportal.dashboard.rentalagreements.create}
-                      >
-                        Hinzufügen
-                      </Button>{" "}
-                    </span>
+                    {" "}
+                    <Tooltip
+                      title={
+                        checkIfUserIsNotAllowedToCreateRentalAgreement(landlord as Landlord) ? (
+                          <>
+                            Mehr Mietverhältnisse anlegen?{" "}
+                            <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
+                              Jetzt upgraden
+                            </Link>
+                          </>
+                        ) : (
+                          ""
+                        )
+                      }
+                    >
+                      <span>
+                        <Button
+                          component={RouterLink}
+                          startIcon={
+                            <SvgIcon>
+                              <PlusIcon />
+                            </SvgIcon>
+                          }
+                          variant="contained"
+                          href={paths.landlordportal.dashboard.rentalagreements.create}
+                          disabled={checkIfUserIsNotAllowedToCreateRentalAgreement(landlord as Landlord)}
+                        >
+                          Hinzufügen
+                        </Button>{" "}
+                      </span>
+                    </Tooltip>
                   </Stack>
                 </Stack>
               </Grid>

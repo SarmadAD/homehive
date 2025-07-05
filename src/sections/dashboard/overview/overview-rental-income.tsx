@@ -16,6 +16,7 @@ const useChartOptions = (months: string[]): ApexOptions => {
   const theme = useTheme();
 
   return {
+    noData: { text: "Noch keine Mieteinnahmen erfasst" },
     chart: {
       background: "transparent",
       stacked: true,
@@ -117,12 +118,8 @@ export function OverviewRentalIncome() {
   const getAllRentPayments = () => {
     const allRentPayments: RentPayment[] = [];
     if (rentPaymentsState && rentPaymentsState.length > 0) {
-      const filterNullPaymentDateRentPayments = rentPaymentsState.filter(
-        (rentPayment) => rentPayment.paymentDate !== null
-      );
-      const filterNotPaidPaymentRentPayments = filterNullPaymentDateRentPayments.filter(
-        (rentPayment) => rentPayment.status === "PAID"
-      );
+      const filterNullPaymentDateRentPayments = rentPaymentsState.filter((rentPayment) => rentPayment.paymentDate !== null);
+      const filterNotPaidPaymentRentPayments = filterNullPaymentDateRentPayments.filter((rentPayment) => rentPayment.status === "PAID");
       allRentPayments.push(...filterNotPaidPaymentRentPayments);
     }
     return allRentPayments;
@@ -159,9 +156,7 @@ export function OverviewRentalIncome() {
   );
 
   const groupedRentPayments: any = groupRentPaymentsByMonth(rentPayments);
-  const totalPaymentAmounts = groupedRentPayments.map(
-    (groupedRentPayment: any) => groupedRentPayment.totalPaymentAmount
-  );
+  const totalPaymentAmounts = groupedRentPayments.map((groupedRentPayment: any) => groupedRentPayment.totalPaymentAmount);
   const getMonthName = (monthNumber: number) => {
     const monthNames = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
     return monthNames[monthNumber];

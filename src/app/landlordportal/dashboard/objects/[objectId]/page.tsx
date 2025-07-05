@@ -574,7 +574,7 @@ export default function Page(): React.JSX.Element {
         openDeleteModal={openDeleteModalForRenter}
       />
       <DeleteModal
-        text={"Möchtest Du wirklich das Objekt löschen?"}
+        text={"Bist Du sicher, dass Du dieses Objekt dauerhaft löschen möchtest?" + "Dieser Vorgang kann nicht rückgängig gemacht werden."}
         handleCancelDeleteModal={handleCancelDeleteRentalObject}
         onDelete={handleObjectDelete}
         openDeleteModal={openDeleteModalForRentalObject}

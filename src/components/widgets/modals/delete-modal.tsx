@@ -15,12 +15,7 @@ interface Props {
   text: string;
 }
 
-export function DeleteModal({
-  handleCancelDeleteModal,
-  openDeleteModal,
-  onDelete,
-  text,
-}: Props): React.JSX.Element | null {
+export function DeleteModal({ handleCancelDeleteModal, openDeleteModal, onDelete, text }: Props): React.JSX.Element | null {
   if (!openDeleteModal) {
     return null;
   }

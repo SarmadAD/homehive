@@ -15,7 +15,7 @@ interface ObjectInfosStepProps {
 }
 
 const schema = zod.object({
-  areaSize: zod.number().min(1, { message: "Die Fläche muss größer als 0 sein" }).optional(),
+  areaSize: zod.string().min(1, { message: "Die Fläche muss angegeben werden" }).regex(/^\d+$/, { message: "Nur Ziffern erlaubt" }).optional(),
 });
 
 type Values = zod.infer<typeof schema>;
@@ -29,7 +29,7 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
     formState: { errors },
   } = useForm<Values>({
     defaultValues: {
-      areaSize: newObject.areaSize || 0,
+      areaSize: newObject.areaSize ? String(newObject.areaSize) : "",
     },
     resolver: zodResolver(schema),
   });
@@ -45,7 +45,7 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
   // }
 
   const onSubmit = (data: Values) => {
-    setNewObject({ ...newObject, ...data });
+    setNewObject({ ...newObject, areaSize: Number(data.areaSize) });
     if (onNext) onNext();
   };
 
@@ -62,13 +62,17 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
               label="Fläche"
               name="areaSize"
               placeholder="42"
-              type="number"
+              type="text"
               InputProps={{
                 endAdornment: <InputAdornment position="end">m²</InputAdornment>,
+                inputMode: "numeric",
               }}
               error={!!errors.areaSize}
               helperText={errors.areaSize?.message}
-              onChange={(e) => field.onChange(Number(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "");
+                field.onChange(value);
+              }}
               sx={{ maxWidth: 150 }}
             />
           )}

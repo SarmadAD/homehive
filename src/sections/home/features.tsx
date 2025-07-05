@@ -8,10 +8,9 @@ import Stack from "@mui/material/Stack";
 import { useColorScheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import { CodeBlock as CodeBlockIcon } from "@phosphor-icons/react/dist/ssr/CodeBlock";
+import { FileText as FileTextIcon } from "@phosphor-icons/react/dist/ssr/FileText";
+import { ChartBar as ChartBarIcon } from "@phosphor-icons/react/dist/ssr/ChartBar";
 import { DiamondsFour as DiamondsFourIcon } from "@phosphor-icons/react/dist/ssr/DiamondsFour";
-import { Palette as PaletteIcon } from "@phosphor-icons/react/dist/ssr/Palette";
-import { Timer as TimerIcon } from "@phosphor-icons/react/dist/ssr/Timer";
 import { NoSsr } from "src/components/no-ssr";
 
 export function Features(): React.JSX.Element {
@@ -130,7 +129,7 @@ export function Features(): React.JSX.Element {
               >
                 <Stack spacing={2} sx={{ p: 4 }}>
                   <div>
-                    <Chip color="primary" icon={<CodeBlockIcon />} label="Automatisch erkannt" variant="soft" />
+                    <Chip color="primary" icon={<FileTextIcon />} label="Mieten erfassen" variant="soft" />
                   </div>
                   <Typography variant="h5">Einnahmen einfach im Griff</Typography>
                   <Typography color="text.secondary" variant="body2">
@@ -160,7 +159,7 @@ export function Features(): React.JSX.Element {
               >
                 <Stack spacing={2} sx={{ p: 4 }}>
                   <div>
-                    <Chip color="primary" icon={<DiamondsFourIcon />} label="Datenvisualisierung" variant="soft" />
+                    <Chip color="primary" icon={<ChartBarIcon />} label="Datenvisualisierung" variant="soft" />
                   </div>
                   <Typography variant="h5">Mieten grafisch im Blick</Typography>
                   <Typography color="text.secondary" variant="body2">
