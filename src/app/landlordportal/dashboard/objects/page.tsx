@@ -291,7 +291,7 @@ export default function Page(): React.JSX.Element {
                       title={
                         checkIfUserIsNotAllowedToCreateRentalObjects(landlord as Landlord) ? (
                           <>
-                            Mehr Objekte anlegen?
+                            Mehr Objekte anlegen?{" "}
                             <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
                               Jetzt upgraden
                             </Link>
@@ -362,7 +362,7 @@ export default function Page(): React.JSX.Element {
           </Container>
         </Box>
         <DeleteModal
-          text={"Möchtest Du wirklich das Objekt löschen?"}
+          text={"Bist Du sicher, dass Du dieses Objekt dauerhaft löschen möchtest?" + "Dieser Vorgang kann nicht rückgängig gemacht werden."}
           handleCancelDeleteModal={handleCancelDeleteModal}
           onDelete={handleDelete}
           openDeleteModal={openDeleteModal}

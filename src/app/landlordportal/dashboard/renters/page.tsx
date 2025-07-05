@@ -195,7 +195,7 @@ export default function Page(): React.JSX.Element {
                       title={
                         checkIfUserIsNotAllowedToCreateRenter(landlord as Landlord) ? (
                           <>
-                            Mehr Mieter anlegen?
+                            Mehr Mieter anlegen?{" "}
                             <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
                               Jetzt upgraden
                             </Link>

@@ -19,8 +19,8 @@ interface RentInfoStepProps {
 }
 
 const schema = zod.object({
-  baseRent: zod.number().min(1, { message: "Die Kaltmiete muss größer als 0 sein" }),
-  serviceCharges: zod.number().min(0, { message: "Nebenkosten dürfen nicht negativ sein" }).optional(),
+  baseRent: zod.string().min(1, { message: "Die Kaltmiete muss größer als 0 sein" }).regex(/^\d+$/, { message: "Nur Ziffern erlaubt" }),
+  serviceCharges: zod.string().regex(/^\d*$/, { message: "Nur Ziffern erlaubt" }).optional(),
 });
 
 type Values = zod.infer<typeof schema>;
@@ -34,14 +34,14 @@ export const RentInfoStep: FC<RentInfoStepProps> = (props) => {
     formState: { errors },
   } = useForm<Values>({
     defaultValues: {
-      baseRent: newRentalAgreement?.baseRent || 0,
-      serviceCharges: newRentalAgreement?.serviceCharges || 0,
+      baseRent: newRentalAgreement?.baseRent ? String(newRentalAgreement.baseRent) : "",
+      serviceCharges: newRentalAgreement?.serviceCharges ? String(newRentalAgreement.serviceCharges) : "",
     },
     resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: Values) => {
-    setNewRentalAgreement({ ...newRentalAgreement, baseRent: data.baseRent, serviceCharges: data.serviceCharges ?? 0 });
+    setNewRentalAgreement({ ...newRentalAgreement, baseRent: Number(data.baseRent), serviceCharges: Number(data.serviceCharges ?? 0) });
     if (onNext) onNext();
   };
 
@@ -57,10 +57,14 @@ export const RentInfoStep: FC<RentInfoStepProps> = (props) => {
                 {...field}
                 fullWidth
                 label="Kaltmiete"
-                type="number"
+                type="text"
                 error={!!errors.baseRent}
                 helperText={errors.baseRent?.message}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  field.onChange(value);
+                }}
               />
             )}
           />
@@ -72,10 +76,14 @@ export const RentInfoStep: FC<RentInfoStepProps> = (props) => {
                 {...field}
                 fullWidth
                 label="Nebenkosten"
-                type="number"
+                type="text"
                 error={!!errors.serviceCharges}
                 helperText={errors.serviceCharges?.message}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  field.onChange(value);
+                }}
               />
             )}
           />

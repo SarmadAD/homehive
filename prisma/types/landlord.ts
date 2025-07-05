@@ -1,7 +1,13 @@
 import { Prisma } from "@prisma/client";
 
 const landlord = Prisma.validator<Prisma.LandlordDefaultArgs>()({
-  include: { rentPayments: { include: { rentalObject: true, renter: true } }, rentalObjects: true, renters: true, tokens: true },
+  include: {
+    rentPayments: { include: { rentalObject: true, renter: true } },
+    rentalObjects: true,
+    renters: true,
+    tokens: true,
+    rentalAgreements: true,
+  },
 });
 
 export type Landlord = Prisma.LandlordGetPayload<typeof landlord>;
@@ -16,4 +22,5 @@ export const defaultLandlord: Landlord = {
   rentalObjects: [],
   renters: [],
   tokens: [],
+  rentalAgreements: [],
 };
