@@ -31,12 +31,22 @@ export function MobileNav({ onClose, open = false }: MobileNavProps): React.JSX.
       items: [{ key: "home", title: "Startseite", href: paths.index }],
     },
     {
-      key: "group-0",
+      key: "group-1",
       items: [
         {
           key: "home",
           title: "Dashboard",
           href: user ? paths.landlordportal.dashboard.index : paths.auth.supabase.signIn,
+        },
+      ],
+    },
+    {
+      key: "group-2",
+      items: [
+        {
+          key: "blog",
+          title: "Blog",
+          href: paths.marketing.blog.index,
         },
       ],
     },
