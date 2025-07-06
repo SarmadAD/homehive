@@ -31,7 +31,7 @@ export function MobileNav({ onClose, open = false }: MobileNavProps): React.JSX.
       items: [{ key: "home", title: "Startseite", href: paths.index }],
     },
     {
-      key: "group-0",
+      key: "group-1",
       items: [
         {
           key: "home",
@@ -41,7 +41,7 @@ export function MobileNav({ onClose, open = false }: MobileNavProps): React.JSX.
       ],
     },
     {
-      key: "group-0",
+      key: "group-2",
       items: [
         {
           key: "blog",
