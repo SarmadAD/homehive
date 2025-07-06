@@ -28,6 +28,11 @@ const groups = [
       { key: "imprint ", title: "Impressum", href: paths.marketing.legal.imprint },
     ],
   },
+  {
+    key: "Socials",
+    title: "Socials",
+    items: [{ key: "blog", title: "Blog", href: paths.marketing.blog.index }],
+  },
 ] satisfies GroupConfig[];
 
 const date = new Date();

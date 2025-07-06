@@ -26,6 +26,7 @@ export function MainNav(): React.JSX.Element {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const [rederict, setRederict] = useState<string>("");
   const { user } = useUser();
+  const pathname = usePathname();
 
   const [elevate, setElevate] = useState<boolean>(false);
   const offset = 64;
@@ -125,7 +126,15 @@ export function MainNav(): React.JSX.Element {
           }}
         >
           <Stack direction="row" spacing={2} sx={{ alignItems: "center", flex: "1 1 auto", p: 1, justifyContent: "space-between" }}>
-            <Logo width={35} height={35} fontSize={17} showLogoName={true} />
+            <Stack direction="row" spacing={2} sx={{ alignItems: "center", flex: "1 1 auto" }}>
+              <Logo width={35} height={35} fontSize={17} showLogoName={true} />{" "}
+              <Box component="nav" sx={{ display: { xs: "none", md: "block" } }}>
+                <Stack component="ul" direction="row" spacing={1} sx={{ listStyle: "none", m: 0, p: 0 }}>
+                  <NavItem href={paths.marketing.blog.index} pathname={pathname} title="Blog" />{" "}
+                </Stack>
+              </Box>
+            </Stack>
+
             {user ? (
               <Button component="a" href={rederict} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Dashboard
@@ -188,7 +197,7 @@ export function NavItem({ children, disabled, external, href, matcher, pathname,
         sx={{
           alignItems: "center",
           borderRadius: 1,
-          color: "var(--mui-palette-neutral-300)",
+          color: "black",
           cursor: "pointer",
           display: "flex",
           flex: "0 0 auto",
@@ -202,9 +211,9 @@ export function NavItem({ children, disabled, external, href, matcher, pathname,
             color: "var(--mui-action-disabled)",
             cursor: "not-allowed",
           }),
-          ...(active && { color: "var(--mui-palette-common-white)" }),
+          ...(active && { color: "#e9ad0e" }),
           "&:hover": {
-            ...(!disabled && !active && { bgcolor: "rgba(255, 255, 255, 0.04)", color: "var(--mui-palette-common-white)" }),
+            ...(!disabled && !active && { bgcolor: "rgba(255, 255, 255, 0.04)", color: "#e9ad0e" }),
           },
         }}
         tabIndex={0}

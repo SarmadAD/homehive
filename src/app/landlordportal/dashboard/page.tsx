@@ -6,23 +6,10 @@ import { useSettings } from "src/hooks/use-settings";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
 import { OverviewRentalIncome } from "src/sections/dashboard/overview/overview-rental-income";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
-import { useState } from "react";
 import { RoleBasedGuard } from "../../auth/role/RoleBasedGuard";
-// import { site } from "src/config";
-// import { Metadata } from "next/types";
-
-// export const metadata = { title: `Dashboard | Übersicht | ${site.name}` } satisfies Metadata;
 
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
-
-  // if (isLoading) {
-  //   return (
-  //     <Backdrop sx={(theme) => ({ color: "var(--mui-palette-primary-main)", zIndex: theme.zIndex.drawer + 1 })} open={isLoading}>
-  //       <CircularProgress color="inherit" />
-  //     </Backdrop>
-  //   );
-  // }
 
   return (
     <>

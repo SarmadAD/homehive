@@ -53,9 +53,28 @@ const useChartOptions = (): ApexOptions => {
   };
 };
 
+numeral.register("locale", "de", {
+  delimiters: {
+    thousands: ".",
+    decimal: ",",
+  },
+  abbreviations: {
+    thousand: "k",
+    million: "M",
+    billion: "Mrd",
+    trillion: "Bio",
+  },
+  ordinal: function () {
+    return ".";
+  },
+  currency: { symbol: "€" },
+});
+
 export const ObjectRentalAgreementChart: FC = () => {
   const chartOptions = useChartOptions();
   const rentalObjectLoadable = useRecoilValueLoadable(rentalObjectAtom);
+
+  numeral.locale("de");
 
   if (rentalObjectLoadable.state === "loading" || (rentalObjectLoadable.state === "hasValue" && rentalObjectLoadable.contents.id === "")) {
     return (
