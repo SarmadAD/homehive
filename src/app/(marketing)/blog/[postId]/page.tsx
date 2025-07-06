@@ -8,8 +8,8 @@ import Typography from "@mui/material/Typography";
 import { Metadata } from "next/types";
 import { Content } from "src/components/marketing/blog/content";
 import { site } from "src/config";
-import { posts } from "../page";
 import { dayjs } from "src/lib/dayjs";
+import { posts } from "../posts";
 
 export async function generateMetadata({ params }: { params: { postId: number } }): Promise<Metadata> {
   const post = posts[params.postId];

@@ -8,27 +8,17 @@ import { Post } from "src/components/marketing/blog/types";
 import { PostCard } from "src/components/marketing/blog/post-card";
 import { site } from "src/config";
 import { Metadata } from "next/types";
+import { post0Content } from "./post-0";
 
 import { dayjs } from "src/lib/dayjs";
 import "dayjs/locale/de";
-import { post0Content } from "./post-0";
+import { posts } from "./posts";
 dayjs.locale("de");
 
-export const metadata = { title: `Blog | ${site.name}` } satisfies Metadata;
-
-export const posts: Post[] = [
-  // {
-  //   id: 0,
-  //   title: "Building a Design System from Scratch",
-  //   description: "Learn how to build a design system from scratch using Figma and React that scales.",
-  //   cover: "/assets/image-abstract-2.png",
-  //   category: "Programming",
-  //   author: { name: "Sarmad", avatar: "/assets/sarmad-image.png" },
-  //   readTime: "5 min",
-  //   publishedAt: dayjs().subtract(45, "minute").toDate(),
-  //   content: post0Content,
-  // },
-];
+export const metadata = {
+  title: `Blog | ${site.name}`,
+  description: "Entdecke die neuesten Tipps, Neuigkeiten und Einblicke rund um HomeHive.",
+} satisfies Metadata;
 
 export default function Page(): React.JSX.Element {
   return (
@@ -58,7 +48,8 @@ export default function Page(): React.JSX.Element {
           </Stack>
           <Divider />
           <Grid container spacing={4}>
-            {posts.length > 0 ? (
+            {/* Hier ändern wenn erster Blog Post */}
+            {[].length > 0 ? (
               posts.map((post) => (
                 <Grid key={post.title} md={6} xs={12}>
                   <PostCard post={post} />
