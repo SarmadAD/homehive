@@ -16,19 +16,19 @@ dayjs.locale("de");
 
 export const metadata = { title: `Blog | ${site.name}` } satisfies Metadata;
 
-export const posts = [
-  {
-    id: 0,
-    title: "Building a Design System from Scratch",
-    description: "Learn how to build a design system from scratch using Figma and React that scales.",
-    cover: "/assets/image-abstract-2.png",
-    category: "Programming",
-    author: { name: "Sarmad", avatar: "/assets/sarmad-image.png" },
-    readTime: "5 min",
-    publishedAt: dayjs().subtract(45, "minute").toDate(),
-    content: post0Content,
-  },
-] satisfies Post[];
+export const posts: Post[] = [
+  // {
+  //   id: 0,
+  //   title: "Building a Design System from Scratch",
+  //   description: "Learn how to build a design system from scratch using Figma and React that scales.",
+  //   cover: "/assets/image-abstract-2.png",
+  //   category: "Programming",
+  //   author: { name: "Sarmad", avatar: "/assets/sarmad-image.png" },
+  //   readTime: "5 min",
+  //   publishedAt: dayjs().subtract(45, "minute").toDate(),
+  //   content: post0Content,
+  // },
+];
 
 export default function Page(): React.JSX.Element {
   return (
@@ -58,11 +58,17 @@ export default function Page(): React.JSX.Element {
           </Stack>
           <Divider />
           <Grid container spacing={4}>
-            {posts.map((post) => (
-              <Grid key={post.title} md={6} xs={12}>
-                <PostCard post={post} />
-              </Grid>
-            ))}
+            {posts.length > 0 ? (
+              posts.map((post) => (
+                <Grid key={post.title} md={6} xs={12}>
+                  <PostCard post={post} />
+                </Grid>
+              ))
+            ) : (
+              <Typography color="text.secondary" variant="body1" sx={{ textAlign: "center", width: "100%" }}>
+                Es gibt noch keine Artikel. Schau später wieder vorbei, um die neuesten Inhalte zu entdecken!
+              </Typography>
+            )}
           </Grid>
         </Stack>
         {/* <Newsletter /> */}

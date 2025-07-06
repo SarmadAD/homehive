@@ -49,7 +49,7 @@ export const ObjectBasicDetails: FC = () => {
       <PropertyList>
         <PropertyListItem divider label="Straße" value={`${address} ${houseNr} ${additionalHouseDetails ? additionalHouseDetails : ""}`} />
         <PropertyListItem divider label="Ort" value={`${postalCode} ${city}`} />
-        <PropertyListItem divider label="Fläche" value={areaSize?.toString()} />
+        <PropertyListItem divider label="Fläche" value={areaSize?.toString() + " " + "m²"} />
         <PropertyListItem divider align={align} label="Wohnstatus">
           {statusPill}
         </PropertyListItem>
