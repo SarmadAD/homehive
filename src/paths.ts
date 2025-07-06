@@ -10,8 +10,8 @@ export const paths = {
       privacyPolicy: "/legal/privacypolicy",
     },
     blog: {
-      list: "/blog",
-      details: (postId: string) => `/blog/${postId}`,
+      index: "/blog",
+      details: (postId: number) => `/blog/${postId}`,
     },
   },
   auth: {

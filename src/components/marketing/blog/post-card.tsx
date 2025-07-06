@@ -20,14 +20,14 @@ export interface PostCardProps {
 export function PostCard({ post }: PostCardProps): React.JSX.Element {
   return (
     <Card>
-      <CardMedia component={RouterLink} href={paths.marketing.blog.details("1")} image={post.cover} sx={{ height: "280px" }} />
+      <CardMedia component={RouterLink} href={paths.marketing.blog.details(post.id)} image={post.cover} sx={{ height: "280px" }} />
       <CardContent>
         <Stack spacing={2}>
           <div>
             <Chip label={post.category} />
           </div>
           <div>
-            <Link color="text.primary" component={RouterLink} href={paths.marketing.blog.details("1")} variant="h5">
+            <Link color="text.primary" component={RouterLink} href={paths.marketing.blog.details(post.id)} variant="h5">
               {post.title}
             </Link>
           </div>
@@ -48,10 +48,10 @@ export function PostCard({ post }: PostCardProps): React.JSX.Element {
             <Avatar src={post.author.avatar} />
             <Stack direction="row" spacing={1} sx={{ alignItems: "center", flex: "1 1 auto", flexWrap: "wrap" }}>
               <Typography sx={{ flex: "1 1 auto" }} variant="subtitle2">
-                By {post.author.name} • {dayjs(post.publishedAt).format("MMM D, YYYY")}
+                Von {post.author.name} • {dayjs(post.publishedAt).format("D MMMM YYYY")}
               </Typography>
               <Typography color="text.secondary" sx={{ whiteSpace: "nowrap" }} variant="body2">
-                {post.readTime} read
+                Lesezeit: {post.readTime}
               </Typography>
             </Stack>
           </Stack>
