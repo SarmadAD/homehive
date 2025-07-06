@@ -40,6 +40,16 @@ export function MobileNav({ onClose, open = false }: MobileNavProps): React.JSX.
         },
       ],
     },
+    {
+      key: "group-0",
+      items: [
+        {
+          key: "blog",
+          title: "Blog",
+          href: paths.marketing.blog.index,
+        },
+      ],
+    },
   ] satisfies NavItemConfig[];
   return (
     <Dialog
