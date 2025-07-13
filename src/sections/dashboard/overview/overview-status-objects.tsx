@@ -6,7 +6,7 @@ import { paths } from "src/paths";
 import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
-import OverViewStatusObjectsSkeleton from "src/skeleton/dashboard-skeletons";
+import { OverViewStatusObjectsSkeleton } from "src/skeleton/dashboard-skeletons";
 import { RouterLink } from "src/components/router-link";
 
 interface OverviewStatusObjects {
