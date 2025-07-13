@@ -14,28 +14,28 @@ import {
   Card,
   Divider,
   Tooltip,
+  useMediaQuery,
+  Theme,
+  CardContent,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
 import { useRentersSearch } from "src/hooks/use-renter-search";
 import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useSettings } from "src/hooks/use-settings";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
-import { Layout as DashboardLayout } from "src/layouts/dashboard";
 import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
-import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
 import { Renter } from "prisma/types/renter";
 import { RouterLink } from "src/components/router-link";
-import { DotsVertical, User03 } from "@untitled-ui/icons-react";
+import { DotsVertical, Trash01, User03 } from "@untitled-ui/icons-react";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { toast } from "src/components/toaster";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
@@ -43,6 +43,8 @@ import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import checkIfUserIsNotAllowedToCreateRenter from "src/utils/hasAccessForCreateRenter";
 import { Landlord } from "prisma/types/landlord";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
+import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -78,6 +80,7 @@ export default function Page(): React.JSX.Element {
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
   const isLoading = rentersLoading || landloadLoading;
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const handleCloseRenterThreeDotsMenu = () => {
     setAnchorElRenterThreeDotsMenu(null);
@@ -171,6 +174,54 @@ export default function Page(): React.JSX.Element {
     },
   ] satisfies ColumnDef<Renter>[];
 
+  function MobileRenterCard({ renter }: { renter: Renter }) {
+    return (
+      <Box sx={{ mb: 2 }}>
+        <Card>
+          <CardContent>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <SvgIcon>
+                    <User03 />
+                  </SvgIcon>
+                  <Typography variant="subtitle2">
+                    {renter.firstname} {renter.surname}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    component={RouterLink}
+                    href={`${paths.landlordportal.dashboard.renters.details}${renter.id}`}
+                    size="small"
+                    color="primary"
+                    sx={{ minWidth: 0, p: 1 }}
+                    aria-label="Details anzeigen"
+                  >
+                    <SvgIcon>
+                      <EyeIcon />
+                    </SvgIcon>
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => {
+                      selectOne(renter.id);
+                      setOpenDeleteModal(true);
+                    }}
+                    sx={{ minWidth: 0, p: 1 }}
+                    aria-label="Löschen"
+                  >
+                    <Trash01 />
+                  </Button>
+                </Stack>
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  }
   return (
     <>
       <Seo title="Mieter" />
@@ -229,29 +280,39 @@ export default function Page(): React.JSX.Element {
               </Grid>
               <Grid xs={12} sx={{ pt: 3 }}>
                 <Card>
-                  <DataTable<Renter>
-                    columns={columns}
-                    rows={(paginatedRenter as Renter[]) || []}
-                    onDeselectAll={deselectAll}
-                    onDeselectOne={(_, row) => {
-                      deselectOne(row.id);
-                    }}
-                    onSelectAll={selectAll}
-                    onSelectOne={(_, row) => {
-                      selectOne(row.id);
-                    }}
-                    selected={selected}
-                    isLoading={isLoading}
-                    rowStartIcon={<User03 />}
-                    selectable
-                  />{" "}
-                  {!renters.length && !isLoading ? (
-                    <Box sx={{ p: 3 }}>
-                      <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
-                        Es wurden noch keine Mieter angelegt
-                      </Typography>
+                  {!isMobile ? (
+                    <DataTable<Renter>
+                      columns={columns}
+                      rows={(paginatedRenter as Renter[]) || []}
+                      onDeselectAll={deselectAll}
+                      onDeselectOne={(_, row) => {
+                        deselectOne(row.id);
+                      }}
+                      onSelectAll={selectAll}
+                      onSelectOne={(_, row) => {
+                        selectOne(row.id);
+                      }}
+                      selected={selected}
+                      isLoading={isLoading}
+                      rowStartIcon={<User03 />}
+                      selectable
+                    />
+                  ) : (
+                    <Box sx={{ p: 2 }}>
+                      {isLoading ? (
+                        <>
+                          <MobileCardSkeleton />
+                          <MobileCardSkeleton />
+                        </>
+                      ) : paginatedRenter && paginatedRenter.length === 0 ? (
+                        <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
+                          Es wurden noch keine Mieter angelegt
+                        </Typography>
+                      ) : (
+                        (paginatedRenter ?? []).map((renter) => <MobileRenterCard key={renter.id} renter={renter} />)
+                      )}
                     </Box>
-                  ) : null}
+                  )}
                   <Divider />
                   <GeneralPagination
                     rowsPerPage={paginationState.rowsPerPage}

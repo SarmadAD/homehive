@@ -9,13 +9,15 @@ import {
   Button,
   SvgIcon,
   Link,
-  Menu,
-  MenuItem,
   Card,
   Divider,
   Tooltip,
-  AvatarGroup,
   Avatar,
+  useMediaQuery,
+  Theme,
+  CardContent,
+  List,
+  ListItem,
 } from "@mui/material";
 import { useMemo, useState } from "react";
 import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
@@ -50,6 +52,8 @@ import { getInitials } from "src/utils/get-initials";
 import { getRenterName } from "src/utils/get-renter-name";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import checkIfUserIsNotAllowedToCreateRentalAgreement from "src/utils/hasAccessForCreateRentalAgreement";
+import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
+import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -76,6 +80,7 @@ export default function Page(): React.JSX.Element {
   const rentalAgreementsIds = useRentalAgreementIds(rentalAgreements);
 
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentalAgreementsIds);
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   // const rentersSelection = useSelection<string>(rentersIds);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -181,6 +186,53 @@ export default function Page(): React.JSX.Element {
     },
   ] satisfies ColumnDef<RentalAgreement>[];
 
+  function MobileRentalAgreementCard({ agreement }: { agreement: RentalAgreement }) {
+    return (
+      <Box sx={{ mb: 2 }}>
+        <Card>
+          <CardContent>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <SvgIcon>
+                    <File02 />
+                  </SvgIcon>
+                  <Typography variant="subtitle2">Mietverhältnis</Typography>
+                </Stack>
+                <Button
+                  component={RouterLink}
+                  href={`${paths.landlordportal.dashboard.renters.details}${agreement.renter?.id ?? ""}`}
+                  size="small"
+                  color="primary"
+                  sx={{ minWidth: 0, p: 1 }}
+                  aria-label="Mieter anzeigen"
+                >
+                  <SvgIcon>
+                    <EyeIcon />
+                  </SvgIcon>
+                </Button>
+              </Stack>
+              <List sx={{ "& .MuiListItem-root": { justifyContent: "space-between", px: 0, py: 1 } }}>
+                <ListItem divider>
+                  <Typography variant="subtitle2">Mieter</Typography>
+                  <Typography color="text.secondary" variant="body2">
+                    {agreement.renter ? getRenterName(agreement.renter.firstname, agreement.renter.surname) : "Unbekannter Mieter"}
+                  </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography variant="subtitle2">Objekt</Typography>
+                  <Typography color="text.secondary" variant="body2">
+                    {agreement.rentalObject?.name || "Unbekanntes Objekt"}
+                  </Typography>
+                </ListItem>
+              </List>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Seo title="Mietverhältnisse" />
@@ -196,7 +248,7 @@ export default function Page(): React.JSX.Element {
           <Container maxWidth={settings.settings.stretch ? false : "xl"}>
             <Grid container disableEqualOverflow>
               <Grid xs={12} pb={3}>
-                <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={4}>
+                <Stack direction={{ xs: "column", sm: "row", md: "row" }} justifyContent="space-between" spacing={4}>
                   <div>
                     <Typography variant="h4">Mietverhältnisse</Typography>
                   </div>
@@ -238,37 +290,50 @@ export default function Page(): React.JSX.Element {
 
               <Grid xs={12} sx={{ pt: 3 }}>
                 <Card>
-                  <DataTable<RentalAgreement>
-                    columns={columns}
-                    rows={(paginatedRentalAgreements as RentalAgreement[]) || []}
-                    onDeselectAll={deselectAll}
-                    onDeselectOne={(_, row) => {
-                      deselectOne(row.id);
-                    }}
-                    onSelectAll={selectAll}
-                    onSelectOne={(_, row) => {
-                      selectOne(row.id);
-                    }}
-                    selected={selected}
-                    isLoading={isLoading}
-                    rowStartIcon={<File02 />}
-                    selectable
-                  />{" "}
-                  {!rentalAgreements.length && !isLoading ? (
-                    <Box sx={{ p: 3 }}>
-                      <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
-                        Es wurden noch keine Mietverhältnisse angelegt
-                      </Typography>
+                  {!isMobile ? (
+                    <DataTable<RentalAgreement>
+                      columns={columns}
+                      rows={(paginatedRentalAgreements as RentalAgreement[]) || []}
+                      onDeselectAll={deselectAll}
+                      onDeselectOne={(_, row) => {
+                        deselectOne(row.id);
+                      }}
+                      onSelectAll={selectAll}
+                      onSelectOne={(_, row) => {
+                        selectOne(row.id);
+                      }}
+                      selected={selected}
+                      isLoading={isLoading}
+                      rowStartIcon={<File02 />}
+                      selectable
+                    />
+                  ) : (
+                    <Box sx={{ p: 2 }}>
+                      {isLoading ? (
+                        <>
+                          <MobileCardSkeleton />
+                          <MobileCardSkeleton />
+                        </>
+                      ) : !paginatedRentalAgreements || paginatedRentalAgreements.length === 0 ? (
+                        <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
+                          Es wurden noch keine Mietverhältnisse angelegt
+                        </Typography>
+                      ) : (
+                        (paginatedRentalAgreements ?? []).map((agreement) => <MobileRentalAgreementCard key={agreement.id} agreement={agreement} />)
+                      )}
                     </Box>
-                  ) : null}
+                  )}
                   <Divider />
-                  <GeneralPagination
-                    rowsPerPage={paginationState.rowsPerPage}
-                    page={paginationState.page}
-                    count={rentalAgreements.length}
-                    onPageChange={handlePageChange}
-                    onRowsPerPageChange={handleRowsPerPageChange}
-                  />
+                  {/* Pagination nur im Desktop-View */}
+                  {!isMobile && (
+                    <GeneralPagination
+                      rowsPerPage={paginationState.rowsPerPage}
+                      page={paginationState.page}
+                      count={rentalAgreements.length}
+                      onPageChange={handlePageChange}
+                      onRowsPerPageChange={handleRowsPerPageChange}
+                    />
+                  )}
                 </Card>
               </Grid>
             </Grid>

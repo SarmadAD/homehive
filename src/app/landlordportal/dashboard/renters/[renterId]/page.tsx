@@ -382,7 +382,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                       />
                       <Divider />{" "}
                       <Box sx={{ overflowX: "auto" }}>
-                        <PaidRents rentPayments={paginatedRentPayments} isLoadingPayments={isLoadingPaymentsAll} />
+                        <PaidRents rentPayments={paginatedRentPayments} isLoading={isLoadingPaymentsAll} />
                       </Box>
                       <Divider />
                       <GeneralPagination

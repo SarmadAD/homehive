@@ -8,7 +8,6 @@ import {
   Unstable_Grid2 as Grid,
   Button,
   SvgIcon,
-  CircularProgress,
   Link,
   Avatar,
   AvatarGroup,
@@ -17,7 +16,11 @@ import {
   MenuItem,
   Card,
   Divider,
-  Backdrop,
+  useMediaQuery,
+  Theme,
+  CardContent,
+  List,
+  ListItem,
 } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { useSettings } from "src/hooks/use-settings";
@@ -39,13 +42,15 @@ import { getInitials } from "src/utils/get-initials";
 import { getRenterName } from "src/utils/get-renter-name";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { RouterLink } from "src/components/router-link";
-import { DotsVertical, Home02 } from "@untitled-ui/icons-react";
+import { DotsVertical, Home02, Trash01 } from "@untitled-ui/icons-react";
 import { toast } from "src/components/toaster";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import checkIfUserIsNotAllowedToCreateRentalObjects from "src/utils/hasAccessForCreateObjects";
 import { Landlord } from "prisma/types/landlord";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
+import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
 
 interface Filters {
   query?: string;
@@ -117,13 +122,16 @@ const useObjectsIds = (objects: RentalObject[] = []) => {
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
-  const rentalObjects = useRecoilValue(rentalObjectsAtom);
+  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
+  const rentalObjectLoading = rentalObjectsLoadable.state === "loading";
+  const rentalObjects: RentalObject[] = rentalObjectsLoadable.contents;
   const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
 
-  const setLandlord = useSetRecoilState(currentLandlordAtom);
   const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
   const landloadLoading = landlordLoadable.state === "loading";
   const landlord = landlordLoadable.contents;
+  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const objectsIds = useObjectsIds(rentalObjects);
   // const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject]);
@@ -260,6 +268,66 @@ export default function Page(): React.JSX.Element {
   //   );
   // }
 
+  function MobileRentalObjectCard({ object }: { object: RentalObject }) {
+    const statusPill = useRentalObjectStatusPill(object);
+
+    return (
+      <Box sx={{ mb: 2 }}>
+        <Card>
+          <CardContent>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <SvgIcon>
+                    <Home02 />
+                  </SvgIcon>
+                  <Typography variant="subtitle2">{object.name}</Typography>
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    component={RouterLink}
+                    href={`${paths.landlordportal.dashboard.objects.details}${encodeURIComponent(object.id)}`}
+                    size="small"
+                    color="primary"
+                    sx={{ minWidth: 0, p: 1 }}
+                    aria-label="Details anzeigen"
+                  >
+                    <SvgIcon>
+                      <EyeIcon />
+                    </SvgIcon>
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => {
+                      selectOne(object.id);
+                      setOpenDeleteModal(true);
+                    }}
+                    sx={{ minWidth: 0, p: 1 }}
+                    aria-label="Löschen"
+                  >
+                    <Trash01 />
+                  </Button>
+                </Stack>
+              </Stack>
+              <List sx={{ "& .MuiListItem-root": { justifyContent: "space-between", px: 0, py: 1 } }}>
+                <ListItem divider>
+                  <Typography variant="subtitle2">Mieter</Typography>
+                  <Typography color="text.secondary" variant="body2">
+                    {object.renter?.map((r) => `${r.firstname} ${r.surname}`).join(", ") || "—"}
+                  </Typography>
+                </ListItem>
+                <ListItem divider>
+                  <Typography variant="subtitle2">Status</Typography>
+                  {statusPill}
+                </ListItem>
+              </List>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  }
   return (
     <>
       <Seo title="Objekte" />
@@ -325,29 +393,40 @@ export default function Page(): React.JSX.Element {
               </Grid>
               <Grid xs={12}>
                 <Card>
-                  <DataTable<RentalObject>
-                    columns={columns}
-                    rows={rentalObjects}
-                    onDeselectAll={deselectAll}
-                    onDeselectOne={(_, row) => {
-                      deselectOne(row.id);
-                    }}
-                    onSelectAll={selectAll}
-                    onSelectOne={(_, row) => {
-                      selectOne(row.id);
-                    }}
-                    selected={selected}
-                    isLoading={landloadLoading}
-                    rowStartIcon={<Home02 />}
-                    selectable
-                  />{" "}
-                  {!rentalObjects.length && !landloadLoading ? (
-                    <Box sx={{ p: 3 }}>
-                      <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
-                        Es wurden noch keine Objekte angelegt
-                      </Typography>
+                  {!isMobile ? (
+                    <DataTable<RentalObject>
+                      columns={columns}
+                      rows={rentalObjects ?? []}
+                      onDeselectAll={deselectAll}
+                      onDeselectOne={(_, row) => {
+                        deselectOne(row.id);
+                      }}
+                      onSelectAll={selectAll}
+                      onSelectOne={(_, row) => {
+                        selectOne(row.id);
+                      }}
+                      selected={selected}
+                      isLoading={landloadLoading || rentalObjectLoading}
+                      rowStartIcon={<Home02 />}
+                      selectable
+                    />
+                  ) : (
+                    <Box sx={{ p: 2 }}>
+                      {landloadLoading || rentalObjectLoading ? (
+                        <>
+                          <MobileCardSkeleton />
+                          <MobileCardSkeleton />
+                          <MobileCardSkeleton />
+                        </>
+                      ) : rentalObjects && rentalObjects.length === 0 ? (
+                        <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
+                          Es wurden noch keine Objekte angelegt
+                        </Typography>
+                      ) : (
+                        (rentalObjects ?? []).map((object) => <MobileRentalObjectCard key={object.id} object={object} />)
+                      )}
                     </Box>
-                  ) : null}
+                  )}
                   <Divider />
                   <GeneralPagination
                     rowsPerPage={paginationState.rowsPerPage}
@@ -362,7 +441,7 @@ export default function Page(): React.JSX.Element {
           </Container>
         </Box>
         <DeleteModal
-          text={"Bist Du sicher, dass Du dieses Objekt dauerhaft löschen möchtest?" + "Dieser Vorgang kann nicht rückgängig gemacht werden."}
+          text={"Bist Du sicher, dass Du dieses Objekt dauerhaft löschen möchtest?" + " Dieser Vorgang kann nicht rückgängig gemacht werden."}
           handleCancelDeleteModal={handleCancelDeleteModal}
           onDelete={handleDelete}
           openDeleteModal={openDeleteModal}
