@@ -64,7 +64,7 @@ const rentPayments = {
   checkForNewTransactionsForRenter: (landlordId: string, renterId: string) =>
     requests.post<void>(`/api/rentPayments/renter/?landlordId=${landlordId}&renterId=${renterId}`, {}),
   checkForNewTransactions: (landlordId: string) => requests.post<void>(`/api/rentPayments/?landlordId=${landlordId}`, {}),
-  update: (rentPaymentId: string) => requests.put<void>(`/api/rentPayments/${rentPaymentId}`, {}),
+  update: (rentPaymentId: string) => requests.put<RentPayment[]>(`/api/rentPayments/${rentPaymentId}`, {}),
   list: (landlordId: string) => requests.get<RentPayment[]>(`/api/rentPayments/?landlordId=${landlordId}`),
 };
 

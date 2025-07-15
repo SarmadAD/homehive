@@ -11,16 +11,18 @@ import { ColumnDef, DataTable } from "src/components/data-table";
 import { dayjs } from "src/lib/dayjs";
 import { getRentPaidStatusPill } from "src/hooks/use-status-pill";
 import { Renter } from "@prisma/client";
-import { IconButton, List, ListItem, SvgIcon, Theme, Tooltip, useMediaQuery } from "@mui/material";
+import { CircularProgress, List, ListItem, SvgIcon, Theme, Tooltip, useMediaQuery } from "@mui/material";
 import { getRenterName } from "src/utils/get-renter-name";
 import { getInitials } from "src/utils/get-initials";
 import { RentPayment } from "prisma/types/rentPayment";
 import agent from "src/api/agent";
-import { useRecoilRefresher_UNSTABLE } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 import XIcon from "@untitled-ui/icons-react/build/esm/X";
 import CheckIcon from "@untitled-ui/icons-react/build/esm/Check";
 import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { useState } from "react";
 
 export type RentPaymentWithRenter = RentPayment & {
   renter: Renter;
@@ -31,7 +33,15 @@ export interface PaymentsProps {
   isLoadingPayments: boolean;
 }
 
-function MobileRentPaymentCard({ rentPayment, onAction }: { rentPayment: RentPaymentWithRenter; onAction: (rentPayment: RentPayment) => void }) {
+function MobileRentPaymentCard({
+  rentPayment,
+  onAction,
+  loadingIds,
+}: {
+  rentPayment: RentPaymentWithRenter;
+  loadingIds: { [id: string]: boolean };
+  onAction: (rentPayment: RentPayment) => void;
+}) {
   return (
     <Box sx={{ mb: 2 }}>
       <Card>
@@ -41,9 +51,14 @@ function MobileRentPaymentCard({ rentPayment, onAction }: { rentPayment: RentPay
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="subtitle2">{dayjs(rentPayment.paymentDate).format("DD. MMMM YYYY")}</Typography>
               <Tooltip title={rentPayment.status === "PAID" ? "Markiere als nicht bezahlt" : "Markiere als bezahlt"}>
-                <IconButton color={rentPayment.status === "PAID" ? "error" : "success"} onClick={() => onAction(rentPayment)} size="small">
-                  <SvgIcon sx={{ fontSize: 28 }}>{rentPayment.status === "PAID" ? <XIcon /> : <CheckIcon />}</SvgIcon>
-                </IconButton>
+                <LoadingButton
+                  onClick={() => onAction(rentPayment)}
+                  loading={!!loadingIds[rentPayment.id]}
+                  color={rentPayment.status === "PAID" ? "error" : "success"}
+                  loadingIndicator={<CircularProgress size={20} />}
+                >
+                  <SvgIcon sx={{ fontSize: 28 }}>{rentPayment.status === "PAID" ? <XIcon /> : <CheckIcon />} </SvgIcon>
+                </LoadingButton>
               </Tooltip>
             </Stack>
             {/* Felder als List, Werte immer rechts */}
@@ -93,15 +108,19 @@ function MobileRentPaymentCard({ rentPayment, onAction }: { rentPayment: RentPay
 }
 
 export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProps): React.JSX.Element {
-  const refreshRentPayment = useRecoilRefresher_UNSTABLE(rentPaymentsAtom);
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+  const [loadingIds, setLoadingIds] = useState<{ [id: string]: boolean }>({});
+  const setRentPayments = useSetRecoilState(rentPaymentsAtom);
 
   async function markPaymentAsPaid(rentPayment: RentPayment) {
     try {
-      await agent.rentPayments.update(rentPayment.id);
-      refreshRentPayment();
+      setLoadingIds((prev) => ({ ...prev, [rentPayment.id]: true }));
+      const updatedRentPayments = await agent.rentPayments.update(rentPayment.id);
+      setRentPayments(updatedRentPayments);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoadingIds((prev) => ({ ...prev, [rentPayment.id]: false }));
     }
   }
 
@@ -152,9 +171,14 @@ export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProp
     {
       formatter: (row): React.JSX.Element => (
         <Tooltip title={row.status === "PAID" ? "Markiere als nicht bezahlt" : "Markiere als bezahlt"}>
-          <IconButton color={row.status === "PAID" ? "error" : "success"} onClick={() => markPaymentAsPaid(row)}>
-            <SvgIcon sx={{ fontSize: 28 }}>{row.status === "PAID" ? <XIcon /> : <CheckIcon />}</SvgIcon>
-          </IconButton>
+          <LoadingButton
+            onClick={() => markPaymentAsPaid(row)}
+            loading={!!loadingIds[row.id]}
+            color={row.status === "PAID" ? "error" : "success"}
+            loadingIndicator={<CircularProgress size={20} />}
+          >
+            <SvgIcon sx={{ fontSize: 28 }}>{row.status === "PAID" ? <XIcon /> : <CheckIcon />} </SvgIcon>
+          </LoadingButton>
         </Tooltip>
       ),
       name: "Aktion",
@@ -176,7 +200,12 @@ export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProp
           </Typography>
         ) : (
           rentPayments.map((rentPayment) => (
-            <MobileRentPaymentCard key={rentPayment.id} rentPayment={rentPayment as RentPaymentWithRenter} onAction={markPaymentAsPaid} />
+            <MobileRentPaymentCard
+              key={rentPayment.id}
+              rentPayment={rentPayment as RentPaymentWithRenter}
+              onAction={markPaymentAsPaid}
+              loadingIds={loadingIds}
+            />
           ))
         )}
       </Box>
