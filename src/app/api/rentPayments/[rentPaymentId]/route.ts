@@ -25,7 +25,7 @@ export async function PUT(request: Request, { params }: { params: { rentPaymentI
 
     const newStatus = currentRentPayment.status === RentPaymentStatus.PAID ? RentPaymentStatus.NOTPAID : RentPaymentStatus.PAID;
 
-    const updatedRentPayment = await prisma.rentPayment.update({
+    await prisma.rentPayment.update({
       where: { id: currentRentPayment.id },
       data: { status: newStatus },
     });
@@ -57,8 +57,18 @@ export async function PUT(request: Request, { params }: { params: { rentPaymentI
         }
       }
     }
+    const allRentPayments = await prisma.rentPayment.findMany({
+      where: { landlordId: currentRentPayment.landlordId },
+      include: {
+        renter: {
+          include: {
+            rentalAgreement: true,
+          },
+        },
+      },
+    });
 
-    return NextResponse.json(updatedRentPayment);
+    return NextResponse.json(allRentPayments);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       return NextResponse.json({ error: e.message });

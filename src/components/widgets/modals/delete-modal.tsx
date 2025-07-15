@@ -37,14 +37,26 @@ export function DeleteModal({ handleCancelDeleteModal, openDeleteModal, onDelete
     >
       <Container maxWidth="sm">
         <Paper sx={{ border: "1px solid var(--mui-palette-divider)", boxShadow: "var(--mui-shadows-16)", p: 3 }}>
-          <Stack direction="row" spacing={2} sx={{ display: "flex" }}>
-            <Avatar sx={{ bgcolor: "var(--mui-palette-error-50)", color: "var(--mui-palette-error-main)" }}>
-              <WarningIcon fontSize="var(--Icon-fontSize)" />
-            </Avatar>
-            <Stack spacing={3}>
-              <Stack spacing={1}>
-                <Typography variant="h5">Löschen</Typography>
-                <Typography color="text.secondary" variant="body2">
+          <Stack direction="column" spacing={2} sx={{ alignItems: "center" }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{
+                alignItems: "center",
+                width: "100%",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Avatar sx={{ bgcolor: "var(--mui-palette-error-50)", color: "var(--mui-palette-error-main)" }}>
+                <WarningIcon fontSize="var(--Icon-fontSize)" />
+              </Avatar>
+              <Typography variant="h5" align="left">
+                Löschen
+              </Typography>
+            </Stack>
+            <Stack spacing={3} sx={{ width: "100%" }}>
+              <Stack spacing={1} sx={{ alignItems: "flex-start" }}>
+                <Typography color="text.secondary" variant="body2" align="left">
                   {text}{" "}
                 </Typography>
               </Stack>
