@@ -13,6 +13,9 @@ export const paths = {
       index: "/blog",
       details: (postId: number) => `/blog/${postId}`,
     },
+    pricing: {
+      index: "/pricing",
+    },
   },
   auth: {
     auth0: {

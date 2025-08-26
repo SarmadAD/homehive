@@ -38,7 +38,6 @@ const permissions = [
     permission: "/landlordportal/dashboard/renters/create",
     role: "Landlord",
   },
-
   {
     permission: "showLandlordPortalName",
     role: "Landlord",

@@ -5,10 +5,10 @@ import { dayjs } from "src/lib/dayjs";
 export const posts: Post[] = [
   {
     id: 0,
-    title: "Building a Design System from Scratch",
+    title: "3 einfache Tipps, wie du als Vermieter deine Mieteingänge im Blick behältst",
     description: "Learn how to build a design system from scratch using Figma and React that scales.",
     cover: "/assets/image-abstract-2.png",
-    category: "Programming",
+    category: "Tipps",
     author: { name: "Sarmad", avatar: "/assets/sarmad-image.png" },
     readTime: "5 min",
     publishedAt: dayjs().subtract(45, "minute").toDate(),
