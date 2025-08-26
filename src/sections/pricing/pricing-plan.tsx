@@ -123,7 +123,7 @@ export function PricingPlan({
             display: "flex",
           }}
         >
-          <Typography sx={{ mt: 2 }} variant="h6">
+          <Typography sx={{ mt: 2, mr: 2 }} variant="h6">
             {name}
           </Typography>
           {setChecked && (

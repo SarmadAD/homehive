@@ -10,12 +10,7 @@ function Page() {
   return (
     <Box
       sx={{
-        maxWidth: "var(--maxWidth-xl)",
-        m: "0 auto",
-        "--Content-paddingX": "24px",
-        "--Content-paddingY": { xs: "100px", lg: "100px" },
-        p: "var(--Content-paddingY) var(--Content-paddingX)",
-        width: "100%",
+        mt: { xs: 8, md: 10 },
       }}
     >
       <PricingPlans />
