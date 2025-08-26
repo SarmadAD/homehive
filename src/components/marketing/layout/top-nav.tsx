@@ -132,6 +132,11 @@ export function MainNav(): React.JSX.Element {
                 <Stack component="ul" direction="row" spacing={1} sx={{ listStyle: "none", m: 0, p: 0 }}>
                   <NavItem href={paths.marketing.blog.index} pathname={pathname} title="Blog" />{" "}
                 </Stack>
+              </Box>{" "}
+              <Box component="nav" sx={{ display: { xs: "none", md: "block" } }}>
+                <Stack component="ul" direction="row" spacing={1} sx={{ listStyle: "none", m: 0, p: 0 }}>
+                  <NavItem href={paths.marketing.pricing.index} pathname={pathname} title="Preise" />{" "}
+                </Stack>
               </Box>
             </Stack>
 
@@ -141,7 +146,7 @@ export function MainNav(): React.JSX.Element {
               </Button>
             ) : (
               <Button component="a" href={paths.auth.supabase.signIn} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
-                Einloggen
+                Jetzt ausprobieren
               </Button>
             )}
             <IconButton

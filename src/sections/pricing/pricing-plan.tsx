@@ -12,19 +12,19 @@ import Typography from "@mui/material/Typography";
 import type { Theme } from "@mui/material/styles/createTheme";
 import { useUser } from "src/hooks/use-user";
 import { Chip, Switch } from "@mui/material";
+import { usePathname } from "next/navigation";
 
 interface PricingPlanProps {
   cta: string;
   currency: string;
   description: string;
-  features: string[];
+  features: { name: string; color: string }[];
   icon: ReactNode;
   name: string;
   popular?: boolean;
   price: string;
   subscriptionText: string;
   link?: string;
-  priceId?: string;
   discountPrice?: number;
   discountPercentage?: number;
   hint?: string;
@@ -53,6 +53,7 @@ export function PricingPlan({
   ...other
 }: PricingPlanProps) {
   const { user } = useUser();
+  const pathname = usePathname();
 
   return (
     <Card
@@ -154,22 +155,22 @@ export function PricingPlan({
               alignItems="center"
               direction="row"
               spacing={1}
-              key={feature}
+              key={feature.name}
               sx={{
                 alignItems: "center",
                 display: "flex",
               }}
             >
               <SvgIcon color="success">
-                <CheckIcon />
+                <CheckIcon color={feature.color} />
               </SvgIcon>
               <Typography sx={{ fontWeight: 500 }} variant="body2">
-                {feature}
+                {feature.name}
               </Typography>
             </Stack>
           ))}
         </Stack>
-        {cta && (
+        {cta && user && pathname !== "/pricing" && (
           <Box
             sx={{
               display: "flex",

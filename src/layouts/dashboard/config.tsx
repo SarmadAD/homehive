@@ -53,7 +53,6 @@ export const useSections = (): { items: NavItemConfig[] }[] => {
             href: paths.landlordportal.dashboard.renters.index,
             icon: "person",
           },
-
           {
             title: t(tokens.nav.objects),
             key: "renterPortalObjects",
