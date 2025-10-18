@@ -67,9 +67,7 @@ export function MainNav(): React.JSX.Element {
     try {
       const authenticatedUserId = user?.id;
       const renter = await agent.renter.details(authenticatedUserId);
-      if ("error" in renter) {
-        throw new Error(String(renter.error));
-      } else {
+      if (!("error" in renter)) {
         result = true;
       }
     } catch (error) {
@@ -141,11 +139,11 @@ export function MainNav(): React.JSX.Element {
             </Stack>
 
             {user ? (
-              <Button component="a" href={rederict} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
+              <Button component={RouterLink} href={rederict} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Dashboard
               </Button>
             ) : (
-              <Button component="a" href={paths.auth.supabase.signIn} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
+              <Button component={RouterLink} href={paths.auth.supabase.signIn} sx={{ display: { xs: "none", md: "flex" } }} variant="contained">
                 Jetzt ausprobieren
               </Button>
             )}
