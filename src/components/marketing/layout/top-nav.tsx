@@ -79,18 +79,18 @@ export function MainNav(): React.JSX.Element {
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        if (await checkIfRenterExistsWithAuthenticatedUserId()) {
-          logger.debug("[GuestGuard]: User is logged in, redirecting to renter portal");
-          setRederict(paths.renterportal.dashboard.objects.index);
-        } else if (await checkIfUserIsLandlord()) {
+        if (await checkIfUserIsLandlord()) {
           logger.debug("[GuestGuard]: User is logged in, redirecting to landlord portal");
           setRederict(paths.landlordportal.dashboard.index);
+        } else if (await checkIfRenterExistsWithAuthenticatedUserId()) {
+          logger.debug("[GuestGuard]: User is logged in, redirecting to renter portal");
+          setRederict(paths.renterportal.dashboard.objects.index);
         }
       }
     };
 
     fetchData();
-  }, [user]);
+  }, [user, rederict]);
 
   return (
     <React.Fragment>
