@@ -126,12 +126,12 @@ export function MainNav(): React.JSX.Element {
           <Stack direction="row" spacing={2} sx={{ alignItems: "center", flex: "1 1 auto", p: 1, justifyContent: "space-between" }}>
             <Stack direction="row" spacing={2} sx={{ alignItems: "center", flex: "1 1 auto" }}>
               <Logo width={35} height={35} fontSize={17} showLogoName={true} />{" "}
-              <Box component="nav" sx={{ display: { xs: "none", md: "block" } }}>
+              <Box data-testid="blog-nav-item" component="nav" sx={{ display: { xs: "none", md: "block" } }}>
                 <Stack component="ul" direction="row" spacing={1} sx={{ listStyle: "none", m: 0, p: 0 }}>
                   <NavItem href={paths.marketing.blog.index} pathname={pathname} title="Blog" />{" "}
                 </Stack>
               </Box>{" "}
-              <Box component="nav" sx={{ display: { xs: "none", md: "block" } }}>
+              <Box data-testid="price-nav-item" component="nav" sx={{ display: { xs: "none", md: "block" } }}>
                 <Stack component="ul" direction="row" spacing={1} sx={{ listStyle: "none", m: 0, p: 0 }}>
                   <NavItem href={paths.marketing.pricing.index} pathname={pathname} title="Preise" />{" "}
                 </Stack>

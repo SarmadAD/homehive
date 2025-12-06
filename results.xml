@@ -1,0 +1,42 @@
+<testsuites id="" name="" tests="16" failures="0" skipped="0" errors="0" time="21.468555000000002">
+<testsuite name="home-page.spec.ts" timestamp="2025-11-14T19:58:21.865Z" hostname="chromium" tests="4" failures="0" skipped="0" time="10.053" errors="0">
+<testcase name="Home Page › show the correct Hero text" classname="home-page.spec.ts" time="2.246">
+</testcase>
+<testcase name="Home Page › scroll to end" classname="home-page.spec.ts" time="2.221">
+</testcase>
+<testcase name="Home Page › navigate to Blog page" classname="home-page.spec.ts" time="2.74">
+</testcase>
+<testcase name="Home Page › navigate to Pricing page" classname="home-page.spec.ts" time="2.846">
+</testcase>
+</testsuite>
+<testsuite name="home-page.spec.ts" timestamp="2025-11-14T19:58:21.865Z" hostname="firefox" tests="4" failures="0" skipped="0" time="18.154" errors="0">
+<testcase name="Home Page › show the correct Hero text" classname="home-page.spec.ts" time="3.457">
+</testcase>
+<testcase name="Home Page › scroll to end" classname="home-page.spec.ts" time="4.532">
+</testcase>
+<testcase name="Home Page › navigate to Blog page" classname="home-page.spec.ts" time="5.393">
+</testcase>
+<testcase name="Home Page › navigate to Pricing page" classname="home-page.spec.ts" time="4.772">
+</testcase>
+</testsuite>
+<testsuite name="home-page.spec.ts" timestamp="2025-11-14T19:58:21.865Z" hostname="webkit" tests="4" failures="0" skipped="0" time="26.298" errors="0">
+<testcase name="Home Page › show the correct Hero text" classname="home-page.spec.ts" time="3.936">
+</testcase>
+<testcase name="Home Page › scroll to end" classname="home-page.spec.ts" time="4.179">
+</testcase>
+<testcase name="Home Page › navigate to Blog page" classname="home-page.spec.ts" time="8.553">
+</testcase>
+<testcase name="Home Page › navigate to Pricing page" classname="home-page.spec.ts" time="9.63">
+</testcase>
+</testsuite>
+<testsuite name="home-page.spec.ts" timestamp="2025-11-14T19:58:21.865Z" hostname="Google Chrome" tests="4" failures="0" skipped="0" time="14.636" errors="0">
+<testcase name="Home Page › show the correct Hero text" classname="home-page.spec.ts" time="2.99">
+</testcase>
+<testcase name="Home Page › scroll to end" classname="home-page.spec.ts" time="3.04">
+</testcase>
+<testcase name="Home Page › navigate to Blog page" classname="home-page.spec.ts" time="4.991">
+</testcase>
+<testcase name="Home Page › navigate to Pricing page" classname="home-page.spec.ts" time="3.615">
+</testcase>
+</testsuite>
+</testsuites>

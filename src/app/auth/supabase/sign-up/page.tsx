@@ -9,17 +9,7 @@ import { RouterLink } from "src/components/router-link";
 import { useRouter } from "next/navigation";
 import { paths } from "src/paths";
 import agent from "src/api/agent";
-import {
-  Divider,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  FormHelperText,
-  FormControlLabel,
-  Checkbox,
-  Alert,
-  Stack,
-} from "@mui/material";
+import { Divider, FormControl, InputLabel, OutlinedInput, FormHelperText, FormControlLabel, Checkbox, Alert, Stack } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z as zod } from "zod";
@@ -40,9 +30,7 @@ interface OAuthProvider {
 }
 // export const metadata = { title: `Register | Registrieren | ${site.name}` } satisfies Metadata;
 
-const oAuthProviders = [
-  { id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" },
-] satisfies OAuthProvider[];
+const oAuthProviders = [{ id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" }] satisfies OAuthProvider[];
 
 const schema = zod.object({
   // firstName: zod.string().min(1, { message: "Vorname ist erforderlich" }),
@@ -202,7 +190,7 @@ const Page = () => {
                   render={({ field }) => (
                     <FormControl error={Boolean(errors.email)}>
                       <InputLabel>E-Mail-Adresse</InputLabel>
-                      <OutlinedInput {...field} type="email" />
+                      <OutlinedInput {...field} type="email" name="E-Mail-Adresse" />
                       {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
                     </FormControl>
                   )}
@@ -213,7 +201,7 @@ const Page = () => {
                   render={({ field }) => (
                     <FormControl error={Boolean(errors.password)}>
                       <InputLabel>Passwort</InputLabel>
-                      <OutlinedInput {...field} type="password" />
+                      <OutlinedInput {...field} type="password" name="Passwort" />
                       {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
                     </FormControl>
                   )}
