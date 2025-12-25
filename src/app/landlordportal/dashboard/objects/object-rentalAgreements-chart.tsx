@@ -4,10 +4,10 @@ import numeral from "numeral";
 import { Box, Card, CardContent, CardHeader, Divider, Link, Skeleton, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
-import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { RouterLink } from "src/components/router-link";
 import { paths } from "src/paths";
+import { useAtom } from "jotai";
 
 const labels: string[] = ["Kaltmiete", "Nebenkosten"];
 
@@ -72,11 +72,11 @@ numeral.register("locale", "de", {
 
 export const ObjectRentalAgreementChart: FC = () => {
   const chartOptions = useChartOptions();
-  const rentalObjectLoadable = useRecoilValueLoadable(rentalObjectAtom);
+  const [{ data: rentalObject, isLoading, isError }] = useAtom(rentalObjectAtom);
 
   numeral.locale("de");
 
-  if (rentalObjectLoadable.state === "loading" || (rentalObjectLoadable.state === "hasValue" && rentalObjectLoadable.contents.id === "")) {
+  if (isLoading || (rentalObject && rentalObject.id === "")) {
     return (
       <Box>
         <Card>
@@ -121,7 +121,7 @@ export const ObjectRentalAgreementChart: FC = () => {
     );
   }
 
-  if (rentalObjectLoadable.state === "hasError") {
+  if (isError) {
     return (
       <Box>
         <Card>
@@ -136,8 +136,7 @@ export const ObjectRentalAgreementChart: FC = () => {
     );
   }
 
-  const rentalObject = rentalObjectLoadable.contents;
-  const agreements = rentalObject.rentalAgreement ?? [];
+  const agreements = rentalObject?.rentalAgreement ?? [];
 
   // Durchschnittswerte berechnen
   const avg = (arr: number[]) => (arr.length === 0 ? 0 : arr.reduce((a, b) => a + b, 0) / arr.length);

@@ -17,11 +17,9 @@ import {
   Tab,
   Tabs,
   Typography,
-  Unstable_Grid2 as Grid,
+  Grid,
   Menu,
   MenuItem,
-  IconButton,
-  Tooltip,
   Skeleton,
   Card,
 } from "@mui/material";
@@ -35,7 +33,6 @@ import { useDialog } from "src/hooks/use-dialog";
 import { ObjectSingleView } from "src/app/landlordportal/dashboard/objects/renter/object-single-view";
 import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
 import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
-import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { useSearchParams } from "next/navigation";
@@ -48,18 +45,17 @@ import agent from "src/api/agent";
 import { DeleteOutline } from "@mui/icons-material";
 import { useRouter } from "src/hooks/use-router";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
-import { AddRenterModal } from "src/components/widgets/modals/add-renter-modal";
-import { rentersAtom } from "src/state/atoms/rentersAtom";
-import { RentalObject } from "prisma/types/objects";
 import { toast } from "src/components/toaster";
 import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
-import DotsVertical from "@untitled-ui/icons-react/build/esm/DotsVertical";
-import { PlusCircle, User03 } from "@untitled-ui/icons-react";
+import { User03 } from "@untitled-ui/icons-react";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { ObjectRentalAgreementChart } from "../object-rentalAgreements-chart";
+import { useAtom, useSetAtom } from "jotai";
+import { deleteRentalObjectAtom } from "src/state/atoms/deleteRentalObjectAtom";
+import { removeRentersFromObjectAtom } from "src/state/atoms/removeRentersFromObjectAtom";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -96,9 +92,13 @@ export default function Page(): React.JSX.Element {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
 
-  const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
-  const setRentalObject = useSetRecoilState(rentalObjectAtom);
-  const rentalObject = useRecoilValue(rentalObjectAtom);
+  const setSelectedRentalObjectId = useSetAtom(selectedRentalObjectIdAtom);
+  const [{ data: rentalObject, isLoading, isError }] = useAtom(rentalObjectAtom);
+
+  const [{ isLoading: landloadLoading }] = useAtom(currentLandlordAtom);
+
+  const [{ mutateAsync: deleteObject }] = useAtom(deleteRentalObjectAtom);
+  const [{ mutateAsync: removeRenters }] = useAtom(removeRentersFromObjectAtom);
 
   const rentersSearch = useRentersSearch();
   const repairRequestsSearch = useRepairRequestsSearch();
@@ -107,10 +107,7 @@ export default function Page(): React.JSX.Element {
   const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject]);
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
 
-  const renters = useRecoilValue(rentersAtom);
-
-  const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
-  const landloadLoading = landlordLoadable.state === "loading";
+  // const renters = useRecoilValue(rentersAtom);
 
   const repairRequestsIds = useRepairRequestsIds(rentalObject?.repairRequests);
   // const repairRequestsSelection = useSelection<string>(repairRequestsIds);
@@ -149,7 +146,7 @@ export default function Page(): React.JSX.Element {
   const handleObjectDelete = async () => {
     try {
       if (rentalObject?.id) {
-        await agent.objects.delete(rentalObject.id);
+        await deleteObject(rentalObject.id);
         router.push("/landlordportal/dashboard/objects");
       }
     } catch (error) {
@@ -232,14 +229,11 @@ export default function Page(): React.JSX.Element {
 
   const handleDeleteRenterFromObject = async () => {
     try {
-      const updatedRenters = (rentalObject.renter as Renter[]).filter((renter: Renter) => !selected.has(renter.id));
-      await agent.renter.removeRentalObjectFromRenter(Array.from(selected), rentalObject.id);
-
-      const updatedRentalObject = {
-        ...rentalObject,
-        renter: updatedRenters,
-      };
-      setRentalObject(updatedRentalObject);
+      if (!rentalObject) return;
+      await removeRenters({
+        renterIds: Array.from(selected),
+        objectId: rentalObject.id,
+      });
       toast.success("Mieter erfolgreich gelöscht");
     } catch (error) {
       console.error(error);
@@ -296,8 +290,8 @@ export default function Page(): React.JSX.Element {
   const paginatedRenter = useMemo(() => {
     const startIndex = paginationState.page * paginationState.rowsPerPage;
     const endIndex = startIndex + paginationState.rowsPerPage;
-    return rentalObject.renter.slice(startIndex, endIndex);
-  }, [rentalObject.renter, paginationState.page, paginationState.rowsPerPage]);
+    return rentalObject?.renter.slice(startIndex, endIndex);
+  }, [rentalObject?.renter, paginationState.page, paginationState.rowsPerPage]);
 
   const columns = [
     {
@@ -429,7 +423,7 @@ export default function Page(): React.JSX.Element {
                             <Edit02Icon />
                           </SvgIcon>
                         }
-                        href={`${paths.landlordportal.dashboard.objects.edit}${rentalObject.id}`}
+                        href={`${paths.landlordportal.dashboard.objects.edit}${rentalObject?.id}`}
                       >
                         Ändern
                       </Button>
@@ -485,17 +479,17 @@ export default function Page(): React.JSX.Element {
                 {currentTab === "details" && rentalObject && (
                   <div>
                     <Grid container spacing={4}>
-                      <Grid xs={12} lg={4}>
+                      <Grid size={{ xs: 12, lg: 4 }}>
                         <ObjectBasicDetails />
                       </Grid>
-                      <Grid xs={12} lg={8}>
+                      <Grid size={{ xs: 12, lg: 8 }}>
                         <ObjectRentalAgreementChart />
                       </Grid>
                     </Grid>
                   </div>
                 )}
                 {currentTab === "renter" && (
-                  <Grid xs={12} sx={{ pt: 3 }}>
+                  <Grid size={{ xs: 12 }} sx={{ pt: 3 }}>
                     <Card>
                       <DataTable<Renter>
                         columns={columns}
@@ -514,7 +508,7 @@ export default function Page(): React.JSX.Element {
                         rowStartIcon={<User03 />}
                         selectable
                       />{" "}
-                      {!rentalObject.renter.length && !landloadLoading ? (
+                      {!rentalObject?.renter.length && !landloadLoading ? (
                         <Box sx={{ p: 3 }}>
                           <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
                             Es wurden noch kein Mieter diesem Objekt zugewiesen
@@ -525,7 +519,7 @@ export default function Page(): React.JSX.Element {
                       <GeneralPagination
                         rowsPerPage={paginationState.rowsPerPage}
                         page={paginationState.page}
-                        count={rentalObject.renter.length}
+                        count={rentalObject?.renter.length ?? 0}
                         onPageChange={handlePageChange}
                         onRowsPerPageChange={handleRowsPerPageChange}
                       />

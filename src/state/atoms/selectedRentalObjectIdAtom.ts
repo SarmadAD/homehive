@@ -1,6 +1,3 @@
-import { atom } from "recoil";
+import { atom } from "jotai";
 
-export const selectedRentalObjectIdAtom = atom({
-  key: "selectedRentalObjectIdAtom",
-  default: "",
-});
+export const selectedRentalObjectIdAtom = atom<string>("");

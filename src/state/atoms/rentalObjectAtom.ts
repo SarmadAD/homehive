@@ -1,19 +1,16 @@
-import { atom, selector } from "recoil";
-import { selectedRentalObjectIdAtom } from "./selectedRentalObjectIdAtom";
+import { atomWithQuery } from "jotai-tanstack-query";
 import agent from "src/api/agent";
-import { RentalObject, rentalObjectDefault } from "prisma/types/objects";
+import { selectedRentalObjectIdAtom } from "./selectedRentalObjectIdAtom";
 
-export const rentalObjectAtom = atom<RentalObject>({
-  key: "rentalObjectAtom",
-  default: selector({
-    key: "rentalObjectAtom/rentalObject",
-    get: async ({ get }) => {
-      const id = get(selectedRentalObjectIdAtom);
-      if (id) {
-        const response = await agent.objects.details(id);
-        return response;
-      }
-      return rentalObjectDefault;
+export const rentalObjectAtom = atomWithQuery((get) => {
+  const objectId = get(selectedRentalObjectIdAtom);
+
+  return {
+    queryKey: ["rentalObject", objectId],
+    enabled: Boolean(objectId),
+    queryFn: async () => {
+      if (!objectId) throw new Error("Missing objectId");
+      return agent.objects.details(objectId);
     },
-  }),
+  };
 });

@@ -5,13 +5,15 @@ import { PropertyListItem } from "src/components/property-list-item";
 import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
+import { useAtom } from "jotai";
 
 export const ObjectBasicDetails: FC = () => {
-  const rentalObjectLoadable = useRecoilValueLoadable(rentalObjectAtom);
+  const [{ data: rentalObject, isLoading, isError }] = useAtom(rentalObjectAtom);
+
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   const align = lgUp ? "horizontal" : "vertical";
 
-  if (rentalObjectLoadable.state === "loading" || (rentalObjectLoadable.state === "hasValue" && rentalObjectLoadable.contents.id === "")) {
+  if (isLoading || (rentalObject && rentalObject.id === "")) {
     return (
       <Card>
         <CardHeader title="Basisinformationen" />
@@ -27,7 +29,7 @@ export const ObjectBasicDetails: FC = () => {
     );
   }
 
-  if (rentalObjectLoadable.state === "hasError") {
+  if (isError) {
     return (
       <Card>
         <CardHeader title="Basisinformationen" />
@@ -38,7 +40,10 @@ export const ObjectBasicDetails: FC = () => {
     );
   }
 
-  const rentalObject = rentalObjectLoadable.contents;
+  if (!rentalObject) {
+    return null;
+  }
+
   const { address, areaSize, city, houseNr, postalCode, additionalHouseDetails } = rentalObject;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const statusPill = useRentalObjectStatusPill(rentalObject);
