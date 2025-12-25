@@ -27,12 +27,7 @@ export default function NotFound(): React.JSX.Element {
       <Container maxWidth="lg">
         <Stack spacing={6}>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Box
-              alt="Not found"
-              component="img"
-              src="/assets/errors/error-404.png"
-              sx={{ height: "auto", maxWidth: "100%", width: "200px" }}
-            />
+            <Box alt="Not found" component="img" src="/assets/errors/error-404.png" sx={{ height: "auto", maxWidth: "100%", width: "200px" }} />
           </Box>
           <Stack spacing={1} sx={{ textAlign: "center" }}>
             <Typography variant="h4">404: The page you are looking for isn&apos;t here</Typography>

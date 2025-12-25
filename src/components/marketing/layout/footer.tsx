@@ -1,7 +1,9 @@
+"use client";
+
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -54,7 +56,7 @@ export function Footer(): React.JSX.Element {
     >
       <Container maxWidth="lg">
         <Grid container spacing={2}>
-          <Grid xs={12} md={3} sm={4} sx={{ order: { xs: 4, md: 1 } }}>
+          <Grid size={{ xs: 12, md: 3, sm: 4 }} sx={{ order: { xs: 4, md: 1 } }}>
             <Stack spacing={1}>
               <Logo width={35} height={35} fontSize={15} showLogoName={true} />
               <Typography color="text.secondary" variant="caption">
@@ -63,7 +65,7 @@ export function Footer(): React.JSX.Element {
             </Stack>
           </Grid>
           {groups.map((section, index) => (
-            <Grid key={section.key} md={3} sm={4} sx={{ order: { md: index + 2, xs: index + 1 } }} xs={12}>
+            <Grid key={section.key} size={{ xs: 12, sm: 4, md: 3 }} sx={{ order: { md: index + 2, xs: index + 1 } }}>
               <Typography color="text.secondary" variant="overline">
                 {section.title}
               </Typography>

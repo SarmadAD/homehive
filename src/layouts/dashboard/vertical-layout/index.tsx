@@ -1,5 +1,5 @@
 import { type FC, type ReactNode } from "react";
-import { Box, GlobalStyles, useMediaQuery } from "@mui/material";
+import { Box, GlobalStyles } from "@mui/material";
 import { SideNav } from "./side-nav";
 import { TopNav } from "./top-nav";
 import { layoutConfig } from "src/layouts/config";

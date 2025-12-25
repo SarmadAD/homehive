@@ -85,9 +85,7 @@ export const RenterDetails: FC<RenterDetailsProps> = (props) => {
               getOptionLabel={(option: OptionDueDate) => option.label}
               options={dueDateOfRentList}
               value={dueDateOfRentList.find((x) => x.value === renter.rentalAgreement?.dueDateState)}
-              renderInput={(params): JSX.Element => (
-                <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />
-              )}
+              renderInput={(params): JSX.Element => <TextField {...params} fullWidth label="Fälligkeit der Miete" name="dueDate" />}
             />
           </PropertyListItem>
           <PropertyListItem disableGutters divider label="">

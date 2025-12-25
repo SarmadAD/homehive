@@ -5,7 +5,6 @@ import {
   Container,
   Stack,
   Typography,
-  Unstable_Grid2 as Grid,
   Button,
   SvgIcon,
   Link,
@@ -16,11 +15,11 @@ import {
   MenuItem,
   Card,
   Divider,
-  useMediaQuery,
   Theme,
   CardContent,
   List,
   ListItem,
+  Grid,
 } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { useSettings } from "src/hooks/use-settings";
@@ -51,6 +50,7 @@ import { Landlord } from "prisma/types/landlord";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
 import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface Filters {
   query?: string;
@@ -343,13 +343,12 @@ export default function Page(): React.JSX.Element {
           <Container maxWidth={settings.settings.stretch ? false : "xl"}>
             <Grid
               container
-              disableEqualOverflow
               spacing={{
                 xs: 3,
                 lg: 4,
               }}
             >
-              <Grid xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
                   <div>
                     <Typography variant="h4">Objekte</Typography>
@@ -388,10 +387,10 @@ export default function Page(): React.JSX.Element {
                   </Stack>
                 </Stack>
               </Grid>{" "}
-              <Grid xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <OverviewStatusObjects showActions={false} />
               </Grid>
-              <Grid xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Card>
                   {!isMobile ? (
                     <DataTable<RentalObject>

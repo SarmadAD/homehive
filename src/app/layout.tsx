@@ -16,8 +16,6 @@ import { cookies } from "next/headers";
 
 // import { Layout as RootLayout } from "src/layouts/root";
 
-import type { Viewport } from "next/types";
-
 import type { Settings } from "src/types/settings";
 import { Analytics } from "@vercel/analytics/next";
 import { applyDefaultSettings } from "src/lib/settings/apply-default-settings";
@@ -30,10 +28,13 @@ import { UserProvider } from "src/contexts/auth/user-context";
 import { SettingsProvider } from "src/contexts/settings";
 import { ThemeProvider } from "src/components/widgets/core/theme-provider/theme-provider";
 
-import dayjs from "dayjs";
-import "dayjs/locale/de";
 import { useUser } from "src/hooks/use-user";
 import { currentUserIdAtom } from "src/state/atoms/currentUserIdAtom";
+
+import dayjs from "dayjs";
+import "dayjs/locale/de";
+import type { Viewport } from "next/types";
+
 dayjs.locale("de");
 
 // Force-Dynamic is required otherwise all pages are marked as client-side
@@ -101,7 +102,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default async function Layout({ children }: LayoutProps): Promise<React.JSX.Element> {
+export default function Layout({ children }: LayoutProps): React.JSX.Element {
   // const { children } = props;
   // const settings = restoreSettings();
   // const settings = applyDefaultSettings(await getPersistedSettings());
@@ -120,7 +121,6 @@ export default async function Layout({ children }: LayoutProps): Promise<React.J
       </head>
       <body>
         {/* <RootLayout settings={settings}>{children}</RootLayout> <Analytics /> */}
-
         <RecoilRoot>
           <LocalizationProvider>
             <UserProvider>

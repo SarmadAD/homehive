@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import { PricingPlan } from "src/sections/pricing/pricing-plan";
 import { pricingPlans } from "src/lib/marketing/pricing";
 import { useState } from "react";
+import { Grid } from "@mui/material";
 
 function PricingPlans() {
   const [checked, setChecked] = useState(true);
@@ -39,21 +39,21 @@ function PricingPlans() {
             {pricingPlans
               .filter((plan) => plan.name === "Free")
               .map((plan, index) => (
-                <Grid key={`einmalig-${index}`} xs={12} md={4}>
+                <Grid key={`einmalig-${index}`} size={{ xs: 12, md: 4 }}>
                   <PricingPlan {...plan} />
                 </Grid>
               ))}
             {pricingPlans
               .filter((plan) => (checked ? plan.name === "Jährlich" : plan.name === "Monatlich"))
               .map((plan, index) => (
-                <Grid key={index} xs={12} md={4}>
+                <Grid key={index} size={{ xs: 12, md: 4 }}>
                   <PricingPlan {...plan} setChecked={setChecked} checked={checked} />
                 </Grid>
               ))}
             {pricingPlans
               .filter((plan) => plan.name === "Einmalig")
               .map((plan, index) => (
-                <Grid key={`einmalig-${index}`} xs={12} md={4}>
+                <Grid key={`einmalig-${index}`} size={{ xs: 12, md: 4 }}>
                   <PricingPlan {...plan} />
                 </Grid>
               ))}
