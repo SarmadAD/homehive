@@ -13,7 +13,7 @@ export async function GET(request: Request, { params }: { params: { landlordId: 
     if (rentalObjects.length > 0) {
       return NextResponse.json(rentalObjects);
     }
-    return NextResponse.json({ error: "error" });
+    return NextResponse.json([]);
   }
 }
 

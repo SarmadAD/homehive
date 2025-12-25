@@ -8,13 +8,12 @@ import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } fr
 import { ObjectBasicInfosStep } from "../object-basicinfos-step";
 import { ObjectInfosStep } from "../object-objectInfos-step";
 import { RentalObject, rentalObjectDefault } from "prisma/types/objects";
-import agent from "src/api/agent";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "src/hooks/use-router";
 import { defaultLandlord } from "prisma/types/landlord";
 import { paths } from "src/paths";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
-import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import { useAtom } from "jotai";
+import { createRentalObjectAtom } from "src/state/atoms/createRentalObjectAtom";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -48,10 +47,11 @@ export const ObjectCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newObject, setNewObject] = useState<RentalObject>(rentalObjectDefault);
-  const landlord = useRecoilValue(currentLandlordAtom);
+  const [{ data: landlord }] = useAtom(currentLandlordAtom);
   const router = useRouter();
-  const setLandlords = useSetRecoilState(currentLandlordAtom);
-  const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
+  // const setLandlords = useSetRecoilState(currentLandlordAtom);
+  // const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
+  const [{ mutateAsync: createRentalObject }] = useAtom(createRentalObjectAtom);
 
   const handleNext = useCallback(() => {
     setActiveStep((prevState) => prevState + 1);
@@ -78,20 +78,18 @@ export const ObjectCreateForm: FC = () => {
     ];
   }, [handleBack, handleNext, handleComplete, newObject]);
 
-  async function createRentalObject() {
+  async function handleCreate() {
     try {
       if (newObject) {
-        const response = await agent.objects.create(newObject);
-        if ("error" in response) {
-          throw new Error(String(response.error));
-        } else if (response.id) {
-          setRentalObjects((prevRentalObjects) => (prevRentalObjects ? [...prevRentalObjects, response] : [response]));
-          setLandlords((prevLandlord) =>
-            prevLandlord
-              ? { ...prevLandlord, rentalObjects: prevLandlord.rentalObjects ? [...prevLandlord.rentalObjects, response] : [response] }
-              : prevLandlord
-          );
-          return response;
+        const newRentalObject = await createRentalObject({
+          ...newObject,
+          landlord: landlord ?? defaultLandlord,
+          createdAt: new Date(),
+        });
+        if (newRentalObject && newRentalObject.id) {
+          router.push(`${paths.landlordportal.dashboard.objects.details}${encodeURIComponent(newRentalObject.id)}`);
+        } else {
+          router.push("/landlordportal/dashboard/objects");
         }
       }
     } catch (error) {
@@ -100,28 +98,10 @@ export const ObjectCreateForm: FC = () => {
   }
 
   useEffect(() => {
-    if (isComplete && newObject) {
-      setNewObject({
-        ...newObject,
-        landlord: "hasAccess" in landlord ? landlord : defaultLandlord,
-        createdAt: new Date(),
-      });
+    if (isComplete) {
+      handleCreate();
     }
   }, [isComplete]);
-
-  useEffect(() => {
-    if (isComplete && newObject.landlord.id) {
-      (async () => {
-        const newRentalObject = await createRentalObject();
-        setIsComplete(false);
-        if (newRentalObject && newRentalObject.id) {
-          router.push(`${paths.landlordportal.dashboard.objects.details}${encodeURIComponent(newRentalObject.id)}`);
-        } else {
-          router.push("/landlordportal/dashboard/objects");
-        }
-      })();
-    }
-  }, [newObject.landlord]);
 
   return (
     <Stepper

@@ -23,16 +23,12 @@ import {
 } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { useSettings } from "src/hooks/use-settings";
-import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-repair-request";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
-import type { Page as PageType } from "src/types/page";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { useCallback, useState, ChangeEvent, MouseEvent, useMemo, useEffect } from "react";
 import { useSelection } from "src/hooks/use-selection";
 import { paths } from "src/paths";
-import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import { ColumnDef, DataTable } from "src/components/data-table";
@@ -51,6 +47,8 @@ import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
 import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useAtom } from "jotai";
+import { deleteRentalObjectAtom } from "src/state/atoms/deleteRentalObjectAtom";
 
 interface Filters {
   query?: string;
@@ -122,15 +120,14 @@ const useObjectsIds = (objects: RentalObject[] = []) => {
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
-  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
-  const rentalObjectLoading = rentalObjectsLoadable.state === "loading";
-  const rentalObjects: RentalObject[] = rentalObjectsLoadable.contents;
-  const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
+  const [{ isLoading: rentalObjectLoading, isError: rentalObjectError, data: rentalObjectsData }] = useAtom(rentalObjectsAtom);
+  const rentalObjects: RentalObject[] = rentalObjectsData ?? [];
+  const [{ mutateAsync: deleteRentalObject }] = useAtom(deleteRentalObjectAtom);
 
-  const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
-  const landloadLoading = landlordLoadable.state === "loading";
-  const landlord = landlordLoadable.contents;
-  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const [{ isLoading: landloadLoading, isError: landlordError, data: landlordData }] = useAtom(currentLandlordAtom);
+
+  const landlord = landlordData ?? [];
+
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const objectsIds = useObjectsIds(rentalObjects);
@@ -157,13 +154,7 @@ export default function Page(): React.JSX.Element {
 
   async function handleDelete() {
     try {
-      const deltedObject = await agent.objects.delete(Array.from(selected)[0]);
-      const updatedRentalObjects = rentalObjects.filter((object) => object.id !== deltedObject.id);
-      setRentalObjects(updatedRentalObjects);
-      setLandlord((prevLandlord) => ({
-        ...prevLandlord,
-        rentalObjects: updatedRentalObjects,
-      }));
+      await deleteRentalObject(Array.from(selected)[0]);
       toast.success("Objekt erfolgreich gelöscht");
     } catch (error) {
       console.error(error);
@@ -393,22 +384,28 @@ export default function Page(): React.JSX.Element {
               <Grid size={{ xs: 12 }}>
                 <Card>
                   {!isMobile ? (
-                    <DataTable<RentalObject>
-                      columns={columns}
-                      rows={rentalObjects ?? []}
-                      onDeselectAll={deselectAll}
-                      onDeselectOne={(_, row) => {
-                        deselectOne(row.id);
-                      }}
-                      onSelectAll={selectAll}
-                      onSelectOne={(_, row) => {
-                        selectOne(row.id);
-                      }}
-                      selected={selected}
-                      isLoading={landloadLoading || rentalObjectLoading}
-                      rowStartIcon={<Home02 />}
-                      selectable
-                    />
+                    rentalObjects && rentalObjects.length === 0 ? (
+                      <Typography color="text.secondary" sx={{ textAlign: "center", padding: 2 }} variant="body2">
+                        Es wurden noch keine Objekte angelegt
+                      </Typography>
+                    ) : (
+                      <DataTable<RentalObject>
+                        columns={columns}
+                        rows={rentalObjects ?? []}
+                        onDeselectAll={deselectAll}
+                        onDeselectOne={(_, row) => {
+                          deselectOne(row.id);
+                        }}
+                        onSelectAll={selectAll}
+                        onSelectOne={(_, row) => {
+                          selectOne(row.id);
+                        }}
+                        selected={selected}
+                        isLoading={landloadLoading || rentalObjectLoading}
+                        rowStartIcon={<Home02 />}
+                        selectable
+                      />
+                    )
                   ) : (
                     <Box sx={{ p: 2 }}>
                       {landloadLoading || rentalObjectLoading ? (
