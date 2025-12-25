@@ -6,6 +6,8 @@ import { RentPayment } from "@prisma/client";
 import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
+import { loadable } from "jotai/utils";
+import { useAtom, useAtomValue } from "jotai";
 
 type ChartSeries = {
   name: string;
@@ -88,10 +90,16 @@ const useChartOptions = (months: string[]): ApexOptions => {
 };
 
 export function OverviewRentalIncome() {
-  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
-  const rentPaymentsState = useRecoilValue(rentPaymentsAtom);
+  const [{ isLoading: objectsLoading, isError: objectsError, data: rentalObjectsData }] = useAtom(rentalObjectsAtom);
+  const [{ isLoading: paymentsLoading, isError: paymentsError, data: rentPaymentsData }] = useAtom(rentPaymentsAtom);
 
-  if (rentalObjectsLoadable.state === "loading") {
+  const isLoading = objectsLoading || paymentsLoading;
+  const isError = objectsError || paymentsError;
+
+  const rentPaymentsAtomLoadable = loadable(rentPaymentsAtom);
+  const [rentPaymentsValue] = useAtom(rentPaymentsAtomLoadable);
+
+  if (isLoading) {
     return (
       <Card>
         <CardHeader subheader="Basierend auf das aktuelle Jahr" title="Mieteinnahmen" />
@@ -102,7 +110,7 @@ export function OverviewRentalIncome() {
     );
   }
 
-  if (rentalObjectsLoadable.state === "hasError") {
+  if (isError) {
     return (
       <Card>
         <CardHeader subheader="Basierend auf das aktuelle Jahr" title="Mieteinnahmen" />
@@ -114,6 +122,9 @@ export function OverviewRentalIncome() {
       </Card>
     );
   }
+
+  const rentalObjects = rentalObjectsData ?? [];
+  const rentPaymentsState = rentPaymentsData ?? [];
 
   const getAllRentPayments = () => {
     const allRentPayments: RentPayment[] = [];

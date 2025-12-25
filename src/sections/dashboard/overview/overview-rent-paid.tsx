@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Skeleton, Stack, SvgIcon, Typography } from "@mui/material";
 import { paths } from "src/paths";
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
-import { totalPaidRents } from "src/state/selectors/totalPaidRents";
+import { totalPaidRentsAtom } from "src/state/atoms/totalPaidRentsAtom";
 import { RouterLink } from "src/components/router-link";
 import { dayjs } from "src/lib/dayjs";
+import { loadable } from "jotai/utils";
+import { useAtom } from "jotai";
 
 dayjs.locale("de");
 
@@ -16,17 +17,18 @@ interface OverviewRentPaidProps {
 
 export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
   const { showActions } = props;
-  const lengthPaidRentsLoadable = useRecoilValueLoadable(totalPaidRents);
+  const lengthPaidRentsLoadable = loadable(totalPaidRentsAtom);
+  const [value] = useAtom(lengthPaidRentsLoadable);
 
   let content;
-  if (lengthPaidRentsLoadable.state === "loading") {
+  if (value.state === "loading") {
     content = (
       <Typography color="text.primary" variant="h4">
         <Skeleton />
       </Typography>
     );
-  } else if (lengthPaidRentsLoadable.state === "hasValue") {
-    const lengthPaidRents = lengthPaidRentsLoadable.contents;
+  } else if (value.state === "hasData") {
+    const lengthPaidRents = value.data;
     content = (
       <Typography color="text.primary" variant="h4">
         {lengthPaidRents !== undefined ? lengthPaidRents : "Keine Daten verfügbar"}

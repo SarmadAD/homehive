@@ -1,14 +1,15 @@
-import { atom, selector } from "recoil";
+import { atom } from "jotai";
+import { atomWithQuery } from "jotai-tanstack-query";
 import agent from "src/api/agent";
 import { UserRole } from "prisma/types/userrole";
 import { currentUserIdAtom } from "./currentUserIdAtom";
 
-export const userRoleAtom = atom<UserRole | null>({
-  key: "userRoleAtom",
-  default: selector({
-    key: "userRoleAtom/default",
-    get: async ({ get }) => {
-      const userId = get(currentUserIdAtom);
+// Asynchrones Atom für UserRole
+export const userRoleAtom = atomWithQuery<UserRole | null>((get) => {
+  const userId = get(currentUserIdAtom);
+  return {
+    queryKey: ["userRole", userId],
+    queryFn: async () => {
       if (userId) {
         try {
           const userRole = await agent.userRoles.details(userId);
@@ -19,5 +20,6 @@ export const userRoleAtom = atom<UserRole | null>({
       }
       return null;
     },
-  }),
+    enabled: !!userId,
+  };
 });

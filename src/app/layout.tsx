@@ -33,7 +33,7 @@ import { currentUserIdAtom } from "src/state/atoms/currentUserIdAtom";
 
 import dayjs from "dayjs";
 import "dayjs/locale/de";
-import type { Viewport } from "next/types";
+// import type { Viewport } from "next/types";
 
 dayjs.locale("de");
 
@@ -68,11 +68,11 @@ const Vendors: FC = () => (
   </>
 );
 
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
-  themeColor: site.themeColor,
-} satisfies Viewport;
+// export const viewport = {
+//   width: "device-width",
+//   initialScale: 1,
+//   themeColor: site.themeColor,
+// } satisfies Viewport;
 
 const SETTINGS_STORAGE_KEY = "app.settings";
 
@@ -113,7 +113,7 @@ export default function Layout({ children }: LayoutProps): React.JSX.Element {
     <html data-mui-color-scheme={defaultSettings.colorScheme} lang="de">
       <head>
         <title>HomeHive</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />{" "}
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
         <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
         <Favicon />
         <Fonts />
