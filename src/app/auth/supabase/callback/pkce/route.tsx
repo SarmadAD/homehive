@@ -1,20 +1,12 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { AuthApiError, User } from "@supabase/supabase-js";
 import { createClient } from "src/lib/supabase/server";
 import { logger } from "src/lib/default-logger";
 import { paths } from "src/paths";
-import agent from "src/api/agent";
 import { prisma } from "src/app/db/db";
 
 export const dynamic = "force-dynamic";
-
-// NOTE: If you have a proxy in front of this app
-//  the request origin might be a local address.
-//  Consider using `config.site.url` from `@/config` instead.
-
-// NOTE: This is not a `Page` because we only redirect and it will never render React content.
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams, origin } = req.nextUrl;
@@ -30,8 +22,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Code is missing" });
   }
 
-  const cookieStore = cookies();
-  const supabaseClient = createClient(cookieStore);
+  const supabaseClient = await createClient();
   const { error, data: user } = await supabaseClient.auth.exchangeCodeForSession(code);
 
   let next = searchParams.get("next") || paths.index;

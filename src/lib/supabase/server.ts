@@ -1,31 +1,23 @@
-import type { cookies } from "next/headers";
-import type { CookieOptions } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabase } from "src/config";
 
-type ResponseCookie = Pick<CookieOptions, "httpOnly" | "maxAge" | "priority">;
+export async function createClient(): Promise<SupabaseClient> {
+  const cookieStore = await cookies();
 
-export function createClient(cookieStore: ReturnType<typeof cookies>): SupabaseClient {
   return createServerClient(supabase.url!, supabase.anonKey!, {
     cookies: {
-      get(name: string) {
-        return cookieStore.get(name)?.value;
+      getAll() {
+        return cookieStore.getAll();
       },
-      set(name: string, value: string, options: CookieOptions) {
+      setAll(cookiesToSet) {
         try {
-          cookieStore.set({ name, value, ...(options as Partial<ResponseCookie>) });
-        } catch (error) {
-          // The `set` method was called from a Server Component.
-          // This can be ignored if you have middleware refreshing
-          // user sessions.
-        }
-      },
-      remove(name: string, options: CookieOptions) {
-        try {
-          cookieStore.set({ name, value: "", ...(options as Partial<ResponseCookie>) });
-        } catch (error) {
-          // The `delete` method was called from a Server Component.
+          for (const { name, value, options } of cookiesToSet) {
+            cookieStore.set(name, value, options);
+          }
+        } catch {
+          // The `setAll` method was called from a Server Component.
           // This can be ignored if you have middleware refreshing
           // user sessions.
         }

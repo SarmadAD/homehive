@@ -3,8 +3,10 @@ import { NextResponse } from "next/server";
 import { RentalObject } from "prisma/types/objects";
 import { prisma } from "src/app/db/db";
 
-export async function GET(request: Request, { params }: { params: { objectId: string } }) {
-  const { objectId } = params;
+type Params = { objectId: string };
+
+export async function GET(request: Request, { params }: { params: Promise<Params> }) {
+  const { objectId } = await params;
   if (objectId) {
     const rentalObject = await prisma.rentalObject.findFirst({
       where: { id: objectId },
@@ -21,9 +23,9 @@ export async function GET(request: Request, { params }: { params: { objectId: st
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { objectId: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<Params> }) {
   try {
-    const { objectId } = params;
+    const { objectId } = await params;
     if (objectId) {
       const deletedRentalObject = await prisma.rentalObject.update({
         where: { id: objectId },
@@ -50,9 +52,9 @@ export async function DELETE(request: Request, { params }: { params: { objectId:
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { objectId: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<Params> }) {
   try {
-    const { objectId } = params;
+    const { objectId } = await params;
     const rentalObject: RentalObject = await request.json();
     if (objectId) {
       const rentersId: Prisma.RenterWhereUniqueInput[] = rentalObject.renter.map((renter: Renter) => ({

@@ -30,15 +30,11 @@ import { deleteRenterAtom } from "src/state/atoms/deleteRenterAtom";
 
 const tabs = [{ label: "Details", value: "details" }];
 
-interface PageProps {
-  searchParams: { sortDir?: "asc" | "desc"; renterId: string };
-}
-
-export default function Page({ searchParams }: PageProps): React.JSX.Element {
-  const { sortDir } = searchParams;
+export default function Page(): React.JSX.Element {
+  const searchParams = useSearchParams();
+  const sortDir = (searchParams.get("sortDir") as "asc" | "desc" | null) ?? undefined;
+  const renterId = searchParams.get("renterId");
   const router = useRouter();
-  const customSearchParams = useSearchParams();
-  const renterId = customSearchParams.get("renterId");
 
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 

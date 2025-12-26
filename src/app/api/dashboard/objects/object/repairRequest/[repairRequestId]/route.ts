@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
 import { RepairRequest } from "prisma/types/repairRequest";
 import { prisma } from "src/app/db/db";
 
-export async function PUT(request: Request, { params }: { params: { repairRequestId: string } }) {
+type Params = { repairRequestId: string };
+
+export async function PUT(request: Request, { params }: { params: Promise<Params> }) {
   try {
-    const { repairRequestId } = params;
+    const { repairRequestId } = await params;
     const repairRequest: RepairRequest = await request.json();
     if (repairRequestId) {
       const updatedRepairRequest = await prisma.repairRequest.update({

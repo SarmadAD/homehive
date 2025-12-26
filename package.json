@@ -27,8 +27,8 @@
     "@mui/utils": "7.3.6",
     "@mui/x-date-pickers": "8.21.0",
     "@phosphor-icons/react": "2.0.15",
-    "@supabase/ssr": "0.1.0",
-    "@supabase/supabase-js": "2.39.7",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.89.0",
     "@tanstack/react-query": "^5.90.12",
     "@untitled-ui/icons-react": "0.1.0",
     "@vercel/analytics": "^1.5.0",
@@ -104,7 +104,7 @@
     "prettier": "3.2.5",
     "prisma": "^5.19.1",
     "react-email": "4.0.7",
-    "supabase": "^2.20.12",
+    "supabase": "^2.70.5",
     "ts-node": "^10.9.1",
     "typescript": "5.3.3"
   }

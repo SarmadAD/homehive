@@ -4,7 +4,7 @@ import LinkExternal01Icon from "@untitled-ui/icons-react/build/esm/LinkExternal0
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
@@ -29,24 +29,21 @@ const features: Feature[] = [
   {
     id: "figma",
     title: "Design Files",
-    description:
-      "We've included the source Figma files to Plus & Extended licenses so you can get creative! Build layouts with confidence.",
+    description: "We've included the source Figma files to Plus & Extended licenses so you can get creative! Build layouts with confidence.",
     imageDark: "/assets/home-features-figma-dark.png",
     imageLight: "/assets/home-features-figma-light.png",
   },
   {
     id: "tech",
     title: "Built with modern technologies",
-    description:
-      "Each template is a well-structured CRA & Next.js project, giving you a codebase that’s productive and enjoyable to work in.",
+    description: "Each template is a well-structured CRA & Next.js project, giving you a codebase that’s productive and enjoyable to work in.",
     imageDark: "/assets/home-features-tech-dark.png",
     imageLight: "/assets/home-features-tech-light.png",
   },
   {
     id: "customize",
     title: "Easy to customize",
-    description:
-      "Everything is styled using global theme overrides, just open the theme file in your editor and change whatever you want.",
+    description: "Everything is styled using global theme overrides, just open the theme file in your editor and change whatever you want.",
     imageDark: "/assets/home-features-customize-dark.png",
     imageLight: "/assets/home-features-customize-light.png",
   },
@@ -87,7 +84,7 @@ export const HomeFeatures: FC = () => {
           </Typography>
         </Stack>
         <Grid alignItems="center" container spacing={3}>
-          <Grid xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Stack spacing={1}>
               {features.map((feature, index) => {
                 const isActive = activeFeature === index;
@@ -150,7 +147,7 @@ export const HomeFeatures: FC = () => {
               })}
             </Stack>
           </Grid>
-          <Grid xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box
               sx={{
                 "& img": {

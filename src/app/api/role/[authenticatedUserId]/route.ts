@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "src/app/db/db";
 
-export async function GET(request: Request, context: { params: { authenticatedUserId: string } }) {
-  const { authenticatedUserId } = context.params;
+type Params = { authenticatedUserId: string };
+
+export async function GET(request: Request, context: { params: Promise<Params> }) {
+  const { authenticatedUserId } = await context.params;
   if (!authenticatedUserId) return NextResponse.json({ error: "authenticatedUserId not there!" });
   const userRole = await getUserRole(authenticatedUserId);
   if (userRole) {

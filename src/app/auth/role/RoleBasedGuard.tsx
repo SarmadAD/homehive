@@ -1,3 +1,5 @@
+"use client";
+
 import { Landlord } from "prisma/types/landlord";
 import { useAtomValue } from "jotai";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";

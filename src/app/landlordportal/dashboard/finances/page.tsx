@@ -15,17 +15,11 @@ import { RentPayment } from "prisma/types/rentPayment";
 import { PaidRents } from "src/sections/dashboard/finances/paid-rents";
 import { useAtom } from "jotai";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
-// import { site } from "src/config";
-// import { Metadata } from "next/types";
+import { useSearchParams } from "next/navigation";
 
-// export const metadata = { title: `Renters | Mieter | ${site.name}` } satisfies Metadata;
-
-interface PageProps {
-  searchParams: { sortDir?: "asc" | "desc" };
-}
-
-export default function Page({ searchParams }: PageProps): React.JSX.Element {
-  const { sortDir } = searchParams;
+export default function Page(): React.JSX.Element {
+  const searchParams = useSearchParams();
+  const sortDir = (searchParams.get("sortDir") as "asc" | "desc" | null) ?? undefined;
   const settings = useSettings();
 
   // const { data: landlord } = useAtomValue(currentLandlordAtom);
