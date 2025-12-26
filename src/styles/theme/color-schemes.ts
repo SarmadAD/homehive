@@ -134,7 +134,7 @@ export function colorSchemes(config: Config): Partial<Record<ColorScheme, ColorS
     dark: {
       // THIS PALLETE IS USED FROM THE light PALLETE BELOW. The dark pallete is comment out for now to force light mode only.
       palette: {
-        action: { disabledBackground: "rgba(0, 0, 0, 0.06)" },
+        action: { disabledBackground: "rgba(0, 0, 0, 0.06)", disabled: "var(--mui-palette-neutral-300)" },
         background: {
           default: "var(--mui-palette-common-white)",
           defaultChannel: "255 255 255",
