@@ -15,14 +15,14 @@ import { CircularProgress, List, ListItem, SvgIcon, Theme, Tooltip, useMediaQuer
 import { getRenterName } from "src/utils/get-renter-name";
 import { getInitials } from "src/utils/get-initials";
 import { RentPayment } from "prisma/types/rentPayment";
-import agent from "src/api/agent";
-import { useSetRecoilState } from "recoil";
-import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 import XIcon from "@untitled-ui/icons-react/build/esm/X";
 import CheckIcon from "@untitled-ui/icons-react/build/esm/Check";
 import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
+import { useAtom } from "jotai";
+import { markRentPaymentPaidAtom } from "src/state/atoms/markRentPaymentPaidAtom";
+import { toast } from "src/components/toaster";
 
 export type RentPaymentWithRenter = RentPayment & {
   renter: Renter;
@@ -110,15 +110,15 @@ function MobileRentPaymentCard({
 export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProps): React.JSX.Element {
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const [loadingIds, setLoadingIds] = useState<{ [id: string]: boolean }>({});
-  const setRentPayments = useSetRecoilState(rentPaymentsAtom);
+  const [{ mutateAsync: markPaid }] = useAtom(markRentPaymentPaidAtom);
 
   async function markPaymentAsPaid(rentPayment: RentPayment) {
     try {
       setLoadingIds((prev) => ({ ...prev, [rentPayment.id]: true }));
-      const updatedRentPayments = await agent.rentPayments.update(rentPayment.id);
-      setRentPayments(updatedRentPayments);
+      await markPaid(rentPayment.id);
     } catch (error) {
       console.log(error);
+      toast.error("Update fehlgeschlagen");
     } finally {
       setLoadingIds((prev) => ({ ...prev, [rentPayment.id]: false }));
     }

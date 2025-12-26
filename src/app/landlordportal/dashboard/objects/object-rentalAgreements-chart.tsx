@@ -76,7 +76,7 @@ export const ObjectRentalAgreementChart: FC = () => {
 
   numeral.locale("de");
 
-  if (isLoading || (rentalObject && rentalObject.id === "")) {
+  if (isLoading) {
     return (
       <Box>
         <Card>

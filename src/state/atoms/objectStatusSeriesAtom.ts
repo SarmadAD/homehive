@@ -1,18 +1,31 @@
 import { atom } from "jotai";
 import { rentalObjectsAtom } from "./rentalObjectsAtom";
 
-export const objectStatusSeriesDataAtom = atom<number[]>((get) => {
-  const rentalObjectsResults = get(rentalObjectsAtom);
+export const objectStatusSeriesDataAtom = atom((get) => {
+  const { data, isLoading, isError } = get(rentalObjectsAtom);
 
-  const rentalObjects = rentalObjectsResults.data ?? [];
-
-  if (rentalObjects.length === 0) {
-    return [0, 0];
+  if (isLoading) {
+    return {
+      data: [0, 0] as [number, number],
+      isLoading: true,
+      isError: false,
+    };
   }
 
-  const inhabited = rentalObjects.filter((rentalObject) => rentalObject.renter.length > 0).length;
+  if (isError || !data) {
+    return {
+      data: [0, 0] as [number, number],
+      isLoading: false,
+      isError: true,
+    };
+  }
 
-  const uninhabited = rentalObjects.filter((rentalObject) => rentalObject.renter.length === 0).length;
+  const inhabited = data.filter((o) => o.renter.length > 0).length;
+  const uninhabited = data.filter((o) => o.renter.length === 0).length;
 
-  return [inhabited, uninhabited];
+  return {
+    data: [inhabited, uninhabited] as [number, number],
+    isLoading: false,
+    isError: false,
+  };
 });

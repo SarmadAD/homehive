@@ -54,7 +54,7 @@ export const useRepairRequestStatusPill = (orderStatus: RepairRequestStatus): JS
   return <Chip color={color} label={text} size="small" variant="soft"></Chip>;
 };
 
-export const useRentalObjectStatusPill = (rentalObject: RentalObject): JSX.Element => {
+export const useRentalObjectStatusPill = (rentalObject: RentalObject | undefined): JSX.Element => {
   const map: Record<RentalObjectStatus, { color: ChipColor; text: string }> = {
     INHABITED: {
       color: "success",
@@ -66,7 +66,7 @@ export const useRentalObjectStatusPill = (rentalObject: RentalObject): JSX.Eleme
     },
   };
   let status: RentalObjectStatus = RentalObjectStatus.UNINHABITED;
-  if (rentalObject.renter?.length > 0) {
+  if (rentalObject && rentalObject?.renter?.length > 0) {
     status = RentalObjectStatus.INHABITED;
   }
   const { text, color } = map[status];

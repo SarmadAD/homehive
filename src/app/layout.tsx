@@ -23,7 +23,6 @@ import { getSettings as getPersistedSettings } from "../lib/settings/get-setting
 import { site } from "src/config";
 import { LocalizationProvider } from "src/components/localization-provider";
 import { Toaster } from "src/components/toaster";
-import { RecoilRoot, useSetRecoilState } from "recoil";
 import { UserProvider } from "src/contexts/auth/user-context";
 import { SettingsProvider } from "src/contexts/settings";
 import { ThemeProvider } from "src/components/widgets/core/theme-provider/theme-provider";
@@ -121,23 +120,21 @@ export default function Layout({ children }: LayoutProps): React.JSX.Element {
       </head>
       <body>
         {/* <RootLayout settings={settings}>{children}</RootLayout> <Analytics /> */}
-        <RecoilRoot>
-          <LocalizationProvider>
-            <UserProvider>
-              {/* <SettingsProvider settings={settings}> */}
-              <SettingsProvider settings={defaultSettings}>
-                {/* <I18nProvider language="en"> */}
-                <ThemeProvider>
-                  {children}
-                  {/* <SettingsButton /> */}
-                  <Toaster position="bottom-right" />
-                  <Analytics />
-                </ThemeProvider>
-                {/* </I18nProvider> */}
-              </SettingsProvider>
-            </UserProvider>
-          </LocalizationProvider>
-        </RecoilRoot>
+        <LocalizationProvider>
+          <UserProvider>
+            {/* <SettingsProvider settings={settings}> */}
+            <SettingsProvider settings={defaultSettings}>
+              {/* <I18nProvider language="en"> */}
+              <ThemeProvider>
+                {children}
+                {/* <SettingsButton /> */}
+                <Toaster position="bottom-right" />
+                <Analytics />
+              </ThemeProvider>
+              {/* </I18nProvider> */}
+            </SettingsProvider>
+          </UserProvider>
+        </LocalizationProvider>
       </body>
     </html>
   );

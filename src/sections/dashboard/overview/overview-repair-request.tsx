@@ -2,9 +2,9 @@ import { FC } from "react";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import { Box, Button, Card, CardActions, Divider, Skeleton, Stack, SvgIcon, Typography } from "@mui/material";
 import { paths } from "src/paths";
-import { useRecoilValueLoadable } from "recoil";
-import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { RouterLink } from "src/components/router-link";
+import { useAtom } from "jotai";
+import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
 interface OverviewRepairRequest {
   showActions: boolean;
@@ -12,21 +12,17 @@ interface OverviewRepairRequest {
 
 export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
   const { showActions } = props;
-  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
+  const [{ data: rentalObject, isLoading: rentalObjectLoading, isError: rentalObjectError }] = useAtom(rentalObjectAtom);
 
   let content;
-  if (rentalObjectsLoadable.state === "loading") {
+  if (rentalObjectLoading) {
     content = (
       <Typography color="text.primary" variant="h4">
         <Skeleton />
       </Typography>
     );
-  } else if (rentalObjectsLoadable.state === "hasValue") {
-    const rentalObjects = rentalObjectsLoadable.contents;
-    const totalRepairRequests =
-      rentalObjects.length > 0
-        ? rentalObjects.reduce((accumulator, rentalObject) => accumulator + rentalObject.repairRequests.length, 0)
-        : 0;
+  } else if (rentalObject && rentalObject.repairRequests) {
+    const totalRepairRequests = rentalObject?.repairRequests.length > 0 ? rentalObject.repairRequests.length : 0;
     content = (
       <Typography color="text.primary" variant="h4">
         {totalRepairRequests}

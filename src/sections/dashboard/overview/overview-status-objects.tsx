@@ -7,7 +7,6 @@ import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { objectStatusSeriesDataAtom } from "src/state/atoms/objectStatusSeriesAtom";
 import { OverViewStatusObjectsSkeleton } from "src/skeleton/dashboard-skeletons";
 import { RouterLink } from "src/components/router-link";
-import { loadable } from "jotai/utils";
 import { useAtom } from "jotai";
 
 interface OverviewStatusObjects {
@@ -76,18 +75,15 @@ const useChartOptions = (): ApexOptions => {
 export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) => {
   const chartOptions = useChartOptions();
 
-  const rentalObjectsLoadable = loadable(rentalObjectsAtom);
-  const [rentalObjectsValue] = useAtom(rentalObjectsLoadable);
-
-  const objectStatusLoadable = loadable(objectStatusSeriesDataAtom);
-  const [objectStatusDataValue] = useAtom(objectStatusLoadable);
+  const [{ data: rentalObjectsData, isLoading: rentalObjectsLoading }] = useAtom(rentalObjectsAtom);
+  const [{ data: objectStatusData, isLoading: objectStatusLoading }] = useAtom(objectStatusSeriesDataAtom);
 
   let content;
 
-  if (rentalObjectsValue.state === "loading" || objectStatusDataValue.state === "loading") {
+  if (rentalObjectsLoading || objectStatusLoading) {
     content = <OverViewStatusObjectsSkeleton />;
-  } else if (rentalObjectsValue.state === "hasData" && objectStatusDataValue.state === "hasData") {
-    const statusData = objectStatusDataValue.data;
+  } else if (rentalObjectsData && objectStatusData) {
+    const statusData = objectStatusData;
 
     content =
       statusData[0] === 0 && statusData[1] === 0 ? (

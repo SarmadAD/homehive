@@ -4,20 +4,14 @@ import * as React from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AccountDetails } from "src/components/settings/landlord/account-details";
-import { useRecoilValue } from "recoil";
 import { Subscription } from "src/components/settings/landlord/subscription";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
-// import { site } from "src/config";
-// import { Metadata } from "next/types";
-
-// export const metadata = {
-//   title: `Account | Settings | Dashboard| Kontoeinstellungen  | ${site.name}`,
-// } satisfies Metadata;
+import { useAtomValue } from "jotai";
 
 export default function Page(): React.JSX.Element {
-  const landlord = useRecoilValue(currentLandlordAtom);
+  const { data: landlord } = useAtomValue(currentLandlordAtom);
   const oneTimePriceId = process.env.NODE_ENV === "development" ? "price_1RLqlBFJT2pyPaEfkiFIo14q" : "price_1RfN2uFAQVAyiPDH9FsKyzZ2";
-  const canSeeSubscriptionCard = "hasAccess" in landlord && landlord?.hasAccess && landlord?.priceId !== oneTimePriceId;
+  const canSeeSubscriptionCard = landlord && "hasAccess" in landlord && landlord?.hasAccess && landlord?.priceId !== oneTimePriceId;
 
   return (
     <Stack spacing={4}>

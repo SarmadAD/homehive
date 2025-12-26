@@ -11,13 +11,13 @@ import { RepairRequest } from "prisma/types/repairRequest";
 import agent from "src/api/agent";
 import { ObjectBasicDetails } from "src/app/landlordportal/dashboard/objects/object-basic-details";
 import { ObjectRepairRequestDrawer } from "src/app/landlordportal/dashboard/objects/repairRequests/object-repairRequest-drawer";
-import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
 import { toast } from "src/components/toaster";
 import { renterAtom } from "src/state/atoms/renterAtom";
-import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { ObjectRentalAgreementChart } from "./object-rental-agreement-chart";
+import { useAtom, useSetAtom } from "jotai";
+import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -39,17 +39,13 @@ export default function Page(): React.JSX.Element {
 
   const hasShownToast = useRef(false);
 
-  const renterLoadable = useRecoilValueLoadable(renterAtom);
-  const renter = renterLoadable.contents;
-  const isRenterLoading = renterLoadable.state === "loading";
+  const [{ data: renter, isLoading: renterLoading, isError: renterError }] = useAtom(renterAtom);
+  const [{ data: rentalObject, isLoading: rentalObjectLoading, isError: rentalObjectError }] = useAtom(rentalObjectAtom);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();
 
-  const rentalObjectLoadable = useRecoilValueLoadable(rentalObjectAtom);
-  const rentalObject = rentalObjectLoadable.contents;
-  const isRentalObjectLoading = rentalObjectLoadable.state === "loading";
-  const setSelectedRentalObjectId = useSetRecoilState(selectedRentalObjectIdAtom);
+  const setSelectedRentalObjectId = useSetAtom(selectedRentalObjectIdAtom);
 
   // const setRenter = useSetRecoilState(renterAtom);
 
@@ -57,13 +53,13 @@ export default function Page(): React.JSX.Element {
   // const repairRequestsIds = useRepairRequestsIds(renter.rentalObject?.repairRequests);
   // const repairRequestsSelection = useSelection<string>(repairRequestsIds);
 
-  const currentRepairRequest = useCurrentRepairRequest(renter.rentalObject?.repairRequests as RepairRequest[], dialog.data);
+  const currentRepairRequest = useCurrentRepairRequest(renter?.rentalObject?.repairRequests as RepairRequest[], dialog.data);
 
-  const isLoading = isRenterLoading || isRentalObjectLoading;
+  const isLoading = renterLoading || rentalObjectLoading;
 
   useEffect(() => {
-    if (renter.rentalObjectId) {
-      setSelectedRentalObjectId(renter.rentalObjectId ?? "");
+    if (renter?.rentalObjectId) {
+      setSelectedRentalObjectId(renter?.rentalObjectId ?? "");
     } else if (!isLoading) {
       toast.info("Ihnen wurde noch kein Objekt zugewiesen. Bitte wenden Sie sich an Ihren Vermieter.", {
         duration: 8000,
@@ -133,7 +129,7 @@ export default function Page(): React.JSX.Element {
     }
   };
 
-  if (!isLoading && rentalObject.id === "" && renter.id !== "") {
+  if (!isLoading && rentalObject?.id === "" && renter?.id !== "") {
     // if (!hasShownToast.current) {
     //   toast.info("Ihnen wurde noch kein Objekt zugewiesen. Bitte wenden Sie sich an Ihren Vermieter.", {
     //     duration: 8000,
@@ -220,10 +216,10 @@ export default function Page(): React.JSX.Element {
                 {currentTab === "details" && rentalObject && (
                   <div>
                     <Grid container spacing={4}>
-                      <Grid xs={12} lg={4}>
+                      <Grid size={{ xs: 12, lg: 4 }}>
                         <ObjectBasicDetails />
                       </Grid>
-                      <Grid xs={12} lg={8}>
+                      <Grid size={{ xs: 12, lg: 8 }}>
                         <ObjectRentalAgreementChart />
                       </Grid>
                     </Grid>

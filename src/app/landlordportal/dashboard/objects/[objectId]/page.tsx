@@ -107,8 +107,6 @@ export default function Page(): React.JSX.Element {
   const rentersIds = React.useMemo(() => rentalObject?.renter.map((renter) => renter.id), [rentalObject]);
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
 
-  // const renters = useRecoilValue(rentersAtom);
-
   const repairRequestsIds = useRepairRequestsIds(rentalObject?.repairRequests);
   // const repairRequestsSelection = useSelection<string>(repairRequestsIds);
 
@@ -397,21 +395,21 @@ export default function Page(): React.JSX.Element {
                     spacing={4}
                   >
                     <Stack alignItems="center" direction="row" spacing={2}>
-                      {rentalObject?.image || rentalObject?.name ? (
+                      {isLoading ? (
+                        <Skeleton variant="circular" width={64} height={64} />
+                      ) : (
                         <Avatar
-                          src={rentalObject.image}
+                          src={rentalObject?.image}
                           sx={{
                             height: 64,
                             width: 64,
                           }}
                         >
-                          {getInitials(rentalObject.name)}
+                          {getInitials(rentalObject?.name)}
                         </Avatar>
-                      ) : (
-                        <Skeleton variant="circular" width={64} height={64} />
                       )}
                       <Stack spacing={1}>
-                        {rentalObject?.name ? <Typography variant="h4">{rentalObject.name}</Typography> : <Skeleton width={150} height={32} />}
+                        {isLoading ? <Skeleton width={150} height={32} /> : <Typography variant="h4">{rentalObject?.name}</Typography>}
                       </Stack>
                     </Stack>
                     <Stack alignItems="center" direction="row" spacing={2}>
@@ -476,7 +474,7 @@ export default function Page(): React.JSX.Element {
                     <Divider />
                   </div>
                 </Stack>
-                {currentTab === "details" && rentalObject && (
+                {currentTab === "details" && (
                   <div>
                     <Grid container spacing={4}>
                       <Grid size={{ xs: 12, lg: 4 }}>

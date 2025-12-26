@@ -12,7 +12,7 @@ export const ObjectBasicDetails: FC = () => {
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   const align = lgUp ? "horizontal" : "vertical";
 
-  if (isLoading || (rentalObject && rentalObject.id === "")) {
+  if (isLoading) {
     return (
       <Card>
         <CardHeader title="Basisinformationen" />
@@ -39,11 +39,7 @@ export const ObjectBasicDetails: FC = () => {
     );
   }
 
-  if (!rentalObject) {
-    return null;
-  }
-
-  const { address, areaSize, city, houseNr, postalCode, additionalHouseDetails } = rentalObject;
+  // const { address, areaSize, city, houseNr, postalCode, additionalHouseDetails } = rentalObject;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const statusPill = useRentalObjectStatusPill(rentalObject);
 
@@ -51,9 +47,13 @@ export const ObjectBasicDetails: FC = () => {
     <Card>
       <CardHeader title="Basisinformationen" />
       <PropertyList>
-        <PropertyListItem divider label="Straße" value={`${address} ${houseNr} ${additionalHouseDetails ? additionalHouseDetails : ""}`} />
-        <PropertyListItem divider label="Ort" value={`${postalCode} ${city}`} />
-        <PropertyListItem divider label="Fläche" value={areaSize?.toString() + " " + "m²"} />
+        <PropertyListItem
+          divider
+          label="Straße"
+          value={`${rentalObject?.address} ${rentalObject?.houseNr} ${rentalObject?.additionalHouseDetails ?? ""}`}
+        />
+        <PropertyListItem divider label="Ort" value={`${rentalObject?.postalCode} ${rentalObject?.city}`} />
+        <PropertyListItem divider label="Fläche" value={rentalObject?.areaSize?.toString() + " " + "m²"} />
         <PropertyListItem divider align={align} label="Wohnstatus">
           {statusPill}
         </PropertyListItem>
