@@ -14,12 +14,12 @@ import { Faqs } from "src/sections/home/home-faqs";
 
 export default function Page(): React.JSX.Element {
   return (
-    <main>
+    <>
       <Hero />
       <Features />
       {/* <HomeFeatures /> */}
       <Faqs />
       <StartManaging />
-    </main>
+    </>
   );
 }

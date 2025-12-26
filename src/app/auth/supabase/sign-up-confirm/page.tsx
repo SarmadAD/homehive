@@ -15,12 +15,14 @@ import { SignUpResendButton } from "src/components/auth/supabase/sign-up-resend-
 
 export const metadata: Metadata = { title: `Sign up confirm | E-Mail bestätigen | Supabase | Auth | ${site.name}` };
 
+type Params = { email: string };
+
 interface PageProps {
-  searchParams: { email?: string };
+  params: Promise<Params>;
 }
 
-export default function Page({ searchParams }: PageProps): React.JSX.Element {
-  const { email } = searchParams;
+export default async function Page({ params }: PageProps): Promise<React.JSX.Element | null> {
+  const { email } = await params;
 
   if (!email) {
     return (

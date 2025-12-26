@@ -54,6 +54,6 @@ const getRenter = async (authenticatedUserId: string) => {
   } catch (error) {
     console.error(error);
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 };

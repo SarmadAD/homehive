@@ -1,6 +1,3 @@
-import { atom } from "recoil";
+import { atom } from "jotai";
 
-export const currentUserIdAtom = atom({
-  key: "currentUserIdAtom",
-  default: "",
-});
+export const currentUserIdAtom = atom<string>("");

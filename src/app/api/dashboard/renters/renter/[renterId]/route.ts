@@ -2,8 +2,10 @@ import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "src/app/db/db";
 
-export async function GET(request: Request, { params }: { params: { renterId: string } }) {
-  const { renterId } = params;
+type Params = { renterId: string };
+
+export async function GET(request: Request, { params }: { params: Promise<Params> }) {
+  const { renterId } = await params;
   if (renterId) {
     const renter = await prisma.renter.findUnique({
       where: { id: renterId },
@@ -16,9 +18,9 @@ export async function GET(request: Request, { params }: { params: { renterId: st
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { renterId: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<Params> }) {
   try {
-    const { renterId } = params;
+    const { renterId } = await params;
     const authenticatedUserId: string = await request.text();
     if (renterId) {
       const renter = await prisma.renter.update({
@@ -53,9 +55,9 @@ export async function PUT(request: Request, { params }: { params: { renterId: st
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { renterId: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<Params> }) {
   try {
-    const { renterId } = params;
+    const { renterId } = await params;
 
     await prisma.rentalAgreement.deleteMany({
       where: { renter: { id: renterId } },

@@ -5,7 +5,7 @@ import {
   Container,
   Stack,
   Typography,
-  Unstable_Grid2 as Grid,
+  Grid,
   Button,
   SvgIcon,
   Link,
@@ -20,30 +20,18 @@ import {
   ListItem,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
-import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
-import { usePageView } from "src/hooks/use-page-view";
-import { useRentersSearch } from "src/hooks/use-renter-search";
-import { useRentersIds } from "src/hooks/use-renters-ids";
 import { useSelection } from "src/hooks/use-selection";
 import { useSettings } from "src/hooks/use-settings";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
-import { Layout as DashboardLayout } from "src/layouts/dashboard";
-import { OverviewRentPaid } from "src/sections/dashboard/overview/overview-rent-paid";
-import type { Page as PageType } from "src/types/page";
 import { paths } from "src/paths";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
-import { Renter } from "prisma/types/renter";
 import { RouterLink } from "src/components/router-link";
-import { DotsVertical, User03, File02 } from "@untitled-ui/icons-react";
-import { DeleteModal } from "src/components/widgets/modals/delete-modal";
-import { toast } from "src/components/toaster";
+import { File02 } from "@untitled-ui/icons-react";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
-import checkIfUserIsNotAllowedToCreateRenter from "src/utils/hasAccessForCreateRenter";
 import { Landlord } from "prisma/types/landlord";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
@@ -54,6 +42,7 @@ import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import checkIfUserIsNotAllowedToCreateRentalAgreement from "src/utils/hasAccessForCreateRentalAgreement";
 import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
 import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
+import { useAtom } from "jotai";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -68,15 +57,9 @@ const useRentalAgreementIds = (rentalAgreements: RentalAgreement[] = []) => {
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
 
-  const setLandlord = useSetRecoilState(currentLandlordAtom);
-  const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
-  const landlord = landlordLoadable.contents;
-  const landloadLoading = landlordLoadable.state === "loading";
+  const [{ isLoading: landloadLoading, isError: landlordError, data: landlord }] = useAtom(currentLandlordAtom);
+  const [{ isLoading: rentalAgreementsLoading, isError: rentalAgreementsError, data: rentalAgreements }] = useAtom(rentalAgreementsAtom);
 
-  const rentalAgreementsLoadable = useRecoilValueLoadable(rentalAgreementsAtom);
-  const rentalAgreementsLoading = rentalAgreementsLoadable.state === "loading";
-  const setRentalAgreements = useSetRecoilState(rentalAgreementsAtom);
-  const rentalAgreements: RentalAgreement[] = rentalAgreementsLoadable.contents;
   const rentalAgreementsIds = useRentalAgreementIds(rentalAgreements);
 
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentalAgreementsIds);
@@ -129,10 +112,10 @@ export default function Page(): React.JSX.Element {
   // }
 
   const paginatedRentalAgreements = useMemo(() => {
-    if (rentalAgreementsLoadable.state === "hasValue") {
+    if (rentalAgreements) {
       const startIndex = paginationState.page * paginationState.rowsPerPage;
       const endIndex = startIndex + paginationState.rowsPerPage;
-      return rentalAgreements.slice(startIndex, endIndex);
+      return rentalAgreements?.slice(startIndex, endIndex);
     }
   }, [rentalAgreements, paginationState.page, paginationState.rowsPerPage]);
 
@@ -246,14 +229,13 @@ export default function Page(): React.JSX.Element {
           }}
         >
           <Container maxWidth={settings.settings.stretch ? false : "xl"}>
-            <Grid container disableEqualOverflow>
-              <Grid xs={12} pb={3}>
+            <Grid container>
+              <Grid size={{ xs: 12 }} pb={3}>
                 <Stack direction={{ xs: "column", sm: "row", md: "row" }} justifyContent="space-between" spacing={4}>
                   <div>
                     <Typography variant="h4">Mietverhältnisse</Typography>
                   </div>
                   <Stack direction="row" spacing={4}>
-                    {" "}
                     <Tooltip
                       title={
                         checkIfUserIsNotAllowedToCreateRentalAgreement(landlord as Landlord) ? (
@@ -288,7 +270,7 @@ export default function Page(): React.JSX.Element {
                 </Stack>
               </Grid>
 
-              <Grid xs={12} sx={{ pt: 3 }}>
+              <Grid size={{ xs: 12 }} sx={{ pt: 3 }}>
                 <Card>
                   {!isMobile ? (
                     <DataTable<RentalAgreement>
@@ -329,7 +311,7 @@ export default function Page(): React.JSX.Element {
                     <GeneralPagination
                       rowsPerPage={paginationState.rowsPerPage}
                       page={paginationState.page}
-                      count={rentalAgreements.length}
+                      count={rentalAgreements?.length ?? 0}
                       onPageChange={handlePageChange}
                       onRowsPerPageChange={handleRowsPerPageChange}
                     />

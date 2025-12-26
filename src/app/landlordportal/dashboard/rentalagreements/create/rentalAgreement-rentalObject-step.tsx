@@ -1,12 +1,12 @@
 import type { Dispatch, FC } from "react";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack, SvgIcon, Typography } from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select, Skeleton, Stack, SvgIcon, Typography } from "@mui/material";
 import { z as zod } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
-import { useRecoilValue } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
+import { useAtomValue } from "jotai";
 
 interface RentalAgreementRentalObjectStepProps {
   onNext?: () => void;
@@ -23,13 +23,9 @@ type Values = zod.infer<typeof schema>;
 
 export const RentalAgreementRentalObjectStep: FC<RentalAgreementRentalObjectStepProps> = (props) => {
   const { onBack, onNext, newRentalAgreement, setNewRentalAgreement, ...other } = props;
-  const rentalObjects = useRecoilValue(rentalObjectsAtom);
+  const { data: rentalObjects, isLoading: rentalObjectsLoading } = useAtomValue(rentalObjectsAtom);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Values>({
+  const { control, handleSubmit } = useForm<Values>({
     defaultValues: {
       rentalObjectId: newRentalAgreement.rentalObjectId || "",
     },
@@ -53,21 +49,24 @@ export const RentalAgreementRentalObjectStep: FC<RentalAgreementRentalObjectStep
           render={({ field, fieldState }) => (
             <FormControl fullWidth error={!!fieldState.error}>
               <InputLabel id="rental-object-select-label">Mietobjekt</InputLabel>
-              <Select labelId="rental-object-select-label" label="Mietobjekt" {...field} value={field.value || ""} displayEmpty>
-                {" "}
-                <MenuItem value="" disabled>
-                  Bitte Mietobjekt auswählen
-                </MenuItem>
-                {rentalObjects && rentalObjects.length > 0 ? (
-                  rentalObjects.map((obj) => (
-                    <MenuItem key={obj.id} value={obj.id}>
-                      {obj.name || `Objekt #${obj.id}`}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem disabled>Keine Mietobjekte vorhanden</MenuItem>
-                )}
-              </Select>
+              {rentalObjectsLoading ? (
+                <Skeleton width={400} height={50} />
+              ) : (
+                <Select labelId="rental-object-select-label" label="Mietobjekt" {...field} value={field.value || ""} displayEmpty>
+                  <MenuItem value="" disabled>
+                    Bitte Mietobjekt auswählen
+                  </MenuItem>
+                  {rentalObjects && rentalObjects.length > 0 ? (
+                    rentalObjects.map((obj) => (
+                      <MenuItem key={obj.id} value={obj.id}>
+                        {obj.name || `Objekt #${obj.id}`}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Keine Mietobjekte vorhanden</MenuItem>
+                  )}
+                </Select>
+              )}
               {fieldState.error && (
                 <Typography color="error" variant="caption">
                   {fieldState.error.message}

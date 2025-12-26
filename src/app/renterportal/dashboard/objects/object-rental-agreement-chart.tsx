@@ -4,9 +4,8 @@ import numeral from "numeral";
 import { Box, Card, CardContent, CardHeader, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
-import { useRecoilValueLoadable } from "recoil";
-import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { renterAtom } from "src/state/atoms/renterAtom";
+import { useAtom } from "jotai";
 
 const labels: string[] = ["Kaltmiete", "Nebenkosten"];
 
@@ -54,9 +53,9 @@ const useChartOptions = (): ApexOptions => {
 
 export const ObjectRentalAgreementChart: FC = () => {
   const chartOptions = useChartOptions();
-  const renterLoadable = useRecoilValueLoadable(renterAtom);
+  const [{ data: renter, isLoading: renterLoading, isError: renterError }] = useAtom(renterAtom);
 
-  if (renterLoadable.state === "loading" || (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "")) {
+  if (renterLoading) {
     return (
       <Box>
         <Card>
@@ -101,7 +100,7 @@ export const ObjectRentalAgreementChart: FC = () => {
     );
   }
 
-  if (renterLoadable.state === "hasError") {
+  if (renterError) {
     return (
       <Box>
         <Card>
@@ -116,8 +115,7 @@ export const ObjectRentalAgreementChart: FC = () => {
     );
   }
 
-  const renter = renterLoadable.contents;
-  const agreement = renter.rentalAgreement;
+  const agreement = renter?.rentalAgreement;
 
   // Safely access agreement properties, fallback to 0 if agreement is null or undefined
   const chartSeries: ChartSeries = [agreement?.baseRent ?? 0, agreement?.serviceCharges ?? 0];

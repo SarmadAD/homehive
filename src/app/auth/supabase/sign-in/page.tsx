@@ -1,18 +1,6 @@
 "use client";
 
-import {
-  Alert,
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Link,
-  OutlinedInput,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Divider, FormControl, FormHelperText, InputLabel, Link, OutlinedInput, Stack, Typography } from "@mui/material";
 import { RouterLink } from "src/components/router-link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeSlash as EyeSlashIcon } from "@phosphor-icons/react/dist/ssr/EyeSlash";
@@ -38,9 +26,7 @@ interface OAuthProvider {
   logo: string;
 }
 
-const oAuthProviders = [
-  { id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" },
-] satisfies OAuthProvider[];
+const oAuthProviders = [{ id: "google", name: "Google", logo: "/assets/logos/logo-google.svg" }] satisfies OAuthProvider[];
 
 const schema = zod.object({
   email: zod.string().min(1, { message: "E-Mail ist erforderlich" }).email(),
@@ -163,8 +149,8 @@ export default function Page(): React.JSX.Element {
                     name="email"
                     render={({ field }) => (
                       <FormControl error={Boolean(errors.email)}>
-                        <InputLabel>E-Mail-Adresse</InputLabel>
-                        <OutlinedInput {...field} type="email" />
+                        <InputLabel htmlFor="email-input">E-Mail-Adresse</InputLabel>
+                        <OutlinedInput {...field} type="email" name="E-Mail-Adresse" id="email-input" />
                         {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
                       </FormControl>
                     )}
@@ -174,9 +160,11 @@ export default function Page(): React.JSX.Element {
                     name="password"
                     render={({ field }) => (
                       <FormControl error={Boolean(errors.password)}>
-                        <InputLabel>Passwort</InputLabel>
+                        <InputLabel htmlFor="password-input">Passwort</InputLabel>
                         <OutlinedInput
                           {...field}
+                          id="password-input"
+                          name="Passwort"
                           endAdornment={
                             showPassword ? (
                               <EyeIcon
@@ -204,7 +192,7 @@ export default function Page(): React.JSX.Element {
                     )}
                   />
                   {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
-                  <Button disabled={isPending} type="submit" variant="contained">
+                  <Button disabled={isPending} type="submit" variant="contained" name="submit-button-login">
                     Anmelden
                   </Button>
                 </Stack>

@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { useColorScheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import { FileText as FileTextIcon } from "@phosphor-icons/react/dist/ssr/FileText";
 import { ChartBar as ChartBarIcon } from "@phosphor-icons/react/dist/ssr/ChartBar";
 import { DiamondsFour as DiamondsFourIcon } from "@phosphor-icons/react/dist/ssr/DiamondsFour";
@@ -118,7 +118,7 @@ export function Features(): React.JSX.Element {
             </Typography>
           </Stack>
           <Grid container spacing={3}>
-            <Grid md={8} xs={12}>
+            <Grid size={{ md: 8, xs: 12 }}>
               <Box
                 sx={{
                   bgcolor: "var(--mui-palette-background-level1)",
@@ -148,7 +148,7 @@ export function Features(): React.JSX.Element {
                 </Box>
               </Box>
             </Grid>
-            <Grid md={4} xs={12}>
+            <Grid size={{ md: 4, xs: 12 }}>
               <Box
                 sx={{
                   bgcolor: "var(--mui-palette-background-level1)",

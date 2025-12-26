@@ -9,7 +9,7 @@ import { logger } from "../default-logger";
  * This should be used in Server Components.
  */
 export async function getSettings(): Promise<Partial<Settings>> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const settingsStr = cookieStore.get("app.settings")?.value;
   let settings: Partial<Settings>;

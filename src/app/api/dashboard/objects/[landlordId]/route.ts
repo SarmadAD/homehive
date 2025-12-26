@@ -3,8 +3,11 @@ import { NextResponse } from "next/server";
 import { RentalObject } from "prisma/types/objects";
 import { prisma } from "src/app/db/db";
 
-export async function GET(request: Request, { params }: { params: { landlordId: string } }) {
-  const { landlordId } = params;
+type Params = { landlordId: string };
+
+export async function GET(request: Request, { params }: { params: Promise<Params> }) {
+  const { landlordId } = await params;
+
   if (landlordId) {
     const rentalObjects = await prisma.rentalObject.findMany({
       where: { landlordId: landlordId, state: 1 },
@@ -13,13 +16,13 @@ export async function GET(request: Request, { params }: { params: { landlordId: 
     if (rentalObjects.length > 0) {
       return NextResponse.json(rentalObjects);
     }
-    return NextResponse.json({ error: "error" });
+    return NextResponse.json([]);
   }
 }
 
-export async function POST(request: Request, { params }: { params: { landlordId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<Params> }) {
   try {
-    const { landlordId } = params;
+    const { landlordId } = await params;
     const rentalObject: RentalObject = await request.json();
     if (landlordId) {
       const rentersId: Prisma.RenterWhereUniqueInput[] = rentalObject.renter.map((renter: Renter) => ({

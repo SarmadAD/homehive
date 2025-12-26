@@ -2,7 +2,7 @@ import { Landlord } from "prisma/types/landlord";
 
 export default function checkIfUserIsNotAllowedToCreateRentalObjects(landlord: Landlord) {
   // If user has no access
-  if ("hasAccess" in landlord && !landlord.hasAccess) {
+  if (landlord && "hasAccess" in landlord && !landlord.hasAccess) {
     // Disable if at least one rental object exists
     return landlord.rentalObjects.length >= 1;
   }

@@ -4,8 +4,10 @@ import { Renter } from "prisma/types/renter";
 import { prisma } from "src/app/db/db";
 import { createClient } from "@supabase/supabase-js";
 
-export async function GET(request: Request, { params }: { params: { landlordId: string } }) {
-  const { landlordId } = params;
+type Params = { landlordId: string };
+
+export async function GET(request: Request, context: { params: Promise<Params> }) {
+  const { landlordId } = await context.params;
   if (landlordId) {
     const landlords = await prisma.landlord.findUnique({
       where: { id: landlordId },
@@ -20,9 +22,9 @@ export async function GET(request: Request, { params }: { params: { landlordId: 
 }
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL || "", process.env.SUPABASE_SERVICE_ROLE_KEY || "");
 
-export async function POST(request: Request, { params }: { params: { landlordId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<Params> }) {
   try {
-    const { landlordId } = params;
+    const { landlordId } = await params;
     const renter: Renter = await request.json();
     if (landlordId) {
       const createdRenter = await prisma.renter.create({

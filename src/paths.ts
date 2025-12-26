@@ -26,10 +26,6 @@ export const paths = {
       login: "/auth/jwt/login",
       register: "/auth/jwt/register",
     },
-    firebase: {
-      login: "/auth/firebase/login",
-      register: "/auth/firebase/register",
-    },
     amplify: {
       confirmRegister: "/auth/amplify/confirm-register",
       forgotPassword: "/auth/amplify/forgot-password",

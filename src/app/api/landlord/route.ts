@@ -33,7 +33,7 @@ const createLandlord = async (authenticatedUserId: string) => {
   } catch (error) {
     console.error(error);
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 };
 
@@ -56,6 +56,6 @@ const getLandlord = async (authenticatedUserId: string) => {
   } catch (error) {
     console.error(error);
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 };

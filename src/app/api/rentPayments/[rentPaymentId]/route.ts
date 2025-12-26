@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
 import { prisma } from "src/app/db/db";
 import getNextDueDateFromState from "src/utils/get-next-due-date";
 
-export async function PUT(request: Request, { params }: { params: { rentPaymentId: string } }) {
+type Params = { rentPaymentId: string };
+
+export async function PUT(request: Request, { params }: { params: Promise<Params> }) {
   try {
-    const { rentPaymentId } = params;
+    const { rentPaymentId } = await params;
     if (!rentPaymentId) return NextResponse.json({ error: "No rentPaymentId" }, { status: 400 });
 
     const currentRentPayment = await prisma.rentPayment.findUnique({

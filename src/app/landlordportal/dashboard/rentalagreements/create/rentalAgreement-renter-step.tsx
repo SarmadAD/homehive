@@ -1,16 +1,15 @@
 import type { ChangeEvent, Dispatch, FC } from "react";
-import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Button, FormControl, InputLabel, Link, MenuItem, Select, Stack, SvgIcon, TextField, Typography } from "@mui/material";
+import { Button, FormControl, InputLabel, Link, MenuItem, Select, Skeleton, Stack, SvgIcon, TextField, Typography } from "@mui/material";
 import { Renter } from "prisma/types/renter";
 import { z as zod } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
-import { useRecoilValue } from "recoil";
 import { paths } from "src/paths";
 import { RouterLink } from "src/components/router-link";
+import { useAtomValue } from "jotai";
 
 interface RentalAgreementRenterStepProps {
   onNext?: () => void;
@@ -27,7 +26,8 @@ type Values = zod.infer<typeof schema>;
 
 export const RentalAgreementRenterStep: FC<RentalAgreementRenterStepProps> = (props) => {
   const { onBack, onNext, newRentalAgreement, setNewRentalAgreement, ...other } = props;
-  const renters = useRecoilValue(rentersAtom).filter((renter) => !renter.rentalAgreementId);
+  const { data: rentersResult, isLoading: renterLoading } = useAtomValue(rentersAtom);
+  const renters: Renter[] = rentersResult?.filter((renter) => !renter.rentalAgreementId) || [];
 
   const {
     control,
@@ -55,26 +55,37 @@ export const RentalAgreementRenterStep: FC<RentalAgreementRenterStepProps> = (pr
           render={({ field, fieldState }) => (
             <FormControl fullWidth error={!!fieldState.error}>
               <InputLabel id="renter-select-label">Mieter</InputLabel>
-              <Select labelId="renter-select-label" label="Mieter" {...field} value={field.value || ""} displayEmpty disabled={renters.length === 0}>
-                {renters.length > 0 ? (
-                  <MenuItem value="" disabled>
-                    Bitte Mieter auswählen
-                  </MenuItem>
-                ) : (
-                  <MenuItem value="" disabled>
-                    Keine Mieter vorhanden
-                  </MenuItem>
-                )}
-                {renters && renters.length > 0 ? (
-                  renters.map((renter) => (
-                    <MenuItem key={renter.id} value={renter.id}>
-                      {renter.firstname} {renter.surname}
+              {renterLoading ? (
+                <Skeleton width={400} height={50} />
+              ) : (
+                <Select
+                  labelId="renter-select-label"
+                  label="Mieter"
+                  {...field}
+                  value={field.value || ""}
+                  displayEmpty
+                  disabled={renters.length === 0}
+                >
+                  {renters.length > 0 ? (
+                    <MenuItem value="" disabled>
+                      Bitte Mieter auswählen
                     </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem disabled>Keine Mieter vorhanden</MenuItem>
-                )}
-              </Select>
+                  ) : (
+                    <MenuItem value="" disabled>
+                      Keine Mieter vorhanden
+                    </MenuItem>
+                  )}
+                  {renters && renters.length > 0 ? (
+                    renters.map((renter) => (
+                      <MenuItem key={renter.id} value={renter.id}>
+                        {renter.firstname} {renter.surname}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Keine Mieter vorhanden</MenuItem>
+                  )}
+                </Select>
+              )}
               {fieldState.error && (
                 <Typography color="error" variant="caption">
                   {fieldState.error.message}

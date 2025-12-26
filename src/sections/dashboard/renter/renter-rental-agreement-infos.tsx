@@ -2,14 +2,14 @@ import { FC } from "react";
 import { Avatar, Card, CardHeader, Skeleton } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { useRecoilValueLoadable } from "recoil";
-import { renterAtomWithRenterId } from "src/state/atoms/renterAtom";
 import { Handshake as HandshakeIcon } from "@phosphor-icons/react/dist/ssr/Handshake";
+import { useAtom } from "jotai";
+import { renterAtomWithRenterId } from "src/state/atoms/renterAtomWithRenterId";
 
 export const RenterRentalAgreementInfos: FC = () => {
-  const renterLoadable = useRecoilValueLoadable(renterAtomWithRenterId);
+  const [{ isLoading: renterLoading, isError: renterError, data: renter }] = useAtom(renterAtomWithRenterId);
 
-  if (renterLoadable.state === "loading" || (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "")) {
+  if (renterLoading) {
     return (
       <Card sx={{ mt: 2 }}>
         <CardHeader
@@ -29,7 +29,7 @@ export const RenterRentalAgreementInfos: FC = () => {
     );
   }
 
-  if (renterLoadable.state === "hasError") {
+  if (renterError) {
     return (
       <Card sx={{ mt: 2 }}>
         <CardHeader title="Mietverhältnis" />
@@ -40,8 +40,7 @@ export const RenterRentalAgreementInfos: FC = () => {
     );
   }
 
-  const renter = renterLoadable.contents;
-  const rentalAgreement = renter.rentalAgreement;
+  const rentalAgreement = renter?.rentalAgreement;
 
   return (
     <Card sx={{ mt: 2 }}>

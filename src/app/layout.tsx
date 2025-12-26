@@ -16,8 +16,6 @@ import { cookies } from "next/headers";
 
 // import { Layout as RootLayout } from "src/layouts/root";
 
-import type { Viewport } from "next/types";
-
 import type { Settings } from "src/types/settings";
 import { Analytics } from "@vercel/analytics/next";
 import { applyDefaultSettings } from "src/lib/settings/apply-default-settings";
@@ -25,15 +23,17 @@ import { getSettings as getPersistedSettings } from "../lib/settings/get-setting
 import { site } from "src/config";
 import { LocalizationProvider } from "src/components/localization-provider";
 import { Toaster } from "src/components/toaster";
-import { RecoilRoot, useSetRecoilState } from "recoil";
 import { UserProvider } from "src/contexts/auth/user-context";
 import { SettingsProvider } from "src/contexts/settings";
 import { ThemeProvider } from "src/components/widgets/core/theme-provider/theme-provider";
 
-import dayjs from "dayjs";
-import "dayjs/locale/de";
 import { useUser } from "src/hooks/use-user";
 import { currentUserIdAtom } from "src/state/atoms/currentUserIdAtom";
+
+import dayjs from "dayjs";
+import "dayjs/locale/de";
+// import type { Viewport } from "next/types";
+
 dayjs.locale("de");
 
 // Force-Dynamic is required otherwise all pages are marked as client-side
@@ -67,11 +67,11 @@ const Vendors: FC = () => (
   </>
 );
 
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
-  themeColor: site.themeColor,
-} satisfies Viewport;
+// export const viewport = {
+//   width: "device-width",
+//   initialScale: 1,
+//   themeColor: site.themeColor,
+// } satisfies Viewport;
 
 const SETTINGS_STORAGE_KEY = "app.settings";
 
@@ -101,7 +101,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default async function Layout({ children }: LayoutProps): Promise<React.JSX.Element> {
+export default function Layout({ children }: LayoutProps): React.JSX.Element {
   // const { children } = props;
   // const settings = restoreSettings();
   // const settings = applyDefaultSettings(await getPersistedSettings());
@@ -112,7 +112,7 @@ export default async function Layout({ children }: LayoutProps): Promise<React.J
     <html data-mui-color-scheme={defaultSettings.colorScheme} lang="de">
       <head>
         <title>HomeHive</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />{" "}
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
         <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
         <Favicon />
         <Fonts />
@@ -120,24 +120,21 @@ export default async function Layout({ children }: LayoutProps): Promise<React.J
       </head>
       <body>
         {/* <RootLayout settings={settings}>{children}</RootLayout> <Analytics /> */}
-
-        <RecoilRoot>
-          <LocalizationProvider>
-            <UserProvider>
-              {/* <SettingsProvider settings={settings}> */}
-              <SettingsProvider settings={defaultSettings}>
-                {/* <I18nProvider language="en"> */}
-                <ThemeProvider>
-                  {children}
-                  {/* <SettingsButton /> */}
-                  <Toaster position="bottom-right" />
-                  <Analytics />
-                </ThemeProvider>
-                {/* </I18nProvider> */}
-              </SettingsProvider>
-            </UserProvider>
-          </LocalizationProvider>
-        </RecoilRoot>
+        <LocalizationProvider>
+          <UserProvider>
+            {/* <SettingsProvider settings={settings}> */}
+            <SettingsProvider settings={defaultSettings}>
+              {/* <I18nProvider language="en"> */}
+              <ThemeProvider>
+                {children}
+                {/* <SettingsButton /> */}
+                <Toaster position="bottom-right" />
+                <Analytics />
+              </ThemeProvider>
+              {/* </I18nProvider> */}
+            </SettingsProvider>
+          </UserProvider>
+        </LocalizationProvider>
       </body>
     </html>
   );

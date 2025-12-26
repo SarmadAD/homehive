@@ -11,6 +11,7 @@ import { paths } from "src/paths";
 
 export function Hero(): React.JSX.Element {
   const { user } = useUser();
+
   useEffect(() => {
     const patternElement = document.getElementById("pattern");
 
@@ -65,6 +66,7 @@ export function Hero(): React.JSX.Element {
     // Start the animation loop
     window.requestAnimationFrame(loop);
   }, []);
+
   return (
     <Box
       sx={{

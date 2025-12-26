@@ -120,7 +120,7 @@ function renderNavItems({ depth = 0, items = [], pathname }: { depth: number; it
     const forceOpen = childItems ? Boolean(childItems.find((childItem) => childItem.href && pathname.startsWith(childItem.href))) : false;
 
     acc.push(
-      <RoleBasedGuard permission={item.href ?? ""}>
+      <RoleBasedGuard permission={item.href ?? ""} key={key}>
         <NavItem depth={depth} forceOpen={forceOpen} key={key} pathname={pathname} {...item}>
           {childItems ? renderNavItems({ depth: depth + 1, pathname, items: childItems }) : null}
         </NavItem>

@@ -5,7 +5,6 @@ import {
   Container,
   Stack,
   Typography,
-  Unstable_Grid2 as Grid,
   Button,
   SvgIcon,
   Link,
@@ -16,24 +15,20 @@ import {
   MenuItem,
   Card,
   Divider,
-  useMediaQuery,
   Theme,
   CardContent,
   List,
   ListItem,
+  Grid,
 } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { useSettings } from "src/hooks/use-settings";
-import { OverviewRepairRequest } from "src/sections/dashboard/overview/overview-repair-request";
 import { OverviewStatusObjects } from "src/sections/dashboard/overview/overview-status-objects";
-import type { Page as PageType } from "src/types/page";
 import PlusIcon from "@untitled-ui/icons-react/build/esm/Plus";
 import { useCallback, useState, ChangeEvent, MouseEvent, useMemo, useEffect } from "react";
 import { useSelection } from "src/hooks/use-selection";
 import { paths } from "src/paths";
-import { useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import agent from "src/api/agent";
 import { RentalObject } from "prisma/types/objects";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import { ColumnDef, DataTable } from "src/components/data-table";
@@ -51,6 +46,9 @@ import { Landlord } from "prisma/types/landlord";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
 import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useAtom } from "jotai";
+import { deleteRentalObjectAtom } from "src/state/atoms/deleteRentalObjectAtom";
 
 interface Filters {
   query?: string;
@@ -122,15 +120,12 @@ const useObjectsIds = (objects: RentalObject[] = []) => {
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
-  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
-  const rentalObjectLoading = rentalObjectsLoadable.state === "loading";
-  const rentalObjects: RentalObject[] = rentalObjectsLoadable.contents;
-  const setRentalObjects = useSetRecoilState(rentalObjectsAtom);
+  const [{ isLoading: rentalObjectLoading, isError: rentalObjectError, data: rentalObjectsData }] = useAtom(rentalObjectsAtom);
+  const rentalObjects: RentalObject[] = rentalObjectsData ?? [];
+  const [{ mutateAsync: deleteRentalObject }] = useAtom(deleteRentalObjectAtom);
 
-  const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
-  const landloadLoading = landlordLoadable.state === "loading";
-  const landlord = landlordLoadable.contents;
-  const setLandlord = useSetRecoilState(currentLandlordAtom);
+  const [{ isLoading: landloadLoading, isError: landlordError, data: landlord }] = useAtom(currentLandlordAtom);
+
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const objectsIds = useObjectsIds(rentalObjects);
@@ -145,6 +140,8 @@ export default function Page(): React.JSX.Element {
   // Rental Object Menu Three Dots Menu
   const [anchorElRentalObjectThreeDotsMenu, setAnchorElRentalObjectThreeDotsMenu] = useState<null | HTMLElement>(null);
   const openRentalObjectThreeDotsMenu = Boolean(anchorElRentalObjectThreeDotsMenu);
+  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
+
   const handleClickRentalObjectThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: RentalObject) => {
     selectOne(row.id);
     setAnchorElRentalObjectThreeDotsMenu(event.currentTarget);
@@ -153,17 +150,9 @@ export default function Page(): React.JSX.Element {
     setAnchorElRentalObjectThreeDotsMenu(null);
     deselectAll();
   };
-  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
-
   async function handleDelete() {
     try {
-      const deltedObject = await agent.objects.delete(Array.from(selected)[0]);
-      const updatedRentalObjects = rentalObjects.filter((object) => object.id !== deltedObject.id);
-      setRentalObjects(updatedRentalObjects);
-      setLandlord((prevLandlord) => ({
-        ...prevLandlord,
-        rentalObjects: updatedRentalObjects,
-      }));
+      await deleteRentalObject(Array.from(selected)[0]);
       toast.success("Objekt erfolgreich gelöscht");
     } catch (error) {
       console.error(error);
@@ -343,13 +332,12 @@ export default function Page(): React.JSX.Element {
           <Container maxWidth={settings.settings.stretch ? false : "xl"}>
             <Grid
               container
-              disableEqualOverflow
               spacing={{
                 xs: 3,
                 lg: 4,
               }}
             >
-              <Grid xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
                   <div>
                     <Typography variant="h4">Objekte</Typography>
@@ -388,10 +376,10 @@ export default function Page(): React.JSX.Element {
                   </Stack>
                 </Stack>
               </Grid>{" "}
-              <Grid xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <OverviewStatusObjects showActions={false} />
               </Grid>
-              <Grid xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Card>
                   {!isMobile ? (
                     <DataTable<RentalObject>

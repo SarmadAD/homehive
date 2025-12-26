@@ -7,7 +7,7 @@ import { useSections } from "./config";
 // import { HorizontalLayout } from "./horizontal-layout";
 import { VerticalLayout } from "./vertical-layout";
 import { layoutConfig } from "../config";
-import { useSetRecoilState } from "recoil";
+import { useSetAtom } from "jotai";
 import { useUser } from "src/hooks/use-user";
 import { currentUserIdAtom } from "src/state/atoms/currentUserIdAtom";
 
@@ -18,7 +18,7 @@ interface LayoutProps {
 export const Layout: FC<LayoutProps> = withAuthGuard((props) => {
   // const sections = useSections();
   const settings = useSettings();
-  const setCurrentUserId = useSetRecoilState(currentUserIdAtom);
+  const setCurrentUserId = useSetAtom(currentUserIdAtom);
   const { user } = useUser();
 
   // if (settings.settings.layout === "horizontal") {
@@ -30,7 +30,7 @@ export const Layout: FC<LayoutProps> = withAuthGuard((props) => {
     if (authenticatedUserId) {
       setCurrentUserId(authenticatedUserId);
     }
-  }, [user]);
+  }, [user, setCurrentUserId]);
 
   return <VerticalLayout>{props.children}</VerticalLayout>;
 });

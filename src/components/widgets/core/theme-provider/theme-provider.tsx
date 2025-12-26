@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
 
 import EmotionCache from "./emotion-cache";
 import { Rtl } from "./rtl";
 import { useSettings } from "src/hooks/use-settings";
 import { createTheme } from "src/styles/theme/create-theme";
+import { CssVarsProvider } from "@mui/material";
 
 export interface ThemeProviderProps {
   children: React.ReactNode;

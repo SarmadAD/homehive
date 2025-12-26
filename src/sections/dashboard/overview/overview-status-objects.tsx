@@ -3,11 +3,11 @@ import { Box, Button, Card, CardActions, CardContent, Container, Divider, Link, 
 import { Chart } from "src/components/chart";
 import { ApexOptions } from "apexcharts";
 import { paths } from "src/paths";
-import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
-import { objectStatusSeriesData } from "src/state/selectors/objectStatusSeriesData";
+import { objectStatusSeriesDataAtom } from "src/state/atoms/objectStatusSeriesAtom";
 import { OverViewStatusObjectsSkeleton } from "src/skeleton/dashboard-skeletons";
 import { RouterLink } from "src/components/router-link";
+import { useAtom } from "jotai";
 
 interface OverviewStatusObjects {
   showActions: boolean;
@@ -74,13 +74,16 @@ const useChartOptions = (): ApexOptions => {
 
 export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) => {
   const chartOptions = useChartOptions();
-  const rentalObjectsLoadable = useRecoilValueLoadable(rentalObjectsAtom);
-  const objectStatusData = useRecoilValueLoadable(objectStatusSeriesData);
+
+  const [{ data: rentalObjectsData, isLoading: rentalObjectsLoading }] = useAtom(rentalObjectsAtom);
+  const [{ data: objectStatusData, isLoading: objectStatusLoading }] = useAtom(objectStatusSeriesDataAtom);
+
   let content;
-  if (rentalObjectsLoadable.state === "loading" || objectStatusData.state === "loading") {
+
+  if (rentalObjectsLoading || objectStatusLoading) {
     content = <OverViewStatusObjectsSkeleton />;
-  } else if (rentalObjectsLoadable.state === "hasValue" && objectStatusData.state === "hasValue") {
-    const statusData = objectStatusData.contents;
+  } else if (rentalObjectsData && objectStatusData) {
+    const statusData = objectStatusData;
 
     content =
       statusData[0] === 0 && statusData[1] === 0 ? (

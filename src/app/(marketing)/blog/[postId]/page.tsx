@@ -11,8 +11,13 @@ import { site } from "src/config";
 import { dayjs } from "src/lib/dayjs";
 import { posts } from "../posts";
 
-export async function generateMetadata({ params }: { params: { postId: number } }): Promise<Metadata> {
-  const post = posts[params.postId];
+type Params = { postId: string };
+
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
+  const { postId } = await params;
+  const id = Number(postId);
+  const post = posts[id];
+
   return {
     title: post ? `${post.title} | ${site.name}` : site.name,
     description: post?.description,
@@ -21,12 +26,13 @@ export async function generateMetadata({ params }: { params: { postId: number } 
 }
 
 interface PageProps {
-  params: { postId: number };
+  params: Promise<Params>;
 }
 
-export default function Page({ params }: PageProps): React.JSX.Element | null {
-  const { postId } = params;
-  const post = posts[postId];
+export default async function Page({ params }: PageProps): Promise<React.JSX.Element | null> {
+  const { postId } = await params;
+  const id = Number(postId);
+  const post = posts[id];
 
   return (
     <Box

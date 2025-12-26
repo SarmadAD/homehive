@@ -15,9 +15,9 @@ import { Bank as BankIcon } from "@phosphor-icons/react/dist/ssr/Bank";
 import { Plus as PlusIcon } from "@phosphor-icons/react/dist/ssr/Plus";
 import { useState } from "react";
 import agent from "src/api/agent";
-import { useRecoilRefresher_UNSTABLE, useRecoilValue } from "recoil";
 import { toast } from "src/components/toaster";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { useAtomValue } from "jotai";
 
 export interface Integration {
   id: string;
@@ -32,30 +32,28 @@ export interface IntegrationsProps {
 }
 
 export function Integrations({ integrations }: IntegrationsProps): React.JSX.Element {
-  const landlord = useRecoilValue(currentLandlordAtom);
-  const refreshLandlord = useRecoilRefresher_UNSTABLE(currentLandlordAtom);
+  const { data: landlord } = useAtomValue(currentLandlordAtom);
   const [isLoading, setIsLoading] = useState(false);
   // const tinkLink =
   //   process.env.NODE_ENV === "production"
   //     ? `https://link.tink.com/1.0/transactions/connect-accounts/?client_id=${process.env.NEXT_PUBLIC_TINK_CLIENT_ID}&redirect_uri=https%3A%2F%2Fhomehive.me%2Flandlordportal%2Fdashboard%2Fsettings%2Fintegrations&market=DE&locale=de_DE`
   //     : `https://link.tink.com/1.0/transactions/connect-accounts/?client_id=${process.env.NEXT_PUBLIC_TINK_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flandlordportal%2Fdashboard%2Fsettings%2Fintegrations&market=DE&locale=de_DE`;
 
-  const activeTokens = "hasAccess" in landlord ? landlord.tokens.filter((token) => token.state === 1) : [];
+  const activeTokens = landlord && "hasAccess" in landlord ? landlord.tokens.filter((token) => token.state === 1) : [];
 
   async function handlePlaidConnect() {
     try {
       setIsLoading(true);
       // Hole das Link-Token über agent
-      const data = await agent.integrations.plaid.linktoken.create(landlord.id);
+      const data = await agent.integrations.plaid.linktoken.create(landlord?.id ?? "");
       if (!data.link_token) throw new Error("Kein Link-Token erhalten");
 
       // Initialisiere Plaid Link
       const handler = (window as any).Plaid.create({
         token: data.link_token,
         onSuccess: async (public_token: string, metadata: any) => {
-          await agent.integrations.plaid.accessToken.create(landlord.id, public_token);
+          await agent.integrations.plaid.accessToken.create(landlord?.id ?? "", public_token);
           toast.success("Verbindung erfolgreich hergestellt");
-          refreshLandlord();
           setIsLoading(false);
         },
         onExit: () => setIsLoading(false),
@@ -72,10 +70,9 @@ export function Integrations({ integrations }: IntegrationsProps): React.JSX.Ele
   async function deactivateBankConnection() {
     try {
       setIsLoading(true);
-      if (landlord.id) {
+      if (landlord?.id) {
         const response: any = await agent.integrations.plaid.accessToken.deactivate(landlord.id);
         if (response.isDeactivated) {
-          refreshLandlord();
           toast.success("Bankverbindung erfolgreich gelöscht");
         }
       }

@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "src/app/db/db";
 
-export async function GET(request: Request, { params }: { params: { authenticatedUserId: string } }) {
-  const { authenticatedUserId } = params;
+type Params = { authenticatedUserId: string };
+
+export async function GET(request: Request, context: { params: Promise<Params> }) {
+  const { authenticatedUserId } = await context.params;
   if (!authenticatedUserId) return NextResponse.json({ error: "authenticatedUserId not there!" });
   const userRole = await getUserRole(authenticatedUserId);
   if (userRole) {
@@ -21,6 +23,6 @@ const getUserRole = async (authenticatedUserId: string) => {
   } catch (error) {
     console.error(error);
   } finally {
-    prisma.$disconnect;
+    await prisma.$disconnect();
   }
 };

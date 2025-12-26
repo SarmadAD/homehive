@@ -1,7 +1,9 @@
+"use client";
+
 import { Landlord } from "prisma/types/landlord";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
-import { permissionSelector } from "src/state/selectors/permissionSelector";
+import { permissionAtom } from "src/state/atoms/permissionAtom";
 import checkIfUserIsNotAllowedToCreateRentalObjects from "src/utils/hasAccessForCreateObjects";
 import checkIfUserIsNotAllowedToCreateRenter from "src/utils/hasAccessForCreateRenter";
 
@@ -11,11 +13,13 @@ interface Props {
 }
 
 export const RoleBasedGuard = ({ children, permission }: Props) => {
-  const checkPermission = useRecoilValue(permissionSelector);
-  const currentLandlord = useRecoilValue(currentLandlordAtom);
+  const checkPermission = useAtomValue(permissionAtom);
+  const currentLandlordResult = useAtomValue(currentLandlordAtom);
+  const currentLandlord = currentLandlordResult.data;
+
   if (
     !checkPermission(permission) ||
-    (permission === "/landlordportal/dashboard/pricing" && "hasAccess" in currentLandlord && currentLandlord.hasAccess) ||
+    (currentLandlord && permission === "/landlordportal/dashboard/pricing" && "hasAccess" in currentLandlord && currentLandlord.hasAccess) ||
     (permission === "/landlordportal/dashboard/objects/create" && checkIfUserIsNotAllowedToCreateRentalObjects(currentLandlord as Landlord)) ||
     (permission === "/landlordportal/dashboard/renters/create" && checkIfUserIsNotAllowedToCreateRenter(currentLandlord as Landlord))
   ) {

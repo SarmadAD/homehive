@@ -1,6 +1,5 @@
 export enum Issuer {
-  Auth0 = 'Auth0',
-  Firebase = 'Firebase',
-  JWT = 'JWT',
-  Amplify = 'Amplify'
+  Auth0 = "Auth0",
+  JWT = "JWT",
+  Amplify = "Amplify",
 }

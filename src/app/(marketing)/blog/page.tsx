@@ -1,7 +1,6 @@
 import type * as React from "react";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Unstable_Grid2";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Post } from "src/components/marketing/blog/types";
@@ -13,6 +12,7 @@ import { post0Content } from "./post-0";
 import { dayjs } from "src/lib/dayjs";
 import "dayjs/locale/de";
 import { posts } from "./posts";
+import { Grid } from "@mui/material";
 dayjs.locale("de");
 
 export const metadata = {
@@ -51,7 +51,7 @@ export default function Page(): React.JSX.Element {
             {/* Hier ändern wenn erster Blog Post */}
             {[].length > 0 ? (
               posts.map((post) => (
-                <Grid key={post.title} md={6} xs={12}>
+                <Grid key={post.title} size={{ md: 6, xs: 12 }}>
                   <PostCard post={post} />
                 </Grid>
               ))

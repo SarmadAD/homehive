@@ -1,4 +1,5 @@
 "use client";
+
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
@@ -18,8 +19,7 @@ export default function Page(): React.JSX.Element {
         >
           <Grid container sx={{ flexGrow: 1 }}>
             <Grid
-              xs={12}
-              sm={4}
+              size={{ xs: 12, sm: 4 }}
               sx={{
                 backgroundImage: "url(/assets/people-talking.png)",
                 backgroundPosition: "center",
@@ -32,8 +32,7 @@ export default function Page(): React.JSX.Element {
               }}
             />
             <Grid
-              xs={12}
-              md={8}
+              size={{ xs: 12, sm: 8 }}
               sx={{
                 p: {
                   xs: 4,

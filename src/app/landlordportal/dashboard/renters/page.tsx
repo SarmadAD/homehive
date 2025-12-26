@@ -5,7 +5,7 @@ import {
   Container,
   Stack,
   Typography,
-  Unstable_Grid2 as Grid,
+  Grid,
   Button,
   SvgIcon,
   Link,
@@ -19,7 +19,6 @@ import {
   CardContent,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import agent from "src/api/agent";
 import { Seo } from "src/components/seo";
 import { useRentersSearch } from "src/hooks/use-renter-search";
@@ -45,6 +44,8 @@ import { Landlord } from "prisma/types/landlord";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
 import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
+import { useAtom } from "jotai";
+import { deleteRenterAtom } from "src/state/atoms/deleteRenterAtom";
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -52,17 +53,14 @@ import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
 
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
+  const [{ isLoading: landloadLoading, isError: landlordError, data: landlordData }] = useAtom(currentLandlordAtom);
 
-  const setLandlord = useSetRecoilState(currentLandlordAtom);
-  const landlordLoadable = useRecoilValueLoadable(currentLandlordAtom);
-  const landlord = landlordLoadable.contents;
-  const landloadLoading = landlordLoadable.state === "loading";
-
+  const landlord = landlordData ?? [];
   const rentersSearch = useRentersSearch();
-  const rentersLoadable = useRecoilValueLoadable(rentersAtom);
-  const rentersLoading = rentersLoadable.state === "loading";
-  const setRenters = useSetRecoilState(rentersAtom);
-  const renters: Renter[] = rentersLoadable.contents;
+
+  const [{ isLoading: rentersLoading, isError: rentersError, data: renters }] = useAtom(rentersAtom);
+  const [{ mutateAsync: deleteRenter }] = useAtom(deleteRenterAtom);
+
   const rentersIds = useRentersIds(renters);
   // const rentersIds = React.useMemo(() => renters.map((renter) => renter.id), [renters]);
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentersIds);
@@ -89,13 +87,10 @@ export default function Page(): React.JSX.Element {
 
   const handleDelete = async () => {
     try {
-      const deletedRenter = await agent.renters.delete(Array.from(selected)[0]);
-      const updatedRenters = renters.filter((renter) => renter.id !== deletedRenter.id);
-      setRenters(updatedRenters);
-      setLandlord((prevLandlord) => ({
-        ...prevLandlord,
-        renters: updatedRenters,
-      }));
+      const renterId = Array.from(selected)[0];
+      if (!renterId) return;
+      await deleteRenter(renterId);
+
       toast.success("Mieter erfolgreich gelöscht");
     } catch (error) {
       console.error(error);
@@ -115,7 +110,7 @@ export default function Page(): React.JSX.Element {
   }
 
   const paginatedRenter = useMemo(() => {
-    if (rentersLoadable.state === "hasValue") {
+    if (renters) {
       const startIndex = paginationState.page * paginationState.rowsPerPage;
       const endIndex = startIndex + paginationState.rowsPerPage;
       return renters.slice(startIndex, endIndex);
@@ -235,8 +230,8 @@ export default function Page(): React.JSX.Element {
           }}
         >
           <Container maxWidth={settings.settings.stretch ? false : "xl"}>
-            <Grid container disableEqualOverflow>
-              <Grid xs={12} pb={3}>
+            <Grid container>
+              <Grid size={{ xs: 12 }} pb={3}>
                 <Stack direction="row" justifyContent="space-between" spacing={4}>
                   <div>
                     <Typography variant="h4">Mieter</Typography>
@@ -275,10 +270,10 @@ export default function Page(): React.JSX.Element {
                   </Stack>
                 </Stack>
               </Grid>
-              <Grid xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <OverviewRentPaid showActions={false} />
               </Grid>
-              <Grid xs={12} sx={{ pt: 3 }}>
+              <Grid size={{ xs: 12 }} sx={{ pt: 3 }}>
                 <Card>
                   {!isMobile ? (
                     <DataTable<Renter>
@@ -317,7 +312,7 @@ export default function Page(): React.JSX.Element {
                   <GeneralPagination
                     rowsPerPage={paginationState.rowsPerPage}
                     page={paginationState.page}
-                    count={renters.length}
+                    count={renters?.length ?? 0}
                     onPageChange={handlePageChange}
                     onRowsPerPageChange={handleRowsPerPageChange}
                   />

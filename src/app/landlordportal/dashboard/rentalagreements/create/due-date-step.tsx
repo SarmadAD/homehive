@@ -1,14 +1,10 @@
 import type { ChangeEvent, Dispatch, FC } from "react";
-import PropTypes from "prop-types";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack, SvgIcon, TextField, Typography } from "@mui/material";
-import { Renter } from "prisma/types/renter";
+import { Button, Stack, SvgIcon, Typography } from "@mui/material";
 import { z as zod } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RentalAgreement } from "prisma/types/rentalAgreement";
-import { rentersAtom } from "src/state/atoms/rentersAtom";
-import { useRecoilValue } from "recoil";
 import { DueDateSelect } from "src/components/common/selects/dueDate";
 
 interface DueDateStepProps {
