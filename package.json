@@ -42,7 +42,6 @@
     "jotai-tanstack-query": "^0.11.0",
     "lodash.isequal": "4.5.0",
     "mapbox-gl": "3.1.2",
-    "next": "15.4.8",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "plaid": "^33.0.0",
