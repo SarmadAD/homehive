@@ -4,30 +4,14 @@ import { useMemo } from "react";
 import { useEffect, useState, MouseEvent } from "react";
 import ArrowLeftIcon from "@untitled-ui/icons-react/build/esm/ArrowLeft";
 import ChevronDownIcon from "@untitled-ui/icons-react/build/esm/ChevronDown";
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Divider,
-  Link,
-  Stack,
-  SvgIcon,
-  Typography,
-  Unstable_Grid2 as Grid,
-  Menu,
-  MenuItem,
-  Skeleton,
-  Card,
-} from "@mui/material";
+import { Avatar, Box, Button, Container, Divider, Link, Stack, SvgIcon, Typography, Grid, Menu, MenuItem, Skeleton, Card } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { paths } from "src/paths";
 import { getInitials } from "src/utils/get-initials";
 import { RenterBasicDetails } from "src/sections/dashboard/renter/renter-basic-details";
 import { useSearchParams } from "next/navigation";
-import { useRecoilRefresher_UNSTABLE, useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
-import { renterAtom, renterAtomWithRenterId } from "src/state/atoms/renterAtom";
+import { renterAtom } from "src/state/atoms/renterAtom";
 import { getRenterName } from "src/utils/get-renter-name";
 import { DeleteOutline } from "@mui/icons-material";
 import agent from "src/api/agent";
@@ -43,6 +27,9 @@ import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { toast } from "src/components/toaster";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { RenterRentalAgreementInfos } from "src/sections/dashboard/renter/renter-rental-agreement-infos";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { renterAtomWithRenterId } from "src/state/atoms/renterAtomWithRenterId";
+import { deleteRenterAtom } from "src/state/atoms/deleteRenterAtom";
 
 const tabs = [{ label: "Details", value: "details" }];
 
@@ -51,31 +38,24 @@ interface PageProps {
 }
 
 export default function Page({ searchParams }: PageProps): React.JSX.Element {
-  // const [currentTab, setCurrentTab] = useState<string>("details");
-
+  const { sortDir } = searchParams;
   const router = useRouter();
   const customSearchParams = useSearchParams();
   const renterId = customSearchParams.get("renterId");
 
-  const { sortDir } = searchParams;
-
-  const setSelectedRenterIdAtom = useSetRecoilState(selectedRenterIdAtom);
-  const landlord = useRecoilValue(currentLandlordAtom);
-
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const rentPaymentsLoadable = useRecoilValueLoadable(rentPaymentsAtom);
-
-  const [isLoading, setIsLoading] = useState(false);
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  const renter = useRecoilValue(renterAtomWithRenterId);
-  const renterLoadable = useRecoilValueLoadable(renterAtomWithRenterId);
-  const refreshRentPayment = useRecoilRefresher_UNSTABLE(rentPaymentsAtom);
+  const [{ isLoading: landloadLoading, isError: landlordError, data: landlord }] = useAtom(currentLandlordAtom);
+  const [{ isLoading: renterLoading, isError: renterError, data: renter }] = useAtom(renterAtomWithRenterId);
+  const [{ isLoading: rentPaymentsLoading, isError: rentPaymentsError, data: rentPayments }] = useAtom(rentPaymentsAtom);
 
-  const renters = useRecoilValue(rentersAtom);
-  const setRenters = useSetRecoilState(rentersAtom);
+  const setSelectedRenterIdAtom = useSetAtom(selectedRenterIdAtom);
+  const { data: renters } = useAtomValue(rentersAtom);
+  const [{ mutateAsync: deleteRenter }] = useAtom(deleteRenterAtom);
 
   const [openDeleteModalForRenter, setOpenDeleteModalForRenter] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function setRenterId() {
     if (renterId) {
@@ -104,13 +84,9 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   //   }
   // };
 
-  useEffect(
-    () => {
-      setRenterId();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  useEffect(() => {
+    setRenterId();
+  }, []);
 
   // --After when using plaid again
   // useEffect(() => {
@@ -118,7 +94,6 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   //     handleRefreshPayments();
   //   }
   // }, [landlord]);
-  // --After when using plaid again
 
   // async function getRentPayments() {
   //   try {
@@ -129,30 +104,31 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
   //   }
   // }
 
-  async function syncTransactions() {
-    try {
-      if (landlord.id) {
-        const transactions = await agent.integrations.plaid.transactions.sync(landlord.id);
-        return transactions;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // async function syncTransactions() {
+  //   try {
+  //     if (landlord?.id) {
+  //       const transactions = await agent.integrations.plaid.transactions.sync(landlord?.id);
+  //       return transactions;
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
-  async function handleRefreshPayments() {
-    try {
-      setIsLoading(true);
-      const response = await syncTransactions();
-      if (Array.isArray(response) && response.length > 0 && response.some((item) => item !== null && item !== undefined)) {
-        refreshRentPayment();
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  // async function handleRefreshPayments() {
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await syncTransactions();
+  //     if (Array.isArray(response) && response.length > 0 && response.some((item) => item !== null && item !== undefined)) {
+  //       refreshRentPayment();
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
+  // --After when using plaid again
 
   function applySort(rentPayments: RentPayment[], sortDir: "asc" | "desc" | undefined): RentPayment[] {
     const paymentsCopy = [...rentPayments];
@@ -180,9 +156,7 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   const handleDeleteRenter = async () => {
     try {
-      await agent.renters.delete(renterId ?? "");
-      const updatedRenters = renters.filter((renter) => renter.id !== renterId);
-      setRenters(updatedRenters);
+      await deleteRenter(renterId ?? "");
       router.push(paths.landlordportal.dashboard.renters.index);
       toast.success("Mieter erfolgreich gelöscht");
     } catch (error) {
@@ -192,16 +166,12 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     }
   };
 
-  const isLoadingPaymentsAll =
-    rentPaymentsLoadable.state === "loading" ||
-    isLoading ||
-    renterLoadable.state === "loading" ||
-    (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "");
+  const isLoadingPaymentsAll = rentPaymentsLoading || isLoading || renterLoading;
 
   let sortedRentPayments: RentPayment[] = [];
-  if (!isLoadingPaymentsAll && rentPaymentsLoadable.state === "hasValue") {
-    const rentPayments = rentPaymentsLoadable.contents.filter((rentPayment) => rentPayment.renterId === renterId);
-    sortedRentPayments = applySort(rentPayments, sortDir);
+  if (!isLoadingPaymentsAll) {
+    const filteredRentPayments = rentPayments?.filter((rentPayment) => rentPayment.renterId === renterId);
+    sortedRentPayments = applySort(filteredRentPayments ?? [], sortDir);
   }
 
   const paginatedRentPayments = useMemo(() => {
@@ -289,11 +259,11 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
                     )}
 
                     <Stack spacing={1}>
-                      {renter?.firstname || renter.surname ? (
+                      {renter?.firstname || renter?.surname ? (
                         <div>
-                          <Typography variant="h4">{getRenterName(renter.firstname, renter.surname)}</Typography>
+                          <Typography variant="h4">{getRenterName(renter?.firstname, renter?.surname)}</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {renter.email}
+                            {renter?.email}
                           </Typography>
                         </div>
                       ) : (
@@ -367,17 +337,17 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
               {/* {currentTab === "details" && ( */}
               <div>
                 <Grid container spacing={4}>
-                  <Grid xs={12} lg={4}>
+                  <Grid size={{ xs: 12, lg: 4 }}>
                     <RenterBasicDetails />
                     <RenterRentalAgreementInfos />
                   </Grid>
-                  <Grid lg={8} xs={12}>
+                  <Grid size={{ lg: 8, xs: 12 }}>
                     <Card>
                       <RentPaymentFilters
                         sortDir={sortDir}
                         showFilters={false}
                         path={`${paths.landlordportal.dashboard.renters.details}${renterId}`}
-                        handleRefreshPayments={handleRefreshPayments}
+                        // handleRefreshPayments={handleRefreshPayments}
                         isLoadingPayments={isLoadingPaymentsAll}
                       />
                       <Divider />{" "}

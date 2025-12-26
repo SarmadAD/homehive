@@ -3,13 +3,14 @@ import { Avatar, Card, CardHeader, Skeleton } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
 import { getRenterName } from "src/utils/get-renter-name";
-import { useRecoilValueLoadable } from "recoil";
-import { renterAtomWithRenterId } from "src/state/atoms/renterAtom";
 import { User as UserIcon } from "@phosphor-icons/react/dist/ssr/User";
+import { renterAtomWithRenterId } from "src/state/atoms/renterAtomWithRenterId";
+import { useAtom } from "jotai";
 
 export const RenterBasicDetails: FC = () => {
-  const renterLoadable = useRecoilValueLoadable(renterAtomWithRenterId);
-  if (renterLoadable.state === "loading" || (renterLoadable.state === "hasValue" && renterLoadable.contents.id === "")) {
+  const [{ isLoading: renterLoading, isError: renterError, data: renter }] = useAtom(renterAtomWithRenterId);
+
+  if (renterLoading) {
     return (
       <Card>
         <CardHeader
@@ -28,7 +29,7 @@ export const RenterBasicDetails: FC = () => {
     );
   }
 
-  if (renterLoadable.state === "hasError") {
+  if (renterError) {
     return (
       <Card>
         <CardHeader title="Basisinformationen" />
@@ -38,8 +39,6 @@ export const RenterBasicDetails: FC = () => {
       </Card>
     );
   }
-
-  const renter = renterLoadable.contents;
 
   return (
     <Card>
@@ -52,8 +51,8 @@ export const RenterBasicDetails: FC = () => {
         }
       />
       <PropertyList>
-        <PropertyListItem divider label="Kontaktdaten" value={renter.email} />
-        <PropertyListItem divider label="Name" value={getRenterName(renter.firstname, renter.surname)} />
+        <PropertyListItem divider label="Kontaktdaten" value={renter?.email ?? ""} />
+        <PropertyListItem divider label="Name" value={getRenterName(renter?.firstname ?? "", renter?.surname ?? "")} />
       </PropertyList>
     </Card>
   );

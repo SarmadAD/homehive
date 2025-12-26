@@ -14,6 +14,8 @@ import { RenterSendInviteStep } from "./renter-send-invite-step";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
 import { toast } from "src/components/toaster";
+import { useAtom, useAtomValue } from "jotai";
+import { createRenterAtom } from "src/state/atoms/createRenterAtom";
 
 const StepIcon: FC<StepIconProps> = (props) => {
   const { active, completed, icon } = props;
@@ -47,10 +49,9 @@ export default function RenterCreateForm(): React.JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newRenter, setNewRenter] = useState<Renter>(renterDefault);
-  const setRenters = useSetRecoilState(rentersAtom);
-  const setLandlords = useSetRecoilState(currentLandlordAtom);
 
-  const landlord = useRecoilValue(currentLandlordAtom);
+  const { isLoading: landloadLoading, isError: landlordError, data: landlord } = useAtomValue(currentLandlordAtom);
+  const [{ mutateAsync: createRenter }] = useAtom(createRenterAtom);
   const router = useRouter();
 
   const handleNext = useCallback(() => {
@@ -78,16 +79,12 @@ export default function RenterCreateForm(): React.JSX.Element {
     ];
   }, [handleBack, handleNext, handleComplete, newRenter]);
 
-  async function createRenter() {
+  async function handleCreateRenter() {
     try {
       if (newRenter) {
-        const newRenterResponse = await agent.renters.create(newRenter, landlord.id);
-        setRenters((prevRenters) => (prevRenters ? [...prevRenters, newRenterResponse] : [newRenterResponse]));
-        setLandlords((prevLandlord) =>
-          prevLandlord
-            ? { ...prevLandlord, renters: prevLandlord.renters ? [...prevLandlord.renters, newRenterResponse] : [newRenterResponse] }
-            : prevLandlord
-        );
+        if (!landlord?.id) return;
+        await createRenter({ renter: newRenter, landlordId: landlord.id });
+        router.push("/landlordportal/dashboard/renters");
         toast.success("Mieter erfolgreich erstellt");
       }
     } catch (error) {
@@ -97,10 +94,8 @@ export default function RenterCreateForm(): React.JSX.Element {
 
   useEffect(() => {
     if (isComplete) {
-      setNewRenter({ ...newRenter, createdAt: new Date() });
-      createRenter();
+      handleCreateRenter();
       setIsComplete(false);
-      router.push("/landlordportal/dashboard/renters");
     }
   }, [isComplete]);
 

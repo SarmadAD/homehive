@@ -106,7 +106,7 @@ const getLandlord = async (authenticatedUserId: string) => {
   } catch (error) {
     console.error(error);
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 };
 
@@ -132,7 +132,7 @@ const getRenterWithAuthenticatedUserId = async (authenticatedUserId: string) => 
   } catch (error) {
     console.error(error);
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 };
 
@@ -148,7 +148,7 @@ async function getRenter(renterId: string) {
   } catch (error) {
     console.error(error);
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 }
 
@@ -217,6 +217,6 @@ const createLandlord = async (authenticatedUserId: string) => {
   } catch (error) {
     console.error(error);
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 };

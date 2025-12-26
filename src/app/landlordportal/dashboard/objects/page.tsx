@@ -124,9 +124,7 @@ export default function Page(): React.JSX.Element {
   const rentalObjects: RentalObject[] = rentalObjectsData ?? [];
   const [{ mutateAsync: deleteRentalObject }] = useAtom(deleteRentalObjectAtom);
 
-  const [{ isLoading: landloadLoading, isError: landlordError, data: landlordData }] = useAtom(currentLandlordAtom);
-
-  const landlord = landlordData ?? [];
+  const [{ isLoading: landloadLoading, isError: landlordError, data: landlord }] = useAtom(currentLandlordAtom);
 
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
@@ -142,6 +140,8 @@ export default function Page(): React.JSX.Element {
   // Rental Object Menu Three Dots Menu
   const [anchorElRentalObjectThreeDotsMenu, setAnchorElRentalObjectThreeDotsMenu] = useState<null | HTMLElement>(null);
   const openRentalObjectThreeDotsMenu = Boolean(anchorElRentalObjectThreeDotsMenu);
+  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
+
   const handleClickRentalObjectThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: RentalObject) => {
     selectOne(row.id);
     setAnchorElRentalObjectThreeDotsMenu(event.currentTarget);
@@ -150,8 +150,6 @@ export default function Page(): React.JSX.Element {
     setAnchorElRentalObjectThreeDotsMenu(null);
     deselectAll();
   };
-  const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
-
   async function handleDelete() {
     try {
       await deleteRentalObject(Array.from(selected)[0]);

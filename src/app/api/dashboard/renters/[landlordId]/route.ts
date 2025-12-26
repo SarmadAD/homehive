@@ -4,8 +4,8 @@ import { Renter } from "prisma/types/renter";
 import { prisma } from "src/app/db/db";
 import { createClient } from "@supabase/supabase-js";
 
-export async function GET(request: Request, { params }: { params: { landlordId: string } }) {
-  const { landlordId } = params;
+export async function GET(request: Request, context: { params: { landlordId: string } }) {
+  const { landlordId } = context.params;
   if (landlordId) {
     const landlords = await prisma.landlord.findUnique({
       where: { id: landlordId },

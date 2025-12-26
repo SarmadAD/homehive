@@ -324,4 +324,4 @@ async function main() {
   //   });
 }
 
-main().finally(async () => await prisma.$disconnect());
+main().finally(async () => await prisma.$disconnect()());

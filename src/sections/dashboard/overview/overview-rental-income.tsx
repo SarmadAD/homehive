@@ -3,11 +3,10 @@ import { Box, Card, CardHeader, Skeleton, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { RentPayment } from "@prisma/client";
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 import { loadable } from "jotai/utils";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 
 type ChartSeries = {
   name: string;

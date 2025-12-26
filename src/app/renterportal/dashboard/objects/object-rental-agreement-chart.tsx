@@ -5,7 +5,6 @@ import { Box, Card, CardContent, CardHeader, Divider, Skeleton, Stack, Typograph
 import { useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { useRecoilValueLoadable } from "recoil";
-import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { renterAtom } from "src/state/atoms/renterAtom";
 
 const labels: string[] = ["Kaltmiete", "Nebenkosten"];

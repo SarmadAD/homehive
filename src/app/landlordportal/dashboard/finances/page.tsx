@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Stack, Typography, Unstable_Grid2 as Grid, Divider, Card } from "@mui/material";
+import { Box, Container, Stack, Typography, Grid, Divider, Card } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useRecoilRefresher_UNSTABLE, useRecoilValue, useRecoilValueLoadable } from "recoil";
 import agent from "src/api/agent";

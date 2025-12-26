@@ -11,17 +11,12 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
-import React, { Dispatch, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { rentersAtom } from "src/state/atoms/rentersAtom";
+import React, { useState } from "react";
 import { Renter } from "prisma/types/renter";
 import { getRenterName } from "src/utils/get-renter-name";
-import { PlusCircle } from "@untitled-ui/icons-react";
 import { RentalObject } from "prisma/types/objects";
-import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
 interface Props {
   setOpenAddRenterModal: (open: boolean) => void;
@@ -31,16 +26,7 @@ interface Props {
   rentalObject: RentalObject;
 }
 
-export function AddRenterModal({
-  setOpenAddRenterModal,
-  openAddRenterModal,
-  onAddRenter,
-  renters,
-  rentalObject,
-}: Props): React.JSX.Element | null {
-  //   const rentalObject = useRecoilValue(rentalObjectAtom);
-
-  //   const [currentObject, setCurrentObject] = useState<RentalObject>(rentalObject);
+export function AddRenterModal({ setOpenAddRenterModal, openAddRenterModal, onAddRenter, renters, rentalObject }: Props): React.JSX.Element | null {
   const [selectedRenterId, setSelectedRenterId] = useState<string>("");
 
   function handleRenterChange(event: SelectChangeEvent<string>) {
@@ -48,8 +34,6 @@ export function AddRenterModal({
     const selectedRenter = renters.find((renter) => renter.id === renterId);
 
     if (selectedRenter) {
-      //   const updatedRenters = currentObject.renter ? [...currentObject.renter, selectedRenter] : [selectedRenter];
-      //   setCurrentObject({ ...currentObject, renter: updatedRenters });
       setSelectedRenterId(renterId);
     }
   }
@@ -82,21 +66,12 @@ export function AddRenterModal({
               </div>
               <FormControl fullWidth>
                 <InputLabel id="renter-select-label">Mieter</InputLabel>
-                <Select
-                  labelId="renter-select-label"
-                  value={selectedRenterId}
-                  onChange={handleRenterChange}
-                  label="Mieter"
-                >
-                  {renters.filter(
-                    (renter) => !rentalObject.renter?.some((assignedRenter) => assignedRenter.id === renter.id)
-                  ).length === 0 ? (
+                <Select labelId="renter-select-label" value={selectedRenterId} onChange={handleRenterChange} label="Mieter">
+                  {renters.filter((renter) => !rentalObject.renter?.some((assignedRenter) => assignedRenter.id === renter.id)).length === 0 ? (
                     <MenuItem disabled>Alle Mieter wurden bereits Objekten zugewiesen. </MenuItem>
                   ) : (
                     renters
-                      .filter(
-                        (renter) => !rentalObject.renter?.some((assignedRenter) => assignedRenter.id === renter.id)
-                      )
+                      .filter((renter) => !rentalObject.renter?.some((assignedRenter) => assignedRenter.id === renter.id))
                       .map((renter) => (
                         <MenuItem key={renter.id} value={renter.id}>
                           {getRenterName(renter.firstname, renter.surname)}

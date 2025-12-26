@@ -2,7 +2,6 @@ import type { FC } from "react";
 import { Card, CardHeader, Skeleton, Theme, useMediaQuery } from "@mui/material";
 import { PropertyList } from "src/components/property-list";
 import { PropertyListItem } from "src/components/property-list-item";
-import { useRecoilValueLoadable } from "recoil";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
 import { useAtom } from "jotai";

@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useMemo, useRef } from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Avatar, Box, Container, Divider, Stack, Tab, Tabs, Typography, Unstable_Grid2 as Grid, Skeleton } from "@mui/material";
+import { Avatar, Box, Container, Divider, Stack, Tab, Tabs, Typography, Grid, Skeleton } from "@mui/material";
 import { Seo } from "src/components/seo";
 import { getInitials } from "src/utils/get-initials";
 import { useDialog } from "src/hooks/use-dialog";

@@ -7,21 +7,18 @@ import type { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import { Option } from "src/components/option";
 import { CurrencyEur as CurrencyEurIcon } from "@phosphor-icons/react/dist/ssr/CurrencyEur";
-import { Avatar, Button, CardHeader, Link, Tooltip } from "@mui/material";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import { Avatar, CardHeader, Link, Tooltip } from "@mui/material";
 import agent from "src/api/agent";
-import { useRecoilValue } from "recoil";
 import { useEffect, useState } from "react";
-import { paths } from "src/paths";
-import { RouterLink } from "src/components/router-link";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
+import { useAtomValue } from "jotai";
 
 export type SortDir = "asc" | "desc";
 
 export interface RentPaymentFilters {
   sortDir?: SortDir;
   path: string;
-  handleRefreshPayments: () => void;
+  // handleRefreshPayments: () => void;
   showFilters: boolean;
   isLoadingPayments: boolean;
 }
@@ -29,12 +26,12 @@ export interface RentPaymentFilters {
 export function RentPaymentFilters({
   sortDir = "desc",
   path,
-  handleRefreshPayments,
+  // handleRefreshPayments,
   isLoadingPayments,
   showFilters,
 }: RentPaymentFilters): React.JSX.Element {
   const router = useRouter();
-  const landlord = useRecoilValue(currentLandlordAtom);
+  const { data: landlord } = useAtomValue(currentLandlordAtom);
   const [isTokenAlive, setIsTokenAlive] = useState(false);
 
   const updateSearchParams = React.useCallback(
@@ -57,14 +54,14 @@ export function RentPaymentFilters({
   );
 
   useEffect(() => {
-    if (landlord.id) {
+    if (landlord?.id) {
       checkIfTokenIsAlive();
     }
-  }, [landlord.id]);
+  }, [landlord?.id]);
 
   async function checkIfTokenIsAlive() {
     try {
-      const response: any = await agent.token.get(landlord.id);
+      const response: any = await agent.token.get(landlord?.id ?? "");
       setIsTokenAlive(response.isAlive);
     } catch (error) {
       console.log(error);
