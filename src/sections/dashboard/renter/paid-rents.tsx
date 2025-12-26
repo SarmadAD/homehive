@@ -85,7 +85,7 @@ export function PaidRents({ rentPayments = [], isLoading }: PaymentsProps): Reac
             Es wurden noch keine Mieten bezahlt
           </Typography>
         ) : (
-          (rentPayments ?? []).map((rentPayment) => <MobileRentPaymentCard key={rentPayment.id} rentPayment={rentPayment} />)
+          rentPayments.map((rentPayment) => <MobileRentPaymentCard key={rentPayment.id} rentPayment={rentPayment} />)
         )}
       </Box>
     );

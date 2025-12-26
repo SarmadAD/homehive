@@ -11,10 +11,8 @@ import { getInitials } from "src/utils/get-initials";
 import { RenterBasicDetails } from "src/sections/dashboard/renter/renter-basic-details";
 import { useSearchParams } from "next/navigation";
 import { selectedRenterIdAtom } from "src/state/atoms/selectedRenterIdAtom";
-import { renterAtom } from "src/state/atoms/renterAtom";
 import { getRenterName } from "src/utils/get-renter-name";
 import { DeleteOutline } from "@mui/icons-material";
-import agent from "src/api/agent";
 import { useRouter } from "src/hooks/use-router";
 import { PaidRents } from "src/sections/dashboard/renter/paid-rents";
 import { RentPayment } from "@prisma/client";
@@ -22,7 +20,6 @@ import { RentPaymentFilters } from "src/sections/dashboard/finances/rent-payment
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
-import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
 import { DeleteModal } from "src/components/widgets/modals/delete-modal";
 import { toast } from "src/components/toaster";
 import { rentersAtom } from "src/state/atoms/rentersAtom";
@@ -45,7 +42,6 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  const [{ isLoading: landloadLoading, isError: landlordError, data: landlord }] = useAtom(currentLandlordAtom);
   const [{ isLoading: renterLoading, isError: renterError, data: renter }] = useAtom(renterAtomWithRenterId);
   const [{ isLoading: rentPaymentsLoading, isError: rentPaymentsError, data: rentPayments }] = useAtom(rentPaymentsAtom);
 
@@ -55,7 +51,6 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
 
   const [openDeleteModalForRenter, setOpenDeleteModalForRenter] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   async function setRenterId() {
     if (renterId) {
@@ -166,13 +161,14 @@ export default function Page({ searchParams }: PageProps): React.JSX.Element {
     }
   };
 
-  const isLoadingPaymentsAll = rentPaymentsLoading || isLoading || renterLoading;
+  const isLoadingPaymentsAll = rentPaymentsLoading || renterLoading;
 
-  let sortedRentPayments: RentPayment[] = [];
-  if (!isLoadingPaymentsAll) {
-    const filteredRentPayments = rentPayments?.filter((rentPayment) => rentPayment.renterId === renterId);
-    sortedRentPayments = applySort(filteredRentPayments ?? [], sortDir);
-  }
+  const sortedRentPayments = useMemo(() => {
+    if (isLoadingPaymentsAll) return [];
+    const base = rentPayments ?? [];
+    const filtered = base.filter((p) => p.renterId === renterId);
+    return applySort([...filtered], sortDir);
+  }, [isLoadingPaymentsAll, rentPayments, renterId, sortDir]);
 
   const paginatedRentPayments = useMemo(() => {
     const startIndex = paginationState.page * paginationState.rowsPerPage;
