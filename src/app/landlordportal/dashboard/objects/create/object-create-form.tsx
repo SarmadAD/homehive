@@ -46,7 +46,7 @@ const StepIcon: FC<StepIconProps> = (props) => {
 export const ObjectCreateForm: FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
-  const [newObject, setNewObject] = useState<RentalObject>(rentalObjectDefault);
+  const [newObject, setNewObject] = useState<RentalObject | undefined>(rentalObjectDefault);
   const [{ data: landlord }] = useAtom(currentLandlordAtom);
   const router = useRouter();
   // const setLandlords = useSetRecoilState(currentLandlordAtom);
