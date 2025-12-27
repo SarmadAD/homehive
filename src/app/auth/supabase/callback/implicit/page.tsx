@@ -16,7 +16,6 @@ export default function Page(): React.JSX.Element | null {
   const [supabaseClient] = React.useState(createSupabaseClient());
   const router = useRouter();
   const executedRef = React.useRef<boolean>(false);
-  const [displayError, setDisplayError] = React.useState<string | null>(null);
 
   const handle = React.useCallback(async (): Promise<void> => {
     // Prevent rerun on DEV mode
@@ -35,7 +34,7 @@ export default function Page(): React.JSX.Element | null {
 
     if (hashParams.get("error")) {
       logger.debug(hashParams.get("error_description"));
-      setDisplayError("Something went wrong");
+      toast.error("Something went wrong");
       return;
     }
 
@@ -43,7 +42,7 @@ export default function Page(): React.JSX.Element | null {
     const refreshToken = hashParams.get("refresh_token");
 
     if (!accessToken || !refreshToken) {
-      setDisplayError("Access token or refresh token is missing");
+      toast.error("Access token or refresh token is missing");
       return;
     }
 
@@ -51,7 +50,7 @@ export default function Page(): React.JSX.Element | null {
 
     if (error) {
       logger.debug(error.message);
-      toast.error("Something went wrong");
+      toast.error(error.message);
       router.push(paths.auth.supabase.signIn);
       return;
     }
@@ -65,10 +64,6 @@ export default function Page(): React.JSX.Element | null {
     handle().catch(logger.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- Expected
   }, []);
-
-  if (displayError) {
-    return <Alert color="error">{displayError}</Alert>;
-  }
 
   return null;
 }

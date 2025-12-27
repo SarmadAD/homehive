@@ -1,28 +1,21 @@
+"use client";
+
 import * as React from "react";
 import RouterLink from "next/link";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-
-import { site } from "src/config";
 import { GuestGuard } from "../../guest-guard";
 import { SplitLayout } from "src/components/split-layout";
 import { paths } from "src/paths";
 import { Logo } from "src/components/logo";
-import { Metadata } from "next/types";
 import { SignUpResendButton } from "src/components/auth/supabase/sign-up-resend-button";
+import { useSearchParams } from "next/navigation";
 
-export const metadata: Metadata = { title: `Sign up confirm | E-Mail bestätigen | Supabase | Auth | ${site.name}` };
-
-type Params = { email: string };
-
-interface PageProps {
-  params: Promise<Params>;
-}
-
-export default async function Page({ params }: PageProps): Promise<React.JSX.Element | null> {
-  const { email } = await params;
+export default function Page() {
+  const searchParams = useSearchParams();
+  const email = searchParams?.get("email");
 
   if (!email) {
     return (
