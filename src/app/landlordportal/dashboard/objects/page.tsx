@@ -382,22 +382,31 @@ export default function Page(): React.JSX.Element {
               <Grid size={{ xs: 12 }}>
                 <Card>
                   {!isMobile ? (
-                    <DataTable<RentalObject>
-                      columns={columns}
-                      rows={rentalObjects ?? []}
-                      onDeselectAll={deselectAll}
-                      onDeselectOne={(_, row) => {
-                        deselectOne(row.id);
-                      }}
-                      onSelectAll={selectAll}
-                      onSelectOne={(_, row) => {
-                        selectOne(row.id);
-                      }}
-                      selected={selected}
-                      isLoading={landloadLoading || rentalObjectLoading}
-                      rowStartIcon={<Home02 />}
-                      selectable
-                    />
+                    <>
+                      <DataTable<RentalObject>
+                        columns={columns}
+                        rows={rentalObjects ?? []}
+                        onDeselectAll={deselectAll}
+                        onDeselectOne={(_, row) => {
+                          deselectOne(row.id);
+                        }}
+                        onSelectAll={selectAll}
+                        onSelectOne={(_, row) => {
+                          selectOne(row.id);
+                        }}
+                        selected={selected}
+                        isLoading={landloadLoading || rentalObjectLoading}
+                        rowStartIcon={<Home02 />}
+                        selectable
+                      />
+                      {!rentalObjectLoading && rentalObjects && rentalObjects.length === 0 && (
+                        <Box sx={{ p: 3 }}>
+                          <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
+                            Es wurden noch keine Objekte angelegt
+                          </Typography>
+                        </Box>
+                      )}
+                    </>
                   ) : (
                     <Box sx={{ p: 2 }}>
                       {landloadLoading || rentalObjectLoading ? (

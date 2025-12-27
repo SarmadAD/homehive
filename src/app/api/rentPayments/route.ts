@@ -1,3 +1,4 @@
+import { RentPaymentStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "src/app/db/db";
 import getNextDueDateFromState from "src/utils/get-next-due-date";
@@ -12,41 +13,57 @@ export async function GET(request: NextRequest) {
 
     const existingPayments = await prisma.rentPayment.findMany({
       where: { landlordId },
-      include: { renter: { include: { rentalAgreement: true } } },
+      select: {
+        id: true,
+        renterId: true,
+        rentalObjectId: true,
+      },
     });
 
-    if (existingPayments.length === 0) {
-      const rentalAgreements = await prisma.rentalAgreement.findMany({
-        where: { landlordId },
-        include: { renter: true },
+    const rentalAgreements = await prisma.rentalAgreement.findMany({
+      where: { landlordId },
+      select: {
+        id: true,
+        rentalObjectId: true,
+        baseRent: true,
+        serviceCharges: true,
+        dueDateState: true,
+        renter: { select: { id: true } },
+      },
+    });
+
+    const existingKey = new Set(existingPayments.map((p) => `${p.renterId}:${p.rentalObjectId}`));
+
+    const toCreate = rentalAgreements
+      .filter((a) => a.renter?.id && a.rentalObjectId)
+      .filter((a) => !existingKey.has(`${a?.renter?.id}:${a.rentalObjectId}`))
+      .map((a) => {
+        const totalRent = (a.baseRent ?? 0) + (a.serviceCharges ?? 0);
+        const nextDueDate = getNextDueDateFromState(a.dueDateState, new Date());
+
+        return {
+          rentalObjectId: a.rentalObjectId!,
+          renterId: a.renter?.id ?? "",
+          landlordId,
+          paymentAmount: totalRent,
+          dueDate: nextDueDate,
+          paymentDate: nextDueDate,
+          status: RentPaymentStatus.NOTPAID,
+        };
       });
 
-      for (const agreement of rentalAgreements) {
-        if (!agreement.renter) continue;
-        const totalRent = (agreement.baseRent ?? 0) + (agreement.serviceCharges ?? 0);
-
-        const nextDueDate = getNextDueDateFromState(agreement.dueDateState, new Date());
-        await prisma.rentPayment.create({
-          data: {
-            renterId: agreement.renter.id,
-            rentalObjectId: agreement.rentalObjectId,
-            landlordId: landlordId,
-            paymentAmount: totalRent,
-            dueDate: nextDueDate,
-            paymentDate: nextDueDate,
-            status: "NOTPAID",
-          },
-        });
-      }
-
-      const newPayments = await prisma.rentPayment.findMany({
-        where: { landlordId },
-        include: { renter: { include: { rentalAgreement: true } } },
+    if (toCreate.length > 0) {
+      await prisma.rentPayment.createMany({
+        data: toCreate,
+        skipDuplicates: true,
       });
-      return NextResponse.json(newPayments, { status: 200 });
     }
 
-    return NextResponse.json(existingPayments, { status: 200 });
+    const payments = await prisma.rentPayment.findMany({
+      where: { landlordId },
+      include: { renter: { include: { rentalAgreement: true } } },
+    });
+    return NextResponse.json(payments, { status: 200 });
   } catch (error) {
     console.error("Fehler:", error);
     return NextResponse.json({ error: "Internal server error", details: error.message }, { status: 500 });

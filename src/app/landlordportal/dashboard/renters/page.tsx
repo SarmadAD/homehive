@@ -276,22 +276,31 @@ export default function Page(): React.JSX.Element {
               <Grid size={{ xs: 12 }} sx={{ pt: 3 }}>
                 <Card>
                   {!isMobile ? (
-                    <DataTable<Renter>
-                      columns={columns}
-                      rows={(paginatedRenter as Renter[]) || []}
-                      onDeselectAll={deselectAll}
-                      onDeselectOne={(_, row) => {
-                        deselectOne(row.id);
-                      }}
-                      onSelectAll={selectAll}
-                      onSelectOne={(_, row) => {
-                        selectOne(row.id);
-                      }}
-                      selected={selected}
-                      isLoading={isLoading}
-                      rowStartIcon={<User03 />}
-                      selectable
-                    />
+                    <>
+                      <DataTable<Renter>
+                        columns={columns}
+                        rows={(paginatedRenter as Renter[]) || []}
+                        onDeselectAll={deselectAll}
+                        onDeselectOne={(_, row) => {
+                          deselectOne(row.id);
+                        }}
+                        onSelectAll={selectAll}
+                        onSelectOne={(_, row) => {
+                          selectOne(row.id);
+                        }}
+                        selected={selected}
+                        isLoading={isLoading}
+                        rowStartIcon={<User03 />}
+                        selectable
+                      />{" "}
+                      {!rentersLoading && renters && renters.length === 0 && (
+                        <Box sx={{ p: 3 }}>
+                          <Typography color="text.secondary" sx={{ textAlign: "center" }} variant="body2">
+                            Es wurden noch keine Mieter angelegt
+                          </Typography>
+                        </Box>
+                      )}
+                    </>
                   ) : (
                     <Box sx={{ p: 2 }}>
                       {isLoading ? (

@@ -205,6 +205,10 @@ export function colorSchemes(config: Config): Partial<Record<ColorScheme, ColorS
           hovered: "rgba(var(--mui-palette-warning-mainChannel) / var(--mui-palette-action-hoverOpacity))",
           selected: "rgba(var(--mui-palette-warning-mainChannel) / var(--mui-palette-action-selectedOpacity))",
         },
+        Alert: {
+          errorStandardBg: "rgb(254, 241, 240);",
+          errorColor: "rgb(99, 48, 44);",
+        },
         Avatar: { defaultBg: "var(--mui-palette-neutral-600)" },
         Backdrop: { bg: "rgb(18, 22, 33, 0.8)" },
         OutlinedInput: { border: "var(--mui-palette-neutral-200)" },
