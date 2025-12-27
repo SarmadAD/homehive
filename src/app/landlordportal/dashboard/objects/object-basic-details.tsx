@@ -7,7 +7,7 @@ import { useRentalObjectStatusPill } from "src/hooks/use-status-pill";
 import { useAtom } from "jotai";
 
 export const ObjectBasicDetails: FC = () => {
-  const [{ data: rentalObject, isLoading, isError }] = useAtom(rentalObjectAtom);
+  const [{ data: rentalObject, isLoading }] = useAtom(rentalObjectAtom);
 
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   const align = lgUp ? "horizontal" : "vertical";
@@ -23,17 +23,6 @@ export const ObjectBasicDetails: FC = () => {
           <PropertyListItem divider align={align} label="Wohnstatus">
             <Skeleton width="50%" />
           </PropertyListItem>
-        </PropertyList>
-      </Card>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Card>
-        <CardHeader title="Basisinformationen" />
-        <PropertyList>
-          <PropertyListItem divider label="Fehler" value="Fehler beim Laden der Daten." />
         </PropertyList>
       </Card>
     );

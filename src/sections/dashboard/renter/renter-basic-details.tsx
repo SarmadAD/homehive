@@ -8,7 +8,7 @@ import { renterAtomWithRenterId } from "src/state/atoms/renterAtomWithRenterId";
 import { useAtom } from "jotai";
 
 export const RenterBasicDetails: FC = () => {
-  const [{ isLoading: renterLoading, isError: renterError, data: renter }] = useAtom(renterAtomWithRenterId);
+  const [{ isLoading: renterLoading, data: renter }] = useAtom(renterAtomWithRenterId);
 
   if (renterLoading) {
     return (
@@ -24,17 +24,6 @@ export const RenterBasicDetails: FC = () => {
         <PropertyList>
           <PropertyListItem divider label="Kontaktdaten" valueJSX={<Skeleton width="60%" />} />
           <PropertyListItem divider label="Name" valueJSX={<Skeleton width="40%" />} />
-        </PropertyList>
-      </Card>
-    );
-  }
-
-  if (renterError) {
-    return (
-      <Card>
-        <CardHeader title="Basisinformationen" />
-        <PropertyList>
-          <PropertyListItem divider label="Fehler" value="Fehler beim Laden der Daten." />
         </PropertyList>
       </Card>
     );

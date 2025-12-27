@@ -93,7 +93,7 @@ export default function Page(): React.JSX.Element {
   const dialog = useDialog<string>();
 
   const setSelectedRentalObjectId = useSetAtom(selectedRentalObjectIdAtom);
-  const [{ data: rentalObject, isLoading, isError }] = useAtom(rentalObjectAtom);
+  const [{ data: rentalObject, isLoading }] = useAtom(rentalObjectAtom);
 
   const [{ isLoading: landloadLoading }] = useAtom(currentLandlordAtom);
 

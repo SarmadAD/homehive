@@ -72,7 +72,7 @@ numeral.register("locale", "de", {
 
 export const ObjectRentalAgreementChart: FC = () => {
   const chartOptions = useChartOptions();
-  const [{ data: rentalObject, isLoading, isError }] = useAtom(rentalObjectAtom);
+  const [{ data: rentalObject, isLoading }] = useAtom(rentalObjectAtom);
 
   numeral.locale("de");
 
@@ -115,21 +115,6 @@ export const ObjectRentalAgreementChart: FC = () => {
                 </Stack>
               </Stack>
             </Stack>
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Box>
-        <Card>
-          <CardHeader title="Mieteinnahmen" subheader="Mieteinnahmen des Objekts" />
-          <CardContent>
-            <Typography color="error" variant="body2">
-              Fehler beim Laden der Daten.
-            </Typography>
           </CardContent>
         </Card>
       </Box>
