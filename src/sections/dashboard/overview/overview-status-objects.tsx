@@ -75,8 +75,8 @@ const useChartOptions = (): ApexOptions => {
 export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) => {
   const chartOptions = useChartOptions();
 
-  const [{ data: rentalObjectsData, isLoading: rentalObjectsLoading }] = useAtom(rentalObjectsAtom);
-  const [{ data: objectStatusData, isLoading: objectStatusLoading }] = useAtom(objectStatusSeriesDataAtom);
+  const [{ data: rentalObjectsData, isLoading: rentalObjectsLoading, isError: rentalObjectsError }] = useAtom(rentalObjectsAtom);
+  const [{ data: objectStatusData, isLoading: objectStatusLoading, isError: objectStatusError }] = useAtom(objectStatusSeriesDataAtom);
 
   let content;
 
@@ -104,7 +104,7 @@ export const OverviewStatusObjects = ({ showActions }: OverviewStatusObjects) =>
           </CardContent>
         </Container>
       );
-  } else {
+  } else if (rentalObjectsError || objectStatusError) {
     content = (
       <Typography color="error" variant="body2">
         Fehler beim Laden der Daten.
