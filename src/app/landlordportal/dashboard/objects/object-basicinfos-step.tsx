@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 interface ObjectDetailsStepProps {
   onNext?: () => void;
   onBack?: () => void;
-  newObject: RentalObject;
-  setNewObject: Dispatch<RentalObject>;
+  newObject: RentalObject | undefined;
+  setNewObject: Dispatch<RentalObject | undefined>;
 }
 
 const schema = zod.object({
@@ -34,19 +34,21 @@ export const ObjectBasicInfosStep: FC<ObjectDetailsStepProps> = (props) => {
     formState: { errors },
   } = useForm<Values>({
     defaultValues: {
-      name: newObject.name || "",
-      address: newObject.address || "",
-      houseNr: newObject.houseNr ? String(newObject.houseNr) : "",
-      additionalHouseDetails: newObject.additionalHouseDetails || "",
-      city: newObject.city || "",
-      postalCode: newObject.postalCode ? String(newObject.postalCode) : "",
+      name: newObject?.name || "",
+      address: newObject?.address || "",
+      houseNr: newObject?.houseNr ? String(newObject?.houseNr) : "",
+      additionalHouseDetails: newObject?.additionalHouseDetails || "",
+      city: newObject?.city || "",
+      postalCode: newObject?.postalCode ? String(newObject?.postalCode) : "",
     },
     resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: Values) => {
-    setNewObject({ ...newObject, ...data, postalCode: Number(data.postalCode), houseNr: Number(data.houseNr) });
-    if (onNext) onNext();
+    if (newObject) {
+      setNewObject({ ...newObject, ...data, postalCode: Number(data.postalCode), houseNr: Number(data.houseNr) });
+      if (onNext) onNext();
+    }
   };
 
   // function handleChange(e: ChangeEvent<HTMLInputElement>) {

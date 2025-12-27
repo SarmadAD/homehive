@@ -1,8 +1,9 @@
 import { atomWithQuery } from "jotai-tanstack-query";
 import agent from "src/api/agent";
 import { selectedRentalObjectIdAtom } from "./selectedRentalObjectIdAtom";
+import { RentalObject } from "prisma/types/objects";
 
-export const rentalObjectAtom = atomWithQuery((get) => {
+export const rentalObjectAtom = atomWithQuery<RentalObject>((get) => {
   const objectId = get(selectedRentalObjectIdAtom);
 
   return {

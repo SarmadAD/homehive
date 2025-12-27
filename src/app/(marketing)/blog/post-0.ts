@@ -1,25 +1,39 @@
-export const post0Content = `## Cras at molestie lacus. Phasellus feugiat leo quis sem iaculis, sed mattis nibh accumsan.
+export const post0Content = `
 
-Phasellus ullamcorper ultrices ullamcorper. Nunc auctor porttitor ex, non consequat ipsum aliquam at. Duis dapibus dolor in nisi viverra, a elementum nulla viverra. Etiam feugiat turpis leo, nec finibus diam rhoncus ac. Sed at metus et orci consequat facilisis vel vel diam.
+Als Vermieter möchtest du vor allem eins: **zuverlässige Mieteingänge und einen klaren Überblick**.  
+Doch gerade bei mehreren Mietern oder Objekten kann es schnell unübersichtlich werden. Die gute Nachricht: Mit ein paar einfachen Maßnahmen bekommst du Struktur in deine Mieteinnahmen – ganz ohne großen Aufwand.
 
-## Cras at molestie lacus. Phasellus feugiat leo quis sem iaculis, sed mattis nibh accumsan.
+Hier sind drei Tipps, die dir dabei helfen.
 
-Etiam faucibus massa auctor gravida finibus.
-Cras nulla magna, dapibus sit amet accumsan nec, ullamcorper sit amet dolor.
+## 1. Lege einen festen Zahlungstermin fest
 
-Donec leo nisi, porta et gravida nec, tincidunt ac velit. Aliquam in turpis a quam tempus dapibus. Morbi in tellus tempor, hendrerit mi vel, aliquet tellus. Quisque vel interdum ante. Nunc quis purus sem. Donec at risus lacinia ipsum cursus condimentum at ac dui. Nulla bibendum feugiat tellus ac tristique. Proin auctor, lectus et accumsan varius, justo odio vulputate neque, et efficitur augue leo id ex. Aliquam eget turpis nisl. Nam sapien massa, sollicitudin et vehicula a, fringilla vitae purus. Praesent a vestibulum felis.
+Je klarer die Regeln, desto einfacher die Kontrolle.  
+Wenn deine Mieter jeden Monat **zum gleichen Zeitpunkt** zahlen (z. B. bis zum 1. des Monats), weißt du sofort, wann du prüfen musst, ob alles eingegangen ist.
 
-\`\`\`javascript
-// This is a comment
+Unterschiedliche Zahlungstermine sorgen oft für Verwirrung – sowohl bei dir als auch bei deinen Mietern. Ein einheitlicher Termin schafft Klarheit und spart Zeit.
 
-const x = () => {};
 
-\`\`\`
+## 2. Halte Mieteingänge regelmäßig fest
 
-Class aptent taciti sociosqu ad litora torquent \`const d = 3;\` per conubia nostra, per inceptos himenaeos. Morbi maximus metus eget nulla malesuada, sit amet luctus est fringilla. Aenean imperdiet rhoncus justo, ut pharetra lorem gravida placerat. Duis et enim lorem. Aliquam placerat elit est, vitae fermentum ipsum finibus sed. Donec dapibus magna non tortor commodo rhoncus. Suspendisse luctus tincidunt eros, aliquet pellentesque neque venenatis quis. Aliquam auctor felis nec orci ornare gravida. Fusce ac neque sit amet nibh scelerisque molestie. Nullam in lorem viverra, aliquam nunc vel, interdum orci. Fusce mattis est neque, et tincidunt justo blandit quis. Etiam tincidunt purus in libero semper, vitae placerat dui vehicula. Pellentesque sit amet imperdiet purus, quis lacinia eros.
+Einer der häufigsten Fehler: Zahlungen werden „später“ eingetragen – und später wird dann nie.  
+Wenn du Mieteingänge **direkt dokumentierst**, behältst du jederzeit den Überblick und vermeidest Missverständnisse.
 
-Duis placerat turpis non metus dapibus sagittis. Vestibulum ex massa, tempus pulvinar varius at, placerat non justo. Ut tristique nisl sed porta pulvinar. Nunc ex nibh, tempor eget elit vel, fringilla ornare risus. Praesent vel lacus finibus, laoreet nulla quis, semper tellus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec volutpat quis dui ac varius. Suspendisse potenti. Maecenas sagittis lacus vitae ex rhoncus, eu fringilla urna luctus.
+Ob du dafür eine einfache Liste nutzt oder eine digitale Lösung wie HomeHive – wichtig ist, dass alle Zahlungen zentral an einem Ort festgehalten werden.
 
-## Donec vel erat augue. Aenean ut nisl cursus nulla tempus ultricies vel eget lorem.
 
-Suspendisse pharetra dolor in massa molestie, vel molestie nunc accumsan. Cras varius aliquet pellentesque. Curabitur ac mi fermentum nibh congue pharetra in eu nunc. Vivamus mattis urna a fringilla facilisis. Cras finibus nulla in nulla imperdiet pharetra. Morbi vel tortor turpis.`;
+## 3. Reagiere früh, wenn eine Zahlung fehlt
+
+Nicht jede verspätete Zahlung ist Absicht. Oft wird sie einfach vergessen.  
+Je früher du merkst, dass eine Miete fehlt, desto entspannter lässt sich das klären.
+
+Mit Erinnerungen oder automatischen Benachrichtigungen kannst du Zahlungsausfälle früh erkennen und rechtzeitig reagieren – bevor sie zum Problem werden.
+
+
+## Fazit
+
+Den Überblick über deine Mieteingänge zu behalten, muss weder kompliziert noch zeitaufwendig sein.  
+Mit festen Zahlungsterminen, einer sauberen Dokumentation und einem klaren Blick auf offene Zahlungen sparst du dir Stress – Monat für Monat.
+
+Wenn du deine Mieteinnahmen einfach digital verwalten möchtest, unterstützt dich HomeHive dabei, alles auf einen Blick im Griff zu behalten.
+
+`;
