@@ -38,8 +38,8 @@ export default function Page(): React.JSX.Element {
 
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
-  const [{ isLoading: renterLoading, isError: renterError, data: renter }] = useAtom(renterAtomWithRenterId);
-  const [{ isLoading: rentPaymentsLoading, isError: rentPaymentsError, data: rentPayments }] = useAtom(rentPaymentsAtom);
+  const [{ isLoading: renterLoading, data: renter }] = useAtom(renterAtomWithRenterId);
+  const [{ isLoading: rentPaymentsLoading, data: rentPayments }] = useAtom(rentPaymentsAtom);
 
   const setSelectedRenterIdAtom = useSetAtom(selectedRenterIdAtom);
   const { data: renters } = useAtomValue(rentersAtom);

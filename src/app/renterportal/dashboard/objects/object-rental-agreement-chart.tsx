@@ -53,7 +53,7 @@ const useChartOptions = (): ApexOptions => {
 
 export const ObjectRentalAgreementChart: FC = () => {
   const chartOptions = useChartOptions();
-  const [{ data: renter, isLoading: renterLoading, isError: renterError }] = useAtom(renterAtom);
+  const [{ data: renter, isLoading: renterLoading }] = useAtom(renterAtom);
 
   if (renterLoading) {
     return (
@@ -94,21 +94,6 @@ export const ObjectRentalAgreementChart: FC = () => {
                 </Stack>
               </Stack>
             </Stack>
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  }
-
-  if (renterError) {
-    return (
-      <Box>
-        <Card>
-          <CardHeader title="Mieteinnahmen" subheader="Mieteinnahmen des Objekts" />
-          <CardContent>
-            <Typography color="error" variant="body2">
-              Fehler beim Laden der Daten.
-            </Typography>
           </CardContent>
         </Card>
       </Box>

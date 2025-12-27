@@ -89,11 +89,10 @@ const useChartOptions = (months: string[]): ApexOptions => {
 };
 
 export function OverviewRentalIncome() {
-  const [{ isLoading: objectsLoading, isError: objectsError, data: rentalObjectsData }] = useAtom(rentalObjectsAtom);
-  const [{ isLoading: paymentsLoading, isError: paymentsError, data: rentPaymentsData }] = useAtom(rentPaymentsAtom);
+  const [{ isLoading: objectsLoading, data: rentalObjectsData }] = useAtom(rentalObjectsAtom);
+  const [{ isLoading: paymentsLoading, data: rentPaymentsData }] = useAtom(rentPaymentsAtom);
 
   const isLoading = objectsLoading || paymentsLoading;
-  const isError = objectsError || paymentsError;
 
   const rentPaymentsAtomLoadable = loadable(rentPaymentsAtom);
   const [rentPaymentsValue] = useAtom(rentPaymentsAtomLoadable);
@@ -104,19 +103,6 @@ export function OverviewRentalIncome() {
         <CardHeader subheader="Basierend auf das aktuelle Jahr" title="Mieteinnahmen" />
         <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: 250 }}>
           <Skeleton variant="rounded" width="90%" height={225} />
-        </Box>
-      </Card>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Card>
-        <CardHeader subheader="Basierend auf das aktuelle Jahr" title="Mieteinnahmen" />
-        <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: 250 }}>
-          <Typography color="error" variant="body2">
-            Fehler beim Laden der Daten.
-          </Typography>
         </Box>
       </Card>
     );

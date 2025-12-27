@@ -12,7 +12,7 @@ interface OverviewRepairRequest {
 
 export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
   const { showActions } = props;
-  const [{ data: rentalObject, isLoading: rentalObjectLoading, isError: rentalObjectError }] = useAtom(rentalObjectAtom);
+  const [{ data: rentalObject, isLoading: rentalObjectLoading }] = useAtom(rentalObjectAtom);
 
   let content;
   if (rentalObjectLoading) {
@@ -26,12 +26,6 @@ export const OverviewRepairRequest: FC<OverviewRepairRequest> = (props) => {
     content = (
       <Typography color="text.primary" variant="h4">
         {totalRepairRequests}
-      </Typography>
-    );
-  } else {
-    content = (
-      <Typography color="error" variant="body2">
-        Fehler beim Laden der Daten.
       </Typography>
     );
   }

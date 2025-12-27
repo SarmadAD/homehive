@@ -120,11 +120,11 @@ const useObjectsIds = (objects: RentalObject[] = []) => {
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
   const objectsSearch = useObjectsSearch();
-  const [{ isLoading: rentalObjectLoading, isError: rentalObjectError, data: rentalObjectsData }] = useAtom(rentalObjectsAtom);
+  const [{ isLoading: rentalObjectLoading, data: rentalObjectsData }] = useAtom(rentalObjectsAtom);
   const rentalObjects: RentalObject[] = rentalObjectsData ?? [];
   const [{ mutateAsync: deleteRentalObject }] = useAtom(deleteRentalObjectAtom);
 
-  const [{ isLoading: landloadLoading, isError: landlordError, data: landlord }] = useAtom(currentLandlordAtom);
+  const [{ isLoading: landloadLoading, data: landlord }] = useAtom(currentLandlordAtom);
 
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 

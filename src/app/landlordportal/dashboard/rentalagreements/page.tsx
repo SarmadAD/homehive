@@ -57,8 +57,8 @@ const useRentalAgreementIds = (rentalAgreements: RentalAgreement[] = []) => {
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
 
-  const [{ isLoading: landloadLoading, isError: landlordError, data: landlord }] = useAtom(currentLandlordAtom);
-  const [{ isLoading: rentalAgreementsLoading, isError: rentalAgreementsError, data: rentalAgreements }] = useAtom(rentalAgreementsAtom);
+  const [{ isLoading: landloadLoading, data: landlord }] = useAtom(currentLandlordAtom);
+  const [{ isLoading: rentalAgreementsLoading, data: rentalAgreements }] = useAtom(rentalAgreementsAtom);
 
   const rentalAgreementsIds = useRentalAgreementIds(rentalAgreements);
 

@@ -30,12 +30,6 @@ export const OverviewRentPaid: FC<OverviewRentPaidProps> = (props) => {
         {value !== undefined ? value : "Keine Daten verfügbar"}
       </Typography>
     );
-  } else {
-    content = (
-      <Typography color="error" variant="body2">
-        Fehler beim Laden der Daten.
-      </Typography>
-    );
   }
 
   return (

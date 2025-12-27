@@ -39,8 +39,8 @@ export default function Page(): React.JSX.Element {
 
   const hasShownToast = useRef(false);
 
-  const [{ data: renter, isLoading: renterLoading, isError: renterError }] = useAtom(renterAtom);
-  const [{ data: rentalObject, isLoading: rentalObjectLoading, isError: rentalObjectError }] = useAtom(rentalObjectAtom);
+  const [{ data: renter, isLoading: renterLoading }] = useAtom(renterAtom);
+  const [{ data: rentalObject, isLoading: rentalObjectLoading }] = useAtom(rentalObjectAtom);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dialog = useDialog<string>();

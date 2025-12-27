@@ -47,7 +47,7 @@ export default function RenterCreateForm(): React.JSX.Element {
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [newRenter, setNewRenter] = useState<Renter>(renterDefault);
 
-  const { isLoading: landloadLoading, isError: landlordError, data: landlord } = useAtomValue(currentLandlordAtom);
+  const { data: landlord } = useAtomValue(currentLandlordAtom);
   const [{ mutateAsync: createRenter }] = useAtom(createRenterAtom);
   const router = useRouter();
 

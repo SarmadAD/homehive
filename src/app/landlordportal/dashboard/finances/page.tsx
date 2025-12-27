@@ -23,7 +23,7 @@ export default function Page(): React.JSX.Element {
   const settings = useSettings();
 
   // const { data: landlord } = useAtomValue(currentLandlordAtom);
-  const [{ isLoading: rentPaymentsLoading, isError: rentPaymentsError, data: rentPayments }] = useAtom(rentPaymentsAtom);
+  const [{ isLoading: rentPaymentsLoading, data: rentPayments }] = useAtom(rentPaymentsAtom);
 
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 

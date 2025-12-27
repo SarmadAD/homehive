@@ -53,12 +53,12 @@ import { deleteRenterAtom } from "src/state/atoms/deleteRenterAtom";
 
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
-  const [{ isLoading: landloadLoading, isError: landlordError, data: landlordData }] = useAtom(currentLandlordAtom);
+  const [{ isLoading: landloadLoading, data: landlordData }] = useAtom(currentLandlordAtom);
 
   const landlord = landlordData ?? [];
   const rentersSearch = useRentersSearch();
 
-  const [{ isLoading: rentersLoading, isError: rentersError, data: renters }] = useAtom(rentersAtom);
+  const [{ isLoading: rentersLoading, data: renters }] = useAtom(rentersAtom);
   const [{ mutateAsync: deleteRenter }] = useAtom(deleteRenterAtom);
 
   const rentersIds = useRentersIds(renters);
