@@ -6,18 +6,20 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { ObjectEditForm } from "../object-edit-form";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
+import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
 
 export default function Page(): React.JSX.Element {
-  const setSelectedRentalObjectId = useSetAtom(selectedRentalObjectIdAtom);
   const searchParams = useSearchParams();
   const objectId = searchParams.get("objectId");
 
+  const setSelectedRentalObjectId = useSetAtom(selectedRentalObjectIdAtom);
   async function setRentalObjectId() {
     if (objectId) {
       setSelectedRentalObjectId(objectId.toString() ?? "");
     }
   }
+  const [{ data: rentalObject, isLoading, isError }] = useAtom(rentalObjectAtom);
 
   useEffect(
     () => {
@@ -69,7 +71,7 @@ export default function Page(): React.JSX.Element {
           >
             <Stack maxWidth="sm" spacing={3}>
               <Typography variant="h4">Objekt ändern</Typography>
-              <ObjectEditForm />
+              {isLoading ? <></> : <ObjectEditForm rentalObject={rentalObject} />}
             </Stack>
           </Grid>
         </Grid>

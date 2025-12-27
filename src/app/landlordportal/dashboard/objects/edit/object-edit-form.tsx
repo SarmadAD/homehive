@@ -44,42 +44,17 @@ const StepIcon: FC<StepIconProps> = (props) => {
   );
 };
 
-export const ObjectEditForm: FC = () => {
+interface ObjectEditFormProps {
+  rentalObject: RentalObject | undefined;
+}
+
+export const ObjectEditForm = ({ rentalObject }: ObjectEditFormProps) => {
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
+  const [currentObject, setCurrentObject] = useState<RentalObject | undefined>(rentalObject);
 
-  const searchParams = useSearchParams();
-  const setSelectedRentalObjectId = useSetAtom(selectedRentalObjectIdAtom);
-
-  const objectId = searchParams.get("objectId");
-
-  const [{ data: rentalObject, isLoading, isError }] = useAtom(rentalObjectAtom);
-  const [currentObject, setCurrentObject] = useState<RentalObject | null>(rentalObject || null);
   const [{ mutateAsync: updateRentalObject }] = useAtom(updateRentalObjectAtom);
-
-  const router = useRouter();
-
-  async function setRentalObjectId() {
-    if (objectId) {
-      setSelectedRentalObjectId(objectId.toString() ?? "");
-    }
-  }
-
-  // useEffect(() => {
-  //   setCurrentObject(rentalObject || null);
-  // }, [rentalObject]);
-
-  useEffect(
-    () => {
-      setRentalObjectId();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  if (isLoading || isError || !currentObject) {
-    return null;
-  }
 
   const handleNext = useCallback(() => {
     setActiveStep((prevState) => prevState + 1);
@@ -139,7 +114,7 @@ export const ObjectEditForm: FC = () => {
 
         return (
           <Step key={step.label}>
-            <StepLabel StepIconComponent={StepIcon}>
+            <StepLabel slots={{ stepIcon: StepIcon }}>
               <Typography sx={{ ml: 2 }} variant="overline">
                 {step.label}
               </Typography>

@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 interface ObjectInfosStepProps {
   onNext?: () => void;
   onBack?: () => void;
-  newObject: RentalObject;
-  setNewObject: Dispatch<RentalObject>;
+  newObject: RentalObject | undefined;
+  setNewObject: Dispatch<RentalObject | undefined>;
 }
 
 const schema = zod.object({
@@ -29,7 +29,7 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
     formState: { errors },
   } = useForm<Values>({
     defaultValues: {
-      areaSize: newObject.areaSize ? String(newObject.areaSize) : "",
+      areaSize: newObject?.areaSize ? String(newObject?.areaSize) : "",
     },
     resolver: zodResolver(schema),
   });
@@ -45,8 +45,10 @@ export const ObjectInfosStep: FC<ObjectInfosStepProps> = (props) => {
   // }
 
   const onSubmit = (data: Values) => {
-    setNewObject({ ...newObject, areaSize: Number(data.areaSize) });
-    if (onNext) onNext();
+    if (newObject) {
+      setNewObject({ ...newObject, areaSize: Number(data.areaSize) });
+      if (onNext) onNext();
+    }
   };
 
   return (
