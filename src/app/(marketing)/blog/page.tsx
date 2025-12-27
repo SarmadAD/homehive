@@ -49,7 +49,7 @@ export default function Page(): React.JSX.Element {
           <Divider />
           <Grid container spacing={4}>
             {/* Hier ändern wenn erster Blog Post */}
-            {[].length > 0 ? (
+            {posts.length > 0 ? (
               posts.map((post) => (
                 <Grid key={post.title} size={{ md: 6, xs: 12 }}>
                   <PostCard post={post} />
