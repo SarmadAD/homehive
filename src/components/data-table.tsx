@@ -15,6 +15,7 @@ export interface ColumnDef<TRowModel> {
   formatter?: (row: TRowModel, index: number) => React.ReactNode;
   hideName?: boolean;
   name: string;
+  key: string;
   nameJSX?: React.JSX.Element;
   width?: number | string;
 }
@@ -118,7 +119,7 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
             {columns.map(
               (column): React.JSX.Element => (
                 <TableCell
-                  key={column.name}
+                  key={column.key}
                   sx={{
                     width: column.width,
                     minWidth: column.width,
@@ -186,7 +187,7 @@ export function DataTable<TRowModel extends object & { id?: RowId | null }>({
                     ) : null}
                     {columns.map(
                       (column): React.JSX.Element => (
-                        <TableCell key={column.name} sx={{ ...(column.align && { textAlign: column.align }) }}>
+                        <TableCell key={column.key} sx={{ ...(column.align && { textAlign: column.align }) }}>
                           {(column.formatter ? column.formatter(row, index) : column.field ? row[column.field] : null) as React.ReactNode}
                         </TableCell>
                       )

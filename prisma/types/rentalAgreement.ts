@@ -17,4 +17,5 @@ export const rentalAgreementDefault: RentalAgreement = {
   rentalObjectId: "",
   rentalObject: rentalObjectDefault,
   renter: null,
+  state: 1,
 };

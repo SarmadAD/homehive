@@ -14,8 +14,8 @@ import { useAtomValue } from "jotai";
 interface RentalAgreementRenterStepProps {
   onNext?: () => void;
   onBack?: () => void;
-  newRentalAgreement: RentalAgreement;
-  setNewRentalAgreement: Dispatch<RentalAgreement>;
+  newRentalAgreement: RentalAgreement | undefined;
+  setNewRentalAgreement: Dispatch<RentalAgreement | undefined>;
 }
 
 const schema = zod.object({
@@ -35,14 +35,16 @@ export const RentalAgreementRenterStep: FC<RentalAgreementRenterStepProps> = (pr
     formState: { errors },
   } = useForm<Values>({
     defaultValues: {
-      renterId: newRentalAgreement.renter?.id || "",
+      renterId: newRentalAgreement?.renter?.id || "",
     },
     resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: Values) => {
-    const selectedRenter = renters.find((renter) => renter.id === data.renterId) || null;
-    setNewRentalAgreement({ ...newRentalAgreement, renter: selectedRenter });
+    if (newRentalAgreement) {
+      const selectedRenter = renters.find((renter) => renter.id === data.renterId) || null;
+      setNewRentalAgreement({ ...newRentalAgreement, renter: selectedRenter });
+    }
     if (onNext) onNext();
   };
 

@@ -35,7 +35,6 @@ import { useRepairRequestsSearch } from "src/hooks/use-repairRequestsSearch";
 import { RenterDrawer } from "src/app/landlordportal/dashboard/objects/renter/object-renter-drawer";
 import { selectedRentalObjectIdAtom } from "src/state/atoms/selectedRentalObjectIdAtom";
 import { rentalObjectAtom } from "src/state/atoms/rentalObjectAtom";
-import { useSearchParams } from "next/navigation";
 import { ObjectBasicDetails } from "../object-basic-details";
 import { ObjectRepairRequestDrawer } from "../repairRequests/object-repairRequest-drawer";
 import { useRepairRequestsIds } from "src/hooks/use-repairRequestsIds";
@@ -56,6 +55,7 @@ import { ObjectRentalAgreementChart } from "../object-rentalAgreements-chart";
 import { useAtom, useSetAtom } from "jotai";
 import { deleteRentalObjectAtom } from "src/state/atoms/deleteRentalObjectAtom";
 import { removeRentersFromObjectAtom } from "src/state/atoms/removeRentersFromObjectAtom";
+import { useSearchParams } from "src/hooks/use-search-params";
 
 const tabs = [
   { label: "Details", value: "details" },
@@ -306,6 +306,7 @@ export default function Page(): React.JSX.Element {
           </Link>
         </div>
       ),
+      key: "renterName",
       name: "Name",
     },
     // {

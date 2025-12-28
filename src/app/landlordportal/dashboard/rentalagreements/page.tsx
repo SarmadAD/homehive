@@ -18,6 +18,8 @@ import {
   CardContent,
   List,
   ListItem,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { useMemo, useState } from "react";
 import { Seo } from "src/components/seo";
@@ -29,7 +31,7 @@ import { RoleBasedGuard } from "src/app/auth/role/RoleBasedGuard";
 import React from "react";
 import { ColumnDef, DataTable } from "src/components/data-table";
 import { RouterLink } from "src/components/router-link";
-import { File02 } from "@untitled-ui/icons-react";
+import { DotsVertical, File02 } from "@untitled-ui/icons-react";
 import { GeneralPagination } from "src/components/common/pagination/general-pagination";
 import { useGeneralPagination } from "src/hooks/use-general-pagination";
 import { Landlord } from "prisma/types/landlord";
@@ -41,8 +43,15 @@ import { getRenterName } from "src/utils/get-renter-name";
 import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import checkIfUserIsNotAllowedToCreateRentalAgreement from "src/utils/hasAccessForCreateRentalAgreement";
 import { Eye as EyeIcon } from "@phosphor-icons/react/dist/ssr/Eye";
+import { Pen as PenIcon } from "@phosphor-icons/react/dist/ssr/Pen";
+import { Trash as TrashIcon } from "@phosphor-icons/react/dist/ssr/Trash";
 import { MobileCardSkeleton } from "src/skeleton/dashboard-skeletons";
 import { useAtom } from "jotai";
+import { DeleteModal } from "src/components/widgets/modals/delete-modal";
+import { useRouter } from "src/hooks/use-router";
+import { deleteRentalAgreementAtom } from "src/state/atoms/deleteRentalAgreementAtom";
+import { toast } from "src/components/toaster";
+
 // import { site } from "src/config";
 // import { Metadata } from "next/types";
 
@@ -50,66 +59,66 @@ import { useAtom } from "jotai";
 
 const useRentalAgreementIds = (rentalAgreements: RentalAgreement[] = []) => {
   return useMemo(() => {
-    return rentalAgreements.length > 0 ? rentalAgreements.map((object) => object.id) : [];
+    return rentalAgreements.length > 0 ? rentalAgreements.map((rentalAgreement) => rentalAgreement.id) : [];
   }, [rentalAgreements]);
 };
 
 export default function Page(): React.JSX.Element {
   const settings = useSettings();
+  const router = useRouter();
 
   const [{ isLoading: landloadLoading, data: landlord }] = useAtom(currentLandlordAtom);
   const [{ isLoading: rentalAgreementsLoading, data: rentalAgreements }] = useAtom(rentalAgreementsAtom);
+  const [{ mutateAsync: deleteRentalAgreement }] = useAtom(deleteRentalAgreementAtom);
 
   const rentalAgreementsIds = useRentalAgreementIds(rentalAgreements);
 
   const { deselectAll, deselectOne, selectAll, selectOne, selected } = useSelection(rentalAgreementsIds);
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
-  // const rentersSelection = useSelection<string>(rentersIds);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
-  // Renter Menu Three Dots Menu
-  // const [anchorElRenterThreeDotsMenu, setAnchorElRenterThreeDotsMenu] = React.useState<null | HTMLElement>(null);
-  // const openRenterThreeDotsMenu = Boolean(anchorElRenterThreeDotsMenu);
-  // const handleClickRenterThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: Renter) => {
-  //   selectOne(row.id);
-  //   setAnchorElRenterThreeDotsMenu(event.currentTarget);
-  // };
   const { state: paginationState, handlePageChange, handleRowsPerPageChange } = useGeneralPagination();
 
   const isLoading = rentalAgreementsLoading || landloadLoading;
+  const [anchorElRentalAgreementThreeDotsMenu, setAnchorElRentalAgreementThreeDotsMenu] = useState<null | HTMLElement>(null);
+  const openRentalAgreementThreeDotsMenu = Boolean(anchorElRentalAgreementThreeDotsMenu);
 
-  // const handleCloseRenterThreeDotsMenu = () => {
-  //   setAnchorElRenterThreeDotsMenu(null);
-  //   deselectAll();
-  // };
+  const handleClickRentalAgreementThreeDotsMenu = (event: React.MouseEvent<HTMLButtonElement>, row: RentalAgreement) => {
+    selectOne(row.id);
+    setAnchorElRentalAgreementThreeDotsMenu(event.currentTarget);
+  };
 
-  // const handleDelete = async () => {
-  //   try {
-  //     const deletedRenter = await agent.renters.delete(Array.from(selected)[0]);
-  //     const updatedRenters = renters.filter((renter) => renter.id !== deletedRenter.id);
-  //     setRenters(updatedRenters);
-  //     setLandlord((prevLandlord) => ({
-  //       ...prevLandlord,
-  //       renters: updatedRenters,
-  //     }));
-  //     toast.success("Mieter erfolgreich gelöscht");
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setOpenDeleteModal(false);
-  //   }
-  // };
+  const handleCloseRentalAgreementThreeDotsMenu = () => {
+    setAnchorElRentalAgreementThreeDotsMenu(null);
+    deselectAll();
+  };
 
-  // function handleDeleteModalOpen() {
-  //   setAnchorElRenterThreeDotsMenu(null);
-  //   setOpenDeleteModal(true);
-  // }
+  async function handleDelete() {
+    try {
+      await deleteRentalAgreement(Array.from(selected)[0]);
+      toast.success("Mietverhältnis erfolgreich gelöscht");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOpenDeleteModal(false);
+    }
+  }
 
-  // function handleCancelDeleteModal() {
-  //   setOpenDeleteModal(false);
-  //   deselectAll();
-  // }
+  function handleEditRentalAgreement() {
+    setAnchorElRentalAgreementThreeDotsMenu(null);
+    router.push(`${paths.landlordportal.dashboard.rentalagreements.edit}${Array.from(selected)[0]}`);
+  }
+
+  function handleDeleteModalOpen() {
+    setAnchorElRentalAgreementThreeDotsMenu(null);
+    setOpenDeleteModal(true);
+  }
+
+  function handleCancelDeleteModal() {
+    setOpenDeleteModal(false);
+    deselectAll();
+  }
 
   const paginatedRentalAgreements = useMemo(() => {
     if (rentalAgreements) {
@@ -127,6 +136,7 @@ export default function Page(): React.JSX.Element {
         </div>
       ),
       name: "Objekt",
+      key: "rentalObjectName",
       // width: "150px",
     },
     {
@@ -151,20 +161,65 @@ export default function Page(): React.JSX.Element {
           </div>
         </Stack>
       ),
+      key: "renterName",
       name: "Mieter",
       // width: "250px",
     },
     {
       formatter: (row): React.JSX.Element => (
-        <div>
-          <Link component={RouterLink} href={`${paths.landlordportal.dashboard.renters.details}${encodeURIComponent(row.renter?.id ?? "")}`}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <Button
+            size="small"
+            sx={{
+              minWidth: 0,
+              p: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            aria-controls={openRentalAgreementThreeDotsMenu ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openRentalAgreementThreeDotsMenu ? "true" : undefined}
+            onClick={(event) => handleClickRentalAgreementThreeDotsMenu(event, row)}
+          >
+            <SvgIcon>
+              <DotsVertical />
+            </SvgIcon>
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorElRentalAgreementThreeDotsMenu}
+            open={openRentalAgreementThreeDotsMenu}
+            onClose={handleCloseRentalAgreementThreeDotsMenu}
+            slotProps={{ list: { "aria-labelledby": "basic-button" } }}
+          >
+            <MenuItem onClick={() => handleEditRentalAgreement()}>Bearbeiten</MenuItem>
+            <MenuItem onClick={() => handleDeleteModalOpen()}>Löschen</MenuItem>
+          </Menu>
+          <Link
+            component={RouterLink}
+            href={`${paths.landlordportal.dashboard.renters.details}${encodeURIComponent(row.renter?.id ?? "")}`}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              minHeight: 40,
+            }}
+          >
             <SvgIcon>
               <ArrowRightIcon />
             </SvgIcon>
           </Link>
         </div>
       ),
+      width: "0px",
       name: "",
+      key: "goToRenterLink",
       align: "right",
     },
   ] satisfies ColumnDef<RentalAgreement>[];
@@ -182,18 +237,47 @@ export default function Page(): React.JSX.Element {
                   </SvgIcon>
                   <Typography variant="subtitle2">Mietverhältnis</Typography>
                 </Stack>
-                <Button
-                  component={RouterLink}
-                  href={`${paths.landlordportal.dashboard.renters.details}${agreement.renter?.id ?? ""}`}
-                  size="small"
-                  color="primary"
-                  sx={{ minWidth: 0, p: 1 }}
-                  aria-label="Mieter anzeigen"
-                >
-                  <SvgIcon>
-                    <EyeIcon />
-                  </SvgIcon>
-                </Button>
+                <div>
+                  <Button
+                    component={RouterLink}
+                    href={`${paths.landlordportal.dashboard.renters.details}${agreement.renter?.id ?? ""}`}
+                    size="small"
+                    color="primary"
+                    sx={{ minWidth: 0, p: 1 }}
+                    aria-label="Mietverhältnis anzeigen"
+                  >
+                    <SvgIcon>
+                      <EyeIcon />
+                    </SvgIcon>
+                  </Button>{" "}
+                  <Button
+                    component={RouterLink}
+                    href={`${paths.landlordportal.dashboard.rentalagreements.edit}${agreement.id}`}
+                    size="small"
+                    color="primary"
+                    sx={{ minWidth: 0, p: 1 }}
+                    aria-label="Mietverhältnis bearbeiten"
+                  >
+                    <SvgIcon>
+                      <PenIcon />
+                    </SvgIcon>
+                  </Button>{" "}
+                  <Button
+                    component={RouterLink}
+                    href=""
+                    onClick={() => {
+                      handleDeleteModalOpen();
+                    }}
+                    size="small"
+                    color="error"
+                    sx={{ minWidth: 0, p: 1 }}
+                    aria-label="Mietverhältnis löschen"
+                  >
+                    <SvgIcon>
+                      <TrashIcon />
+                    </SvgIcon>
+                  </Button>
+                </div>
               </Stack>
               <List sx={{ "& .MuiListItem-root": { justifyContent: "space-between", px: 0, py: 1 } }}>
                 <ListItem divider>
@@ -230,43 +314,47 @@ export default function Page(): React.JSX.Element {
         >
           <Container maxWidth={settings.settings.stretch ? false : "xl"}>
             <Grid container>
-              <Grid size={{ xs: 12 }} pb={3}>
-                <Stack direction={{ xs: "column", sm: "row", md: "row" }} justifyContent="space-between" spacing={4}>
+              <Grid size={{ xs: 12 }}>
+                <Stack direction="row" flexWrap="wrap" justifyContent="space-between" spacing={4}>
                   <div>
-                    <Typography variant="h4">Mietverhältnisse</Typography>
+                    <Typography variant="h4" sx={{ flexShrink: 0 }}>
+                      Mietverhältnisse
+                    </Typography>
                   </div>
-                  <Stack direction="row" spacing={4}>
-                    <Tooltip
-                      title={
-                        checkIfUserIsNotAllowedToCreateRentalAgreement(landlord as Landlord) ? (
-                          <>
-                            Mehr Mietverhältnisse anlegen?{" "}
-                            <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
-                              Jetzt upgraden
-                            </Link>
-                          </>
-                        ) : (
-                          ""
-                        )
-                      }
-                    >
-                      <span>
-                        <Button
-                          component={RouterLink}
-                          startIcon={
-                            <SvgIcon>
-                              <PlusIcon />
-                            </SvgIcon>
-                          }
-                          variant="contained"
-                          href={paths.landlordportal.dashboard.rentalagreements.create}
-                          disabled={checkIfUserIsNotAllowedToCreateRentalAgreement(landlord as Landlord)}
-                        >
-                          Hinzufügen
-                        </Button>{" "}
-                      </span>
-                    </Tooltip>
-                  </Stack>
+                  <Box sx={{ ml: "auto" }}>
+                    <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={4} sx={{ width: "100%" }}>
+                      <Tooltip
+                        title={
+                          checkIfUserIsNotAllowedToCreateRentalAgreement(landlord as Landlord) ? (
+                            <>
+                              Mehr Mietverhältnisse anlegen?{" "}
+                              <Link component={RouterLink} href={paths.landlordportal.dashboard.pricing} underline="none">
+                                Jetzt upgraden
+                              </Link>
+                            </>
+                          ) : (
+                            ""
+                          )
+                        }
+                      >
+                        <span>
+                          <Button
+                            component={RouterLink}
+                            startIcon={
+                              <SvgIcon>
+                                <PlusIcon />
+                              </SvgIcon>
+                            }
+                            variant="contained"
+                            href={paths.landlordportal.dashboard.rentalagreements.create}
+                            disabled={checkIfUserIsNotAllowedToCreateRentalAgreement(landlord as Landlord)}
+                          >
+                            Hinzufügen
+                          </Button>{" "}
+                        </span>
+                      </Tooltip>
+                    </Stack>
+                  </Box>
                 </Stack>
               </Grid>
 
@@ -329,7 +417,13 @@ export default function Page(): React.JSX.Element {
               </Grid>
             </Grid>
           </Container>
-        </Box>{" "}
+        </Box>
+        <DeleteModal
+          text={"Bist Du sicher, dass Du dieses Mietverhältnis dauerhaft löschen möchtest?" + " Dieser Vorgang kann nicht rückgängig gemacht werden."}
+          handleCancelDeleteModal={handleCancelDeleteModal}
+          onDelete={handleDelete}
+          openDeleteModal={openDeleteModal}
+        />
       </RoleBasedGuard>
     </>
   );

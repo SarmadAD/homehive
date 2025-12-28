@@ -52,8 +52,12 @@ const renters = {
 
 const rentalAgreements = {
   list: (landlordId: string) => requests.get<RentalAgreement[]>(`/api/rentalAgreements/?landlordId=${landlordId}`),
+  details: (rentalAgreementId: string) => requests.get<RentalAgreement>(`/api/rentalAgreements/rentalAgreement/${rentalAgreementId}`),
   create: (rentalAgreement: RentalAgreement, landlordId: string) =>
     requests.post<RentalAgreement>(`/api/rentalAgreements/?landlordId=${landlordId}`, rentalAgreement),
+  update: (rentalAgreement: RentalAgreement) =>
+    requests.put<RentalAgreement>(`/api/rentalAgreements/rentalAgreement/${rentalAgreement.id}`, rentalAgreement),
+  delete: (rentalAgreementId: string) => requests.del<RentalAgreement>(`/api/rentalAgreements/rentalAgreement/${rentalAgreementId}`),
 };
 
 const userRoles = {

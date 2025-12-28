@@ -19,6 +19,7 @@ const columns = [
     ),
     name: "Datum",
     align: "left",
+    key: "paymentDate",
   },
   {
     formatter: (row): React.JSX.Element => (
@@ -27,6 +28,7 @@ const columns = [
       </Typography>
     ),
     name: "Miete",
+    key: "paymentAmount",
     // width: "200px",
   },
   {
@@ -35,6 +37,7 @@ const columns = [
       return rentPaymentStatus;
     },
     name: "Status",
+    key: "status",
     // width: "200px",
   },
 ] satisfies ColumnDef<RentPayment>[];

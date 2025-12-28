@@ -133,6 +133,7 @@ export default function Page(): React.JSX.Element {
         </div>
       ),
       name: "Name",
+      key: "name",
       // width: "650px",
     },
     {
@@ -166,6 +167,7 @@ export default function Page(): React.JSX.Element {
       ),
       name: "",
       align: "right",
+      key: "actions",
     },
   ] satisfies ColumnDef<Renter>[];
 
