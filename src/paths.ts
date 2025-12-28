@@ -66,6 +66,7 @@ export const paths = {
         index: "/landlordportal/dashboard/rentalagreements",
         details: "/landlordportal/dashboard/rentalagreements/:rentalAgreementId?rentalAgreementId=",
         create: "/landlordportal/dashboard/rentalagreements/create",
+        edit: "/landlordportal/dashboard/rentalagreements/edit/:rentalAgreementId?rentalAgreementId=",
       },
       settings: {
         account: "/landlordportal/dashboard/settings/account",

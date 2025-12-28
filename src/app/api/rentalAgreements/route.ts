@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Missing required parameter: landlordId" }, { status: 400 });
     }
     const rentalAgreements = await prisma.rentalAgreement.findMany({
-      where: { landlordId },
+      where: { landlordId, AND: { state: 1 } },
       include: { renter: true, rentalObject: true },
     });
     return NextResponse.json(rentalAgreements, { status: 200 });

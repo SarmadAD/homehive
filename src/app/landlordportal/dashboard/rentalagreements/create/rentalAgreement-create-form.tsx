@@ -6,12 +6,12 @@ import CheckIcon from "@untitled-ui/icons-react/build/esm/Check";
 import type { StepIconProps } from "@mui/material";
 import { Avatar, Step, StepContent, StepLabel, Stepper, SvgIcon, Typography } from "@mui/material";
 import { useRouter } from "src/hooks/use-router";
-import { RentalAgreementRenterStep } from "./rentalAgreement-renter-step";
+import { RentalAgreementRenterStep } from "../rentalAgreement-renter-step";
 import { currentLandlordAtom } from "src/state/atoms/currentLandlordAtom";
-import { RentalAgreementRentalObjectStep } from "./rentalAgreement-rentalObject-step";
+import { RentalAgreementRentalObjectStep } from "../rentalAgreement-rentalObject-step";
 import { RentalAgreement, rentalAgreementDefault } from "prisma/types/rentalAgreement";
-import { DueDateStep } from "./due-date-step";
-import { RentInfoStep } from "./rent-info-step";
+import { DueDateStep } from "../due-date-step";
+import { RentInfoStep } from "../rent-info-step";
 import { paths } from "src/paths";
 import { toast } from "src/components/toaster";
 import { useAtom, useAtomValue } from "jotai";
@@ -48,7 +48,7 @@ const StepIcon: FC<StepIconProps> = (props) => {
 export default function RentalAgreementCreateForm(): React.JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isComplete, setIsComplete] = useState<boolean>(false);
-  const [newRentalAgreement, setNewRentalAgreement] = useState<RentalAgreement>(rentalAgreementDefault);
+  const [newRentalAgreement, setNewRentalAgreement] = useState<RentalAgreement | undefined>(rentalAgreementDefault);
 
   const router = useRouter();
 

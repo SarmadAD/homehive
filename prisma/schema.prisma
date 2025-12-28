@@ -142,6 +142,7 @@ model RentalAgreement {
   rentalObjectId String        @db.Uuid
   landlord       Landlord      @relation(fields: [landlordId], references: [id])
   landlordId     String        @db.Uuid
+  state          Int           @default(1)
 
   @@index([rentalObjectId])
   @@index([landlordId])

@@ -10,8 +10,8 @@ import { DueDateSelect } from "src/components/common/selects/dueDate";
 interface DueDateStepProps {
   onNext?: () => void;
   onBack?: () => void;
-  newRentalAgreement: RentalAgreement;
-  setNewRentalAgreement: Dispatch<RentalAgreement>;
+  newRentalAgreement: RentalAgreement | undefined;
+  setNewRentalAgreement: Dispatch<RentalAgreement | undefined>;
 }
 
 const schema = zod.object({
@@ -29,14 +29,16 @@ export const DueDateStep: FC<DueDateStepProps> = (props) => {
     formState: { errors },
   } = useForm<Values>({
     defaultValues: {
-      dueDate: newRentalAgreement.dueDateState || "",
+      dueDate: newRentalAgreement?.dueDateState || "",
     },
     resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: Values) => {
-    setNewRentalAgreement({ ...newRentalAgreement, dueDateState: data.dueDate as RentalAgreement["dueDateState"] });
-    if (onNext) onNext();
+    if (newRentalAgreement) {
+      setNewRentalAgreement({ ...newRentalAgreement, dueDateState: data.dueDate as RentalAgreement["dueDateState"] });
+      if (onNext) onNext();
+    }
   };
 
   return (
@@ -56,9 +58,11 @@ export const DueDateStep: FC<DueDateStepProps> = (props) => {
           >
             Weiter
           </Button>{" "}
-          <Button color="inherit" onClick={onBack}>
-            Zurück
-          </Button>
+          {onBack && (
+            <Button color="inherit" onClick={onBack}>
+              Zurück
+            </Button>
+          )}
         </Stack>
       </Stack>
     </form>

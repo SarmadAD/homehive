@@ -7,15 +7,14 @@ import { rentalObjectsAtom } from "src/state/atoms/rentalObjectsAtom";
 import { rentPaymentsAtom } from "src/state/atoms/rentPayments";
 import { loadable } from "jotai/utils";
 import { useAtom } from "jotai";
+import { Theme } from "@mui/system";
 
 type ChartSeries = {
   name: string;
   data: number[];
 }[];
 
-const useChartOptions = (months: string[]): ApexOptions => {
-  const theme = useTheme();
-
+const useChartOptions = (months: string[], theme: Theme): ApexOptions => {
   return {
     noData: { text: "Noch keine Mieteinnahmen erfasst" },
     chart: {
@@ -92,6 +91,7 @@ export function OverviewRentalIncome() {
   const [{ isLoading: objectsLoading, data: rentalObjectsData }] = useAtom(rentalObjectsAtom);
   const [{ isLoading: paymentsLoading, data: rentPaymentsData }] = useAtom(rentPaymentsAtom);
 
+  const theme = useTheme();
   const isLoading = objectsLoading || paymentsLoading;
 
   const rentPaymentsAtomLoadable = loadable(rentPaymentsAtom);
@@ -159,7 +159,7 @@ export function OverviewRentalIncome() {
   };
   const months = groupedRentPayments.map((groupedRentPayment: any) => getMonthName(groupedRentPayment.month));
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const chartOptions = useChartOptions(months);
+  const chartOptions = useChartOptions(months, theme);
   const updatedChartSeries: ChartSeries = [
     {
       name: "Diesen Monat",

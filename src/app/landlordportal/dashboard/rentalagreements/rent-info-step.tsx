@@ -9,12 +9,12 @@ import { RentalAgreement } from "prisma/types/rentalAgreement";
 interface RentInfoStepProps {
   onNext?: () => void;
   onBack?: () => void;
-  newRentalAgreement: RentalAgreement;
-  setNewRentalAgreement: Dispatch<RentalAgreement>;
+  newRentalAgreement: RentalAgreement | undefined;
+  setNewRentalAgreement: Dispatch<RentalAgreement | undefined>;
 }
 
 const schema = zod.object({
-  baseRent: zod.string().min(1, { message: "Die Kaltmiete muss größer als 0 sein" }).regex(/^\d+$/, { message: "Nur Ziffern erlaubt" }),
+  baseRent: zod.string().regex(/^\d+$/, { message: "Nur Ziffern erlaubt" }),
   serviceCharges: zod.string().regex(/^\d*$/, { message: "Nur Ziffern erlaubt" }).optional(),
 });
 
@@ -29,15 +29,17 @@ export const RentInfoStep: FC<RentInfoStepProps> = (props) => {
     formState: { errors },
   } = useForm<Values>({
     defaultValues: {
-      baseRent: newRentalAgreement?.baseRent ? String(newRentalAgreement.baseRent) : "",
-      serviceCharges: newRentalAgreement?.serviceCharges ? String(newRentalAgreement.serviceCharges) : "",
+      baseRent: newRentalAgreement?.baseRent !== undefined ? String(newRentalAgreement.baseRent) : "",
+      serviceCharges: newRentalAgreement?.serviceCharges !== undefined ? String(newRentalAgreement.serviceCharges) : "",
     },
     resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: Values) => {
-    setNewRentalAgreement({ ...newRentalAgreement, baseRent: Number(data.baseRent), serviceCharges: Number(data.serviceCharges ?? 0) });
-    if (onNext) onNext();
+    if (newRentalAgreement) {
+      setNewRentalAgreement({ ...newRentalAgreement, baseRent: Number(data.baseRent), serviceCharges: Number(data.serviceCharges ?? 0) });
+      if (onNext) onNext();
+    }
   };
 
   return (

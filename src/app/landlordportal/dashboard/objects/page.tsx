@@ -186,6 +186,7 @@ export default function Page(): React.JSX.Element {
           </Link>
         </div>
       ),
+      key: "rentalObjectName",
       name: "Name",
       // width: "150px",
     },
@@ -206,6 +207,7 @@ export default function Page(): React.JSX.Element {
         </Stack>
       ),
       name: "Mieter",
+      key: "renterName",
       // width: "250px",
     },
     {
@@ -216,6 +218,7 @@ export default function Page(): React.JSX.Element {
       },
 
       name: "Status",
+      key: "rentalObjectStatus",
       // width: "100px",
     },
     {
@@ -245,6 +248,7 @@ export default function Page(): React.JSX.Element {
         </div>
       ),
       name: "",
+      key: "threeDotsMenu",
       align: "right",
     },
   ] satisfies ColumnDef<RentalObject>[];

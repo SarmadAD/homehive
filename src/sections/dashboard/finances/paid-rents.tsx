@@ -133,6 +133,7 @@ export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProp
       ),
       name: "Datum",
       align: "left",
+      key: "paymentDate",
     },
     {
       formatter: (row): React.JSX.Element => (
@@ -141,6 +142,7 @@ export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProp
         </Typography>
       ),
       name: "Miete",
+      key: "paymentAmount",
       // width: "200px",
     },
     {
@@ -158,6 +160,7 @@ export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProp
         </Stack>
       ),
       name: "Mieter",
+      key: "renter",
       // width: "250px",
     },
     {
@@ -166,6 +169,7 @@ export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProp
         return rentPaymentStatus;
       },
       name: "Status",
+      key: "status",
       // width: "200px",
     },
     {
@@ -182,6 +186,7 @@ export function PaidRents({ rentPayments = [], isLoadingPayments }: PaymentsProp
         </Tooltip>
       ),
       name: "Aktion",
+      key: "action",
     },
   ] satisfies ColumnDef<RentPayment>[];
 
