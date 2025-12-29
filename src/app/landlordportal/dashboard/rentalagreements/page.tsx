@@ -266,6 +266,7 @@ export default function Page(): React.JSX.Element {
                     component={RouterLink}
                     href=""
                     onClick={() => {
+                      selectOne(agreement.id);
                       handleDeleteModalOpen();
                     }}
                     size="small"
