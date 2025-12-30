@@ -9,9 +9,11 @@
 - 📋 Verwaltung von Immobilienobjekten
 - 👥 Verwaltung von Mietern mit Zuordnung zu Objekten
 - 💸 Erfassung und Nachverfolgung von Mieteinnahmen
-- 🔔 Erinnerungen bei fehlenden Mietzahlungen
-- 🔐 Integration von Banking APIs durch Plaid zur automatischen Erkennung von Mieteingängen
 - 🧑‍💻 Vermieter- und Mieterportal mit separaten Zugängen
+<!--- 🔔 Erinnerungen bei fehlenden Mietzahlungen
+🔐 Integration von Banking APIs durch Plaid zur automatischen Erkennung von Mieteingängen
+--->
+
 
 ---
 
@@ -32,3 +34,4 @@ cd homehive
 npm install
 npm run dev
 ```
+
