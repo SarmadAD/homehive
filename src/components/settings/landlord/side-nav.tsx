@@ -57,6 +57,7 @@ const icons = {
 
 export function SideNav(): React.JSX.Element {
   const pathname = usePathname();
+  const normalizedPathname = pathname.replace(/\/+$/, "");
 
   return (
     <div>
@@ -82,7 +83,7 @@ export function SideNav(): React.JSX.Element {
               ) : null}
               <Stack component="ul" spacing={1} sx={{ listStyle: "none", m: 0, p: 0 }}>
                 {group.items.map((item) => (
-                  <NavItem {...item} key={item.key} pathname={pathname} />
+                  <NavItem {...item} key={item.key} pathname={normalizedPathname} />
                 ))}
               </Stack>
             </Stack>
@@ -133,24 +134,31 @@ function NavItem({ disabled, external, href, icon, pathname, title }: NavItemPro
           textDecoration: "none",
           whiteSpace: "nowrap",
           ...(disabled && { color: "var(--mui-palette-text-disabled)", cursor: "not-allowed" }),
-          ...(active && { bgcolor: "var(--mui-palette-action-selected)", color: "var(--mui-palette-text-primary)" }),
+          ...(active && {
+            bgcolor: "rgba(var(--mui-palette-primary-mainChannel) / 0.12)",
+            color: "var(--mui-palette-primary-main)",
+          }),
           "&:hover": {
             ...(!active && !disabled && { bgcolor: "var(--mui-palette-action-hover)", color: "var(---mui-palette-text-primary)" }),
           },
         }}
+        aria-current={active ? "page" : undefined}
         tabIndex={0}
       >
         {Icon ? (
           <Box sx={{ alignItems: "center", display: "flex", justifyContent: "center", flex: "0 0 auto" }}>
             <Icon
-              fill={active ? "var(--mui-palette-text-primary)" : "var(--mui-palette-text-secondary)"}
+              fill={active ? "var(--mui-palette-primary-main)" : "var(--mui-palette-text-secondary)"}
               fontSize="var(--icon-fontSize-md)"
               weight={active ? "fill" : undefined}
             />
           </Box>
         ) : null}
         <Box sx={{ flex: "1 1 auto" }}>
-          <Typography component="span" sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: 500, lineHeight: "28px" }}>
+          <Typography
+            component="span"
+            sx={{ color: "inherit", fontSize: "0.875rem", fontWeight: active ? 600 : 500, lineHeight: "28px" }}
+          >
             {title}
           </Typography>
         </Box>
